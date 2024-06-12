@@ -1,4 +1,3 @@
-// src/components/Preview.js
 export default function Preview({ formData }) {
     return (
       <div>

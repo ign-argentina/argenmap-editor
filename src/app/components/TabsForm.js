@@ -1,4 +1,3 @@
-// src/components/TabsForm.js
 import { useState } from 'react';
 import Form from './Form';
 

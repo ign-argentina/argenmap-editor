@@ -1,4 +1,3 @@
-// src/components/Form.js
 export default function Form({ formData, onFormChange, activeTab }) {
     const handleChange = (e) => {
       const { name, value } = e.target;
