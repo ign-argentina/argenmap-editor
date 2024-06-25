@@ -94,14 +94,12 @@ input[type='number']::-webkit-outer-spin-button {
 
 .form-container {
   width: 50%;
-  padding: 20px;
   border-right: 1px solid #ccc;
   overflow-y: auto;
 }
 
 .preview-container {
-  width: 50%;
-  padding: 20px;
+  width: 100%;
   overflow-y: auto;
 }
 

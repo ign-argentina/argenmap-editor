@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Form from './Form';
 
-const tabs = ['Tab 1', 'Tab 2', 'Tab 3', 'Tab 4'];
+const tabs = ['Tab1', 'Tab2', 'Tab3', 'Tab4'];
 
 export default function TabsForm({ formData, onFormChange }) {
   const [activeTab, setActiveTab] = useState(0);
