@@ -20,5 +20,5 @@ if (!fs.existsSync(repoDir)) {
         .then(() => console.log('Repositorio clonado exitosamente.'))
         .catch(err => console.error('Error al clonar el repositorio:', err));
 } else {
-    console.log('El repositorio ya ha sido clonado.');
+    console.log('El repositorio ya ha sido clonado!');
 }
