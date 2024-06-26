@@ -18,7 +18,7 @@ const Preview = () => {
       src="/argenmap/index.html"
       title="Argenmap Visor"
       width="100%"
-      height="500px"
+      height="100%"
       style={{ border: 'insert' }}
     ></iframe>
   );

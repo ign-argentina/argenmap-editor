@@ -101,6 +101,7 @@ input[type='number']::-webkit-outer-spin-button {
 .preview-container {
   width: 100%;
   overflow-y: auto;
+  height: 95vh;
 }
 
 .tabs-form-container {
