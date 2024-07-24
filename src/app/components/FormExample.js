@@ -1,4 +1,4 @@
-export default function FormTitle({ formData, onFormChange, preferences }) {
+export default function FormExample({ formData, onFormChange, preferences }) {
     const handleChange = (e) => {
       const { name, value } = e.target;
       onFormChange({
