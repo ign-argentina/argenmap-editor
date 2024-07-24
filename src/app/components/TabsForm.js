@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import Form from './Form';
+import Form, { formComponents } from './Form';
 import usePreferences from '../hooks/usePreferences';
-
-const tabs = ['Tab1', 'Tab2', 'Tab3', 'Tab4'];
 
 export default function TabsForm({ formData, onFormChange }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -19,13 +17,13 @@ export default function TabsForm({ formData, onFormChange }) {
   return (
     <div className="tabs-form-container">
       <div className="tabs">
-        {tabs.map((tab, index) => (
+        {formComponents.map(({ name }, index) => (
           <button
             key={index}
             className={`tab ${index === activeTab ? 'active' : ''}`}
             onClick={() => setActiveTab(index)}
           >
-            {tab}
+            {name}
           </button>
         ))}
       </div>

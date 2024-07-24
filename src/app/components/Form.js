@@ -1,13 +1,16 @@
-import FormExample from './FormExample';
-import FormDatos from './FormDatos';
-// import FormAnotherField from './FormAnotherField';
+import FormExample, { formName as nameFormExample } from './FormExample';
+import FormDatos, { formName as nameFormDatos } from './FormDatos';
+
+const formComponents = [
+  { component: FormExample, name: nameFormExample },
+  { component: FormDatos, name: nameFormDatos },
+
+];
 
 export default function Form({ formData, onFormChange, activeTab, preferences }) {
-  const forms = [
-    <FormExample formData={formData} onFormChange={onFormChange} preferences={preferences} />,
-    <FormDatos formData={formData} onFormChange={onFormChange} preferences={preferences} />,
-    // <FormAnotherField formData={formData} onFormChange={onFormChange} preferences={preferences} />,
-  ];
+  const forms = formComponents.map(({ component: FormComponent }) => (
+    <FormComponent formData={formData} onFormChange={onFormChange} preferences={preferences} />
+  ));
 
   return (
     <form>
@@ -15,3 +18,5 @@ export default function Form({ formData, onFormChange, activeTab, preferences })
     </form>
   );
 }
+
+export { formComponents };
