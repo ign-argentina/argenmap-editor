@@ -7,7 +7,7 @@ export default function TabsForm({ formData, onFormChange }) {
   const { preferences, loading, error } = usePreferences();
 
   if (loading) {
-    return <div>Loading...</div>; // Puedes mostrar un indicador de carga aquí
+    return <div>Loading...</div>;
   }
 
   if (error) {

@@ -12,8 +12,8 @@ export default function FormDatos({ formData, onFormChange, preferences }) {
   return (
     <div>
       <label>
-      {preferences.geoprocessing.availableProcesses[1].name}:
-      <input type="text" name="title" value={formData.title} onChange={handleChange} />
+        {preferences.geoprocessing.availableProcesses[1].name}:
+        <input type="text" name="title" value={formData.title} onChange={handleChange} />
       </label>
       <div>
         {preferences.somePreference && <p>{preferences.somePreference}</p>}

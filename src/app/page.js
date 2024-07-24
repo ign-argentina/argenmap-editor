@@ -21,7 +21,6 @@ export default function Page() {
         <TabsForm formData={formData} onFormChange={handleFormChange} />
       </div>
       <div className="preview-container">
-        {/* <Preview formData={formData} /> */}
         <Preview/>
       </div>
     </div>
