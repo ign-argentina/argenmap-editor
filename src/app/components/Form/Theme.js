@@ -1,6 +1,6 @@
-export const formName = 'Datos';
+export const formName = 'Tema';
 
-export default function FormDatos({ formData, onFormChange, preferences }) {
+export default function Theme({ formData, onFormChange, preferences }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     onFormChange({
@@ -12,8 +12,8 @@ export default function FormDatos({ formData, onFormChange, preferences }) {
   return (
     <div>
       <label>
-        {preferences.geoprocessing.availableProcesses[1].name}:
-        <input type="text" name="datos" value={formData.datos} onChange={handleChange} />
+        {preferences.geoprocessing.availableProcesses[0].name}:
+        <input type="text" name="theme" value={formData.theme} onChange={handleChange} />
       </label>
       <div>
         {preferences.somePreference && <p>{preferences.somePreference}</p>}

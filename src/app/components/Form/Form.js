@@ -1,10 +1,9 @@
 import FormExample, { formName as nameFormExample } from './FormExample';
-import FormDatos, { formName as nameFormDatos } from './FormDatos';
+import Theme, { formName as nameFormTheme } from './Theme';
 
 const formComponents = [
   { component: FormExample, name: nameFormExample },
-  { component: FormDatos, name: nameFormDatos },
-
+  { component: Theme, name: nameFormTheme },
 ];
 
 export default function Form({ formData, onFormChange, activeTab, preferences }) {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Form, { formComponents } from './Form';
+import Form, { formComponents } from './Form/Form';
 import usePreferences from '../hooks/usePreferences';
 
 export default function TabsForm({ formData, onFormChange }) {
