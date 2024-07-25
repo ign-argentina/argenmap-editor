@@ -1,10 +1,10 @@
 import React from 'react';
-import FormExample, { formName as nameFormExample } from './FormExample';
-import Theme, { formName as nameFormTheme } from './Theme';
+import Theme, { formName as nameFormTheme } from './ThemeForm';
+import LogoForm, { formName as nameFormLogo } from './LogoForm';
 
 const formComponents = [
   { component: Theme, name: nameFormTheme },
-  { component: FormExample, name: nameFormExample },
+  { component: LogoForm, name: nameFormLogo },
 ];
 
 export default function Form({ formData, onFormChange, activeTab, preferences }) {

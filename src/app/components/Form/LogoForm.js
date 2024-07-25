@@ -1,8 +1,8 @@
 import React from 'react';
 
-export const formName = "Theme";
+export const formName = "LogoForm";
 
-export default function Theme({ formData, onChange, preferences }) {
+export default function LogoForm({ formData, onChange, preferences }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     onChange(name, value);
@@ -10,13 +10,13 @@ export default function Theme({ formData, onChange, preferences }) {
 
   return (
     <div>
-      {Object.keys(formData.theme).map((key) => (
+      {Object.keys(preferences.logo).map((key) => (
         <div key={key}>
           <label>
             {key}:
             <input
               type="text"
-              name={`theme.${key}`}
+              name={`logo.${key}`}
               value={formData.theme[key]}
               onChange={handleChange}
             />
