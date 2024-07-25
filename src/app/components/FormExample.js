@@ -13,7 +13,7 @@ export default function FormExample({ formData, onFormChange, preferences }) {
     <div>
       <label>
         {preferences.geoprocessing.availableProcesses[0].name}:
-        <input type="text" name="title" value={formData.title} onChange={handleChange} />
+        <input type="text" name="title" value={formData.example} onChange={handleChange} />
       </label>
       <div>
         {preferences.somePreference && <p>{preferences.somePreference}</p>}
