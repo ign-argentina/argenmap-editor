@@ -2,12 +2,10 @@
 import { useState } from 'react';
 import TabsForm from './components/TabsForm';
 import Preview from './components/Preview';
+import jsonStructure from './utils/jsonStructure';
 
 export default function Page() {
-  const [formData, setFormData] = useState({
-    example: '',
-    datos: '',
-  });
+  const [formData, setFormData] = useState(jsonStructure);
 
   const handleFormChange = (newData) => {
     setFormData(newData);
@@ -33,7 +31,7 @@ export default function Page() {
         <button onClick={downloadJsonFile}>Download JSON</button>
       </div>
       <div className="preview-container">
-        <Preview/>
+        <Preview />
       </div>
     </div>
   );

@@ -1,19 +1,31 @@
+import React from 'react';
 import FormExample, { formName as nameFormExample } from './FormExample';
 import Theme, { formName as nameFormTheme } from './Theme';
 
 const formComponents = [
-  { component: FormExample, name: nameFormExample },
   { component: Theme, name: nameFormTheme },
+  { component: FormExample, name: nameFormExample },
 ];
 
 export default function Form({ formData, onFormChange, activeTab, preferences }) {
-  const forms = formComponents.map(({ component: FormComponent }) => (
-    <FormComponent formData={formData} onFormChange={onFormChange} preferences={preferences} />
-  ));
+  const FormComponent = formComponents[activeTab].component;
+
+  const handleChange = (name, value) => {
+    const keys = name.split('.');
+    const updatedFormData = { ...formData };
+
+    if (keys.length === 2) {
+      updatedFormData[keys[0]][keys[1]] = value;
+    } else {
+      updatedFormData[name] = value;
+    }
+
+    onFormChange(updatedFormData);
+  };
 
   return (
     <form>
-      {forms[activeTab]}
+      <FormComponent formData={formData} onChange={handleChange} preferences={preferences} />
     </form>
   );
 }

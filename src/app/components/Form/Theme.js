@@ -1,23 +1,28 @@
-export const formName = 'Tema';
+import React from 'react';
 
-export default function Theme({ formData, onFormChange, preferences }) {
+export const formName = "Theme";
+
+export default function Theme({ formData, onChange, preferences }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    onFormChange({
-      ...formData,
-      [name]: value,
-    });
+    onChange(name, value);
   };
 
   return (
     <div>
-      <label>
-        {preferences.geoprocessing.availableProcesses[0].name}:
-        <input type="text" name="theme" value={formData.theme} onChange={handleChange} />
-      </label>
-      <div>
-        {preferences.somePreference && <p>{preferences.somePreference}</p>}
-      </div>
+      {Object.keys(formData.theme).map((key) => (
+        <div key={key}>
+          <label>
+            {key}:
+            <input
+              type="text"
+              name={`theme.${key}`}
+              value={formData.theme[key]}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+      ))}
     </div>
   );
 }
