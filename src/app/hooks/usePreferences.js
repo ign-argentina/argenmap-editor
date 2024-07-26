@@ -5,6 +5,7 @@ const usePreferences = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  //Lógica para cargar el preferences por defecto
   useEffect(() => {
     const fetchPreferences = async () => {
       try {

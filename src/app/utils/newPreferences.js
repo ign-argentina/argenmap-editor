@@ -1,8 +1,9 @@
-const jsonStructure = {
+const newPreferences = {
   "theme": {
+    "bodyBackground": "default"
   },
-  "logo": {
+  "example": {
   }
 }
 
-export default jsonStructure;
+export default newPreferences;

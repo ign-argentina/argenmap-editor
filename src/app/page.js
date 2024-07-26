@@ -5,14 +5,26 @@ import Preview from './components/Preview';
 import newPreferences from './utils/newPreferences';
 
 export default function Page() {
-  const [formData, setFormData] = useState(newPreferences);
+  const [formData, setFormData] = useState({
+    ...newPreferences,
+    // Asegúrate de que `formData` comience con campos vacíos en lugar de valores por defecto.
+    theme: { bodyBackground: '' },
+  });
 
   const handleFormChange = (newData) => {
     setFormData(newData);
   };
 
-  const downloadJsonFile = () => {
-    const json = JSON.stringify(formData, null, 2);
+  const downloadPreferencesFile = () => {
+    // Copiar `formData` para no mutar el estado original
+    const finalFormData = { ...formData };
+
+    // Establecer el valor por defecto si el campo está vacío
+    if (!finalFormData.theme.bodyBackground) {
+      finalFormData.theme.bodyBackground = newPreferences.theme.bodyBackground;
+    }
+
+    const json = JSON.stringify(finalFormData, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
@@ -28,7 +40,7 @@ export default function Page() {
     <div className="editor-container">
       <div className="form-container">
         <TabsForm formData={formData} onFormChange={handleFormChange} />
-        <button onClick={downloadJsonFile}>Download JSON</button>
+        <button onClick={downloadPreferencesFile}>Download JSON</button>
       </div>
       <div className="preview-container">
         <Preview />

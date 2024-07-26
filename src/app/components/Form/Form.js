@@ -1,16 +1,16 @@
 import React from 'react';
-import Theme, { formName as nameFormTheme } from './ThemeForm';
-import LogoForm, { formName as nameFormLogo } from './LogoForm';
+import ThemeForm, { formName as nameFormTheme } from './ThemeForm';
+import ExampleForm, { formName as nameFormLogo } from './ExampleForm';
 
 const formComponents = [
-  { component: Theme, name: nameFormTheme },
-  { component: LogoForm, name: nameFormLogo },
+  { component: ThemeForm, name: nameFormTheme },
+  { component: ExampleForm, name: nameFormLogo },
 ];
 
 export default function Form({ formData, onFormChange, activeTab, preferences }) {
   const FormComponent = formComponents[activeTab].component;
 
-  const handleChange = (name, value) => {
+  const handleChangeForm = (name, value) => {
     const keys = name.split('.');
     const updatedFormData = { ...formData };
 
@@ -19,13 +19,12 @@ export default function Form({ formData, onFormChange, activeTab, preferences })
     } else {
       updatedFormData[name] = value;
     }
-
     onFormChange(updatedFormData);
   };
 
   return (
     <form>
-      <FormComponent formData={formData} onChange={handleChange} preferences={preferences} />
+      <FormComponent formData={formData} onChange={handleChangeForm} preferences={preferences} />
     </form>
   );
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 
-export const formName = "ThemeForm";
+export const formName = "ExampleForm";
 
-export default function ThemeForm({ formData, onChange, preferences }) {
+export default function ExampleForm({ formData, onChange, preferences }) {
   const handleChangeTheme = (e) => {
     const { name, value } = e.target;
     onChange(name, value);
@@ -13,7 +13,7 @@ export default function ThemeForm({ formData, onChange, preferences }) {
     <div>
       <label>
         Body Background:
-        <input type="text" name="theme.bodyBackground" value={formData.theme.bodyBackground || ''} onChange={handleChangeTheme} />
+        <input type="text" name="example" value={formData.example || ''} onChange={handleChangeTheme} />
       </label>
     </div>
 

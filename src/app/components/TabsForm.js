@@ -9,7 +9,6 @@ export default function TabsForm({ formData, onFormChange }) {
   if (loading) {
     return <div>Loading...</div>;
   }
-
   if (error) {
     return <div>{error}</div>; // Muestra el error si ocurrió alguno
   }
