@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import TabsForm from './components/TabsForm';
 import Preview from './components/Preview';
-import jsonStructure from './utils/jsonStructure';
+import newPreferences from './utils/newPreferences';
 
 export default function Page() {
-  const [formData, setFormData] = useState(jsonStructure);
+  const [formData, setFormData] = useState(newPreferences);
 
   const handleFormChange = (newData) => {
     setFormData(newData);

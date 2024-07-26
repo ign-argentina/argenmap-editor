@@ -95,12 +95,11 @@ input[type='number']::-webkit-outer-spin-button {
 .form-container {
   width: 50%;
   border-right: 1px solid #ccc;
-  overflow-y: auto;
+  height: 92vh;
 }
 
 .preview-container {
   width: 100%;
-  overflow-y: auto;
   height: 95vh;
 }
 
