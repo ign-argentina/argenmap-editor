@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react';
-import TabsForm from './components/TabsForm';
+import Editor from './components/Editor';
 import Preview from './components/Preview';
 import newPreferences from './utils/newPreferences';
 
@@ -39,7 +39,7 @@ export default function Page() {
   return (
     <div className="editor-container">
       <div className="form-container">
-        <TabsForm formData={formData} onFormChange={handleFormChange} />
+        <Editor formData={formData} onFormChange={handleFormChange} />
         <button onClick={downloadPreferencesFile}>Download JSON</button>
       </div>
       <div className="preview-container">
