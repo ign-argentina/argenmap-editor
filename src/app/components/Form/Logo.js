@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Theme = ({ data, updatePreferences }) => {
+const Logo = ({ data, updatePreferences }) => {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const Theme = ({ data, updatePreferences }) => {
 
   useEffect(() => {
     // Cargar datos del localStorage si existen
-    const savedData = JSON.parse(localStorage.getItem('theme')) || {};
+    const savedData = JSON.parse(localStorage.getItem('logo')) || {};
     setFormData((prevData) => ({
       ...prevData,
       ...savedData,
@@ -22,8 +22,8 @@ const Theme = ({ data, updatePreferences }) => {
     const { name, value } = e.target;
     setFormData((prevData) => {
       const updatedData = { ...prevData, [name]: value };
-      localStorage.setItem('theme', JSON.stringify(updatedData));
-      updatePreferences('theme', updatedData); // Actualizar preferencesNew
+      localStorage.setItem('logo', JSON.stringify(updatedData));
+      updatePreferences('logo', updatedData); // Actualizar preferencesNew
       return updatedData;
     });
   };
@@ -48,4 +48,4 @@ const Theme = ({ data, updatePreferences }) => {
   );
 };
 
-export default Theme;
+export default Logo;
