@@ -1,4 +1,4 @@
-const newPreferences = {
+const newJSON = {
   "theme": {
     "bodyBackground": "default"
   },
@@ -6,4 +6,4 @@ const newPreferences = {
   }
 }
 
-export default newPreferences;
+export default newJSON;

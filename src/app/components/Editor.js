@@ -10,26 +10,28 @@ const TabPanel = ({ children, isActive }) => {
 
 const Editor = ({ setPreferencesNew }) => {
   const { preferences, loading, error } = usePreferences();
-  const [activeTab, setActiveTab] = useState('Theme');
   const [localPreferences, setLocalPreferences] = useState({});
+  const [activeTab, setActiveTab] = useState('Theme');
 
   useEffect(() => {
     if (preferences) {
+      // Toma valores del localStorage, si existen
       const savedTheme = JSON.parse(localStorage.getItem('theme')) || {};
       const savedLogo = JSON.parse(localStorage.getItem('logo')) || {};
 
       // Combinar los datos por defecto con los guardados en localStorage
-      const newPreferences = {
+      const newJSON = {
         ...preferences,
         theme: { ...preferences.theme, ...savedTheme },
         logo: { ...preferences.logo, ...savedLogo },
       };
 
-      setLocalPreferences(newPreferences);
-      setPreferencesNew(newPreferences);
+      setLocalPreferences(newJSON);
+      setPreferencesNew(newJSON);
     }
   }, [preferences, setPreferencesNew]);
 
+  // Asigna a cada formulario el objeto que le corresponde
   const getConfig = (key) => {
     if (localPreferences && localPreferences[key]) {
       return localPreferences[key];
@@ -38,11 +40,12 @@ const Editor = ({ setPreferencesNew }) => {
     }
   };
 
+  
   const updatePreferences = (key, updatedData) => {
     setLocalPreferences((prevPreferences) => {
-      const newPreferences = { ...prevPreferences, [key]: updatedData };
-      setPreferencesNew(newPreferences);
-      return newPreferences;
+      const newJSON = { ...prevPreferences, [key]: updatedData };
+      setPreferencesNew(newJSON);
+      return newJSON;
     });
   };
 

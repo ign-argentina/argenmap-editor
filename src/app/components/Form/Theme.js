@@ -3,14 +3,15 @@ import React, { useState, useEffect } from 'react';
 const Theme = ({ data, updatePreferences }) => {
   const [formData, setFormData] = useState({});
 
+  // Cargar los datos al formulario
   useEffect(() => {
     if (data) {
       setFormData(data);
     }
   }, [data]);
 
+  // Cargar datos del localStorage si existen
   useEffect(() => {
-    // Cargar datos del localStorage si existen
     const savedData = JSON.parse(localStorage.getItem('theme')) || {};
     setFormData((prevData) => ({
       ...prevData,
@@ -18,6 +19,7 @@ const Theme = ({ data, updatePreferences }) => {
     }));
   }, []);
 
+  // Edita el formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => {
