@@ -1,33 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updatePreferences } from '../../store/preferencesSlice';
 
-const Theme = ({ data, updatePreferences }) => {
-  const [formData, setFormData] = useState({});
+const Theme = ({ data }) => {
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.preferences.theme || data);
 
-  // Cargar los datos al formulario
   useEffect(() => {
     if (data) {
-      setFormData(data);
+      dispatch(updatePreferences({ key: 'theme', value: data }));
     }
-  }, [data]);
+  }, [data, dispatch]);
 
-  // Cargar datos del localStorage si existen
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('theme')) || {};
-    setFormData((prevData) => ({
-      ...prevData,
-      ...savedData,
-    }));
-  }, []);
-
-  // Edita el formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => {
-      const updatedData = { ...prevData, [name]: value };
-      localStorage.setItem('theme', JSON.stringify(updatedData));
-      updatePreferences('theme', updatedData); // Actualizar preferencesNew
-      return updatedData;
-    });
+    dispatch(updatePreferences({ key: 'theme', value: { ...formData, [name]: value } }));
   };
 
   return (

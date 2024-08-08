@@ -1,14 +1,13 @@
-'use client'
+'use client';
+
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 import { useState } from 'react';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 
 export default function Page() {
   const [preferencesNew, setPreferencesNew] = useState({});
-
-  const handleFormChange = (newData) => {
-    setFormData(newData);
-  };
 
   const downloadPreferencesFile = () => {
     const json = JSON.stringify(preferencesNew, null, 2);
@@ -24,14 +23,16 @@ export default function Page() {
   };
 
   return (
-    <div className="editor-container">
-      <div className="form-container">
-        <Editor setPreferencesNew={setPreferencesNew} />
-        <button onClick={downloadPreferencesFile}>Download JSON</button>
+    <Provider store={store}>
+      <div className="editor-container">
+        <div className="form-container">
+          <Editor setPreferencesNew={setPreferencesNew} />
+          <button onClick={downloadPreferencesFile}>Download JSON</button>
+        </div>
+        <div className="preview-container">
+          <Preview />
+        </div>
       </div>
-      <div className="preview-container">
-        <Preview />
-      </div>
-    </div>
+    </Provider>
   );
 }

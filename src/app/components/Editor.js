@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import usePreferences from '../hooks/usePreferences';
 import Theme from './Form/Theme';
 import Logo from './Form/Logo';
+import { resetPreferences } from '../store/preferencesSlice';
 
 // Tab activo
 const TabPanel = ({ children, isActive }) => {
@@ -9,44 +11,24 @@ const TabPanel = ({ children, isActive }) => {
 };
 
 const Editor = ({ setPreferencesNew }) => {
+  const dispatch = useDispatch();
   const { preferences, loading, error } = usePreferences();
-  const [localPreferences, setLocalPreferences] = useState({});
+  const userPreferences = useSelector((state) => state.preferences);
   const [activeTab, setActiveTab] = useState('Theme');
 
   useEffect(() => {
     if (preferences) {
-      // Toma valores del localStorage, si existen
-      const savedTheme = JSON.parse(localStorage.getItem('theme')) || {};
-      const savedLogo = JSON.parse(localStorage.getItem('logo')) || {};
-
-      // Combinar los datos por defecto con los guardados en localStorage
-      const newJSON = {
-        ...preferences,
-        theme: { ...preferences.theme, ...savedTheme },
-        logo: { ...preferences.logo, ...savedLogo },
-      };
-
-      setLocalPreferences(newJSON);
-      setPreferencesNew(newJSON);
+      const combinedPreferences = { ...preferences, ...userPreferences };
+      setPreferencesNew(combinedPreferences);
+      // Solo actualiza el estado global si realmente hay cambios
+      if (JSON.stringify(userPreferences) !== JSON.stringify(combinedPreferences)) {
+        dispatch(resetPreferences(combinedPreferences));
+      }
     }
-  }, [preferences, setPreferencesNew]);
+  }, [preferences, userPreferences, dispatch, setPreferencesNew]);
 
-  // Asigna a cada formulario el objeto que le corresponde
   const getConfig = (key) => {
-    if (localPreferences && localPreferences[key]) {
-      return localPreferences[key];
-    } else {
-      return null;
-    }
-  };
-
-  
-  const updatePreferences = (key, updatedData) => {
-    setLocalPreferences((prevPreferences) => {
-      const newJSON = { ...prevPreferences, [key]: updatedData };
-      setPreferencesNew(newJSON);
-      return newJSON;
-    });
+    return userPreferences[key] || preferences[key];
   };
 
   if (loading) return <div>Loading...</div>;
@@ -70,10 +52,10 @@ const Editor = ({ setPreferencesNew }) => {
       </div>
       <div className="form-content">
         <TabPanel isActive={activeTab === 'Theme'}>
-          <Theme data={getConfig('theme')} updatePreferences={updatePreferences} />
+          <Theme data={getConfig('theme')} />
         </TabPanel>
         <TabPanel isActive={activeTab === 'Logo'}>
-          <Logo data={getConfig('logo')} updatePreferences={updatePreferences} />
+          <Logo data={getConfig('logo')} />
         </TabPanel>
       </div>
     </div>

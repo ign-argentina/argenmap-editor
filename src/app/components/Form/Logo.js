@@ -1,31 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updatePreferences } from '../../store/preferencesSlice';
 
-const Logo = ({ data, updatePreferences }) => {
-  const [formData, setFormData] = useState({});
+const Logo = ({ data }) => {
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.preferences.logo || data);
 
   useEffect(() => {
     if (data) {
-      setFormData(data);
+      dispatch(updatePreferences({ key: 'logo', value: data }));
     }
-  }, [data]);
-
-  useEffect(() => {
-    // Cargar datos del localStorage si existen
-    const savedData = JSON.parse(localStorage.getItem('logo')) || {};
-    setFormData((prevData) => ({
-      ...prevData,
-      ...savedData,
-    }));
-  }, []);
+  }, [data, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => {
-      const updatedData = { ...prevData, [name]: value };
-      localStorage.setItem('logo', JSON.stringify(updatedData));
-      updatePreferences('logo', updatedData); // Actualizar preferencesNew
-      return updatedData;
-    });
+    dispatch(updatePreferences({ key: 'logo', value: { ...formData, [name]: value } }));
   };
 
   return (
