@@ -27,7 +27,7 @@ export default function Page() {
       <div className="editor-container">
         <div className="form-container">
           <Editor setPreferencesNew={setPreferencesNew} />
-          <button onClick={downloadPreferencesFile}>Download JSON</button>
+          <button onClick={downloadPreferencesFile} className="download">Download JSON</button>
         </div>
         <div className="preview-container">
           <Preview />

@@ -60,6 +60,15 @@ input[type='number']::-webkit-outer-spin-button {
   height: 100vh;
 }
 
+.download {
+  background-color: #0070f3;
+  color: white;
+  border-radius: 8px;
+  padding: 6px 10px;
+  text-align: center;
+  margin: 5% 33%;
+}
+
 .navbar {
   background-color: #333;
   padding: 10px;
