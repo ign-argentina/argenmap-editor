@@ -72,6 +72,7 @@ input[type='number']::-webkit-outer-spin-button {
 .navbar {
   background-color: #333;
   padding: 10px;
+  width: 200px; /* Ajusta el ancho según sea necesario */
 }
 
 .navbar ul {
@@ -79,15 +80,32 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
   padding: 0;
   display: flex;
+  flex-direction: column; /* Mantén la dirección en columna */
 }
 
 .navbar ul li {
-  margin-right: 20px;
+  margin-bottom: 10px; /* Ajusta el margen entre botones */
 }
 
-.navbar ul li a {
-  color: white;
-  text-decoration: none;
+.navbar-button {
+  background-color: #555; /* Color de fondo del botón */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  padding: 10px 20px; /* Espaciado interno del botón */
+  text-align: left; /* Alinea el texto a la izquierda */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  width: 100%; /* Ocupa el ancho completo del contenedor */
+  display: flex; /* Utiliza flexbox para alinear el contenido */
+  align-items: center; /* Alinea los íconos y el texto verticalmente */
+}
+
+.navbar-button i {
+  margin-right: 10px; /* Espacio entre el ícono y el texto */
+}
+
+.navbar-button:hover {
+  background-color: #777; /* Color de fondo al pasar el ratón */
 }
 
 .content {

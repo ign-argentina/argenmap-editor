@@ -74,12 +74,12 @@ const Editor = ({ setPreferencesNew, setDataNew }) => {
         >
           Logo
         </button>
-        <button
+        {/* <button
           className={`tab ${activeTab === 'Data' ? 'active' : ''}`}
           onClick={() => setActiveTab('Data')}
         >
           Data
-        </button>
+        </button> */}
       </div>
       <div className="form-content">
         <TabPanel isActive={activeTab === 'Theme'}>
@@ -88,9 +88,9 @@ const Editor = ({ setPreferencesNew, setDataNew }) => {
         <TabPanel isActive={activeTab === 'Logo'}>
           <Logo data={getConfig('logo', 'preferences')} />
         </TabPanel>
-        <TabPanel isActive={activeTab === 'Data'}>
+        {/* <TabPanel isActive={activeTab === 'Data'}>
           <Data data={getConfig('logo', 'preferences')} />
-        </TabPanel>
+        </TabPanel> */}
       </div>
     </div>
   );

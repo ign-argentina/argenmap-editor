@@ -1,17 +1,21 @@
-import Link from 'next/link';
-
+'use client'
 export default function Navbar() {
+    const handleButtonClick = (page) => {
+        // Lógica para manejar la navegación, por ejemplo, usando el router de Next.js
+        window.location.href = page;
+    };
+
     return (
         <nav className="navbar">
             <ul>
                 <li>
-                    <Link href="/">Argenmap Editor</Link>
+                    <button className="navbar-button" onClick={() => handleButtonClick('/')}>A</button>
                 </li>
                 <li>
-                    <Link href="/about">About</Link>
+                    <button className="navbar-button" onClick={() => handleButtonClick('/about')}>B</button>
                 </li>
                 <li>
-                    <Link href="/contact">Contact</Link>
+                    <button className="navbar-button" onClick={() => handleButtonClick('/contact')}>C</button>
                 </li>
             </ul>
         </nav>

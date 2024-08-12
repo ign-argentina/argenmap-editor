@@ -5,6 +5,7 @@ import { store } from './store/store';
 import { useState } from 'react';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
+import Navbar from './components/Navbar';
 
 export default function Page() {
   const [preferencesNew, setPreferencesNew] = useState({});
@@ -39,13 +40,14 @@ export default function Page() {
   return (
     <Provider store={store}>
       <div className="editor-container">
+      <Navbar />
         <div className="form-container">
           <Editor 
             setPreferencesNew={setPreferencesNew} 
             setDataNew={setDataNew} 
           />
           <button onClick={downloadPreferencesFile}>Download Preferences JSON</button>
-          <button onClick={downloadDataFile}>Download Data JSON</button>
+          {/* <button onClick={downloadDataFile}>Download Data JSON</button> */}
         </div>
         <div className="preview-container">
           <Preview />
