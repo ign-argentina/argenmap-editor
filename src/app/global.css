@@ -76,6 +76,11 @@ input[type='number']::-webkit-outer-spin-button {
 
 
 /* NAVBAR */
+.logo {
+  width: 100%;
+  height: auto;
+}
+
 .navbar {
   background-color: var(--primary--color);
   padding: 5px;
@@ -130,9 +135,8 @@ input[type='number']::-webkit-outer-spin-button {
 /* FORMULARIO EXTERNO */
 .form-container {
   width: 50%;
-  border-right: 1px solid #ccc;
-  height: 95vh;
-  flex-direction: column;
+  border-right: 2px solid #ccc;
+  display: grid;
 }
 /* FORMULARIO EXTERNO */
 
@@ -174,3 +178,22 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 5px;
 }
 /* FORMULARIO INTERNO */
+
+
+.button-container {
+  display: flex;
+  margin-top: auto;
+  padding: 10px 0;
+  justify-content: center;
+}
+.submit-button {
+  background-color: var(--secondary--color); /* Usa tus variables o un color específico */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.submit-button:hover {
+  background-color: var(--active--color);
+}

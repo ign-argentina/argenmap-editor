@@ -40,14 +40,17 @@ export default function Page() {
   return (
     <Provider store={store}>
       <div className="editor-container">
-      <Navbar />
+        <Navbar />
         <div className="form-container">
-          <Editor 
-            setPreferencesNew={setPreferencesNew} 
-            setDataNew={setDataNew} 
+          <Editor
+            setPreferencesNew={setPreferencesNew}
+            setDataNew={setDataNew}
           />
-          <button onClick={downloadPreferencesFile} className="button">Descargar Preferences</button>
-          {/* <button onClick={downloadDataFile}>Descargar Data</button> */}
+
+          <div className="button-container">
+            <button onClick={downloadPreferencesFile} className="submit-button">Descargar Preferences</button>
+            {/* <button onClick={downloadDataFile}>Descargar Data</button> */}
+          </div>
         </div>
         <div className="preview-container">
           <Preview />
