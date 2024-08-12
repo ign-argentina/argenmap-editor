@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePreferences } from '../../store/preferencesSlice';
-import styles from '../../form.module.css'
+import { updateData } from '../../store/dataSlice';  // Importa la acción correcta
+import styles from '../../form.module.css';
 
-const Logo = ({ data }) => {
+const Data = ({ data }) => {
   const dispatch = useDispatch();
-  const formData = useSelector((state) => state.preferences.logo || data);
+  const formData = useSelector((state) => state.data.items || data);
 
   useEffect(() => {
     if (data) {
-      dispatch(updatePreferences({ key: 'logo', value: data }));
+      dispatch(updateData({ key: 'items', value: data }));
     }
   }, [data, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(updatePreferences({ key: 'logo', value: { ...formData, [name]: value } }));
+    dispatch(updateData({ key: 'items', value: { ...formData, [name]: value } }));
   };
 
   return (
@@ -45,7 +45,4 @@ const Logo = ({ data }) => {
   );
 };
 
-export default Logo;
-
-
-
+export default Data;
