@@ -10,7 +10,7 @@ import { resetData } from '../store/dataSlice';
 
 // Tab activo
 const TabPanel = ({ children, isActive }) => {
-  return isActive ? <div className="tab-panel">{children}</div> : null;
+  return isActive ? <div>{children}</div> : null;
 };
 
 const Editor = ({ setPreferencesNew, setDataNew }) => {
@@ -60,7 +60,7 @@ const Editor = ({ setPreferencesNew, setDataNew }) => {
   if (preferencesError || dataError) return <div>{preferencesError || dataError}</div>;
 
   return (
-    <div className="tabs-form-container">
+    <div>
       <div className="tabs">
         <button
           className={`tab button ${activeTab === 'Theme' ? 'active' : ''}`}

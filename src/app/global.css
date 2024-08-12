@@ -64,7 +64,7 @@ input[type='number']::-webkit-outer-spin-button {
 .button {
   background-color: var(--secondary--color);
   color: white;
-  border-radius: 8px;
+  border-radius: 5px;
   padding: 6px 10px;
   text-align: center;
 }
@@ -132,6 +132,7 @@ input[type='number']::-webkit-outer-spin-button {
   width: 50%;
   border-right: 1px solid #ccc;
   height: 95vh;
+  flex-direction: column;
 }
 /* FORMULARIO EXTERNO */
 
@@ -150,19 +151,14 @@ input[type='number']::-webkit-outer-spin-button {
   border-bottom: 1px solid #ccc;
   padding: 5px;
   background-color: var(--primary--color);
-}
-
-.tabs-form-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  gap: 5px;
 }
 
 .tab {
   padding: 10px 20px;
   cursor: pointer;
   border: none;
-  background: none;
+  background-color: var(--secondary--color);
 }
 
 .tab.active {
@@ -174,8 +170,6 @@ input[type='number']::-webkit-outer-spin-button {
 
 /* FORMULARIO INTERNO */
 .form-content {
-  margin-top: 20px;
-  flex: 1;
   overflow-y: auto;
   padding: 5px;
 }
