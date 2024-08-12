@@ -54,26 +54,6 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-/* DOWNLAOD BUTTON */
-.button {
-  background-color: var(--secondary--color);
-  color: white;
-  border-radius: 5px;
-  padding: 6px 10px;
-  text-align: center;
-}
-
-.button:hover {
-  background-color: var(--active--color);
-}
-/* DOWNLAOD BUTTON */
-
 
 /* NAVBAR */
 .logo {
@@ -98,6 +78,19 @@ input[type='number']::-webkit-outer-spin-button {
   margin-bottom: 10px;
 }
 
+.navbar-display-button {
+  color: white; 
+  border: none; 
+  padding: 10px 20px;
+  text-align: left;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+
 .navbar-button {
   background-color: var(--secondary--color);
   color: white; 
@@ -109,6 +102,7 @@ input[type='number']::-webkit-outer-spin-button {
   width: 100%;
   display: flex;
   align-items: center;
+  height: 50px;
 }
 
 .navbar-button i {
@@ -121,16 +115,15 @@ input[type='number']::-webkit-outer-spin-button {
 /* NAVBAR */
 
 
-.content {
-  display: flex;
-  flex: 1;
-}
+/* EDITOR CONTAINER */
 
 .editor-container {
   display: flex;
   width: 100%;
   height: 100%;
 }
+/* EDITOR CONTAINER */
+
 
 /* FORMULARIO EXTERNO */
 .form-container {
@@ -169,6 +162,18 @@ input[type='number']::-webkit-outer-spin-button {
   font-weight: bold;
   background-color: var(--active--color);
 }
+
+.tab-button {
+  background-color: var(--secondary--color);
+  color: white;
+  border-radius: 5px;
+  padding: 6px 10px;
+  text-align: center;
+}
+
+.tab-button:hover {
+  background-color: var(--active--color);
+}
 /* TABS */
 
 
@@ -180,13 +185,14 @@ input[type='number']::-webkit-outer-spin-button {
 /* FORMULARIO INTERNO */
 
 
-.button-container {
+/* DOWNLAOD BUTTON */
+.download-button-container {
   display: flex;
   margin-top: auto;
   padding: 10px 0;
   justify-content: center;
 }
-.submit-button {
+.download-button {
   background-color: var(--secondary--color); /* Usa tus variables o un color específico */
   color: white;
   border: none;
@@ -194,6 +200,7 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 10px 20px;
   cursor: pointer;
 }
-.submit-button:hover {
+.download-button:hover {
   background-color: var(--active--color);
 }
+/* DOWNLAOD BUTTON */

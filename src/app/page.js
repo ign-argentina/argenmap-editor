@@ -47,8 +47,8 @@ export default function Page() {
             setDataNew={setDataNew}
           />
 
-          <div className="button-container">
-            <button onClick={downloadPreferencesFile} className="submit-button">Descargar Preferences</button>
+          <div className="download-button-container">
+            <button onClick={downloadPreferencesFile} className="download-button">Descargar Preferences</button>
             {/* <button onClick={downloadDataFile}>Descargar Data</button> */}
           </div>
         </div>

@@ -21,7 +21,7 @@ export default function Navbar() {
         <nav className="navbar">
             <img src="/path-to-your-logo.png" alt="Logo" className="logo" />
             <button
-                className={`navbar-button ${formVisible ? 'fa-solid fa-arrow-left' : 'fa-solid fa-arrow-right'}`}
+                className={`navbar-display-button ${formVisible ? 'fa-solid fa-arrow-left' : 'fa-solid fa-arrow-right'}`}
                 onClick={toggleFormDisplay}
             />
             <ul>

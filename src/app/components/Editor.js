@@ -63,13 +63,13 @@ const Editor = ({ setPreferencesNew, setDataNew }) => {
     <div>
       <div className="tabs">
         <button
-          className={`tab button ${activeTab === 'Theme' ? 'active' : ''}`}
+          className={`tab tab-button ${activeTab === 'Theme' ? 'active' : ''}`}
           onClick={() => setActiveTab('Theme')}
         >
           Theme
         </button>
         <button
-          className={`tab button ${activeTab === 'Logo' ? 'active' : ''}`}
+          className={`tab tab-button ${activeTab === 'Logo' ? 'active' : ''}`}
           onClick={() => setActiveTab('Logo')}
         >
           Logo
