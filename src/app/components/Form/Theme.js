@@ -7,7 +7,7 @@ const Theme = ({ data }) => {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.preferences.theme || data);
 
-  // Lista de claves que quieres mostrar en el formulario y sus nombres personalizados
+  // Lista de claves para mostrar en el formulario y sus nombres personalizados
   const fieldsToShow = {
     bodyBackground: 'Color de Fonde del Body',
     headerBackground: 'Color de Fondo del Header',
@@ -29,6 +29,7 @@ const Theme = ({ data }) => {
     dispatch(updatePreferences({ key: 'theme', value: { ...formData, [name]: value } }));
   };
 
+  //Listar elementos que son colores
   const isColorField = (key) => {
     const colorKeys = ['bodyBackground', 'headerBackground', 'menuBackground', 'activeLayer', 'textMenu', 'textLegendMenu', 'iconBar'];
     return colorKeys.includes(key);

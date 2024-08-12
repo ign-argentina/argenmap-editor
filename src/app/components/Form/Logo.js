@@ -7,7 +7,7 @@ const Logo = ({ data }) => {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.preferences.logo || data);
 
-  // Lista de claves que quieres mostrar en el formulario y sus nombres personalizados
+  // Lista de claves para mostrar en el formulario y sus nombres personalizados
   const fieldsToShow = {
     title: 'Titulo',
     src: 'Source',
@@ -25,6 +25,7 @@ const Logo = ({ data }) => {
     dispatch(updatePreferences({ key: 'logo', value: { ...formData, [name]: value } }));
   };
 
+  //Listar elementos que son colores
   const isColorField = (key) => {
     const colorKeys = [];
     return colorKeys.includes(key);
