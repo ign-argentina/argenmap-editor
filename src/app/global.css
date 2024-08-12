@@ -61,19 +61,23 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 /* DOWNLAOD BUTTON */
-.download {
-  background-color: #0070f3;
+.button {
+  background-color: var(--secondary--color);
   color: white;
   border-radius: 8px;
   padding: 6px 10px;
   text-align: center;
+}
+
+.button:hover {
+  background-color: var(--active--color);
 }
 /* DOWNLAOD BUTTON */
 
 
 /* NAVBAR */
 .navbar {
-  background-color: #333;
+  background-color: var(--primary--color);
   padding: 5px;
 }
 
@@ -90,7 +94,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .navbar-button {
-  background-color: #555;
+  background-color: var(--secondary--color);
   color: white; 
   border: none; 
   padding: 10px 20px;
@@ -107,7 +111,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .navbar-button:hover {
-  background-color: #777;
+  background-color: var(--active--color);
 }
 /* NAVBAR */
 
@@ -128,7 +132,6 @@ input[type='number']::-webkit-outer-spin-button {
   width: 50%;
   border-right: 1px solid #ccc;
   height: 95vh;
-  padding: 5px;
 }
 /* FORMULARIO EXTERNO */
 
@@ -145,6 +148,8 @@ input[type='number']::-webkit-outer-spin-button {
 .tabs {
   display: flex;
   border-bottom: 1px solid #ccc;
+  padding: 5px;
+  background-color: var(--primary--color);
 }
 
 .tabs-form-container {
@@ -161,8 +166,8 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .tab.active {
-  border-bottom: 2px solid #0070f3;
   font-weight: bold;
+  background-color: var(--active--color);
 }
 /* TABS */
 
