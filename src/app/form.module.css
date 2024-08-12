@@ -1,0 +1,20 @@
+.form {
+    margin: 0.2rem 0.8rem;
+    overflow: scroll;
+    height: fit-content;
+  }
+  
+  .attribute {
+    margin: 2.5rem 0;
+  }
+  
+  .txtInput {
+    border-bottom: thin solid lightblue;
+    float: right;
+    width: 100%;
+    border-radius: 6px;
+  }
+  
+  .txtInput:focus {
+    border: thin solid cornflowerblue;
+  }

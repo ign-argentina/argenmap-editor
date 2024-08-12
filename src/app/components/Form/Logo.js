@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePreferences } from '../../store/preferencesSlice';
+import styles from '../../form.module.css'
 
 const Logo = ({ data }) => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const Logo = ({ data }) => {
   };
 
   return (
-    <form>
+    <form className="mapItems">
       {formData && Object.keys(formData).map((key) => (
         <div key={key}>
           <label>
@@ -29,6 +30,7 @@ const Logo = ({ data }) => {
               value={formData[key] || ''}
               placeholder={key}
               onChange={handleChange}
+              className={styles.txtInput}
             />
           </label>
         </div>
