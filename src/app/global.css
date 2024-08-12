@@ -60,19 +60,23 @@ input[type='number']::-webkit-outer-spin-button {
   height: 100vh;
 }
 
+/* DOWNLAOD BUTTON */
 .download {
   background-color: #0070f3;
   color: white;
   border-radius: 8px;
   padding: 6px 10px;
   text-align: center;
-  margin: 5% 33%;
 }
+/* DOWNLAOD BUTTON */
 
+
+/* NAVBAR */
 .navbar {
   background-color: #333;
   padding: 10px;
-  width: 200px; /* Ajusta el ancho según sea necesario */
+  width: 200px;
+  height: 100vh;
 }
 
 .navbar ul {
@@ -80,33 +84,35 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column; /* Mantén la dirección en columna */
+  flex-direction: column;
 }
 
 .navbar ul li {
-  margin-bottom: 10px; /* Ajusta el margen entre botones */
+  margin-bottom: 10px;
 }
 
 .navbar-button {
-  background-color: #555; /* Color de fondo del botón */
-  color: white; /* Color del texto */
-  border: none; /* Sin borde */
-  padding: 10px 20px; /* Espaciado interno del botón */
-  text-align: left; /* Alinea el texto a la izquierda */
-  border-radius: 5px; /* Bordes redondeados */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  width: 100%; /* Ocupa el ancho completo del contenedor */
-  display: flex; /* Utiliza flexbox para alinear el contenido */
-  align-items: center; /* Alinea los íconos y el texto verticalmente */
+  background-color: #555;
+  color: white; 
+  border: none; 
+  padding: 10px 20px;
+  text-align: left;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-button i {
-  margin-right: 10px; /* Espacio entre el ícono y el texto */
+  margin-right: 10px;
 }
 
 .navbar-button:hover {
-  background-color: #777; /* Color de fondo al pasar el ratón */
+  background-color: #777;
 }
+/* NAVBAR */
+
 
 .content {
   display: flex;
@@ -119,26 +125,34 @@ input[type='number']::-webkit-outer-spin-button {
   height: 100%;
 }
 
+/* FORMULARIO EXTERNO */
 .form-container {
   width: 50%;
   border-right: 1px solid #ccc;
-  height: 92vh;
+  height: 95vh;
+  padding: 5px;
 }
+/* FORMULARIO EXTERNO */
 
+
+/* PREVIEW */
 .preview-container {
   width: 100%;
-  height: 95vh;
+  height: 100vh;
+}
+/* PREVIEW */
+
+
+/* TABS */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
 }
 
 .tabs-form-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-.tabs {
-  display: flex;
-  border-bottom: 1px solid #ccc;
 }
 
 .tab {
@@ -152,9 +166,14 @@ input[type='number']::-webkit-outer-spin-button {
   border-bottom: 2px solid #0070f3;
   font-weight: bold;
 }
+/* TABS */
 
+
+/* FORMULARIO INTERNO */
 .form-content {
   margin-top: 20px;
   flex: 1;
   overflow-y: auto;
+  padding: 5px;
 }
+/* FORMULARIO INTERNO */

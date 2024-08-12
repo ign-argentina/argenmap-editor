@@ -46,8 +46,8 @@ export default function Page() {
             setPreferencesNew={setPreferencesNew} 
             setDataNew={setDataNew} 
           />
-          <button onClick={downloadPreferencesFile}>Download Preferences JSON</button>
-          {/* <button onClick={downloadDataFile}>Download Data JSON</button> */}
+          <button onClick={downloadPreferencesFile} className="download">Descargar Preferences</button>
+          {/* <button onClick={downloadDataFile}>Descargar Data</button> */}
         </div>
         <div className="preview-container">
           <Preview />

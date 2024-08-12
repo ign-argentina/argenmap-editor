@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateData } from '../../store/dataSlice';  // Importa la acción correcta
-import styles from '../../form.module.css';
+import styles from '../../form.module.css'
 
 const Data = ({ data }) => {
   const dispatch = useDispatch();
