@@ -2,17 +2,39 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import usePreferences from '../hooks/usePreferences';
 import useData from '../hooks/useData';
+import { resetPreferences } from '../store/preferencesSlice';
+import { resetData } from '../store/dataSlice';
+
+// Importar todos los formularios
 import Theme from './Form/Theme';
 import Logo from './Form/Logo';
 import Geoprocessing from './Form/Geoprocessing';
 import Searchbar from './Form/Searchbar';
 import Data from './Form/Data';
-import { resetPreferences } from '../store/preferencesSlice';
-import { resetData } from '../store/dataSlice';
 
-// Panel de grupo activo
-const GroupPanel = ({ children, isActive }) => {
-  return isActive ? <div>{children}</div> : null;
+// Configuración de grupos y formularios
+const formGroups = {
+  themeGroup: {
+    tabs: ['Theme', 'Logo'],
+    components: {
+      Theme: Theme,
+      Logo: Logo
+    }
+  },
+  logoGroup: {
+    tabs: ['Geoprocessing', 'Searchbar'],
+    components: {
+      Geoprocessing: Geoprocessing,
+      Searchbar: Searchbar
+    }
+  },
+  dataGroup: {
+    tabs: ['Theme', 'Logo'],
+    components: {
+      Theme: Theme,
+      Logo: Logo
+    }
+  }
 };
 
 // Panel de pestañas
@@ -26,7 +48,7 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
   const { data, loading: dataLoading, error: dataError } = useData();
   const userPreferences = useSelector((state) => state.preferences);
   const userData = useSelector((state) => state.data);
-  const [activeTab, setActiveTab] = useState('Theme');
+  const [activeTab, setActiveTab] = useState('');
 
   useEffect(() => {
     if (preferences) {
@@ -58,91 +80,47 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
     }
   };
 
+  useEffect(() => {
+    const groupConfig = formGroups[activeGroup];
+    if (groupConfig && groupConfig.tabs.length > 0) {
+      setActiveTab(groupConfig.tabs[0]);
+    }
+  }, [activeGroup]);
+
   if (preferencesLoading || dataLoading) return <div>Loading...</div>;
   if (preferencesError || dataError) return <div>{preferencesError || dataError}</div>;
 
+  const groupConfig = formGroups[activeGroup];
+  
+  if (!groupConfig) {
+    return <div>Invalid group selected.</div>;
+  }
+
+  const { tabs, components } = groupConfig;
+
   return (
     <div>
-      {activeGroup === 'themeGroup' && (
-        <div>
-          <div className="tabs">
-            <button
-              className={`tab ${activeTab === 'Theme' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Theme')}
-            >
-              Theme
-            </button>
-            <button
-              className={`tab ${activeTab === 'Logo' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Logo')}
-            >
-              Logo
-            </button>
-          </div>
-          <div className="form-content">
-            <TabPanel isActive={activeTab === 'Theme'}>
-              <Theme data={getConfig('theme', 'preferences')} />
+      <div className="tabs">
+        {tabs.map(tab => (
+          <button
+            key={tab}
+            className={`tab ${activeTab === tab ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div className="form-content">
+        {tabs.map(tab => {
+          const Component = components[tab];
+          return (
+            <TabPanel key={tab} isActive={activeTab === tab}>
+              <Component data={getConfig(tab.toLowerCase(), 'preferences')} />
             </TabPanel>
-            <TabPanel isActive={activeTab === 'Logo'}>
-              <Logo data={getConfig('logo', 'preferences')} />
-            </TabPanel>
-          </div>
-        </div>
-      )}
-
-      {activeGroup === 'logoGroup' && (
-        <div>
-          <div className="tabs">
-            <button
-              className={`tab ${activeTab === 'Geoprocessing' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Geoprocessing')}
-            >
-              Geoprocesos
-            </button>
-            <button
-              className={`tab ${activeTab === 'Searchbar' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Searchbar')}
-            >
-              Buscador
-            </button>
-          </div>
-          <div className="form-content">
-            <TabPanel isActive={activeTab === 'Geoprocessing'}>
-              <Geoprocessing data={getConfig('geoprocessing', 'preferences')} />
-            </TabPanel>
-            <TabPanel isActive={activeTab === 'Searchbar'}>
-              <Searchbar data={getConfig('searchbar', 'preferences')} />
-            </TabPanel>
-          </div>
-        </div>
-      )}
-
-      {activeGroup === 'dataGroup' && (
-        <div>
-          <div className="tabs">
-            <button
-              className={`tab ${activeTab === 'Theme' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Theme')}
-            >
-              Theme
-            </button>
-            <button
-              className={`tab ${activeTab === 'Logo' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Logo')}
-            >
-              Logo
-            </button>
-          </div>
-          <div className="form-content">
-            <TabPanel isActive={activeTab === 'Theme'}>
-              <Theme data={getConfig('theme', 'preferences')} />
-            </TabPanel>
-            <TabPanel isActive={activeTab === 'Logo'}>
-              <Logo data={getConfig('logo', 'preferences')} />
-            </TabPanel>
-          </div>
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 };
