@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updatePreferences } from '../../store/preferencesSlice';
 import styles from '../../form.module.css';
 
-const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields = [] }) => {
+const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields = [], checkBoxFields = [] }) => {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.preferences[formKey] || data);
 
@@ -14,12 +14,23 @@ const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields 
   }, [data, dispatch, formKey]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    dispatch(updatePreferences({ key: formKey, value: { ...formData, [name]: value } }));
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    dispatch(updatePreferences({ key: formKey, value: { ...formData, [name]: newValue } }));
   };
 
   const renderInputField = (key) => {
-    if (colorFields.includes(key)) {
+    if (checkBoxFields.includes(key)) {
+      return (
+        <input
+          type="checkbox"
+          name={key}
+          checked={formData[key] || false}
+          onChange={handleChange}
+          className={styles.txtInput}
+        />
+      );
+    } else if (colorFields.includes(key)) {
       return (
         <input
           type="color"

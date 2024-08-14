@@ -14,6 +14,7 @@ const Geoprocessing = ({ data }) => {
       formKey="geoprocessing"
       data={data}
       fieldsToShow={fieldsToShow}
+      checkBoxFields={['isActive']}
     />
   );
 };
