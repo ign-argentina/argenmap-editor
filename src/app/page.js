@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 export default function Page() {
   const [preferencesNew, setPreferencesNew] = useState({});
   const [dataNew, setDataNew] = useState({});
+  const [activeGroup, setActiveGroup] = useState('themeGroup'); // Controla el grupo de formularios activo
 
   const downloadPreferencesFile = () => {
     const json = JSON.stringify(preferencesNew, null, 2);
@@ -40,13 +41,13 @@ export default function Page() {
   return (
     <Provider store={store}>
       <div className="editor-container">
-        <Navbar />
+        <Navbar setActiveGroup={setActiveGroup} />
         <div className="form-container">
           <Editor
             setPreferencesNew={setPreferencesNew}
             setDataNew={setDataNew}
+            activeGroup={activeGroup} // Pasamos el grupo activo
           />
-
           <div className="download-button-container">
             <button onClick={downloadPreferencesFile} className="download-button">Descargar Preferences</button>
             {/* <button onClick={downloadDataFile}>Descargar Data</button> */}

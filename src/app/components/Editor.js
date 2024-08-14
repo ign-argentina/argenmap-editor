@@ -4,16 +4,23 @@ import usePreferences from '../hooks/usePreferences';
 import useData from '../hooks/useData';
 import Theme from './Form/Theme';
 import Logo from './Form/Logo';
+import Geoprocessing from './Form/Geoprocessing';
+import Searchbar from './Form/Searchbar';
 import Data from './Form/Data';
 import { resetPreferences } from '../store/preferencesSlice';
 import { resetData } from '../store/dataSlice';
 
-// Tab activo
+// Panel de grupo activo
+const GroupPanel = ({ children, isActive }) => {
+  return isActive ? <div>{children}</div> : null;
+};
+
+// Panel de pestañas
 const TabPanel = ({ children, isActive }) => {
   return isActive ? <div>{children}</div> : null;
 };
 
-const Editor = ({ setPreferencesNew, setDataNew }) => {
+const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
   const dispatch = useDispatch();
   const { preferences, loading: preferencesLoading, error: preferencesError } = usePreferences();
   const { data, loading: dataLoading, error: dataError } = useData();
@@ -25,8 +32,6 @@ const Editor = ({ setPreferencesNew, setDataNew }) => {
     if (preferences) {
       const combinedPreferences = { ...preferences, ...userPreferences };
       setPreferencesNew(combinedPreferences);
-      
-      // Solo actualiza el estado global si realmente hay cambios en preferences
       if (JSON.stringify(userPreferences) !== JSON.stringify(combinedPreferences)) {
         dispatch(resetPreferences(combinedPreferences));
       }
@@ -36,9 +41,7 @@ const Editor = ({ setPreferencesNew, setDataNew }) => {
   useEffect(() => {
     if (data) {
       const combinedData = { ...data, ...userData };
-      setDataNew(combinedData); // Asignar el objeto `data` actualizado
-
-      // Solo actualiza el estado global si realmente hay cambios en data
+      setDataNew(combinedData);
       if (JSON.stringify(userData) !== JSON.stringify(combinedData)) {
         dispatch(resetData(combinedData));
       }
@@ -54,44 +57,92 @@ const Editor = ({ setPreferencesNew, setDataNew }) => {
       throw new Error("Invalid source specified. Use 'preferences' or 'data'.");
     }
   };
-  
 
   if (preferencesLoading || dataLoading) return <div>Loading...</div>;
   if (preferencesError || dataError) return <div>{preferencesError || dataError}</div>;
 
   return (
     <div>
-      <div className="tabs">
-        <button
-          className={`tab tab-button ${activeTab === 'Theme' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Theme')}
-        >
-          Theme
-        </button>
-        <button
-          className={`tab tab-button ${activeTab === 'Logo' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Logo')}
-        >
-          Logo
-        </button>
-        {/* <button
-          className={`tab ${activeTab === 'Data' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Data')}
-        >
-          Data
-        </button> */}
-      </div>
-      <div className="form-content">
-        <TabPanel isActive={activeTab === 'Theme'}>
-          <Theme data={getConfig('theme', 'preferences')} />
-        </TabPanel>
-        <TabPanel isActive={activeTab === 'Logo'}>
-          <Logo data={getConfig('logo', 'preferences')} />
-        </TabPanel>
-        {/* <TabPanel isActive={activeTab === 'Data'}>
-          <Data data={getConfig('logo', 'preferences')} />
-        </TabPanel> */}
-      </div>
+      {activeGroup === 'themeGroup' && (
+        <div>
+          <div className="tabs">
+            <button
+              className={`tab ${activeTab === 'Theme' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Theme')}
+            >
+              Theme
+            </button>
+            <button
+              className={`tab ${activeTab === 'Logo' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Logo')}
+            >
+              Logo
+            </button>
+          </div>
+          <div className="form-content">
+            <TabPanel isActive={activeTab === 'Theme'}>
+              <Theme data={getConfig('theme', 'preferences')} />
+            </TabPanel>
+            <TabPanel isActive={activeTab === 'Logo'}>
+              <Logo data={getConfig('logo', 'preferences')} />
+            </TabPanel>
+          </div>
+        </div>
+      )}
+
+      {activeGroup === 'logoGroup' && (
+        <div>
+          <div className="tabs">
+            <button
+              className={`tab ${activeTab === 'Geoprocessing' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Geoprocessing')}
+            >
+              Geoprocesos
+            </button>
+            <button
+              className={`tab ${activeTab === 'Searchbar' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Searchbar')}
+            >
+              Buscador
+            </button>
+          </div>
+          <div className="form-content">
+            <TabPanel isActive={activeTab === 'Geoprocessing'}>
+              <Geoprocessing data={getConfig('geoprocessing', 'preferences')} />
+            </TabPanel>
+            <TabPanel isActive={activeTab === 'Searchbar'}>
+              <Searchbar data={getConfig('searchbar', 'preferences')} />
+            </TabPanel>
+          </div>
+        </div>
+      )}
+
+      {activeGroup === 'dataGroup' && (
+        <div>
+          <div className="tabs">
+            <button
+              className={`tab ${activeTab === 'Theme' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Theme')}
+            >
+              Theme
+            </button>
+            <button
+              className={`tab ${activeTab === 'Logo' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Logo')}
+            >
+              Logo
+            </button>
+          </div>
+          <div className="form-content">
+            <TabPanel isActive={activeTab === 'Theme'}>
+              <Theme data={getConfig('theme', 'preferences')} />
+            </TabPanel>
+            <TabPanel isActive={activeTab === 'Logo'}>
+              <Logo data={getConfig('logo', 'preferences')} />
+            </TabPanel>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
