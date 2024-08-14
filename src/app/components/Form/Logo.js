@@ -31,6 +31,12 @@ const Logo = ({ data }) => {
     return colorKeys.includes(key);
   };
 
+  //Listar elementos que son Urls
+  const isUrlField = (key) => {
+    const urlKeys = ['link'];
+    return urlKeys.includes(key);
+  };
+
   return (
     <div className={styles.formContainer}>
       <form className={styles.mapItems}>
@@ -46,16 +52,25 @@ const Logo = ({ data }) => {
                   onChange={handleChange}
                   className={styles.txtInput}
                 />
-              ) : (
-                <input
-                  type="text"
-                  name={key}
-                  value={formData[key] || ''}
-                  placeholder={key}
-                  onChange={handleChange}
-                  className={styles.txtInput}
-                />
-              )}
+                ): isUrlField(key) ? (
+                  <input
+                    type="url"
+                    name={key}
+                    value={formData[key] || ''}
+                    placeholder={key}
+                    onChange={handleChange}
+                    className={styles.txtInput}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    name={key}
+                    value={formData[key] || ''}
+                    placeholder={key}
+                    onChange={handleChange}
+                    className={styles.txtInput}
+                  />
+                )}
             </label>
           </div>
         ))}

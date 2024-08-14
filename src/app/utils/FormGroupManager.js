@@ -1,5 +1,3 @@
-// FormGroupManager.js
-
 import formRegistry from './formRegistry';
 
 class FormGroupManager {

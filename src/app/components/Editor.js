@@ -4,7 +4,7 @@ import usePreferences from '../hooks/usePreferences';
 import useData from '../hooks/useData';
 import { resetPreferences } from '../store/preferencesSlice';
 import { resetData } from '../store/dataSlice';
-import FormGroupManager from './FormGroupManager';
+import FormGroupManager from '../utils/FormGroupManager';
 
 const formGroupManager = new FormGroupManager();
 
@@ -22,6 +22,7 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
     setActiveTab(formGroupManager.getDefaultTab(activeGroup));
   }, [activeGroup]);
 
+  // Actualiza preferences
   useEffect(() => {
     if (preferences) {
       const combinedPreferences = { ...preferences, ...userPreferences };
@@ -32,6 +33,7 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
     }
   }, [preferences, userPreferences, dispatch, setPreferencesNew]);
 
+  // Actualiza data
   useEffect(() => {
     if (data) {
       const combinedData = { ...data, ...userData };
