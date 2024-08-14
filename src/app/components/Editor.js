@@ -4,43 +4,9 @@ import usePreferences from '../hooks/usePreferences';
 import useData from '../hooks/useData';
 import { resetPreferences } from '../store/preferencesSlice';
 import { resetData } from '../store/dataSlice';
+import FormGroupManager from './FormGroupManager';
 
-// Importar todos los formularios
-import Theme from './Form/Theme';
-import Logo from './Form/Logo';
-import Geoprocessing from './Form/Geoprocessing';
-import Searchbar from './Form/Searchbar';
-import Data from './Form/Data';
-
-// Configuración de grupos y formularios
-const formGroups = {
-  themeGroup: {
-    tabs: ['Theme', 'Logo'],
-    components: {
-      Theme: Theme,
-      Logo: Logo
-    }
-  },
-  logoGroup: {
-    tabs: ['Geoprocessing', 'Searchbar'],
-    components: {
-      Geoprocessing: Geoprocessing,
-      Searchbar: Searchbar
-    }
-  },
-  dataGroup: {
-    tabs: ['Theme', 'Logo'],
-    components: {
-      Theme: Theme,
-      Logo: Logo
-    }
-  }
-};
-
-// Panel de pestañas
-const TabPanel = ({ children, isActive }) => {
-  return isActive ? <div>{children}</div> : null;
-};
+const formGroupManager = new FormGroupManager();
 
 const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
   const dispatch = useDispatch();
@@ -48,7 +14,13 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
   const { data, loading: dataLoading, error: dataError } = useData();
   const userPreferences = useSelector((state) => state.preferences);
   const userData = useSelector((state) => state.data);
-  const [activeTab, setActiveTab] = useState('');
+
+  const [activeTab, setActiveTab] = useState(formGroupManager.getDefaultTab(activeGroup));
+
+  // Actualiza activeTab cuando activeGroup cambie
+  useEffect(() => {
+    setActiveTab(formGroupManager.getDefaultTab(activeGroup));
+  }, [activeGroup]);
 
   useEffect(() => {
     if (preferences) {
@@ -80,28 +52,13 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
     }
   };
 
-  useEffect(() => {
-    const groupConfig = formGroups[activeGroup];
-    if (groupConfig && groupConfig.tabs.length > 0) {
-      setActiveTab(groupConfig.tabs[0]);
-    }
-  }, [activeGroup]);
-
   if (preferencesLoading || dataLoading) return <div>Loading...</div>;
   if (preferencesError || dataError) return <div>{preferencesError || dataError}</div>;
-
-  const groupConfig = formGroups[activeGroup];
-  
-  if (!groupConfig) {
-    return <div>Invalid group selected.</div>;
-  }
-
-  const { tabs, components } = groupConfig;
 
   return (
     <div>
       <div className="tabs">
-        {tabs.map(tab => (
+        {formGroupManager.getTabs(activeGroup).map((tab) => (
           <button
             key={tab}
             className={`tab ${activeTab === tab ? 'active' : ''}`}
@@ -112,12 +69,12 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
         ))}
       </div>
       <div className="form-content">
-        {tabs.map(tab => {
-          const Component = components[tab];
+        {formGroupManager.getTabs(activeGroup).map((tab) => {
+          const FormComponent = formGroupManager.getFormComponent(tab);
           return (
-            <TabPanel key={tab} isActive={activeTab === tab}>
-              <Component data={getConfig(tab.toLowerCase(), 'preferences')} />
-            </TabPanel>
+            <div key={tab} style={{ display: activeTab === tab ? 'block' : 'none' }}>
+              {FormComponent && <FormComponent data={getConfig(tab.toLowerCase(), 'preferences')} />}
+            </div>
           );
         })}
       </div>

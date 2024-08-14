@@ -79,7 +79,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .navbar-display-button {
-  color: white; 
+  color: rgb(255, 255, 255); 
   border: none; 
   padding: 10px 20px;
   text-align: left;
@@ -93,7 +93,7 @@ input[type='number']::-webkit-outer-spin-button {
 
 .navbar-button {
   background-color: var(--secondary--color);
-  color: white; 
+  color: rgb(255, 255, 255); 
   border: none; 
   padding: 10px 20px;
   text-align: left;
@@ -165,7 +165,7 @@ input[type='number']::-webkit-outer-spin-button {
 
 .tab-button {
   background-color: var(--secondary--color);
-  color: white;
+  color: rgb(255, 255, 255);
   border-radius: 5px;
   padding: 6px 10px;
   text-align: center;
@@ -194,7 +194,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 .download-button {
   background-color: var(--secondary--color); /* Usa tus variables o un color específico */
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
