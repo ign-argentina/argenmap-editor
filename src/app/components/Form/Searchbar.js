@@ -14,6 +14,7 @@ const Searchbar = ({ data }) => {
       data={data}
       fieldsToShow={fieldsToShow}
       colorFields={['color_focus', 'background_color']}
+      checkBoxFields={['isActive']}
     />
   );
 };

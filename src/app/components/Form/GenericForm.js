@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updatePreferences } from '../../store/preferencesSlice';
 import styles from '../../form.module.css';
 
-const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields = [], checkBoxFields = [] }) => {
+const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields = [], checkBoxFields = [], numberFields = [] }) => {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.preferences[formKey] || data);
 
@@ -15,7 +15,8 @@ const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
+    const newValue = type === 'checkbox' ? checked : 
+    numberFields.includes(name) ? Number(value) : value;
     dispatch(updatePreferences({ key: formKey, value: { ...formData, [name]: newValue } }));
   };
 
@@ -49,6 +50,18 @@ const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields 
           placeholder={key}
           onChange={handleChange}
           className={styles.txtInput}
+        />
+      );
+    } else if (numberFields.includes(key)) {
+      return (
+        <input
+          type="number"
+          name={key}
+          value={formData[key] || ''}
+          placeholder={key}
+          onChange={handleChange}
+          className={styles.txtInput}
+          step="any" // Permite decimales y signos
         />
       );
     } else {
