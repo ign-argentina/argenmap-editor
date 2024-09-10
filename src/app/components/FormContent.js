@@ -1,9 +1,37 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateConfig } from '../store/configSlice'; // Asegúrate de tener esta acción en tu slice
 
 // Componente para mostrar un formulario para los datos en un tab
 export default function FormContent({ content, level = 0 }) {
+  const dispatch = useDispatch();
+  const configData = useSelector((state) => state.config);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (content) {
+      const initialData = {};
+      Object.entries(content).forEach(([key, value]) => {
+        initialData[key] = value;
+      });
+      setFormData(initialData);
+    }
+  }, [content]);
+
+  const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+    setFormData((prevData) => {
+      const updatedData = {
+        ...prevData,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+      dispatch(updateConfig({ key: name, value: updatedData[name] })); // Reemplaza el valor en Redux
+      return updatedData;
+    });
+  };
+
   const getInputType = (value) => {
     if (typeof value === 'boolean') return 'checkbox';
     if (typeof value === 'number') return 'number';
@@ -28,8 +56,10 @@ export default function FormContent({ content, level = 0 }) {
                 <label>Item {index + 1}</label>
                 <input
                   type={getInputType(item)}
-                  value={item}
-                  readOnly
+                  name={`item-${index}`}
+                  value={typeof item === 'boolean' ? (item ? 'true' : 'false') : item}
+                  placeholder={item}
+                  onChange={handleChange}
                 />
               </div>
             )}
@@ -42,11 +72,24 @@ export default function FormContent({ content, level = 0 }) {
             {typeof value === 'object' && value !== null && !Array.isArray(value) ? (
               <FormContent content={value} level={level + 1} /> // Mostrar contenido del objeto como formulario
             ) : (
-              <input
-                type={getInputType(value)}
-                value={value}
-                readOnly
-              />
+              <>
+                {getInputType(value) === 'checkbox' ? (
+                  <input
+                    type="checkbox"
+                    name={field}
+                    checked={formData[field] || false}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <input
+                    type={getInputType(value)}
+                    name={field}
+                    value={typeof value === 'boolean' ? (value ? 'true' : 'false') : formData[field] || ''}
+                    placeholder={value}
+                    onChange={handleChange}
+                  />
+                )}
+              </>
             )}
           </div>
         ))
