@@ -9,7 +9,7 @@ const usePreferences = () => {
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        const response = await fetch('/argenmap/src/config/default/preferences.json');
+        const response = await fetch('/argenmap/src/config/default/config.json');
         const data = await response.json();
         setPreferences(data);
       } catch (error) {
