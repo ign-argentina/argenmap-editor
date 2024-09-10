@@ -1,41 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
-// Componente para mostrar un formulario para los datos en un tab
-function FormContent({ content, level = 0 }) {
-  return (
-    <div className={`form-content level-${level}`}>
-      {Array.isArray(content) ? (
-        content.map((item, index) => (
-          <div key={index} className={`array-item level-${level}`}>
-            <h4>Item {index + 1}</h4>
-            {/* Renderizar cada elemento del array */}
-            {typeof item === 'object' && item !== null ? (
-              <FormContent content={item} level={level + 1} />
-            ) : (
-              <div className={`form-group level-${level}`}>
-                <label>Item {index + 1}</label>
-                <input type="text" value={item} readOnly />
-              </div>
-            )}
-          </div>
-        ))
-      ) : (
-        Object.entries(content).map(([field, value]) => (
-          <div key={field} className={`form-group level-${level}`}>
-            <label>{field}</label>
-            {typeof value === 'object' && value !== null && !Array.isArray(value) ? (
-              <FormContent content={value} level={level + 1} /> // Mostrar contenido del objeto como formulario
-            ) : (
-              <input type="text" value={value} readOnly />
-            )}
-          </div>
-        ))
-      )}
-    </div>
-  );
-}
+import FormContent from './FormContent'; // Asegúrate de importar el nuevo componente
 
 export default function SectionTabs({ sectionData, initialTab }) {
   const [activeTab, setActiveTab] = useState('');
