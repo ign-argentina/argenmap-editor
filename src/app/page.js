@@ -18,7 +18,7 @@ export default function Page() {
     const json = JSON.stringify(preferencesNew, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-
+    console.log(preferences)
     const link = document.createElement('a');
     link.href = url;
     link.download = 'preferencesNew.json';

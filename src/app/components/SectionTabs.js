@@ -1,9 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function SectionTabs({ sectionData }) {
-  const [activeTab, setActiveTab] = useState(Object.keys(sectionData)[0] || ''); // Tab activo por defecto
+export default function SectionTabs({ sectionData, initialTab }) {
+  const [activeTab, setActiveTab] = useState('');
+  const [tabs, setTabs] = useState({});
+
+  useEffect(() => {
+    if (sectionData) {
+      const newTabs = {};
+      const basicTabContent = {};
+
+      Object.entries(sectionData).forEach(([key, value]) => {
+        if (typeof value === 'object' && value !== null) {
+          newTabs[key] = value; // Agregar como tab si es objeto
+        } else {
+          basicTabContent[key] = value; // Agrupar en "básico"
+        }
+      });
+
+      // Agregar tab "básico" solo si tiene contenido
+      if (Object.keys(basicTabContent).length > 0) {
+        newTabs['básico'] = basicTabContent;
+      }
+
+      setTabs(newTabs);
+      // Establecer el primer tab activo si no se ha proporcionado initialTab
+      setActiveTab(initialTab || Object.keys(newTabs)[0] || '');
+    }
+  }, [sectionData, initialTab]);
 
   if (!sectionData) {
     return <p>No data available for this section.</p>;
@@ -13,7 +38,7 @@ export default function SectionTabs({ sectionData }) {
     <div className="section-tabs">
       {/* Renderizado de tabs */}
       <ul className="tabs">
-        {Object.keys(sectionData).map((tab) => (
+        {Object.keys(tabs).map((tab) => (
           <li
             key={tab}
             className={`tab ${activeTab === tab ? 'active' : ''}`}
@@ -26,7 +51,7 @@ export default function SectionTabs({ sectionData }) {
 
       {/* Renderizado del contenido del tab activo */}
       <div className="tab-content">
-        {sectionData[activeTab] && Object.entries(sectionData[activeTab]).map(([field, value]) => (
+        {tabs[activeTab] && Object.entries(tabs[activeTab]).map(([field, value]) => (
           <div key={field} className="form-group">
             <label>{field}</label>
             <input type="text" value={value} readOnly />
