@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import usePreferences from '../hooks/usePreferences';
-import { resetPreferences } from '../store/preferencesSlice';
+import useConfig from '../hooks/useConfig';
+import { resetConfig } from '../store/configSlice';
 import FormGroupManager from '../utils/FormGroupManager';
 
 const formGroupManager = new FormGroupManager();
 
-const Editor = ({ setPreferencesNew, activeGroup }) => {
+const Editor = ({ setConfigNew, activeGroup }) => {
   const dispatch = useDispatch();
-  const { preferences, loading: preferencesLoading, error: preferencesError } = usePreferences();
-  const userPreferences = useSelector((state) => state.preferences);
+  const { config, loading: configLoading, error: configError } = useConfig();
+  const userConfig = useSelector((state) => state.config);
   const userData = useSelector((state) => state.data);
 
   const [activeTab, setActiveTab] = useState(formGroupManager.getDefaultTab(activeGroup));
@@ -19,24 +19,24 @@ const Editor = ({ setPreferencesNew, activeGroup }) => {
     setActiveTab(formGroupManager.getDefaultTab(activeGroup));
   }, [activeGroup]);
 
-  // Actualiza preferences
+  // Actualiza config
   useEffect(() => {
-    if (preferences) {
-      const combinedPreferences = { ...preferences, ...userPreferences };
-      setPreferencesNew(combinedPreferences);
-      if (JSON.stringify(userPreferences) !== JSON.stringify(combinedPreferences)) {
-        dispatch(resetPreferences(combinedPreferences));
+    if (config) {
+      const combinedConfig = { ...config, ...userConfig };
+      setConfigNew(combinedConfig);
+      if (JSON.stringify(userConfig) !== JSON.stringify(combinedConfig)) {
+        dispatch(resetConfig(combinedConfig));
       }
     }
-  }, [preferences, userPreferences, dispatch, setPreferencesNew]);
+  }, [config, userConfig, dispatch, setConfigNew]);
 
-  const getConfig = (key, source = 'preferences') => {
-    if (source === 'preferences') {
-      return userPreferences[key] || preferences[key];
+  const getConfig = (key, source = 'config') => {
+    if (source === 'config') {
+      return userConfig[key] || config[key];
     }
   };
 
-  if (preferencesLoading) return <div>Loading...</div>;
+  if (configLoading) return <div>Loading...</div>;
 
   return (
     <div>
@@ -56,7 +56,7 @@ const Editor = ({ setPreferencesNew, activeGroup }) => {
           const FormComponent = formGroupManager.getFormComponent(tab);
           return (
             <div key={tab} style={{ display: activeTab === tab ? 'block' : 'none' }}>
-              {FormComponent && <FormComponent data={getConfig(tab.toLowerCase(), 'preferences')} />}
+              {FormComponent && <FormComponent data={getConfig(tab.toLowerCase(), 'config')} />}
             </div>
           );
         })}

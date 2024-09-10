@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePreferences } from '../../store/preferencesSlice';
+import { updateConfig } from '../../store/configSlice';
 import styles from '../../form.module.css';
 
 const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields = [], checkBoxFields = [], numberFields = [] }) => {
   const dispatch = useDispatch();
-  const formData = useSelector((state) => state.preferences[formKey] || data);
+  const formData = useSelector((state) => state.config[formKey] || data);
 
   useEffect(() => {
     if (data) {
-      dispatch(updatePreferences({ key: formKey, value: data }));
+      dispatch(updateConfig({ key: formKey, value: data }));
     }
   }, [data, dispatch, formKey]);
 
@@ -17,7 +17,7 @@ const GenericForm = ({ formKey, data, fieldsToShow, colorFields = [], urlFields 
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : 
     numberFields.includes(name) ? Number(value) : value;
-    dispatch(updatePreferences({ key: formKey, value: { ...formData, [name]: newValue } }));
+    dispatch(updateConfig({ key: formKey, value: { ...formData, [name]: newValue } }));
   };
 
   const renderInputField = (key) => {

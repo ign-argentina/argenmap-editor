@@ -1,24 +1,24 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-export default function Navbar({ setActiveGroup, preferences }) {
+export default function Navbar({ setActiveGroup, config }) {
   const [sections, setSections] = useState([]);
   const [version, setVersion] = useState('');
 
   useEffect(() => {
-    if (preferences) {
+    if (config) {
       // Filtrar las secciones para incluir solo aquellas que son objetos
-      const filteredSections = Object.entries(preferences)
+      const filteredSections = Object.entries(config)
         .filter(([key, value]) => typeof value === 'object' && value !== null)
         .map(([key]) => key);
       
       setSections(filteredSections);
 
       // Obtener la versión si está disponible
-      const versionInfo = preferences.version || 'No disponible';
+      const versionInfo = config.version || 'No disponible';
       setVersion(versionInfo);
     }
-  }, [preferences]);
+  }, [config]);
 
   return (
     <nav className="navbar">

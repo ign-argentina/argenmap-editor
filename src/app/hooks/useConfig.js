@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react';
 
-const usePreferences = () => {
-  const [preferences, setPreferences] = useState(null);
+const useConfig = () => {
+  const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  //Lógica para cargar el preferences por defecto
+  //Lógica para cargar el config por defecto
   useEffect(() => {
-    const fetchPreferences = async () => {
+    const fetchConfig = async () => {
       try {
         const response = await fetch('/argenmap/src/config/default/config.json');
         const data = await response.json();
-        setPreferences(data);
+        setConfig(data);
       } catch (error) {
-        setError('Error loading preferences');
+        setError('Error loading config');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPreferences();
+    fetchConfig();
   }, []);
 
-  return { preferences, loading, error };
+  return { config, loading, error };
 };
 
-export default usePreferences;
+export default useConfig;
