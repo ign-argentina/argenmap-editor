@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import usePreferences from '../hooks/usePreferences';
-import useData from '../hooks/useData';
 import { resetPreferences } from '../store/preferencesSlice';
-import { resetData } from '../store/dataSlice';
 import FormGroupManager from '../utils/FormGroupManager';
 
 const formGroupManager = new FormGroupManager();
 
-const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
+const Editor = ({ setPreferencesNew, activeGroup }) => {
   const dispatch = useDispatch();
   const { preferences, loading: preferencesLoading, error: preferencesError } = usePreferences();
-  const { data, loading: dataLoading, error: dataError } = useData();
   const userPreferences = useSelector((state) => state.preferences);
   const userData = useSelector((state) => state.data);
 
@@ -33,29 +30,13 @@ const Editor = ({ setPreferencesNew, setDataNew, activeGroup }) => {
     }
   }, [preferences, userPreferences, dispatch, setPreferencesNew]);
 
-  // Actualiza data
-  useEffect(() => {
-    if (data) {
-      const combinedData = { ...data, ...userData };
-      setDataNew(combinedData);
-      if (JSON.stringify(userData) !== JSON.stringify(combinedData)) {
-        dispatch(resetData(combinedData));
-      }
-    }
-  }, [data, userData, dispatch, setDataNew]);
-
   const getConfig = (key, source = 'preferences') => {
     if (source === 'preferences') {
       return userPreferences[key] || preferences[key];
-    } else if (source === 'data') {
-      return userData[key] || data[key];
-    } else {
-      throw new Error("Invalid source specified. Use 'preferences' or 'data'.");
     }
   };
 
-  if (preferencesLoading || dataLoading) return <div>Loading...</div>;
-  if (preferencesError || dataError) return <div>{preferencesError || dataError}</div>;
+  if (preferencesLoading) return <div>Loading...</div>;
 
   return (
     <div>

@@ -1,15 +1,3 @@
-// OLD Preview
-// export default function Preview({ formData }) {
-//     return (
-//       <div>
-//         <h3>{formData.title}</h3>
-//         <p>{formData.description}</p>
-//         <p>{formData.anotherField}</p>
-//         <p>{formData.fourthField}</p>
-//       </div>
-//     );
-//   }s
-
 import React from 'react';
 
 const Preview = () => {
