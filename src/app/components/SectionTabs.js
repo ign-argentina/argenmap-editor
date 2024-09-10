@@ -2,6 +2,24 @@
 
 import { useState, useEffect } from 'react';
 
+// Componente para mostrar un formulario para los datos en un tab
+function FormContent({ content, level = 0 }) {
+  return (
+    <div className={`form-content level-${level}`}>
+      {Object.entries(content).map(([field, value]) => (
+        <div key={field} className={`form-group level-${level}`}>
+          <label>{field}</label>
+          {typeof value === 'object' && value !== null && !Array.isArray(value) ? (
+            <FormContent content={value} level={level + 1} /> // Mostrar contenido del objeto como formulario
+          ) : (
+            <input type="text" value={value} readOnly />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function SectionTabs({ sectionData, initialTab }) {
   const [activeTab, setActiveTab] = useState('');
   const [tabs, setTabs] = useState({});
@@ -11,8 +29,9 @@ export default function SectionTabs({ sectionData, initialTab }) {
       const newTabs = {};
       const basicTabContent = {};
 
+      // Organizar los datos en tabs principales
       Object.entries(sectionData).forEach(([key, value]) => {
-        if (typeof value === 'object' && value !== null) {
+        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
           newTabs[key] = value; // Agregar como tab si es objeto
         } else {
           basicTabContent[key] = value; // Agrupar en "básico"
@@ -36,7 +55,7 @@ export default function SectionTabs({ sectionData, initialTab }) {
 
   return (
     <div>
-      {/* Renderizado de tabs */}
+      {/* Renderizado de tabs principales */}
       <ul className="tabs">
         {Object.keys(tabs).map((tab) => (
           <li
@@ -50,14 +69,7 @@ export default function SectionTabs({ sectionData, initialTab }) {
       </ul>
 
       {/* Renderizado del contenido del tab activo */}
-      <div className="form-content">
-        {tabs[activeTab] && Object.entries(tabs[activeTab]).map(([field, value]) => (
-          <div key={field} className="form-group">
-            <label>{field}</label>
-            <input type="text" value={value} readOnly />
-          </div>
-        ))}
-      </div>
+      {tabs[activeTab] && <FormContent content={tabs[activeTab]} />}
     </div>
   );
 }
