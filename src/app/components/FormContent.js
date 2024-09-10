@@ -3,11 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateConfig } from '../store/configSlice'; // Asegúrate de tener esta acción en tu slice
+import styles from '../form.module.css'; // Importa el archivo de estilos
 
-// Componente para mostrar un formulario para los datos en un tab
 export default function FormContent({ content, level = 0 }) {
   const dispatch = useDispatch();
-  const configData = useSelector((state) => state.config);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -27,7 +26,8 @@ export default function FormContent({ content, level = 0 }) {
         ...prevData,
         [name]: type === 'checkbox' ? checked : value,
       };
-      dispatch(updateConfig({ key: name, value: updatedData[name] })); // Reemplaza el valor en Redux
+      // Enviar la actualización de los datos al store solo después de actualizar el estado local
+      dispatch(updateConfig({ key: name, value: updatedData[name] }));
       return updatedData;
     });
   };
@@ -43,7 +43,7 @@ export default function FormContent({ content, level = 0 }) {
   };
 
   return (
-    <div className={`form-content level-${level}`}>
+    <div className={styles.mapItems}> {/* Aplica la clase de estilos */}
       {Array.isArray(content) ? (
         content.map((item, index) => (
           <div key={index} className={`array-item level-${level}`}>
@@ -60,6 +60,7 @@ export default function FormContent({ content, level = 0 }) {
                   value={typeof item === 'boolean' ? (item ? 'true' : 'false') : item}
                   placeholder={item}
                   onChange={handleChange}
+                  className={styles.txtInput} // Aplica la clase de estilos
                 />
               </div>
             )}
@@ -79,6 +80,7 @@ export default function FormContent({ content, level = 0 }) {
                     name={field}
                     checked={formData[field] || false}
                     onChange={handleChange}
+                    className={styles.txtInput} // Aplica la clase de estilos
                   />
                 ) : (
                   <input
@@ -87,6 +89,7 @@ export default function FormContent({ content, level = 0 }) {
                     value={typeof value === 'boolean' ? (value ? 'true' : 'false') : formData[field] || ''}
                     placeholder={value}
                     onChange={handleChange}
+                    className={styles.txtInput} // Aplica la clase de estilos
                   />
                 )}
               </>
