@@ -30,8 +30,8 @@ export default function Page() {
   return (
     <Provider store={store}>
       <div className="editor-container">
-        <Navbar setActiveGroup={setActiveSection} /> {/* Navbar cambia la sección activa */}
         
+        <Navbar setActiveGroup={setActiveSection} /> {/* Navbar cambia la sección activa */}
         <div className="form-container">
           {/* Renderizamos SectionTabs solo si hay una sección activa */}
           {activeSection && preferences[activeSection] && (

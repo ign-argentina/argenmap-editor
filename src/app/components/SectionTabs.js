@@ -35,7 +35,7 @@ export default function SectionTabs({ sectionData, initialTab }) {
   }
 
   return (
-    <div className="section-tabs">
+    <div>
       {/* Renderizado de tabs */}
       <ul className="tabs">
         {Object.keys(tabs).map((tab) => (
@@ -50,7 +50,7 @@ export default function SectionTabs({ sectionData, initialTab }) {
       </ul>
 
       {/* Renderizado del contenido del tab activo */}
-      <div className="tab-content">
+      <div className="form-content">
         {tabs[activeTab] && Object.entries(tabs[activeTab]).map(([field, value]) => (
           <div key={field} className="form-group">
             <label>{field}</label>
