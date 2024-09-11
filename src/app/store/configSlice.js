@@ -1,21 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {};
-
+const initialState = {
+  config: {},
+};
 
 const configSlice = createSlice({
   name: 'config',
   initialState,
   reducers: {
-    updatePreferences(state, action) {
+    updateConfig: (state, action) => {
       const { key, value } = action.payload;
-      state[key] = value;
+      state.config = {
+        ...state.config,
+        [key]: value,
+      };
     },
-    resetConfig: (state, action) => {
-      return { ...action.payload };   
+    setConfig: (state, action) => {
+      state.config = action.payload; // Inicializa el estado con la configuración completa
     },
   },
 });
 
-export const { updateConfig, resetConfig } = configSlice.actions;
+export const { updateConfig, setConfig } = configSlice.actions;
 export default configSlice.reducer;

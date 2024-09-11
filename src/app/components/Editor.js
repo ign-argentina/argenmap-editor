@@ -7,7 +7,7 @@ import Preview from '../components/Preview';
 import Navbar from '../components/Navbar';
 import SectionTabs from '../components/SectionTabs';
 import useConfig from '../hooks/useConfig';
-import { resetConfig } from '../store/configSlice'; // Importar resetConfig de Redux
+import { setConfig } from '../store/configSlice'; // Importar setConfig de Redux
 
 export default function Editor() {
   const [activeSection, setActiveSection] = useState(null); // Controla la sección activa
@@ -15,10 +15,10 @@ export default function Editor() {
   
   const dispatch = useDispatch(); // Asegúrate de que useDispatch esté dentro del Provider
   const configNew = useSelector((state) => state.config.config); // Selecciona el estado de config desde Redux
-  console.log('Current Redux state:', configNew);
+
   useEffect(() => {
     if (config) {
-      dispatch(resetConfig(config)); // Despacha la acción para inicializar la configuración
+      dispatch(setConfig(config)); // Despacha la acción para inicializar la configuración
     }
   }, [config, dispatch]);
 

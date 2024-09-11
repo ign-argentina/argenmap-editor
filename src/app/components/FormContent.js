@@ -30,7 +30,7 @@ export default function FormContent({ content, level = 0 }) {
     console.log('Form data before dispatch:', formData);
 
     dispatch(updateConfig({ key: name, value: newValue }));
-    // dispatch(updateConfig({ key: name, value: { ...formData, [name]: newValue } }));
+    
   };
   
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const useConfig = () => {
-  const [config, resetConfig] = useState(null);
+  const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -11,7 +11,7 @@ const useConfig = () => {
       try {
         const response = await fetch('/argenmap/src/config/default/config.json');
         const data = await response.json();
-        resetConfig(data);
+        setConfig(data);
       } catch (error) {
         setError('Error loading config');
       } finally {
