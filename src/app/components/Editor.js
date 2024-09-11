@@ -1,7 +1,6 @@
 'use client';
 
 import { Provider, useDispatch, useSelector } from 'react-redux';
-// import { store } from '../store/store'; // Asegúrate de que la ruta sea correcta
 import { useEffect, useState } from 'react';
 import Preview from '../components/Preview';
 import Navbar from '../components/Navbar';
@@ -13,16 +12,16 @@ export default function Editor() {
   const [activeSection, setActiveSection] = useState(null); // Controla la sección activa
   const { config, loading: configLoading, error: configError } = useConfig();
   
-  const dispatch = useDispatch(); // Asegúrate de que useDispatch esté dentro del Provider
-  const configNew = useSelector((state) => state.config.config); // Selecciona el estado de config desde Redux
+  const dispatch = useDispatch();
+  const configNew = useSelector((state) => state.config.config);
 
   useEffect(() => {
     if (config) {
-      dispatch(setConfig(config)); // Despacha la acción para inicializar la configuración
+      dispatch(setConfig(config));
     }
   }, [config, dispatch]);
 
-  // Función para descargar el archivo JSON con las preferencias
+  // Función para descargar el archivo JSON con la conf
   const downloadConfigFile = () => {
     const json = JSON.stringify(configNew, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -37,9 +36,8 @@ export default function Editor() {
   
 
   return (
-    // <Provider store={store}> {/* Aquí envuelve todo el componente en el Provider */}
       <div className="editor-container">
-        <Navbar setActiveGroup={setActiveSection} config={config} /> {/* Pasar config a Navbar */}
+        <Navbar setActiveGroup={setActiveSection} config={config} />
         <div className="form-container">
           {/* Renderizamos SectionTabs solo si hay una sección activa */}
           {activeSection && config[activeSection] && (
@@ -55,6 +53,5 @@ export default function Editor() {
           <Preview />
         </div>
       </div>
-    // </Provider>
   );
 }

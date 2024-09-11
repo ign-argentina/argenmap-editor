@@ -16,7 +16,7 @@ const configSlice = createSlice({
       };
     },
     setConfig: (state, action) => {
-      state.config = action.payload; // Inicializa el estado con la configuración completa
+      state.config = action.payload;
     },
   },
 });

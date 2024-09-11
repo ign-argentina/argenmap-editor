@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import FormContent from './FormContent'; // Asegúrate de importar el nuevo componente
+import FormContent from './FormContent';
 
 export default function SectionTabs({ sectionData, initialTab }) {
   const [activeTab, setActiveTab] = useState('');
