@@ -29,6 +29,7 @@ export default function SectionTabs({ sectionData, initialTab }) {
       setTabs(newTabs);
       // Establecer el primer tab activo si no se ha proporcionado initialTab
       setActiveTab(initialTab || Object.keys(newTabs)[0] || '');
+      // console.log("Tabs: ", tabs)
     }
   }, [sectionData, initialTab]);
 

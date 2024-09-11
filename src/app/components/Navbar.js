@@ -13,7 +13,7 @@ export default function Navbar({ setActiveGroup, config }) {
         .map(([key]) => key);
       
       setSections(filteredSections);
-
+      console.log("Seccones: ", sections)
       // Obtener la versión si está disponible
       const versionInfo = config.version || 'No disponible';
       setVersion(versionInfo);

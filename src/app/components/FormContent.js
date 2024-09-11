@@ -8,9 +8,11 @@ import styles from '../form.module.css'; // Importa los estilos
 export default function FormContent({ content, level = 0 }) {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
+  // const formData = useSelector((state) => state.config[formKey] || data);
 
   useEffect(() => {
     if (content) {
+      console.log("Content: ", content)
       const initialData = {};
       Object.entries(content).forEach(([key, value]) => {
         initialData[key] = value;
@@ -30,7 +32,8 @@ export default function FormContent({ content, level = 0 }) {
     console.log('Form data before dispatch:', formData);
 
     dispatch(updateConfig({ key: name, value: newValue }));
-    
+    // dispatch(updatePreferences({ key: formKey, value: { ...formData, [name]: newValue } }));
+
   };
   
 

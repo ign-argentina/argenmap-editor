@@ -1,6 +1,6 @@
 'use client';
 
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Preview from '../components/Preview';
 import Navbar from '../components/Navbar';
@@ -13,7 +13,7 @@ export default function Editor() {
   const { config, loading: configLoading, error: configError } = useConfig();
   
   const dispatch = useDispatch();
-  const configNew = useSelector((state) => state.config.config);
+  const configNew = useSelector((state) => state.config);
 
   useEffect(() => {
     if (config) {

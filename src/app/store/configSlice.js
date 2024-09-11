@@ -10,10 +10,8 @@ const configSlice = createSlice({
   reducers: {
     updateConfig: (state, action) => {
       const { key, value } = action.payload;
-      state.config = {
-        ...state.config,
-        [key]: value,
-      };
+      state[key] = value;
+
     },
     setConfig: (state, action) => {
       state.config = action.payload;
