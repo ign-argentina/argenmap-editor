@@ -11,7 +11,17 @@ const TabForms = React.memo(({ direccionForm, activeSection, initialTab }) => {
   const [activeTab, setActiveTab] = useState('');
   const [tabs, setTabs] = useState({});
   const [formData, setFormData] = useState({});
+  // old
+  // console.log("formKey:", formKey) //nombre del tab
+  // console.log("value:", value) //valor
+  // console.log("formData:", formData) //contenido del tab
+  // console.log("data:", data) //contenido del tab
 
+  // new
+  // console.log("c:", activeTab) //nombre del tab
+  // console.log("name:", name)
+  // console.log("newValue:", newValue) //valor
+  // console.log(data) //contenido del tab
   useEffect(() => {
     if (direccionForm && activeSection) {
       const sectionData = direccionForm[activeSection];
