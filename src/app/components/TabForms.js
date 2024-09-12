@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateConfig } from '../store/configSlice'; // Importa la acción
 import styles from '../form.module.css'; // Importa los estilos
+import React from 'react'; // Asegúrate de importar React
 
-export default function TabForms({ direccionForm, activeSection, initialTab }) {
+const TabForms = React.memo(({ direccionForm, activeSection, initialTab }) => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('');
   const [tabs, setTabs] = useState({});
@@ -47,7 +48,7 @@ export default function TabForms({ direccionForm, activeSection, initialTab }) {
     }
   }, [direccionForm, activeSection, activeTab]);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, type, value, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
     setFormData((prevData) => ({
@@ -55,8 +56,12 @@ export default function TabForms({ direccionForm, activeSection, initialTab }) {
       [name]: newValue,
     }));
 
+    console.log("activeTab:", activeTab)
+    console.log("name:", name)
+    console.log("newValue:", newValue)
+
     dispatch(updateConfig({ key: name, value: newValue }));
-  };
+  }, [dispatch, activeTab]);
 
   const getInputType = (value) => {
     if (typeof value === 'boolean') return 'checkbox';
@@ -112,4 +117,6 @@ export default function TabForms({ direccionForm, activeSection, initialTab }) {
       </div>
     </div>
   );
-}
+});
+
+export default TabForms;
