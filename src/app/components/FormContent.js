@@ -5,19 +5,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateConfig } from '../store/configSlice'; // Importa la acción
 import styles from '../form.module.css'; // Importa los estilos
 
-export default function FormContent({ content, level = 0 }) {
+export default function FormContent({ content, level = 0, combinedData }) {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
   // const formData = useSelector((state) => state.config[formKey] || data);
 
   useEffect(() => {
     if (content) {
-      console.log("Content: ", content)
       const initialData = {};
       Object.entries(content).forEach(([key, value]) => {
         initialData[key] = value;
       });
       setFormData(initialData);
+      console.log("combinedData:", combinedData)
+      console.log("content:", content)
+
     }
   }, [content]);
 
@@ -29,8 +31,6 @@ export default function FormContent({ content, level = 0 }) {
       [name]: newValue,
     }));
   
-    console.log('Form data before dispatch:', formData);
-
     dispatch(updateConfig({ key: name, value: newValue }));
     // dispatch(updatePreferences({ key: formKey, value: { ...formData, [name]: newValue } }));
 

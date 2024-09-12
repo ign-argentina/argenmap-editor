@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import FormContent from './FormContent';
 
-export default function SectionTabs({ sectionData, initialTab }) {
+export default function SectionTabs({ sectionData, activeSection, initialTab }) {
   const [activeTab, setActiveTab] = useState('');
   const [tabs, setTabs] = useState({});
+  const [combinedData, setCombinedData] = useState({});
 
   useEffect(() => {
     if (sectionData) {
@@ -29,7 +30,15 @@ export default function SectionTabs({ sectionData, initialTab }) {
       setTabs(newTabs);
       // Establecer el primer tab activo si no se ha proporcionado initialTab
       setActiveTab(initialTab || Object.keys(newTabs)[0] || '');
-      // console.log("Tabs: ", tabs)
+
+      // Crear el nuevo objeto combinado
+      setCombinedData({
+        sectionName: activeSection,  // Nombre de la sección
+        sectionContent: sectionData, // Contenido de la sección
+      });
+
+      // console.log("sectionData: ", sectionData)
+      // console.log("activeSection: ", activeSection)
     }
   }, [sectionData, initialTab]);
 
@@ -53,7 +62,11 @@ export default function SectionTabs({ sectionData, initialTab }) {
       </ul>
 
       {/* Renderizado del contenido del tab activo */}
-      {tabs[activeTab] && <FormContent content={tabs[activeTab]} />}
+      {tabs[activeTab] && 
+      <FormContent 
+        content={tabs[activeTab]}
+        combinedData={combinedData}
+      />}
     </div>
   );
 }

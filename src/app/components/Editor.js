@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Preview from '../components/Preview';
 import Navbar from '../components/Navbar';
-import SectionTabs from '../components/SectionTabs';
+import TabForms from '../components/TabForms';
 import useConfig from '../hooks/useConfig';
 import { setConfig } from '../store/configSlice'; // Importar setConfig de Redux
 
@@ -33,15 +33,14 @@ export default function Editor() {
     link.click();
     document.body.removeChild(link);
   };
-  
 
   return (
       <div className="editor-container">
         <Navbar setActiveGroup={setActiveSection} config={config} />
         <div className="form-container">
-          {/* Renderizamos SectionTabs solo si hay una sección activa */}
+          {/* Renderizamos TabForms solo si hay una sección activa */}
           {activeSection && config[activeSection] && (
-            <SectionTabs sectionData={config[activeSection]} />
+            <TabForms direccionForm={config} activeSection={activeSection} />
           )}
           <div className="download-button-container">
             <button onClick={downloadConfigFile} className="download-button">
