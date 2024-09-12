@@ -8,23 +8,43 @@ import styles from '../form.module.css'; // Importa los estilos
 export default function TabForms({ direccionForm, activeSection, initialTab }) {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('');
+  const [tabs, setTabs] = useState({});
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
     if (direccionForm && activeSection) {
-      setActiveTab(initialTab || Object.keys(direccionForm[activeSection])[0] || '');
+      const sectionData = direccionForm[activeSection];
+      const newTabs = {};
+      const basicTabContent = {};
+
+      // Organizar los datos en tabs principales
+      Object.entries(sectionData).forEach(([key, value]) => {
+        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+          newTabs[key] = value; // Agregar como tab si es objeto
+        } else {
+          basicTabContent[key] = value; // Agrupar en "Básico"
+        }
+      });
+
+      // Agregar tab "Básico" solo si tiene contenido
+      if (Object.keys(basicTabContent).length > 0) {
+        newTabs['Básico'] = basicTabContent;
+      }
+
+      setTabs(newTabs);
+      // Establecer el primer tab activo si no se ha proporcionado initialTab
+      setActiveTab(initialTab || Object.keys(newTabs)[0] || '');
     }
   }, [direccionForm, activeSection, initialTab]);
 
   useEffect(() => {
-    if (direccionForm[activeSection]) {
+    if (direccionForm[activeSection] && activeTab) {
       const initialData = {};
       Object.entries(direccionForm[activeSection][activeTab] || {}).forEach(([key, value]) => {
         initialData[key] = value;
       });
       setFormData(initialData);
     }
-    console.log("direccionForm:", direccionForm)
   }, [direccionForm, activeSection, activeTab]);
 
   const handleChange = (e) => {
@@ -55,8 +75,8 @@ export default function TabForms({ direccionForm, activeSection, initialTab }) {
   return (
     <div>
       {/* Renderizado de tabs principales */}
-      {/* <ul className="tabs">
-        {Object.keys(direccionForm[activeSection]).map((tab) => (
+      <ul className="tabs">
+        {Object.keys(tabs).map((tab) => (
           <li
             key={tab}
             className={`tab ${activeTab === tab ? 'active' : ''}`}
@@ -65,31 +85,31 @@ export default function TabForms({ direccionForm, activeSection, initialTab }) {
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </li>
         ))}
-      </ul> */}
+      </ul>
 
       {/* Renderizado del contenido del tab activo */}
-      {/* {direccionForm[activeSection][activeTab] && (
-        <div className={styles.mapItems}>
-          {Object.entries(direccionForm[activeSection][activeTab]).map(([field, value]) => (
-            <div key={field} className={`form-group level-0`}>
-              <label>{field}</label>
-              {typeof value === 'object' && value !== null ? (
-                // Si es un objeto, renderizar el TabForms de forma recursiva
-                <TabForms sectionData={value} activeSection={activeTab} />
-              ) : (
-                // Si no es un objeto, renderizar el input correspondiente
-                <input
-                  type={getInputType(value)}
-                  name={field}
-                  value={formData[field] || ''}
-                  onChange={handleChange}
-                  className={styles.txtInput}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      )} */}
+      <div>
+        {tabs[activeTab] && (
+          <div className={styles.mapItems}>
+            {Object.entries(tabs[activeTab]).map(([field, value]) => (
+              <div key={field} className={`form-group`}>
+                <label>{field}</label>
+                {typeof value === 'object' && value !== null ? (
+                  <TabForms direccionForm={{ [field]: value }} activeSection={field} initialTab={Object.keys(value)[0]} />
+                ) : (
+                  <input
+                    type={getInputType(value)}
+                    name={field}
+                    value={formData[field] || ''}
+                    onChange={handleChange}
+                    className={styles.txtInput}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
