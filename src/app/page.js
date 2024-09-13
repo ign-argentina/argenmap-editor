@@ -6,7 +6,7 @@ import Preview from './components/Preview';
 import useConfig from '../app/hooks/useConfig';
 
 // Schema completo del JSON
-const schema = 
+const schema =
 {
   "type": "object",
   "properties": {
@@ -78,8 +78,6 @@ const schema =
     }
   }
 }
-
-
 // `uiSchema` para cada sección
 const uiSchemas = {
   "version": {
@@ -312,37 +310,6 @@ const uiSchemas = {
 }
 
 
-
-// Datos iniciales
-const initialData = {
-  version: "1.0.0",
-  app: {
-    logo: {
-      alt: "Viewer logo image",
-      title: "Logo image"
-    },
-    language: "en",
-    website: "https://github.com/ign-argentina/argenmap",
-    favicon: "src/styles/images/favicon.ico"
-  },
-  plugins: {
-    geoprocesos: {
-      isActive: false,
-      curvas: {
-        isActive: false,
-        name: "Curvas de Nivel"
-      },
-      cota: {
-        isActive: false,
-        name: "Cota"
-      }
-    }
-  },
-  resources: {
-    leaflet: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  }
-};
-
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
   const [data, setData] = useState({});
@@ -375,8 +342,15 @@ export default function Page() {
 
   return (
     <div className="editor-container">
+
       {/* Botones generados dinámicamente según las claves del JSON */}
       <div className='navbar'>
+      <div className="logo-container">
+        <img src="/logos/logo.png" alt="Logo" className="logo" />
+      </div>
+      <div className="version-info">
+        <label>Versión: a.b.c </label>
+      </div>
         {sectionKeys.map((key) => (
           <button key={key} onClick={() => handleSectionChange(key)} className='navbar-button'>
             {key.charAt(0).toUpperCase() + key.slice(1)}
