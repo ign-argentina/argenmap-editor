@@ -8,8 +8,8 @@ import React from 'react'; // Asegúrate de importar React
 
 const TabForms = React.memo(({ direccionForm, activeSection, initialTab }) => {
   const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState('');
   const [tabs, setTabs] = useState({});
+  const [activeTab, setActiveTab] = useState('');
   const [formData, setFormData] = useState({});
   // old
   // console.log("formKey:", formKey) //nombre del tab
@@ -65,8 +65,10 @@ const TabForms = React.memo(({ direccionForm, activeSection, initialTab }) => {
       ...prevData,
       [name]: newValue,
     }));
-
+    
+    console.log("activeSection:", activeSection)
     console.log("activeTab:", activeTab)
+    console.log("tabcontent:", direccionForm[activeSection][activeTab])
     console.log("name:", name)
     console.log("newValue:", newValue)
 
