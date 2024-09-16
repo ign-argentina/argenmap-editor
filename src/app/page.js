@@ -6,78 +6,78 @@ import Preview from './components/Preview';
 import useConfig from '../app/hooks/useConfig';
 
 // // Schema completo del JSON
-const schema =
-{
-  "type": "object",
-  "properties": {
-    "version": { "type": "string" },
-    "app": {
-      "type": "object",
-      "properties": {
-        "logo": {
-          "type": "object",
-          "properties": {
-            "alt": { "type": "string" },
-            "title": { "type": "string" }
-          }
-        },
-        "language": { "type": "string" },
-        "website": { "type": "string" },
-        "favicon": { "type": "string" }
-      }
-    },
-    "plugins": {
-      "type": "object",
-      "properties": {
-        "geoprocesos": {
-          "type": "object",
-          "properties": {
-            "isActive": { "type": "boolean" },
-            "curvas": {
-              "type": "object",
-              "properties": {
-                "isActive": { "type": "boolean" },
-                "name": { "type": "string" },
-                "geoprocess": { "type": "string" },
-                "namePrefix": { "type": "string" },
-                "layer": { "type": "string" },
-                "baseUrl": { "type": "string" },
-                "styles": {
-                  "type": "object",
-                  "properties": {
-                    "line_color": { "type": "string" },
-                    "line_weight": { "type": "number" },
-                    "d_line_m": { "type": "number" },
-                    "d_line_color": { "type": "string" },
-                    "d_weigth": { "type": "number" },
-                    "smoothFactor": { "type": "number" }
-                  }
-                }
-              }
-            },
-            "cota": {
-              "type": "object",
-              "properties": {
-                "isActive": { "type": "boolean" },
-                "name": { "type": "string" },
-                "geoprocess": { "type": "string" },
-                "namePrefix": { "type": "string" },
-                "layer": { "type": "string" },
-                "baseUrl": { "type": "string" }
-              }
-            }
-          }
-        }
-      }
-    },
-    "resources": {
-      "type": "object",
-      "properties": {
-        "leaflet": { "type": "string" }
-      }
-    }
-  }
-}
+// const schema =
+// {
+//   "type": "object",
+//   "properties": {
+//     "version": { "type": "string" },
+//     "app": {
+//       "type": "object",
+//       "properties": {
+//         "logo": {
+//           "type": "object",
+//           "properties": {
+//             "alt": { "type": "string" },
+//             "title": { "type": "string" }
+//           }
+//         },
+//         "language": { "type": "string" },
+//         "website": { "type": "string" },
+//         "favicon": { "type": "string" }
+//       }
+//     },
+//     "plugins": {
+//       "type": "object",
+//       "properties": {
+//         "geoprocesos": {
+//           "type": "object",
+//           "properties": {
+//             "isActive": { "type": "boolean" },
+//             "curvas": {
+//               "type": "object",
+//               "properties": {
+//                 "isActive": { "type": "boolean" },
+//                 "name": { "type": "string" },
+//                 "geoprocess": { "type": "string" },
+//                 "namePrefix": { "type": "string" },
+//                 "layer": { "type": "string" },
+//                 "baseUrl": { "type": "string" },
+//                 "styles": {
+//                   "type": "object",
+//                   "properties": {
+//                     "line_color": { "type": "string" },
+//                     "line_weight": { "type": "number" },
+//                     "d_line_m": { "type": "number" },
+//                     "d_line_color": { "type": "string" },
+//                     "d_weigth": { "type": "number" },
+//                     "smoothFactor": { "type": "number" }
+//                   }
+//                 }
+//               }
+//             },
+//             "cota": {
+//               "type": "object",
+//               "properties": {
+//                 "isActive": { "type": "boolean" },
+//                 "name": { "type": "string" },
+//                 "geoprocess": { "type": "string" },
+//                 "namePrefix": { "type": "string" },
+//                 "layer": { "type": "string" },
+//                 "baseUrl": { "type": "string" }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     },
+//     "resources": {
+//       "type": "object",
+//       "properties": {
+//         "leaflet": { "type": "string" }
+//       }
+//     }
+//   }
+// }
 // // `uiSchema` para cada sección
 // const uiSchemas = {
 //   "version": {
@@ -314,7 +314,7 @@ export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
   const [data, setData] = useState({});
   const [selectedSection, setSelectedSection] = useState(null);
-  // const [schema, setSchema] = useState({});
+  const [schema, setSchema] = useState({});
   const [uiSchemas, setUiSchema] = useState({});
 
   useEffect(() => {
@@ -343,12 +343,12 @@ export default function Page() {
     return createSchema(config);
   };
   
-  // useEffect(() => {
-  //   if (config) {
-  //     const generatedSchema = generateSchema(config);
-  //     setSchema(generatedSchema);
-  //   }
-  // }, [config]);
+  useEffect(() => {
+    if (config) {
+      const generatedSchema = generateSchema(config);
+      setSchema(generatedSchema);
+    }
+  }, [config]);
 
 
 
@@ -390,7 +390,9 @@ export default function Page() {
 
 
   // Extraer las claves principales del JSON para generar secciones dinámicamente
-  const sectionKeys = Object.keys(schema.properties);
+// Asegúrate de que schema y sus propiedades estén definidos antes de intentar acceder a ellas
+const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
+  // console.log("schema:",schema.properties)
 
   const handleSectionChange = (section) => {
     setSelectedSection(section);
