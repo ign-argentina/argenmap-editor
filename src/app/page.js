@@ -4,7 +4,8 @@ import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import Preview from './components/Preview';
 import useConfig from '../app/hooks/useConfig';
-import ColorPickerControl from '../app/components/ColorPickerControl';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+// import ColorPickerControl from '../app/components/ColorPickerControl';
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
@@ -13,10 +14,10 @@ export default function Page() {
   const [schema, setSchema] = useState({});
   const [uiSchemas, setUiSchema] = useState({});
 
-  const customRenderers = [
-    ...materialRenderers,
-    { tester: (schema) => (schema && schema.format === 'color' ? 2 : -1), renderer: ColorPickerControl }
-  ];
+  // const customRenderers = [
+  //   ...materialRenderers,
+  //   { tester: (schema) => (schema && schema.format === 'color'), renderer: ColorPickerControl }
+  // ];
 
   useEffect(() => {
     if (config) {
@@ -117,7 +118,11 @@ export default function Page() {
         </div>
         {sectionKeys.map((key) => (
           <button key={key} onClick={() => handleSectionChange(key)} className='navbar-button'>
-            {key.charAt(0).toUpperCase() + key.slice(1)}
+
+            {config[key]?.sectionIcon && (
+            <i className={config[key].sectionIcon}></i>
+          )}
+
           </button>
         ))}
       </div>
