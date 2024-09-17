@@ -106,7 +106,27 @@ export default function Page() {
   };
 
   const handleDownload = () => {
-    const fileData = JSON.stringify(data, null, 2);
+    // Chequeo de campos borrados.
+    // Un campo vacío es borrado por JSONForms.
+    // Si es borrado se lo crea de nuevo vacío
+    const ensureFieldsExist = (obj, reference) => {
+      if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+        return obj;
+      }
+      const result = { ...obj };
+      Object.keys(reference).forEach((key) => {
+        if (!(key in obj)) {
+          // Si la clave no existe en obj, la añadimos con un valor vacío
+          result[key] = reference[key] === 'string' ? '' : "";
+        } else if (typeof reference[key] === 'object' && reference[key] !== null) {
+          // Si la clave existe pero es un objeto, volvemos a aplicar la función recursivamente
+          result[key] = ensureFieldsExist(obj[key], reference[key]);
+        }
+      });
+      return result;
+    };
+    const completeData = ensureFieldsExist(data, config);
+    const fileData = JSON.stringify(completeData, null, 2);
     const blob = new Blob([fileData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
