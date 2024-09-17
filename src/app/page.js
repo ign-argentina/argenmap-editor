@@ -32,14 +32,14 @@ export default function Page() {
         return { type: 'array', items: createSchema(obj[0]) }; // Assuming all items are of the same type
       } else if (typeof obj === 'object' && obj !== null) {
         const schema = { type: 'object', properties: {} };
-  
+
         Object.keys(obj).forEach(key => {
           // Filtrar la clave 'sectionIcon'
           if (key !== 'sectionIcon') {
             schema.properties[key] = createSchema(obj[key]);
           }
         });
-  
+
         return schema;
       } else if (typeof obj === 'string' && /^#[0-9A-F]{6}$/i.test(obj)) {
         return { type: 'string', format: 'color' }; // Detecta campos de tipo color
@@ -47,10 +47,10 @@ export default function Page() {
         return { type: typeof obj };
       }
     };
-  
+
     return createSchema(config);
   };
-  
+
 
   useEffect(() => {
     if (config) {
@@ -64,7 +64,7 @@ export default function Page() {
       if (typeof obj !== 'object' || obj === null) {
         return { type: 'Control', scope: `#/properties/${title}` };
       }
-  
+
       const elements = [];
       Object.keys(obj).forEach(key => {
         // Filtrar la clave 'sectionIcon'
@@ -84,13 +84,13 @@ export default function Page() {
           }
         }
       });
-  
+
       return { type: 'VerticalLayout', elements };
     };
-  
+
     return createUiSchema(config, 'root');
   };
-  
+
 
   useEffect(() => {
     if (config) {
@@ -138,11 +138,9 @@ export default function Page() {
           </button>
         ))}
 
-        <div className="download-button">
-          <button onClick={handleDownload} title="Descargar JSON">
-            <i class="fa-solid fa-download"></i>
-          </button>
-        </div>
+        <button className="download-button" onClick={handleDownload} title="Descargar JSON">
+          <i class="fa-solid fa-download"></i>
+        </button>
       </div>
       {isFormShown && (<div className="form-container">
         <div>
