@@ -32,11 +32,14 @@ export default function Page() {
         return { type: 'array', items: createSchema(obj[0]) }; // Assuming all items are of the same type
       } else if (typeof obj === 'object' && obj !== null) {
         const schema = { type: 'object', properties: {} };
-
+  
         Object.keys(obj).forEach(key => {
-          schema.properties[key] = createSchema(obj[key]);
+          // Filtrar la clave 'sectionIcon'
+          if (key !== 'sectionIcon') {
+            schema.properties[key] = createSchema(obj[key]);
+          }
         });
-
+  
         return schema;
       } else if (typeof obj === 'string' && /^#[0-9A-F]{6}$/i.test(obj)) {
         return { type: 'string', format: 'color' }; // Detecta campos de tipo color
@@ -44,9 +47,10 @@ export default function Page() {
         return { type: typeof obj };
       }
     };
-
+  
     return createSchema(config);
   };
+  
 
   useEffect(() => {
     if (config) {
@@ -55,34 +59,38 @@ export default function Page() {
     }
   }, [config]);
 
-  const generateUiSchema = (config) => {
+  const generateUiSchema = (config, title) => {
     const createUiSchema = (obj, title) => {
       if (typeof obj !== 'object' || obj === null) {
         return { type: 'Control', scope: `#/properties/${title}` };
       }
-
+  
       const elements = [];
       Object.keys(obj).forEach(key => {
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-          elements.push({
-            type: 'Group',
-            label: key.charAt(0).toUpperCase() + key.slice(1),
-            elements: [createUiSchema(obj[key], key)]
-          });
-        } else {
-          elements.push({
-            type: 'Control',
-            scope: `#/properties/${key}`,
-            options: { label: key.charAt(0).toUpperCase() + key.slice(1) }
-          });
+        // Filtrar la clave 'sectionIcon'
+        if (key !== 'sectionIcon') {
+          if (typeof obj[key] === 'object' && obj[key] !== null) {
+            elements.push({
+              type: 'Group',
+              label: key.charAt(0).toUpperCase() + key.slice(1),
+              elements: [createUiSchema(obj[key], key)]
+            });
+          } else {
+            elements.push({
+              type: 'Control',
+              scope: `#/properties/${key}`,
+              options: { label: key.charAt(0).toUpperCase() + key.slice(1) }
+            });
+          }
         }
       });
-
+  
       return { type: 'VerticalLayout', elements };
     };
-
+  
     return createUiSchema(config, 'root');
   };
+  
 
   useEffect(() => {
     if (config) {
