@@ -131,12 +131,18 @@ export default function Page() {
         </button>
 
         {sectionKeys.map((key) => (
-          <button key={key} onClick={() => handleSectionChange(key)} className='navbar-button' title={key.charAt(0).toUpperCase() + key.slice(1)}>
+          <button
+            key={key}
+            onClick={() => handleSectionChange(key)}
+            className={`navbar-button ${selectedSection === key ? 'active' : ''}`}
+            title={key.charAt(0).toUpperCase() + key.slice(1)}
+          >
             {config[key]?.sectionIcon && (
               <i className={config[key].sectionIcon}></i>
             )}
           </button>
         ))}
+
 
         <button className="download-button" onClick={handleDownload} title="Descargar JSON">
           <i class="fa-solid fa-download"></i>

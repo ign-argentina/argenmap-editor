@@ -128,6 +128,11 @@ input[type='number']::-webkit-outer-spin-button {
   background-color: var(--active--color);
 }
 
+.navbar-button.active {
+  background-color: var(--active--color);  /* Cambia el background-color cuando está activo */
+  color: rgb(0, 0, 0); 
+}
+
 /* DOWNLAOD BUTTON */
 .download-button {
   background-color: green;
