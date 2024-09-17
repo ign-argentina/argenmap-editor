@@ -56,22 +56,6 @@ input[type='number']::-webkit-outer-spin-button {
 
 
 /* NAVBAR */
-.version-info {
-  margin-bottom: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: var(--text--color);
-}
-
-.logo-container {
-  margin-bottom: 10px;
-}
-
-.logo {
-  width: 100px; /* Ajusta el tamaño del logo según tus necesidades */
-  height: auto;
-}
-
 .navbar {
   background-color: var(--primary--color);
   padding: 5px;
@@ -95,6 +79,35 @@ input[type='number']::-webkit-outer-spin-button {
   margin-bottom: 10px;
 }
 
+.version-info {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--text--color);
+}
+
+.logo-container {
+  margin-bottom: 10px;
+}
+
+.logo {
+  width: 100px; /* Ajusta el tamaño del logo según tus necesidades */
+  height: auto;
+}
+
+.showHide-button {
+  color: rgb(255, 255, 255); 
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center; /* Centra el icono horizontalmente */
+  align-items: center; /* Centra el icono verticalmente */
+  height: 50px;
+  width: 50px; /* Fija el ancho y la altura del botón para que sea cuadrado */
+  margin-bottom: 15px; /* Espacio entre los botones */
+}
 
 .navbar-button {
   background-color: var(--secondary--color);

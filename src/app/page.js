@@ -13,6 +13,7 @@ export default function Page() {
   const [selectedSection, setSelectedSection] = useState(null);
   const [schema, setSchema] = useState({});
   const [uiSchemas, setUiSchema] = useState({});
+  const [isFormShown, setIsFormShown] = useState(true);  // Asume que inicialmente quieres mostrar algo
 
   // const customRenderers = [
   //   ...materialRenderers,
@@ -31,11 +32,11 @@ export default function Page() {
         return { type: 'array', items: createSchema(obj[0]) }; // Assuming all items are of the same type
       } else if (typeof obj === 'object' && obj !== null) {
         const schema = { type: 'object', properties: {} };
-  
+
         Object.keys(obj).forEach(key => {
           schema.properties[key] = createSchema(obj[key]);
         });
-  
+
         return schema;
       } else if (typeof obj === 'string' && /^#[0-9A-F]{6}$/i.test(obj)) {
         return { type: 'string', format: 'color' }; // Detecta campos de tipo color
@@ -43,7 +44,7 @@ export default function Page() {
         return { type: typeof obj };
       }
     };
-  
+
     return createSchema(config);
   };
 
@@ -116,36 +117,39 @@ export default function Page() {
         <div className="version-info">
           <label>Versión de Config: {config ? config.app.version : 'Sin versión...'}</label>
         </div>
+
+        <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)}>
+          <i className={isFormShown ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
+        </button>
+
         {sectionKeys.map((key) => (
           <button key={key} onClick={() => handleSectionChange(key)} className='navbar-button'>
-
             {config[key]?.sectionIcon && (
-            <i className={config[key].sectionIcon}></i>
-          )}
-
+              <i className={config[key].sectionIcon}></i>
+            )}
           </button>
         ))}
       </div>
-      <div className="form-container">
+      {isFormShown && (<div className="form-container">
         <div>
           {selectedSection && (
-              <JsonForms
-                schema={schema.properties[selectedSection]}
-                uischema={uiSchemas[selectedSection]}
-                data={data[selectedSection]}
-                renderers={materialRenderers}
-                cells={materialCells}
-                onChange={({ data: updatedData }) => setData(prevData => ({
-                  ...prevData,
-                  [selectedSection]: updatedData
-                }))}
-              />
+            <JsonForms
+              schema={schema.properties[selectedSection]}
+              uischema={uiSchemas[selectedSection]}
+              data={data[selectedSection]}
+              renderers={materialRenderers}
+              cells={materialCells}
+              onChange={({ data: updatedData }) => setData(prevData => ({
+                ...prevData,
+                [selectedSection]: updatedData
+              }))}
+            />
           )}
         </div>
         <div className="download-button-container">
           <button onClick={handleDownload}>Download JSON</button>
         </div>
-      </div>
+      </div>)}
       <div className="preview-container">
         <Preview />
       </div>
