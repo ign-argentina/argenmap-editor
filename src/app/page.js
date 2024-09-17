@@ -118,17 +118,23 @@ export default function Page() {
           <label>Versión de Config: {config ? config.app.version : 'Sin versión...'}</label>
         </div>
 
-        <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)}>
+        <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
           <i className={isFormShown ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
         </button>
 
         {sectionKeys.map((key) => (
-          <button key={key} onClick={() => handleSectionChange(key)} className='navbar-button'>
+          <button key={key} onClick={() => handleSectionChange(key)} className='navbar-button' title={key.charAt(0).toUpperCase() + key.slice(1)}>
             {config[key]?.sectionIcon && (
               <i className={config[key].sectionIcon}></i>
             )}
           </button>
         ))}
+
+        <div className="download-button">
+          <button onClick={handleDownload} title="Descargar JSON">
+            <i class="fa-solid fa-download"></i>
+          </button>
+        </div>
       </div>
       {isFormShown && (<div className="form-container">
         <div>
@@ -145,9 +151,6 @@ export default function Page() {
               }))}
             />
           )}
-        </div>
-        <div className="download-button-container">
-          <button onClick={handleDownload}>Download JSON</button>
         </div>
       </div>)}
       <div className="preview-container">
