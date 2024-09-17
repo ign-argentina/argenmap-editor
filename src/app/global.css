@@ -75,6 +75,12 @@ input[type='number']::-webkit-outer-spin-button {
 .navbar {
   background-color: var(--primary--color);
   padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Esto asegura que los botones estén centrados horizontalmente */
+  justify-content: flex-start;
+  padding: 20px 0; /* Ajusta el padding si es necesario */
+  width: 8%;
 }
 
 .navbar ul {
@@ -89,35 +95,20 @@ input[type='number']::-webkit-outer-spin-button {
   margin-bottom: 10px;
 }
 
-.navbar-display-button {
-  color: rgb(255, 255, 255); 
-  border: none; 
-  padding: 10px 20px;
-  text-align: left;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  height: 50px;
-}
 
 .navbar-button {
   background-color: var(--secondary--color);
   color: rgb(255, 255, 255); 
-  border: none; 
-  padding: 10px 20px;
-  text-align: left;
+  border: none;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  width: 100%;
   display: flex;
-  align-items: center;
+  justify-content: center; /* Centra el icono horizontalmente */
+  align-items: center; /* Centra el icono verticalmente */
   height: 50px;
-}
-
-.navbar-button i {
-  margin-right: 10px;
+  width: 50px; /* Fija el ancho y la altura del botón para que sea cuadrado */
+  margin-bottom: 15px; /* Espacio entre los botones */
 }
 
 .navbar-button:hover {
