@@ -165,7 +165,7 @@ export default function Page() {
 
 
         <button className="download-button" onClick={handleDownload} title="Descargar JSON">
-          <i class="fa-solid fa-download"></i>
+          <i className="fa-solid fa-download"></i>
         </button>
       </div>
       {isFormShown && (<div className="form-container">

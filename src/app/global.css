@@ -130,7 +130,6 @@ input[type='number']::-webkit-outer-spin-button {
 
 .navbar-button.active {
   background-color: var(--active--color);  /* Cambia el background-color cuando está activo */
-  color: rgb(0, 0, 0); 
 }
 
 /* DOWNLAOD BUTTON */
