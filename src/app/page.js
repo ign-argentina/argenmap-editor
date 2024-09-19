@@ -5,7 +5,116 @@ import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import Preview from './components/Preview';
 import useConfig from '../app/hooks/useConfig';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-// import ColorPickerControl from '../app/components/ColorPickerControl';
+import ColorPickerControl from '../app/components/ColorPickerControl';
+import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
+
+
+const NEWschema = {
+  "type": "object",
+  "properties": {
+    "app": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string" }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "type": "object",
+          "properties": {
+            "bodyBackground": { "type": "string", "format": "color" },
+            "headerBackground": { "type": "string", "format": "color" },
+            "menuBackground": { "type": "string", "format": "color" },
+            "activeLayer": { "type": "string", "format": "color" },
+            "textMenu": { "type": "string" },
+            "textMenuStyle": { "type": "string" },
+            "textLegendMenu": { "type": "string", "format": "color" },
+            "textLegendMenuStyle": { "type": "string" },
+            "iconBar": { "type": "string", "format": "color" }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "leaflet": { "type": "string" }
+      }
+    }
+  }
+}
+
+const NEWuischema =  {
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Group",
+      "label": "App Configuration",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/app/properties/version",
+          "label": "App Version"
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "UI Theme",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/ui/properties/theme/properties/bodyBackground",
+          "label": "Body Background Color"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ui/properties/theme/properties/headerBackground",
+          "label": "Header Background Color"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ui/properties/theme/properties/menuBackground",
+          "label": "Menu Background Color"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ui/properties/theme/properties/activeLayer",
+          "label": "Active Layer Color"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ui/properties/theme/properties/textMenu",
+          "label": "Text Menu Color"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ui/properties/theme/properties/textLegendMenu",
+          "label": "Text Legend Menu Color"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/ui/properties/theme/properties/iconBar",
+          "label": "Icon Bar Color"
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Resources",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/resources/properties/leaflet",
+          "label": "Leaflet URL"
+        }
+      ]
+    }
+  ]
+}
+
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
@@ -15,10 +124,18 @@ export default function Page() {
   const [uiSchemas, setUiSchema] = useState({});
   const [isFormShown, setIsFormShown] = useState(true);  // Asume que inicialmente quieres mostrar algo
 
-  // const customRenderers = [
-  //   ...materialRenderers,
-  //   { tester: (schema) => (schema && schema.format === 'color'), renderer: ColorPickerControl }
-  // ];
+   const colorPickerTester = rankWith(
+    3,
+    and(
+      uiTypeIs('Control'),
+      schemaMatches((schema) => schema.format === 'color')
+    )
+  );
+  const customRenderers = [
+    ...materialRenderers, // Mantén los renderers de Material por defecto
+    { tester: colorPickerTester, renderer: ColorPickerControl } // Agrega el control personalizado
+  ];
+  
 
   useEffect(() => {
     if (config) {
@@ -54,7 +171,7 @@ export default function Page() {
 
   useEffect(() => {
     if (config) {
-      const generatedSchema = generateSchema(config);
+      const generatedSchema = NEWschema;
       setSchema(generatedSchema);
     }
   }, [config]);
@@ -94,7 +211,7 @@ export default function Page() {
 
   useEffect(() => {
     if (config) {
-      const generatedUiSchema = generateUiSchema(config);
+      const generatedUiSchema = NEWuischema;
       setUiSchema(generatedUiSchema);
     }
   }, [config]);
@@ -175,7 +292,7 @@ export default function Page() {
               schema={schema.properties[selectedSection]}
               uischema={uiSchemas[selectedSection]}
               data={data[selectedSection]}
-              renderers={materialRenderers}
+              renderers={customRenderers}
               cells={materialCells}
               onChange={({ data: updatedData }) => setData(prevData => ({
                 ...prevData,
