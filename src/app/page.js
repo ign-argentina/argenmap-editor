@@ -9,111 +9,111 @@ import ColorPickerControl from '../app/components/ColorPickerControl';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 
 
-const NEWschema = {
-  "type": "object",
-  "properties": {
-    "app": {
-      "type": "object",
-      "properties": {
-        "version": { "type": "string" }
-      }
-    },
-    "ui": {
-      "type": "object",
-      "properties": {
-        "theme": {
-          "type": "object",
-          "properties": {
-            "bodyBackground": { "type": "string", "format": "color" },
-            "headerBackground": { "type": "string", "format": "color" },
-            "menuBackground": { "type": "string", "format": "color" },
-            "activeLayer": { "type": "string", "format": "color" },
-            "textMenu": { "type": "string" },
-            "textMenuStyle": { "type": "string" },
-            "textLegendMenu": { "type": "string", "format": "color" },
-            "textLegendMenuStyle": { "type": "string" },
-            "iconBar": { "type": "string", "format": "color" }
-          }
-        }
-      }
-    },
-    "resources": {
-      "type": "object",
-      "properties": {
-        "leaflet": { "type": "string" }
-      }
-    }
-  }
-}
+// const NEWschema = {
+//   "type": "object",
+//   "properties": {
+//     "app": {
+//       "type": "object",
+//       "properties": {
+//         "version": { "type": "string" }
+//       }
+//     },
+//     "ui": {
+//       "type": "object",
+//       "properties": {
+//         "theme": {
+//           "type": "object",
+//           "properties": {
+//             "bodyBackground": { "type": "string", "format": "color" },
+//             "headerBackground": { "type": "string", "format": "color" },
+//             "menuBackground": { "type": "string", "format": "color" },
+//             "activeLayer": { "type": "string", "format": "color" },
+//             "textMenu": { "type": "string" },
+//             "textMenuStyle": { "type": "string" },
+//             "textLegendMenu": { "type": "string", "format": "color" },
+//             "textLegendMenuStyle": { "type": "string" },
+//             "iconBar": { "type": "string", "format": "color" }
+//           }
+//         }
+//       }
+//     },
+//     "resources": {
+//       "type": "object",
+//       "properties": {
+//         "leaflet": { "type": "string" }
+//       }
+//     }
+//   }
+// }
 
-const NEWuischema =  {
-  "type": "VerticalLayout",
-  "elements": [
-    {
-      "type": "Group",
-      "label": "App Configuration",
-      "elements": [
-        {
-          "type": "Control",
-          "scope": "#/properties/app/properties/version",
-          "label": "App Version"
-        }
-      ]
-    },
-    {
-      "type": "Group",
-      "label": "UI Theme",
-      "elements": [
-        {
-          "type": "Control",
-          "scope": "#/properties/ui/properties/theme/properties/bodyBackground",
-          "label": "Body Background Color"
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/ui/properties/theme/properties/headerBackground",
-          "label": "Header Background Color"
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/ui/properties/theme/properties/menuBackground",
-          "label": "Menu Background Color"
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/ui/properties/theme/properties/activeLayer",
-          "label": "Active Layer Color"
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/ui/properties/theme/properties/textMenu",
-          "label": "Text Menu Color"
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/ui/properties/theme/properties/textLegendMenu",
-          "label": "Text Legend Menu Color"
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/ui/properties/theme/properties/iconBar",
-          "label": "Icon Bar Color"
-        }
-      ]
-    },
-    {
-      "type": "Group",
-      "label": "Resources",
-      "elements": [
-        {
-          "type": "Control",
-          "scope": "#/properties/resources/properties/leaflet",
-          "label": "Leaflet URL"
-        }
-      ]
-    }
-  ]
-}
+// const NEWuischema =  {
+//   "type": "VerticalLayout",
+//   "elements": [
+//     {
+//       "type": "Group",
+//       "label": "App Configuration",
+//       "elements": [
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/app/properties/version",
+//           "label": "App Version"
+//         }
+//       ]
+//     },
+//     {
+//       "type": "Group",
+//       "label": "UI Theme",
+//       "elements": [
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/ui/properties/theme/properties/bodyBackground",
+//           "label": "Body Background Color"
+//         },
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/ui/properties/theme/properties/headerBackground",
+//           "label": "Header Background Color"
+//         },
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/ui/properties/theme/properties/menuBackground",
+//           "label": "Menu Background Color"
+//         },
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/ui/properties/theme/properties/activeLayer",
+//           "label": "Active Layer Color"
+//         },
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/ui/properties/theme/properties/textMenu",
+//           "label": "Text Menu Color"
+//         },
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/ui/properties/theme/properties/textLegendMenu",
+//           "label": "Text Legend Menu Color"
+//         },
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/ui/properties/theme/properties/iconBar",
+//           "label": "Icon Bar Color"
+//         }
+//       ]
+//     },
+//     {
+//       "type": "Group",
+//       "label": "Resources",
+//       "elements": [
+//         {
+//           "type": "Control",
+//           "scope": "#/properties/resources/properties/leaflet",
+//           "label": "Leaflet URL"
+//         }
+//       ]
+//     }
+//   ]
+// }
 
 
 export default function Page() {
@@ -122,7 +122,7 @@ export default function Page() {
   const [selectedSection, setSelectedSection] = useState(null);
   const [schema, setSchema] = useState({});
   const [uiSchemas, setUiSchema] = useState({});
-  const [isFormShown, setIsFormShown] = useState(true);  // Asume que inicialmente quieres mostrar algo
+  const [isFormShown, setIsFormShown] = useState(true);
 
    const colorPickerTester = rankWith(
     3,
@@ -171,7 +171,7 @@ export default function Page() {
 
   useEffect(() => {
     if (config) {
-      const generatedSchema = NEWschema;
+      const generatedSchema = generateSchema(config);
       setSchema(generatedSchema);
     }
   }, [config]);
@@ -211,7 +211,7 @@ export default function Page() {
 
   useEffect(() => {
     if (config) {
-      const generatedUiSchema = NEWuischema;
+      const generatedUiSchema = generateUiSchema(config);
       setUiSchema(generatedUiSchema);
     }
   }, [config]);

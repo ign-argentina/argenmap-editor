@@ -9,7 +9,7 @@ const useConfig = () => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await fetch('/argenmap/src/config/default/test.json');
+        const response = await fetch('/argenmap/src/config/default/config.json');
         const data = await response.json();
         setConfig(data);
       } catch (error) {

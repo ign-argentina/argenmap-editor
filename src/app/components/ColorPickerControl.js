@@ -3,28 +3,27 @@ import { withJsonFormsControlProps } from '@jsonforms/react';
 import { SketchPicker } from 'react-color'; 
 
 const MaterialInputControl = ({ handleChange, data, path }) => {
-  const [displayColorPicker, setDisplayColorPicker] = useState(false); // Controla la visibilidad del picker
-  const [currentColor, setCurrentColor] = useState(data || '#ffffff'); // Estado para el color actual
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const [currentColor, setCurrentColor] = useState(data || '#ffffff');
 
-  // Manejador para abrir/cerrar el color picker
   const handleButtonClick = () => {
     setDisplayColorPicker(!displayColorPicker);
+    console.log(data, path)
   };
 
-  // Manejador para actualizar el color
   const handleColorChange = (color) => {
     setCurrentColor(color.hex);
-    handleChange(path, color.hex); // Actualiza el color en JsonForms
+    handleChange(path, color.hex);
   };
 
   return (
     <div>
-      {/* Botón que muestra el color actual */}
+      <label>{path}</label>
       <button
         style={{
           backgroundColor: currentColor,
-          width: '36px',
-          height: '36px',
+          width: '100%',
+          height: '25px',
           border: 'none',
           cursor: 'pointer',
           borderRadius: '4px',
@@ -32,12 +31,11 @@ const MaterialInputControl = ({ handleChange, data, path }) => {
         onClick={handleButtonClick}
       />
       
-      {/* Muestra el SketchPicker si displayColorPicker es true */}
       {displayColorPicker && (
         <div style={{ position: 'absolute', zIndex: 2 }}>
           <div
             style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0 }}
-            onClick={() => setDisplayColorPicker(false)} // Cierra el picker si se hace clic fuera
+            onClick={() => setDisplayColorPicker(false)}
           />
           <SketchPicker
             color={currentColor}
