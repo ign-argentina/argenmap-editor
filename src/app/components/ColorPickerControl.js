@@ -12,7 +12,7 @@ const MaterialInputControl = ({ handleChange, data, path, label }) => {
 
   return (
     <div>
-      <label className='colorpickertext'>{label}</label>
+      <label className='color-picker-label'>{label}</label>
       <input
         type="color"
         value={currentColor}
