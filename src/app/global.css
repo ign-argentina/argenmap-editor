@@ -231,7 +231,7 @@ input[type='number']::-webkit-outer-spin-button {
 } */
 /* LABEL del form */
 .css-1dpseql-MuiCardHeader-content {
-  background-color: red;
+  background-color: rgb(255, 255, 255);
   padding: 5px;
   border-radius: 5px;
 }
@@ -311,12 +311,10 @@ input[type='number']::-webkit-outer-spin-button {
 
 /* Paddings de formularios */
 .css-46bh2p-MuiCardContent-root:last-child {
+  padding-bottom: 0px;
 	padding: 0px;
 }
-.css-46bh2p-MuiCardContent-root {
+/* .css-46bh2p-MuiCardContent-root {
 	padding: 0px;
-}
-.css-46bh2p-MuiCardContent-root {
-	padding: 0px;
-}
-/* Paddings de formularios */
+  padding-bottom: 0px;
+} */

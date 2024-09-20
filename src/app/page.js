@@ -171,10 +171,17 @@ export default function Page() {
 
   useEffect(() => {
     if (config) {
+      const sectionKeys = Object.keys(config);
+      // Si no hay una sección seleccionada aún, selecciona la primera sección
+      if (!selectedSection && sectionKeys.length > 0) {
+        setSelectedSection(sectionKeys[0]); // Selecciona la primera sección
+      }
+  
       const generatedSchema = generateSchema(config);
       setSchema(generatedSchema);
     }
-  }, [config]);
+  }, [config, selectedSection]);
+  
 
   const generateUiSchema = (config, title) => {
     const createUiSchema = (obj, title) => {
