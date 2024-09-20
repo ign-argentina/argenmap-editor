@@ -124,7 +124,7 @@ export default function Page() {
   const [uiSchemas, setUiSchema] = useState({});
   const [isFormShown, setIsFormShown] = useState(true);
 
-   const colorPickerTester = rankWith(
+  const colorPickerTester = rankWith(
     3,
     and(
       uiTypeIs('Control'),
@@ -135,7 +135,7 @@ export default function Page() {
     ...materialRenderers, // Mantén los renderers de Material por defecto
     { tester: colorPickerTester, renderer: ColorPickerControl } // Agrega el control personalizado
   ];
-  
+
 
   useEffect(() => {
     if (config) {
@@ -288,18 +288,21 @@ export default function Page() {
       {isFormShown && (<div className="form-container">
         <div>
           {selectedSection && (
-            <JsonForms
-              schema={schema.properties[selectedSection]}
-              uischema={uiSchemas[selectedSection]}
-              data={data[selectedSection]}
-              renderers={customRenderers}
-              cells={materialCells}
-              onChange={({ data: updatedData }) => setData(prevData => ({
-                ...prevData,
-                [selectedSection]: updatedData
-              }))}
-            />
+            <div className="custom-form-group">
+              <JsonForms
+                schema={schema.properties[selectedSection]}
+                uischema={uiSchemas[selectedSection]}
+                data={data[selectedSection]}
+                renderers={customRenderers}
+                cells={materialCells}
+                onChange={({ data: updatedData }) => setData(prevData => ({
+                  ...prevData,
+                  [selectedSection]: updatedData
+                }))}
+              />
+            </div>
           )}
+
         </div>
       </div>)}
       <div className="preview-container">

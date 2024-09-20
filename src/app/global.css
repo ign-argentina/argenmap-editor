@@ -168,7 +168,9 @@ input[type='number']::-webkit-outer-spin-button {
   border-right: 2px solid #ccc;
   display: grid;
   height: 100vh;
-  overflow: scroll;}
+  overflow: scroll;
+  /* background-color: var(--secondary--color); */
+}
 /* FORMULARIO EXTERNO */
 
 
@@ -221,3 +223,71 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 5px;
 }
 /* FORMULARIO INTERNO */
+
+
+/* .MuiCardHeader-root {
+  background-color: yellow;
+  border-radius: 5px;
+} */
+/* LABEL del form */
+.css-1dpseql-MuiCardHeader-content {
+  background-color: red;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+
+
+.css-18pjc51-MuiFormLabel-root-MuiInputLabel-root {
+	color: rgba(255, 0, 0, 0.6);
+	font-family: "Roboto","Helvetica","Arial",sans-serif;
+	font-weight: 400;
+	font-size: 1rem;
+	line-height: 1.4375em;
+	letter-spacing: 0.00938em;
+	padding: 0;
+	display: block;
+	transform-origin: top left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	position: absolute;
+
+}
+
+/* CONTENIDO DEL FORM */
+.MuiGrid-root {
+  background-color: rgb(255, 255, 255);
+  padding: 8px;
+  border-radius: 5px;
+}
+
+/* .MuiCardContent-root {
+  background-color: green;
+  border-radius: 5px;
+} */
+
+/* COLOR PICKER LABEL */
+.colorpickertext {
+	color: rgba(0, 0, 0, 0.6);
+	font-family: "Roboto","Helvetica","Arial",sans-serif;
+
+	display: block;
+	transform-origin: top left;
+
+	-webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+	transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+	z-index: 1;
+}
+
+
+/* Paddings de formularios */
+.css-46bh2p-MuiCardContent-root:last-child {
+	padding: 0px;
+}
+.css-46bh2p-MuiCardContent-root {
+	padding: 0px;
+}
+.css-46bh2p-MuiCardContent-root {
+	padding: 0px;
+}
