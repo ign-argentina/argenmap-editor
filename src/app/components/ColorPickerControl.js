@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 
-const MaterialInputControl = ({ handleChange, data, path }) => {
+const MaterialInputControl = ({ handleChange, data, path, label }) => {
   const [currentColor, setCurrentColor] = useState(data || '#ffffff');
 
   const handleColorChange = (event) => {
@@ -12,7 +12,7 @@ const MaterialInputControl = ({ handleChange, data, path }) => {
 
   return (
     <div>
-      <label>{path}</label>
+      <label>{label}</label>
       <input
         type="color"
         value={currentColor}
@@ -30,8 +30,8 @@ const MaterialInputControl = ({ handleChange, data, path }) => {
 };
 
 const ColorPickerControl = (props) => {
-  const { handleChange, data, path } = props;
-  return <MaterialInputControl handleChange={handleChange} data={data} path={path} />;
+  const { handleChange, data, path, label } = props;
+  return <MaterialInputControl handleChange={handleChange} data={data} path={path} label={label} />;
 };
 
 export default withJsonFormsControlProps(ColorPickerControl);
