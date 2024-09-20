@@ -153,6 +153,7 @@ export default function Page() {
     link.click();
   };
 
+  
   return (
     <div className="editor-container">
       <div className='navbar'>
