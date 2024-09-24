@@ -40,10 +40,10 @@ export default function Page() {
   useEffect(() => {
     const storedData = localStorage.getItem('formData');
     if (storedData) {
-      // console.log("Se usó localSotrage")
+      console.log("Se usó localSotrage")
       setData(JSON.parse(storedData));
     } else if (config) {
-      // console.log("Se usó default config")
+      console.log("Se usó default config")
       setData(config); // Si no hay datos en localStorage, usar config
     }
   }, [config]);
@@ -111,7 +111,7 @@ export default function Page() {
           }
         }
       });
-
+      // label: language[selectedLang].[key]
       return { type: 'VerticalLayout', elements };
     };
 
