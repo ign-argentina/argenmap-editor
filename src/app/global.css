@@ -132,6 +132,23 @@ input[type='number']::-webkit-outer-spin-button {
   background-color: var(--active--color);  /* Cambia el background-color cuando está activo */
 }
 
+/* CLEAR BUTTON */
+.clear-storage {
+  background-color: var(--text--color);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: auto;
+  margin-bottom: 25px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.clear-storage:hover {
+  background-color: var(--active--color);
+}
+
 /* DOWNLAOD BUTTON */
 .download-button {
   background-color: green;
@@ -140,7 +157,6 @@ input[type='number']::-webkit-outer-spin-button {
   border-radius: 8px;
   padding: 10px 20px;
   cursor: pointer;
-  margin-top: auto;
   margin-bottom: 20px;
   margin-left: 5px;
   margin-right: 5px;
@@ -149,7 +165,6 @@ input[type='number']::-webkit-outer-spin-button {
 .download-button:hover {
   background-color: var(--active--color);
 }
-/* DOWNLAOD BUTTON */
 /* NAVBAR */
 
 
