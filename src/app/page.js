@@ -133,7 +133,7 @@ export default function Page() {
   };
 
   const handleClearStorage = () => {
-    localStorage.clear();
+    localStorage.removeItem("formData");
     showToast('¡El storage se ha limpiado con exito!', 'success')
   }
 
