@@ -9,113 +9,6 @@ import ColorPickerControl from '../app/components/ColorPickerControl';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 
 
-// const NEWschema = {
-//   "type": "object",
-//   "properties": {
-//     "app": {
-//       "type": "object",
-//       "properties": {
-//         "version": { "type": "string" }
-//       }
-//     },
-//     "ui": {
-//       "type": "object",
-//       "properties": {
-//         "theme": {
-//           "type": "object",
-//           "properties": {
-//             "bodyBackground": { "type": "string", "format": "color" },
-//             "headerBackground": { "type": "string", "format": "color" },
-//             "menuBackground": { "type": "string", "format": "color" },
-//             "activeLayer": { "type": "string", "format": "color" },
-//             "textMenu": { "type": "string" },
-//             "textMenuStyle": { "type": "string" },
-//             "textLegendMenu": { "type": "string", "format": "color" },
-//             "textLegendMenuStyle": { "type": "string" },
-//             "iconBar": { "type": "string", "format": "color" }
-//           }
-//         }
-//       }
-//     },
-//     "resources": {
-//       "type": "object",
-//       "properties": {
-//         "leaflet": { "type": "string" }
-//       }
-//     }
-//   }
-// }
-
-// const NEWuischema =  {
-//   "type": "VerticalLayout",
-//   "elements": [
-//     {
-//       "type": "Group",
-//       "label": "App Configuration",
-//       "elements": [
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/app/properties/version",
-//           "label": "App Version"
-//         }
-//       ]
-//     },
-//     {
-//       "type": "Group",
-//       "label": "UI Theme",
-//       "elements": [
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/ui/properties/theme/properties/bodyBackground",
-//           "label": "Body Background Color"
-//         },
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/ui/properties/theme/properties/headerBackground",
-//           "label": "Header Background Color"
-//         },
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/ui/properties/theme/properties/menuBackground",
-//           "label": "Menu Background Color"
-//         },
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/ui/properties/theme/properties/activeLayer",
-//           "label": "Active Layer Color"
-//         },
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/ui/properties/theme/properties/textMenu",
-//           "label": "Text Menu Color"
-//         },
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/ui/properties/theme/properties/textLegendMenu",
-//           "label": "Text Legend Menu Color"
-//         },
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/ui/properties/theme/properties/iconBar",
-//           "label": "Icon Bar Color"
-//         }
-//       ]
-//     },
-//     {
-//       "type": "Group",
-//       "label": "Resources",
-//       "elements": [
-//         {
-//           "type": "Control",
-//           "scope": "#/properties/resources/properties/leaflet",
-//           "label": "Leaflet URL"
-//         }
-//       ]
-//     }
-//   ]
-// }
-
-
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
   const [data, setData] = useState({});
@@ -136,10 +29,15 @@ export default function Page() {
     { tester: colorPickerTester, renderer: ColorPickerControl } // Agrega el control personalizado
   ];
 
-
+  // Cargar datos guardados desde localStorage al inicio
   useEffect(() => {
-    if (config) {
-      setData(config); // Actualiza data cuando config esté disponible
+    const storedData = localStorage.getItem('formData');
+    if (storedData) {
+      // console.log("Se usó localSotrage")
+      setData(JSON.parse(storedData));
+    } else if (config) {
+      // console.log("Se usó default config")
+      setData(config); // Si no hay datos en localStorage, usar config
     }
   }, [config]);
 
@@ -168,7 +66,6 @@ export default function Page() {
     return createSchema(config);
   };
 
-
   useEffect(() => {
     if (config) {
       const sectionKeys = Object.keys(config);
@@ -176,12 +73,11 @@ export default function Page() {
       if (!selectedSection && sectionKeys.length > 0) {
         setSelectedSection(sectionKeys[0]); // Selecciona la primera sección
       }
-  
       const generatedSchema = generateSchema(config);
       setSchema(generatedSchema);
     }
   }, [config, selectedSection]);
-  
+
 
   const generateUiSchema = (config, title) => {
     const createUiSchema = (obj, title) => {
@@ -267,7 +163,7 @@ export default function Page() {
           <img src="/logos/logo.png" alt="Logo" className="logo" />
         </div>
         <div className="version-info">
-          <label>Versión de Config: {config ? config.app.version : 'Sin versión...'}</label>
+          <label>v{config ? config.app.version : 'Sin versión...'}</label>
         </div>
 
         <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
@@ -302,10 +198,16 @@ export default function Page() {
                 data={data[selectedSection]}
                 renderers={customRenderers}
                 cells={materialCells}
-                onChange={({ data: updatedData }) => setData(prevData => ({
-                  ...prevData,
-                  [selectedSection]: updatedData
-                }))}
+                onChange={({ data: updatedData }) => {
+                  setData(prevData => {
+                    const newData = {
+                      ...prevData,
+                      [selectedSection]: updatedData
+                    };
+                    localStorage.setItem('formData', JSON.stringify(newData));
+                    return newData;
+                  });
+                }}
               />
             </div>
           )}
