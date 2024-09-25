@@ -4,6 +4,7 @@ import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import Preview from './components/Preview';
 import useConfig from '../app/hooks/useConfig';
+import useLang from '../app/hooks/useLang';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import ColorPickerControl from '../app/components/ColorPickerControl';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
@@ -12,6 +13,7 @@ import Ajv from 'ajv';
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
+  const { lang: languages, loading: langLoading, error: langError } = useLang();
   const [data, setData] = useState({});
   const [selectedSection, setSelectedSection] = useState(null);
   const [schema, setSchema] = useState({});
@@ -20,7 +22,9 @@ export default function Page() {
   const [toast, setToast] = useState(null);
   const ajv = new Ajv();
   ajv.addFormat('color', /^#[0-9A-Fa-f]{6}$/); // Agregando el formato personalizado "color"
-  
+  const [selectedLang, setSelectedLang] = useState('es');
+
+
   const showToast = (message, type) => {
     setToast({ message, type });
     
@@ -43,10 +47,8 @@ export default function Page() {
   useEffect(() => {
     const storedData = localStorage.getItem('formData');
     if (storedData) {
-      console.log("Se usó localSotrage")
       setData(JSON.parse(storedData));
     } else if (config) {
-      console.log("Se usó default config")
       setData(config); // Si no hay datos en localStorage, usar config
     }
   }, [config]);
@@ -89,45 +91,82 @@ export default function Page() {
   }, [config, selectedSection]);
 
 
-  const generateUiSchema = (config, title) => {
+  const generateUiSchema = (config, languages, selectedLang) => {
     const createUiSchema = (obj, title) => {
       if (typeof obj !== 'object' || obj === null) {
-        return { type: 'Control', scope: `#/properties/${title}` };
+        // Obtiene el label en el idioma seleccionado o por defecto
+        const label = languages?.[selectedLang]?.[title] || languages?.default?.[title] || title;
+        return { type: 'Control', scope: `#/properties/${label}`, label };
       }
-
+  
       const elements = [];
       Object.keys(obj).forEach(key => {
-        // Filtrar la clave 'sectionIcon'
         if (key !== 'sectionIcon') {
+          // Obtiene el label en el idioma seleccionado o por defecto
+          const label = languages?.[selectedLang]?.[key] || languages?.default?.[key];
+
           if (typeof obj[key] === 'object' && obj[key] !== null) {
             elements.push({
               type: 'Group',
               label: key.charAt(0).toUpperCase() + key.slice(1),
-              elements: [createUiSchema(obj[key], key)]
+              elements: [createUiSchema(obj[key], label)]
             });
           } else {
             elements.push({
               type: 'Control',
-              scope: `#/properties/${key}`,
-              options: { label: key.charAt(0).toUpperCase() + key.slice(1) }
+              scope: `#/properties/${label}`,
+              options: { label: label }
             });
           }
         }
       });
-      // label: language[selectedLang].[key]
+    
       return { type: 'VerticalLayout', elements };
     };
-
     return createUiSchema(config, 'root');
   };
+  
+  // const generateUiSchema = (config, title) => {
+  //   const createUiSchema = (obj, title) => {
+  //     if (typeof obj !== 'object' || obj === null) {
+  //       return { type: 'Control', scope: `#/properties/${title}` };
+  //     }
+
+  //     const elements = [];
+  //     Object.keys(obj).forEach(key => {
+  //       // Filtrar la clave 'sectionIcon'
+  //       if (key !== 'sectionIcon') {
+  //         if (typeof obj[key] === 'object' && obj[key] !== null) {
+  //           elements.push({
+  //             type: 'Group',
+  //             label: key.charAt(0).toUpperCase() + key.slice(1),
+  //             elements: [createUiSchema(obj[key], key)]
+  //           });
+  //         } else {
+  //           elements.push({
+  //             type: 'Control',
+  //             scope: `#/properties/${key}`,
+  //             options: { label: key.charAt(0).toUpperCase() + key.slice(1) }
+  //           });
+  //         }
+  //       }
+  //     });
+  //     // label: language[selectedLang].[key]
+  //     return { type: 'VerticalLayout', elements };
+  //   };
+
+  //   return createUiSchema(config, 'root');
+  // };
 
 
   useEffect(() => {
-    if (config) {
-      const generatedUiSchema = generateUiSchema(config);
-      setUiSchema(generatedUiSchema);
+    if (!config || !languages || !selectedLang) {
+      return;
     }
-  }, [config]);
+    const generatedUiSchema = generateUiSchema(config, languages, selectedLang);
+    setUiSchema(generatedUiSchema);
+  }, [config, languages, selectedLang]);
+  
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
 
