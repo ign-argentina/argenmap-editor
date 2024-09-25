@@ -8,6 +8,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import ColorPickerControl from '../app/components/ColorPickerControl';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import Toast from './utils/Toast'
+import Ajv from 'ajv';
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
@@ -17,7 +18,9 @@ export default function Page() {
   const [uiSchemas, setUiSchema] = useState({});
   const [isFormShown, setIsFormShown] = useState(true);
   const [toast, setToast] = useState(null);
-
+  const ajv = new Ajv();
+  ajv.addFormat('color', /^#[0-9A-Fa-f]{6}$/); // Agregando el formato personalizado "color"
+  
   const showToast = (message, type) => {
     setToast({ message, type });
     
@@ -213,6 +216,7 @@ export default function Page() {
                 data={data[selectedSection]}
                 renderers={customRenderers}
                 cells={materialCells}
+                ajv={ajv}
                 onChange={({ data: updatedData }) => {
                   setData(prevData => {
                     const newData = {
