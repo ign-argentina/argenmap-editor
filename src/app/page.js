@@ -7,7 +7,8 @@ import useConfig from '../app/hooks/useConfig';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import ColorPickerControl from '../app/components/ColorPickerControl';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
-
+import Toast from './utils/Toast'
+import Ajv from 'ajv';
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
@@ -16,7 +17,16 @@ export default function Page() {
   const [schema, setSchema] = useState({});
   const [uiSchemas, setUiSchema] = useState({});
   const [isFormShown, setIsFormShown] = useState(true);
-
+  const [toast, setToast] = useState(null);
+  const ajv = new Ajv();
+  ajv.addFormat('color', /^#[0-9A-Fa-f]{6}$/); // Agregando el formato personalizado "color"
+  
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    
+    // Limpiar el toast después de mostrarlo
+    setTimeout(() => setToast(null), 3000);
+  };
   const colorPickerTester = rankWith(
     3,
     and(
@@ -29,10 +39,15 @@ export default function Page() {
     { tester: colorPickerTester, renderer: ColorPickerControl } // Agrega el control personalizado
   ];
 
-
+  // Cargar datos guardados desde localStorage al inicio
   useEffect(() => {
-    if (config) {
-      setData(config); // Actualiza data cuando config esté disponible
+    const storedData = localStorage.getItem('formData');
+    if (storedData) {
+      console.log("Se usó localSotrage")
+      setData(JSON.parse(storedData));
+    } else if (config) {
+      console.log("Se usó default config")
+      setData(config); // Si no hay datos en localStorage, usar config
     }
   }, [config]);
 
@@ -61,7 +76,6 @@ export default function Page() {
     return createSchema(config);
   };
 
-
   useEffect(() => {
     if (config) {
       const sectionKeys = Object.keys(config);
@@ -69,12 +83,11 @@ export default function Page() {
       if (!selectedSection && sectionKeys.length > 0) {
         setSelectedSection(sectionKeys[0]); // Selecciona la primera sección
       }
-  
       const generatedSchema = generateSchema(config);
       setSchema(generatedSchema);
     }
   }, [config, selectedSection]);
-  
+
 
   const generateUiSchema = (config, title) => {
     const createUiSchema = (obj, title) => {
@@ -101,7 +114,7 @@ export default function Page() {
           }
         }
       });
-
+      // label: language[selectedLang].[key]
       return { type: 'VerticalLayout', elements };
     };
 
@@ -121,6 +134,11 @@ export default function Page() {
   const handleSectionChange = (section) => {
     setSelectedSection(section);
   };
+
+  const handleClearStorage = () => {
+    localStorage.removeItem("formData");
+    showToast('¡El storage se ha limpiado con exito!', 'success')
+  }
 
   const handleDownload = () => {
     // Chequeo de campos borrados.
@@ -181,6 +199,9 @@ export default function Page() {
           </button>
         ))}
 
+        <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
+          <i className="fa-solid fa-trash-can"></i>
+        </button>
 
         <button className="download-button" onClick={handleDownload} title="Descargar JSON">
           <i className="fa-solid fa-download"></i>
@@ -196,16 +217,33 @@ export default function Page() {
                 data={data[selectedSection]}
                 renderers={customRenderers}
                 cells={materialCells}
-                onChange={({ data: updatedData }) => setData(prevData => ({
-                  ...prevData,
-                  [selectedSection]: updatedData
-                }))}
+                ajv={ajv}
+                onChange={({ data: updatedData }) => {
+                  setData(prevData => {
+                    const newData = {
+                      ...prevData,
+                      [selectedSection]: updatedData
+                    };
+                    localStorage.setItem('formData', JSON.stringify(newData));
+                    return newData;
+                  });
+                }}
               />
             </div>
           )}
 
         </div>
       </div>)}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={3000}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <div className="preview-container">
         <Preview />
       </div>
