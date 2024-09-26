@@ -8,39 +8,34 @@ import useLang from '../app/hooks/useLang';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import ColorPickerControl from '../app/components/ColorPickerControl';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
-import Toast from './utils/Toast'
+import Toast from './utils/Toast';
 import Ajv from 'ajv';
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
-  const { lang: languages, loading: langLoading, error: langError } = useLang();
+  const { lang: language, loading: langLoading, error: langError } = useLang();
   const [data, setData] = useState({});
   const [selectedSection, setSelectedSection] = useState(null);
   const [schema, setSchema] = useState({});
-  const [uiSchemas, setUiSchema] = useState({});
   const [isFormShown, setIsFormShown] = useState(true);
   const [toast, setToast] = useState(null);
+  const [selectedLang, setSelectedLang] = useState('es'); // Idioma predeterminado
   const ajv = new Ajv();
   ajv.addFormat('color', /^#[0-9A-Fa-f]{6}$/); // Agregando el formato personalizado "color"
-  const [selectedLang, setSelectedLang] = useState('es');
-
 
   const showToast = (message, type) => {
     setToast({ message, type });
-    
-    // Limpiar el toast después de mostrarlo
-    setTimeout(() => setToast(null), 3000);
+    setTimeout(() => setToast(null), 3000); // Limpiar el toast después de mostrarlo
   };
+
   const colorPickerTester = rankWith(
     3,
-    and(
-      uiTypeIs('Control'),
-      schemaMatches((schema) => schema.format === 'color')
-    )
+    and(uiTypeIs('Control'), schemaMatches((schema) => schema.format === 'color'))
   );
+  
   const customRenderers = [
-    ...materialRenderers, // Mantén los renderers de Material por defecto
-    { tester: colorPickerTester, renderer: ColorPickerControl } // Agrega el control personalizado
+    ...materialRenderers,
+    { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
   // Cargar datos guardados desde localStorage al inicio
@@ -49,129 +44,74 @@ export default function Page() {
     if (storedData) {
       setData(JSON.parse(storedData));
     } else if (config) {
-      setData(config); // Si no hay datos en localStorage, usar config
+      setData(config);
     }
   }, [config]);
 
+  // Genera el schema base en función de la estructura de config
   const generateSchema = (config) => {
     const createSchema = (obj) => {
       if (Array.isArray(obj)) {
-        return { type: 'array', items: createSchema(obj[0]) }; // Assuming all items are of the same type
+        return { type: 'array', items: createSchema(obj[0]) };
       } else if (typeof obj === 'object' && obj !== null) {
         const schema = { type: 'object', properties: {} };
-
-        Object.keys(obj).forEach(key => {
-          // Filtrar la clave 'sectionIcon'
+        Object.keys(obj).forEach((key) => {
           if (key !== 'sectionIcon') {
             schema.properties[key] = createSchema(obj[key]);
           }
         });
-
         return schema;
       } else if (typeof obj === 'string' && /^#[0-9A-F]{6}$/i.test(obj)) {
-        return { type: 'string', format: 'color' }; // Detecta campos de tipo color
+        return { type: 'string', format: 'color' };
       } else {
         return { type: typeof obj };
       }
     };
-
     return createSchema(config);
   };
 
+  const applyTranslations = (schema, translations, parentKey = '') => {
+    if (!schema || typeof schema !== 'object') return schema;
+  
+    const translatedSchema = { ...schema };
+  
+    // Si es un objeto, iteramos sobre sus propiedades
+    if (schema.type === 'object' && schema.properties) {
+      translatedSchema.properties = Object.entries(schema.properties).reduce((acc, [key, value]) => {
+        acc[key] = applyTranslations(value, translations, key); // Propagar el `key` al siguiente nivel
+        return acc;
+      }, {});
+    } else if (schema.type === 'string') {
+      // Usamos el `parentKey` como referencia para buscar la traducción
+      translatedSchema.title = translations[parentKey] || schema.title || parentKey;
+    }
+    return translatedSchema;
+  };
+  
+
+  // Actualiza el schema cada vez que config o el idioma cambian
   useEffect(() => {
     if (config) {
       const sectionKeys = Object.keys(config);
-      // Si no hay una sección seleccionada aún, selecciona la primera sección
       if (!selectedSection && sectionKeys.length > 0) {
         setSelectedSection(sectionKeys[0]); // Selecciona la primera sección
       }
       const generatedSchema = generateSchema(config);
-      setSchema(generatedSchema);
+      
+      // Aplicar traducciones basadas en el idioma seleccionado
+      const translatedSchema = applyTranslations(generatedSchema, language[selectedLang] || language['default']);
+      setSchema(translatedSchema);
     }
-  }, [config, selectedSection]);
-
-
-  const generateUiSchema = (config, languages, selectedLang) => {
-    const createUiSchema = (obj, title) => {
-      if (typeof obj !== 'object' || obj === null) {
-        // Obtiene el label en el idioma seleccionado o por defecto
-        const label = languages?.[selectedLang]?.[title] || languages?.default?.[title] || title;
-        return { type: 'Control', scope: `#/properties/${label}`, label };
-      }
-  
-      const elements = [];
-      Object.keys(obj).forEach(key => {
-        if (key !== 'sectionIcon') {
-          // Obtiene el label en el idioma seleccionado o por defecto
-          const label = languages?.[selectedLang]?.[key] || languages?.default?.[key];
-
-          if (typeof obj[key] === 'object' && obj[key] !== null) {
-            elements.push({
-              type: 'Group',
-              label: key.charAt(0).toUpperCase() + key.slice(1),
-              elements: [createUiSchema(obj[key], label)]
-            });
-          } else {
-            elements.push({
-              type: 'Control',
-              scope: `#/properties/${label}`,
-              options: { label: label }
-            });
-          }
-        }
-      });
-    
-      return { type: 'VerticalLayout', elements };
-    };
-    return createUiSchema(config, 'root');
-  };
-  
-  // const generateUiSchema = (config, title) => {
-  //   const createUiSchema = (obj, title) => {
-  //     if (typeof obj !== 'object' || obj === null) {
-  //       return { type: 'Control', scope: `#/properties/${title}` };
-  //     }
-
-  //     const elements = [];
-  //     Object.keys(obj).forEach(key => {
-  //       // Filtrar la clave 'sectionIcon'
-  //       if (key !== 'sectionIcon') {
-  //         if (typeof obj[key] === 'object' && obj[key] !== null) {
-  //           elements.push({
-  //             type: 'Group',
-  //             label: key.charAt(0).toUpperCase() + key.slice(1),
-  //             elements: [createUiSchema(obj[key], key)]
-  //           });
-  //         } else {
-  //           elements.push({
-  //             type: 'Control',
-  //             scope: `#/properties/${key}`,
-  //             options: { label: key.charAt(0).toUpperCase() + key.slice(1) }
-  //           });
-  //         }
-  //       }
-  //     });
-  //     // label: language[selectedLang].[key]
-  //     return { type: 'VerticalLayout', elements };
-  //   };
-
-  //   return createUiSchema(config, 'root');
-  // };
-
-
-  useEffect(() => {
-    if (!config || !languages || !selectedLang) {
-      return;
-    }
-    const generatedUiSchema = generateUiSchema(config, languages, selectedLang);
-    setUiSchema(generatedUiSchema);
-  }, [config, languages, selectedLang]);
-  
+  }, [config, selectedSection, selectedLang]);
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
 
   const handleSectionChange = (section) => {
     setSelectedSection(section);
+  };
+
+  const handleLanguageChange = (e) => {
+    setSelectedLang(e.target.value);
   };
 
   const handleClearStorage = () => {
@@ -208,8 +148,11 @@ export default function Page() {
     link.setAttribute('download', 'config.json');
     document.body.appendChild(link);
     link.click();
-  };
 
+  return (0
+  );
+}
+  
   return (
     <div className="editor-container">
       <div className='navbar'>
@@ -220,9 +163,10 @@ export default function Page() {
           <label>v{config ? config.app.version : 'Sin versión...'}</label>
         </div>
 
-        <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
-          <i className={isFormShown ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
-        </button>
+        <select onChange={handleLanguageChange} value={selectedLang}>
+          <option value="es">Español</option>
+          <option value="en">English</option>
+        </select>
 
         {sectionKeys.map((key) => (
           <button
@@ -236,7 +180,6 @@ export default function Page() {
             )}
           </button>
         ))}
-
         <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
           <i className="fa-solid fa-trash-can"></i>
         </button>
@@ -245,19 +188,19 @@ export default function Page() {
           <i className="fa-solid fa-download"></i>
         </button>
       </div>
-      {isFormShown && (<div className="form-container">
-        <div>
+
+      {isFormShown && (
+        <div className="form-container">
           {selectedSection && (
             <div className="custom-form-group">
               <JsonForms
                 schema={schema.properties[selectedSection]}
-                uischema={uiSchemas[selectedSection]}
                 data={data[selectedSection]}
                 renderers={customRenderers}
                 cells={materialCells}
                 ajv={ajv}
                 onChange={({ data: updatedData }) => {
-                  setData(prevData => {
+                  setData((prevData) => {
                     const newData = {
                       ...prevData,
                       [selectedSection]: updatedData
@@ -269,9 +212,8 @@ export default function Page() {
               />
             </div>
           )}
-
         </div>
-      </div>)}
+      )}
 
       {toast && (
         <Toast
