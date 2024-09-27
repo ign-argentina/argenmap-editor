@@ -19,7 +19,11 @@ export default function Page() {
   const [schema, setSchema] = useState({});
   const [isFormShown, setIsFormShown] = useState(true);
   const [toast, setToast] = useState(null);
-  const [selectedLang, setSelectedLang] = useState('es'); // Idioma predeterminado
+
+  // Cargar idioma del localStorage, si no existe usar "default"
+  const savedLanguage = localStorage.getItem('selectedLang') || 'es';
+  const [selectedLang, setSelectedLang] = useState(savedLanguage);
+
   const ajv = new Ajv();
   ajv.addFormat('color', /^#[0-9A-Fa-f]{6}$/); // Agregando el formato personalizado "color"
 
@@ -32,7 +36,7 @@ export default function Page() {
     3,
     and(uiTypeIs('Control'), schemaMatches((schema) => schema.format === 'color'))
   );
-  
+
   const customRenderers = [
     ...materialRenderers,
     { tester: colorPickerTester, renderer: ColorPickerControl }
@@ -72,7 +76,7 @@ export default function Page() {
 
   const applyTranslations = (schema, translations, parentKey = '', defaultTranslations = {}) => {
     if (!schema || typeof schema !== 'object') return schema;
-  
+
     // Función para capitalizar las palabras de una cadena camelCase
     const capitalizeWords = (str) => {
       return str
@@ -82,9 +86,9 @@ export default function Page() {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitaliza la primera letra de cada palabra
         .join(' '); // Une nuevamente con un espacio entre palabras
     };
-  
+
     const translatedSchema = { ...schema };
-  
+
     // Si el esquema es de tipo "object", iteramos sobre sus propiedades y traducimos el título del objeto
     if (schema.type === 'object' && schema.properties) {
       translatedSchema.title =
@@ -92,7 +96,7 @@ export default function Page() {
         defaultTranslations[parentKey] || // Traducción en "default"
         schema.title || // Título original en el schema
         capitalizeWords(parentKey); // Clave original con capitalización como fallback
-  
+
       translatedSchema.properties = Object.entries(schema.properties).reduce((acc, [key, value]) => {
         acc[key] = applyTranslations(value, translations, key, defaultTranslations); // Pasar `defaultTranslations` a cada propiedad
         return acc;
@@ -105,12 +109,12 @@ export default function Page() {
         schema.title || // Título original en el schema
         capitalizeWords(parentKey); // Clave original con capitalización como fallback
     }
-  
+
     return translatedSchema;
   };
-  
-  
-  
+
+
+
 
   // Actualiza el schema cada vez que config o el idioma cambian
   useEffect(() => {
@@ -120,7 +124,7 @@ export default function Page() {
         setSelectedSection(sectionKeys[0]); // Selecciona la primera sección
       }
       const generatedSchema = generateSchema(config);
-  
+
       // Aplicar traducciones basadas en el idioma seleccionado y el idioma por defecto
       const translatedSchema = applyTranslations(
         generatedSchema,
@@ -131,7 +135,7 @@ export default function Page() {
       setSchema(translatedSchema);
     }
   }, [config, selectedSection, selectedLang, language]);
-  
+
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
 
@@ -140,7 +144,9 @@ export default function Page() {
   };
 
   const handleLanguageChange = (e) => {
-    setSelectedLang(e.target.value);
+    const selectedLanguage = e.target.value;
+    setSelectedLang(selectedLanguage);
+    localStorage.setItem('selectedLang', selectedLanguage); // Guardar el idioma en localStorage
   };
 
   const handleClearStorage = () => {
@@ -178,10 +184,10 @@ export default function Page() {
     document.body.appendChild(link);
     link.click();
 
-  return (0
-  );
-}
-  
+    return (0
+    );
+  }
+
   return (
     <div className="editor-container">
       <div className='navbar'>
