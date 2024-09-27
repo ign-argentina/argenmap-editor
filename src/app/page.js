@@ -146,9 +146,12 @@ export default function Page() {
     localStorage.setItem('selectedLang', selectedLanguage);
   };
 
+  const [reloadKey, setReloadKey] = useState(0);
   const handleClearStorage = () => {
     localStorage.removeItem("formData");
-    showToast('¡El storage se ha limpiado con exito!', 'success')
+    setData(config);
+    setReloadKey(prev => prev + 1);
+    showToast('¡El storage se ha limpiado con éxito!', 'success');
   }
 
   const handleDownload = () => {
@@ -241,7 +244,7 @@ export default function Page() {
       </div>
 
       {isFormShown && (
-        <div className="form-container">
+        <div className="form-container" key={reloadKey}>
           {selectedSection && (
             <div className="custom-form-group">
               <JsonForms
