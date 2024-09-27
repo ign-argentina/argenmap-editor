@@ -146,9 +146,12 @@ export default function Page() {
     localStorage.setItem('selectedLang', selectedLanguage);
   };
 
+  const [reloadKey, setReloadKey] = useState(0);
   const handleClearStorage = () => {
     localStorage.removeItem("formData");
-    showToast('¡El storage se ha limpiado con exito!', 'success')
+    setData(config);
+    setReloadKey(prev => prev + 1);
+    showToast('¡El storage se ha limpiado con éxito!', 'success');
   }
 
   const handleDownload = () => {
@@ -190,23 +193,32 @@ export default function Page() {
     <div className="editor-container">
       <div className='navbar'>
         <div className="logo-container">
-          <img src="/logos/logo.png" alt="Logo" className="logo" />
+          <img src="/logos/logo2.png" alt="Logo" className="logo" />
         </div>
         <div className="version-info">
-          <label>v{config ? config.app.version : 'Sin versión...'}</label>
+          <label>EDITOR v{config ? config.app.version : 'Sin versión...'}</label>
         </div>
 
-        <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
-          <i className={isFormShown ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
-        </button>
+        <div className="button-container">
+          <div className="select-container">
+            <i className="fa-solid fa-earth-americas"></i>
+            <select className="lang-select" onChange={handleLanguageChange} value={selectedLang}>
+              {language && Object.keys(language).map((langKey) => (
+                <option key={langKey} value={langKey}>
+                  {langKey === 'default' ? 'Predeterminado' : langKey.charAt(0).toUpperCase() + langKey.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <select className="lang-select" onChange={handleLanguageChange} value={selectedLang}>
-          {language && Object.keys(language).map((langKey) => (
-            <option key={langKey} value={langKey}>
-              {langKey === 'default' ? 'Predeterminado' : langKey.charAt(0).toUpperCase() + langKey.slice(1)}
-            </option>
-          ))}
-        </select>
+          <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
+            <i className="fa-solid fa-trash-can"></i>
+          </button>
+
+          <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
+            <i className={isFormShown ? "fa-solid fa-play" : "fa-solid fa-play fa-flip-horizontal"}></i>
+          </button>
+        </div>
 
         {sectionKeys.map((key) => (
           <button
@@ -219,23 +231,25 @@ export default function Page() {
             }
           >
             {config[key]?.sectionIcon && (
-              <i className={config[key].sectionIcon}></i>
+              <span className="icon">
+                <i className={config[key].sectionIcon}></i>
+              </span>
             )}
+
             {schema.properties[key]?.title || key.charAt(0).toUpperCase() + key.slice(1)}
           </button>
         ))}
 
-        <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
-          <i className="fa-solid fa-trash-can"></i>
-        </button>
-
         <button className="download-button" onClick={handleDownload} title="Descargar JSON">
-          <i className="fa-solid fa-download"></i>
+          <span className="icon">
+            <i className="fa-solid fa-download"></i>
+          </span>
+          Descargar
         </button>
       </div>
 
       {isFormShown && (
-        <div className="form-container">
+        <div className="form-container" key={reloadKey}>
           {selectedSection && (
             <div className="custom-form-group">
               <JsonForms
