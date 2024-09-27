@@ -196,8 +196,11 @@ export default function Page() {
         </div>
 
         <select onChange={handleLanguageChange} value={selectedLang}>
-          <option value="es">Español</option>
-          <option value="en">English</option>
+          {language && Object.keys(language).map((langKey) => (
+            <option key={langKey} value={langKey}>
+              {langKey === 'default' ? 'Predeterminado' : langKey.charAt(0).toUpperCase() + langKey.slice(1)}
+            </option>
+          ))}
         </select>
 
         {sectionKeys.map((key) => (
@@ -205,13 +208,17 @@ export default function Page() {
             key={key}
             onClick={() => handleSectionChange(key)}
             className={`navbar-button ${selectedSection === key ? 'active' : ''}`}
-            title={key.charAt(0).toUpperCase() + key.slice(1)}
+            title={
+              schema.properties[key]?.title ||
+              key.charAt(0).toUpperCase() + key.slice(1) // Fallback a la clave si no existe traducción
+            }
           >
             {config[key]?.sectionIcon && (
               <i className={config[key].sectionIcon}></i>
             )}
           </button>
         ))}
+
         <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
           <i className="fa-solid fa-trash-can"></i>
         </button>
