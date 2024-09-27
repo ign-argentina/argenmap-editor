@@ -199,7 +199,7 @@ export default function Page() {
           <i className={isFormShown ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
         </button>
 
-        <select onChange={handleLanguageChange} value={selectedLang}>
+        <select className="lang-select" onChange={handleLanguageChange} value={selectedLang}>
           {language && Object.keys(language).map((langKey) => (
             <option key={langKey} value={langKey}>
               {langKey === 'default' ? 'Predeterminado' : langKey.charAt(0).toUpperCase() + langKey.slice(1)}
@@ -220,6 +220,7 @@ export default function Page() {
             {config[key]?.sectionIcon && (
               <i className={config[key].sectionIcon}></i>
             )}
+            {schema.properties[key]?.title || key.charAt(0).toUpperCase() + key.slice(1)}
           </button>
         ))}
 
