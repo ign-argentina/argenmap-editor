@@ -195,6 +195,10 @@ export default function Page() {
           <label>v{config ? config.app.version : 'Sin versión...'}</label>
         </div>
 
+        <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
+          <i className={isFormShown ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
+        </button>
+
         <select onChange={handleLanguageChange} value={selectedLang}>
           {language && Object.keys(language).map((langKey) => (
             <option key={langKey} value={langKey}>
@@ -210,7 +214,7 @@ export default function Page() {
             className={`navbar-button ${selectedSection === key ? 'active' : ''}`}
             title={
               schema.properties[key]?.title ||
-              key.charAt(0).toUpperCase() + key.slice(1) // Fallback a la clave si no existe traducción
+              key.charAt(0).toUpperCase() + key.slice(1)
             }
           >
             {config[key]?.sectionIcon && (
