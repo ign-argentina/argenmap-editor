@@ -89,21 +89,47 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .version-info {
-  margin-bottom: 10px;
   font-size: 16px;
   font-weight: bold;
   color: var(--text--color);
 }
 
+.button-container {
+  display: flex;
+  align-items: center; 
+  gap: 10px;
+  margin: 15px;
+}
+
+.showHide-button {
+  color: var(--text--color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CLEAR BUTTON */
+.clear-storage {
+  color: var(--text--color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* .clear-storage:hover {
+  background-color: var(--active--color);
+} */
+
 .select-container {
   display: flex;
   align-items: center;
   position: relative;
-  margin: 15px;
 }
 
 .select-container i {
-  margin-right: 10px;
   color: var(--text--color);
 }
 
@@ -111,14 +137,13 @@ input[type='number']::-webkit-outer-spin-button {
   background-color: var(--primary--color);
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 10px;
   font-size: 16px;
   font-family: 'Arial', sans-serif;
   color: var(--text--color);
   outline: none;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  width: 35%;
+  width: 53px;
 }
 
 .lang-select option {
@@ -139,20 +164,6 @@ input[type='number']::-webkit-outer-spin-button {
   background-color: #e9ecef;
   cursor: not-allowed;
   color: var(--active--color); 
-}
-
-.showHide-button {
-  color: rgb(255, 255, 255); 
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  width: 50px;
-  margin-bottom: 15px;
 }
 
 .navbar-button {
@@ -186,34 +197,24 @@ input[type='number']::-webkit-outer-spin-button {
   background-color: var(--active--color); 
 }
 
-/* CLEAR BUTTON */
-.clear-storage {
-  background-color: var(--text--color);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-top: auto;
-  margin-bottom: 25px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.clear-storage:hover {
-  background-color: var(--active--color);
-}
-
 /* DOWNLAOD BUTTON */
 .download-button {
   background-color: green;
   color: rgb(255, 255, 255);
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
+  padding: 10px 15px;
+  border-radius: 5px;
   cursor: pointer;
-  margin-bottom: 20px;
-  margin-left: 5px;
-  margin-right: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  text-align: left; 
+  margin-top: auto;
 }
 
 .download-button:hover {
