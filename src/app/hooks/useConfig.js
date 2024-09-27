@@ -5,7 +5,6 @@ const useConfig = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  //Lógica para cargar el config por defecto
   useEffect(() => {
     const fetchConfig = async () => {
       try {

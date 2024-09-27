@@ -63,8 +63,8 @@ input[type='number']::-webkit-outer-spin-button {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 20px 0;
-  width: 8%;
+  /* padding: 20px 0; */
+  width: 10%;
 }
 
 .navbar ul {
@@ -79,13 +79,6 @@ input[type='number']::-webkit-outer-spin-button {
   margin-bottom: 10px;
 }
 
-.version-info {
-  margin-bottom: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: var(--text--color);
-}
-
 .logo-container {
   margin-bottom: 10px;
 }
@@ -93,6 +86,46 @@ input[type='number']::-webkit-outer-spin-button {
 .logo {
   width: 100px;
   height: auto;
+}
+
+.version-info {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--text--color);
+}
+
+.lang-select {
+  background-color: var(--primary--color);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  color: var(--text--color);
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  width: 55%;
+}
+
+.lang-select option {
+  background-color: var(--primary--color);
+  color: var(--text--color);
+}
+
+.lang-select:hover {
+  border-color: var(--active--color);
+}
+
+.lang-select:focus {
+  border-color: var(--active--color);
+}
+
+.lang-select:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  color: var(--active--color);;
 }
 
 .showHide-button {
@@ -120,7 +153,7 @@ input[type='number']::-webkit-outer-spin-button {
   justify-content: center;
   align-items: center;
   height: 50px;
-  width: 50px;
+  width: 100%;
   margin-bottom: 15px; 
 }
 
@@ -132,6 +165,23 @@ input[type='number']::-webkit-outer-spin-button {
   background-color: var(--active--color);  /* Cambia el background-color cuando está activo */
 }
 
+/* CLEAR BUTTON */
+.clear-storage {
+  background-color: var(--text--color);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: auto;
+  margin-bottom: 25px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.clear-storage:hover {
+  background-color: var(--active--color);
+}
+
 /* DOWNLAOD BUTTON */
 .download-button {
   background-color: green;
@@ -140,7 +190,6 @@ input[type='number']::-webkit-outer-spin-button {
   border-radius: 8px;
   padding: 10px 20px;
   cursor: pointer;
-  margin-top: auto;
   margin-bottom: 20px;
   margin-left: 5px;
   margin-right: 5px;
@@ -149,7 +198,6 @@ input[type='number']::-webkit-outer-spin-button {
 .download-button:hover {
   background-color: var(--active--color);
 }
-/* DOWNLAOD BUTTON */
 /* NAVBAR */
 
 
