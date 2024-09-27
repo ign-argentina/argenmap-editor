@@ -75,16 +75,18 @@ export default function Page() {
   
     const translatedSchema = { ...schema };
   
-    // Si es un objeto, iteramos sobre sus propiedades
+    // Si el esquema es de tipo "object", iteramos sobre sus propiedades
     if (schema.type === 'object' && schema.properties) {
+      translatedSchema.title = translations[parentKey] || schema.title || parentKey; // Traducir el título del objeto
       translatedSchema.properties = Object.entries(schema.properties).reduce((acc, [key, value]) => {
-        acc[key] = applyTranslations(value, translations, key); // Propagar el `key` al siguiente nivel
+        acc[key] = applyTranslations(value, translations, key); // Propagar la clave `key` al siguiente nivel
         return acc;
       }, {});
     } else if (schema.type === 'string') {
-      // Usamos el `parentKey` como referencia para buscar la traducción
+      // Usamos el `parentKey` como referencia para buscar la traducción de propiedades individuales
       translatedSchema.title = translations[parentKey] || schema.title || parentKey;
     }
+  
     return translatedSchema;
   };
   
