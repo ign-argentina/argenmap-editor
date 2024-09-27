@@ -8,7 +8,7 @@ const useLang = () => {
   useEffect(() => {
     const fetchLang = async () => {
       try {
-        const response = await fetch('/argenmap/src/config/default/langTest.json');
+        const response = await fetch('/argenmap/src/config/default/language.json');
         const data = await response.json();
         setLang(data);
       } catch (error) {
