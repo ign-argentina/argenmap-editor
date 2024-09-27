@@ -70,41 +70,68 @@ export default function Page() {
     return createSchema(config);
   };
 
-  const applyTranslations = (schema, translations, parentKey = '') => {
+  const applyTranslations = (schema, translations, parentKey = '', defaultTranslations = {}) => {
     if (!schema || typeof schema !== 'object') return schema;
+  
+    // Función para capitalizar las palabras de una cadena camelCase
+    const capitalizeWords = (str) => {
+      return str
+        .replace(/([a-z])([A-Z])/g, '$1 $2') // Inserta un espacio antes de cada letra mayúscula en camelCase
+        .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2') // Maneja secuencias de letras mayúsculas (ejemplo: "HTMLParser" -> "HTML Parser")
+        .split(' ') // Divide la cadena en palabras
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitaliza la primera letra de cada palabra
+        .join(' '); // Une nuevamente con un espacio entre palabras
+    };
   
     const translatedSchema = { ...schema };
   
-    // Si el esquema es de tipo "object", iteramos sobre sus propiedades
+    // Si el esquema es de tipo "object", iteramos sobre sus propiedades y traducimos el título del objeto
     if (schema.type === 'object' && schema.properties) {
-      translatedSchema.title = translations[parentKey] || schema.title || parentKey; // Traducir el título del objeto
+      translatedSchema.title =
+        translations[parentKey] || // Traducción en el idioma seleccionado
+        defaultTranslations[parentKey] || // Traducción en "default"
+        schema.title || // Título original en el schema
+        capitalizeWords(parentKey); // Clave original con capitalización como fallback
+  
       translatedSchema.properties = Object.entries(schema.properties).reduce((acc, [key, value]) => {
-        acc[key] = applyTranslations(value, translations, key); // Propagar la clave `key` al siguiente nivel
+        acc[key] = applyTranslations(value, translations, key, defaultTranslations); // Pasar `defaultTranslations` a cada propiedad
         return acc;
       }, {});
     } else if (schema.type === 'string') {
       // Usamos el `parentKey` como referencia para buscar la traducción de propiedades individuales
-      translatedSchema.title = translations[parentKey] || schema.title || parentKey;
+      translatedSchema.title =
+        translations[parentKey] || // Traducción en el idioma seleccionado
+        defaultTranslations[parentKey] || // Traducción en "default"
+        schema.title || // Título original en el schema
+        capitalizeWords(parentKey); // Clave original con capitalización como fallback
     }
   
     return translatedSchema;
   };
   
+  
+  
 
   // Actualiza el schema cada vez que config o el idioma cambian
   useEffect(() => {
-    if (config) {
+    if (config && language) {
       const sectionKeys = Object.keys(config);
       if (!selectedSection && sectionKeys.length > 0) {
         setSelectedSection(sectionKeys[0]); // Selecciona la primera sección
       }
       const generatedSchema = generateSchema(config);
-      
-      // Aplicar traducciones basadas en el idioma seleccionado
-      const translatedSchema = applyTranslations(generatedSchema, language[selectedLang] || language['default']);
+  
+      // Aplicar traducciones basadas en el idioma seleccionado y el idioma por defecto
+      const translatedSchema = applyTranslations(
+        generatedSchema,
+        language[selectedLang] || language['default'],
+        '',
+        language['default'] || {}
+      );
       setSchema(translatedSchema);
     }
-  }, [config, selectedSection, selectedLang]);
+  }, [config, selectedSection, selectedLang, language]);
+  
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
 
