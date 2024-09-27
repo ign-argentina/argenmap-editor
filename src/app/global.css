@@ -95,6 +95,18 @@ input[type='number']::-webkit-outer-spin-button {
   color: var(--text--color);
 }
 
+.select-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin: 15px;
+}
+
+.select-container i {
+  margin-right: 10px;
+  color: var(--text--color);
+}
+
 .lang-select {
   background-color: var(--primary--color);
   border: 1px solid #ccc;
@@ -106,7 +118,7 @@ input[type='number']::-webkit-outer-spin-button {
   outline: none;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  width: 55%;
+  width: 35%;
 }
 
 .lang-select option {
@@ -120,12 +132,13 @@ input[type='number']::-webkit-outer-spin-button {
 
 .lang-select:focus {
   border-color: var(--active--color);
+  color: var(--active--color);
 }
 
 .lang-select:disabled {
   background-color: #e9ecef;
   cursor: not-allowed;
-  color: var(--active--color);;
+  color: var(--active--color); 
 }
 
 .showHide-button {
@@ -144,25 +157,33 @@ input[type='number']::-webkit-outer-spin-button {
 
 .navbar-button {
   background-color: var(--secondary--color);
-  color: rgb(255, 255, 255); 
+  color: var(--text--color);
   border: none;
-  padding: 10px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
   height: 50px;
   width: 100%;
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  text-align: left; 
 }
 
 .navbar-button:hover {
-  background-color: var(--active--color);
+  background-color: var(--active--color); 
+}
+
+.navbar-button .icon {
+  margin-right: 8px;
+  font-size: 20px;
 }
 
 .navbar-button.active {
-  background-color: var(--active--color);  /* Cambia el background-color cuando está activo */
+  background-color: var(--active--color); 
 }
 
 /* CLEAR BUTTON */

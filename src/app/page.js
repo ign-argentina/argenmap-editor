@@ -199,13 +199,17 @@ export default function Page() {
           <i className={isFormShown ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
         </button>
 
-        <select className="lang-select" onChange={handleLanguageChange} value={selectedLang}>
-          {language && Object.keys(language).map((langKey) => (
-            <option key={langKey} value={langKey}>
-              {langKey === 'default' ? 'Predeterminado' : langKey.charAt(0).toUpperCase() + langKey.slice(1)}
-            </option>
-          ))}
-        </select>
+        <div className="select-container">
+          <i className="fa-solid fa-earth-americas"></i>
+          <select className="lang-select" onChange={handleLanguageChange} value={selectedLang}>
+            {language && Object.keys(language).map((langKey) => (
+              <option key={langKey} value={langKey}>
+                {langKey === 'default' ? 'Predeterminado' : langKey.charAt(0).toUpperCase() + langKey.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+
 
         {sectionKeys.map((key) => (
           <button
@@ -218,8 +222,11 @@ export default function Page() {
             }
           >
             {config[key]?.sectionIcon && (
-              <i className={config[key].sectionIcon}></i>
+              <span className="icon">
+                <i className={config[key].sectionIcon}></i>
+              </span>
             )}
+
             {schema.properties[key]?.title || key.charAt(0).toUpperCase() + key.slice(1)}
           </button>
         ))}
