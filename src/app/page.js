@@ -2,13 +2,16 @@
 import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
+import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import Preview from './components/Preview';
+import ColorPickerControl from './components/ColorPickerControl';
+import TranslateSchema from './components/TranslateSchema';
+import GenerateSchema from './components/GenerateSchema';
+import HandleDownload from './components/HandleDownload';
 import useConfig from '../app/hooks/useConfig';
 import useLang from '../app/hooks/useLang';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import ColorPickerControl from '../app/components/ColorPickerControl';
-import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import Toast from './utils/Toast';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import Ajv from 'ajv';
 
 export default function Page() {
@@ -52,67 +55,6 @@ export default function Page() {
   }, [config]);
 
 
-  const generateSchema = (config) => {
-    const createSchema = (obj) => {
-      if (Array.isArray(obj)) {
-        return { type: 'array', items: createSchema(obj[0]) };
-      } else if (typeof obj === 'object' && obj !== null) {
-        const schema = { type: 'object', properties: {} };
-        Object.keys(obj).forEach((key) => {
-          if (key !== 'sectionIcon') {
-            schema.properties[key] = createSchema(obj[key]);
-          }
-        });
-        return schema;
-      } else if (typeof obj === 'string' && /^#[0-9A-F]{6}$/i.test(obj)) {
-        return { type: 'string', format: 'color' };
-      } else {
-        return { type: typeof obj };
-      }
-    };
-    return createSchema(config);
-  };
-
-
-  // Applies translations to the schema
-  const applyTranslations = (schema, translations, parentKey = '', defaultTranslations = {}) => {
-    if (!schema || typeof schema !== 'object') return schema;
-
-    const capitalizeWords = (str) => {
-      return str
-        .replace(/([a-z])([A-Z])/g, '$1 $2')
-        .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-    };
-
-    const translatedSchema = { ...schema };
-
-    // If the schema is of type "object", we iterate over its properties and translate the object title
-    if (schema.type === 'object' && schema.properties) {
-      translatedSchema.title =
-        translations[parentKey] || // Translate to selected language
-        defaultTranslations[parentKey] || // Translate to "default"
-        schema.title || // Original title from schema
-        capitalizeWords(parentKey); // Original key as fallback
-
-      translatedSchema.properties = Object.entries(schema.properties).reduce((acc, [key, value]) => {
-        acc[key] = applyTranslations(value, translations, key, defaultTranslations); // Pass `defaultTranslations` to each property
-        return acc;
-      }, {});
-    } else if (schema.type === 'string') {
-      // We use the `parentKey` as a reference to look up the translation of individual properties
-      translatedSchema.title =
-        translations[parentKey] ||
-        defaultTranslations[parentKey] ||
-        schema.title ||
-        capitalizeWords(parentKey);
-    }
-    return translatedSchema;
-  };
-
-
   // Update the schema whenever config or language changes
   useEffect(() => {
     if (config && language) {
@@ -120,15 +62,14 @@ export default function Page() {
       if (!selectedSection && sectionKeys.length > 0) {
         setSelectedSection(sectionKeys[0]); // Show fist section
       }
-      const generatedSchema = generateSchema(config);
+      const generatedSchema = GenerateSchema({ config });
 
       // Apply translations based on the selected language and the default language
-      const translatedSchema = applyTranslations(
-        generatedSchema,
-        language[selectedLang] || language['default'],
-        '',
-        language['default'] || {}
-      );
+      const translatedSchema = TranslateSchema({
+        schema: generatedSchema,
+        translations: language[selectedLang] || language['default'],
+        defaultTranslations: language['default'] || {}
+      });
       setSchema(translatedSchema);
     }
   }, [config, selectedSection, selectedLang, language]);
@@ -154,39 +95,10 @@ export default function Page() {
     showToast('¡El storage se ha limpiado con éxito!', 'success');
   }
 
+  const { downloadJson } = HandleDownload({ data, config });
   const handleDownload = () => {
-    // Chequeo de campos borrados.
-    // Un campo vacío es borrado por JSONForms.
-    // Si es borrado se lo crea de nuevo vacío
-    const ensureFieldsExist = (obj, reference) => {
-      if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-        return obj;
-      }
-      const result = { ...obj };
-      Object.keys(reference).forEach((key) => {
-        if (!(key in obj)) {
-          // Si la clave no existe en obj, la añadimos con un valor vacío
-          result[key] = reference[key] === 'string' ? '' : "";
-        } else if (typeof reference[key] === 'object' && reference[key] !== null) {
-          // Si la clave existe pero es un objeto, volvemos a aplicar la función recursivamente
-          result[key] = ensureFieldsExist(obj[key], reference[key]);
-        }
-      });
-      return result;
-    };
-    const completeData = ensureFieldsExist(data, config);
-    const fileData = JSON.stringify(completeData, null, 2);
-    const blob = new Blob([fileData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'config.json');
-    document.body.appendChild(link);
-    link.click();
-
-    return (0
-    );
-  }
+    downloadJson();
+  };
 
   return (
     <div className="editor-container">
