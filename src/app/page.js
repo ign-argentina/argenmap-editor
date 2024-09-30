@@ -7,6 +7,7 @@ import Preview from './components/Preview';
 import ColorPickerControl from './components/ColorPickerControl';
 import TranslateSchema from './components/TranslateSchema';
 import GenerateSchema from './components/GenerateSchema';
+import Navbar from './components/Navbar';
 import HandleDownload from './components/HandleDownload';
 import useConfig from '../app/hooks/useConfig';
 import useLang from '../app/hooks/useLang';
@@ -102,62 +103,19 @@ export default function Page() {
 
   return (
     <div className="editor-container">
-      <div className='navbar'>
-        <div className="logo-container">
-          <img src="/logos/logo2.png" alt="Logo" className="logo" />
-        </div>
-        <div className="version-info">
-          <label>EDITOR v{config ? config.app.version : 'Sin versión...'}</label>
-        </div>
-
-        <div className="button-container">
-          <div className="select-container">
-            <i className="fa-solid fa-earth-americas"></i>
-            <select className="lang-select" onChange={handleLanguageChange} value={selectedLang}>
-              {language && Object.keys(language).map((langKey) => (
-                <option key={langKey} value={langKey}>
-                  {langKey === 'default' ? 'Predeterminado' : langKey.charAt(0).toUpperCase() + langKey.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
-            <i className="fa-solid fa-trash-can"></i>
-          </button>
-
-          <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
-            <i className={isFormShown ? "fa-solid fa-play" : "fa-solid fa-play fa-flip-horizontal"}></i>
-          </button>
-        </div>
-
-        {sectionKeys.map((key) => (
-          <button
-            key={key}
-            onClick={() => handleSectionChange(key)}
-            className={`navbar-button ${selectedSection === key ? 'active' : ''}`}
-            title={
-              schema.properties[key]?.title ||
-              key.charAt(0).toUpperCase() + key.slice(1)
-            }
-          >
-            {config[key]?.sectionIcon && (
-              <span className="icon">
-                <i className={config[key].sectionIcon}></i>
-              </span>
-            )}
-
-            {schema.properties[key]?.title || key.charAt(0).toUpperCase() + key.slice(1)}
-          </button>
-        ))}
-
-        <button className="download-button" onClick={handleDownload} title="Descargar JSON">
-          <span className="icon">
-            <i className="fa-solid fa-download"></i>
-          </span>
-          Descargar
-        </button>
-      </div>
+      <Navbar 
+        config={config} 
+        language={language} 
+        selectedLang={selectedLang} 
+        handleLanguageChange={handleLanguageChange}
+        handleClearStorage={handleClearStorage}
+        sectionKeys={sectionKeys}
+        selectedSection={selectedSection}
+        handleSectionChange={handleSectionChange}
+        setIsFormShown={setIsFormShown}
+        isFormShown={isFormShown}
+        handleDownload={handleDownload}
+      />
 
       {isFormShown && (
         <div className="form-container" key={reloadKey}>
