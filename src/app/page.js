@@ -7,6 +7,7 @@ import Preview from './components/Preview';
 import ColorPickerControl from './components/ColorPickerControl';
 import TranslateSchema from './components/TranslateSchema';
 import GenerateSchema from './components/GenerateSchema';
+import FilterEmptySections from './components/FilterEmptySections';
 import Navbar from './components/Navbar';
 import HandleDownload from './components/HandleDownload';
 import useConfig from '../app/hooks/useConfig';
@@ -54,7 +55,7 @@ export default function Page() {
       setData(config);
     }
   }, [config]);
-
+  
 
   // Update the schema whenever config or language changes
   useEffect(() => {
@@ -65,9 +66,12 @@ export default function Page() {
       }
       const generatedSchema = GenerateSchema({ config });
 
+      // Filter empty sections
+      const filteredSchema = FilterEmptySections(generatedSchema);
+
       // Apply translations based on the selected language and the default language
       const translatedSchema = TranslateSchema({
-        schema: generatedSchema,
+        schema: filteredSchema,
         translations: language[selectedLang] || language['default'],
         defaultTranslations: language['default'] || {}
       });
@@ -103,10 +107,10 @@ export default function Page() {
 
   return (
     <div className="editor-container">
-      <Navbar 
-        config={config} 
-        language={language} 
-        selectedLang={selectedLang} 
+      <Navbar
+        config={config}
+        language={language}
+        selectedLang={selectedLang}
         handleLanguageChange={handleLanguageChange}
         handleClearStorage={handleClearStorage}
         sectionKeys={sectionKeys}

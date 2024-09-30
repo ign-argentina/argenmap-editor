@@ -1,5 +1,3 @@
-import React from 'react';
-
 const GenerateSchema = ({ config }) => {
   const createSchema = (obj) => {
     if (Array.isArray(obj)) {
