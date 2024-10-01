@@ -1,5 +1,6 @@
 // components/Navbar.jsx
 import React from 'react';
+import Link from 'next/link';
 
 const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleDownload }) => {
   return (
@@ -10,6 +11,10 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
       <div className="version-info">
         <label>EDITOR v{config ? config.app.version : 'Sin versión...'}</label>
       </div>
+
+      <Link href="/dashboard/home">
+        <div>Ir a Home</div>
+      </Link>
 
       <div className="button-container">
         <div className="select-container">
