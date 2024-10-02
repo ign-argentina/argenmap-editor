@@ -8,6 +8,7 @@ import ColorPickerControl from './components/ColorPickerControl';
 import TranslateSchema from './components/TranslateSchema';
 import GenerateSchema from './components/GenerateSchema';
 import FilterEmptySections from './components/FilterEmptySections';
+import Welcome from './components/Welcome';
 import Navbar from './components/Navbar';
 import HandleDownload from './components/HandleDownload';
 import useConfig from '../app/hooks/useConfig';
@@ -50,34 +51,65 @@ export default function Page() {
   useEffect(() => {
     const storedData = localStorage.getItem('formData');
     if (storedData) {
-      setData(JSON.parse(storedData));
+      const parsedData = JSON.parse(storedData);
+      setData(parsedData);
     } else if (config) {
       setData(config);
     }
   }, [config]);
-  
+
 
   // Update the schema whenever config or language changes
   useEffect(() => {
     if (config && language) {
-      const sectionKeys = Object.keys(config);
-      if (!selectedSection && sectionKeys.length > 0) {
-        setSelectedSection(sectionKeys[0]); // Show fist section
-      }
       const generatedSchema = GenerateSchema({ config });
-
-      // Filter empty sections
       const filteredSchema = FilterEmptySections(generatedSchema);
-
-      // Apply translations based on the selected language and the default language
       const translatedSchema = TranslateSchema({
         schema: filteredSchema,
         translations: language[selectedLang] || language['default'],
-        defaultTranslations: language['default'] || {}
+        defaultTranslations: language['default'] || {},
       });
+
       setSchema(translatedSchema);
+
+      const sectionKeys = Object.keys(translatedSchema.properties);
+      if (sectionKeys.length > 0) {
+        setSelectedSection(sectionKeys[0]);
+      } else {
+        setSelectedSection(null);
+      }
     }
-  }, [config, selectedSection, selectedLang, language]);
+  }, [config, selectedLang, language]);
+
+  const handleJsonUpload = (parsedData) => {
+    // Limpiar el formulario anterior
+    // Limpiar el estado anterior y establecer solo los datos del nuevo JSON
+    setData(parsedData);
+    setIsFormShown(true); // Mostrar el formulario
+    showToast('JSON cargado exitosamente', 'success');
+    // Volver a generar el esquema con el nuevo JSON
+    const generatedSchema = GenerateSchema({ config: parsedData });
+    const filteredSchema = FilterEmptySections(generatedSchema);
+    const translatedSchema = TranslateSchema({
+      schema: filteredSchema,
+      translations: language[selectedLang] || language['default'],
+      defaultTranslations: language['default'] || {},
+    });
+
+    setSchema(translatedSchema);
+
+    // Seleccionar la primera sección del nuevo esquema
+    const sectionKeys = Object.keys(translatedSchema.properties);
+    if (sectionKeys.length > 0) {
+      setSelectedSection(sectionKeys[0]);
+    } else {
+      setSelectedSection(null);
+    }
+
+    // Limpiar el estado anterior para forzar el re-render
+    setIsFormShown(false);
+    setTimeout(() => setIsFormShown(true), 0); // Forzar re-render
+  };
 
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
@@ -97,6 +129,8 @@ export default function Page() {
     localStorage.removeItem("formData");
     setData(config);
     setReloadKey(prev => prev + 1);
+    setIsFormShown(false);
+    setTimeout(() => setIsFormShown(true), 0); // Force re-render
     showToast('¡El storage se ha limpiado con éxito!', 'success');
   }
 
@@ -106,58 +140,61 @@ export default function Page() {
   };
 
   return (
-    <div className="editor-container">
-      <Navbar
-        config={config}
-        language={language}
-        selectedLang={selectedLang}
-        handleLanguageChange={handleLanguageChange}
-        handleClearStorage={handleClearStorage}
-        sectionKeys={sectionKeys}
-        selectedSection={selectedSection}
-        handleSectionChange={handleSectionChange}
-        setIsFormShown={setIsFormShown}
-        isFormShown={isFormShown}
-        handleDownload={handleDownload}
-      />
-
-      {isFormShown && (
-        <div className="form-container" key={reloadKey}>
-          {selectedSection && (
-            <div className="custom-form-group">
-              <JsonForms
-                schema={schema.properties[selectedSection]}
-                data={data[selectedSection]}
-                renderers={customRenderers}
-                cells={materialCells}
-                ajv={ajv}
-                onChange={({ data: updatedData }) => {
-                  setData((prevData) => {
-                    const newData = {
-                      ...prevData,
-                      [selectedSection]: updatedData
-                    };
-                    localStorage.setItem('formData', JSON.stringify(newData));
-                    return newData;
-                  });
-                }}
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          duration={3000}
-          onClose={() => setToast(null)}
+    <div>
+      <div className="editor-container">
+        <Navbar
+          config={config}
+          language={language}
+          selectedLang={selectedLang}
+          handleLanguageChange={handleLanguageChange}
+          handleClearStorage={handleClearStorage}
+          sectionKeys={sectionKeys}
+          selectedSection={selectedSection}
+          handleSectionChange={handleSectionChange}
+          isFormShown={isFormShown}
+          handleDownload={handleDownload}
+          setIsFormShown={setIsFormShown}
         />
-      )}
+        {/* <Welcome onJsonUpload={handleJsonUpload}/> */}
 
-      <div className="preview-container">
-        <Preview />
+        {isFormShown && (
+          <div className="form-container" key={reloadKey}>
+            {selectedSection && (
+              <div className="custom-form-group">
+                <JsonForms
+                  schema={schema.properties[selectedSection]}
+                  data={data[selectedSection] || {}}
+                  renderers={customRenderers}
+                  cells={materialCells}
+                  ajv={ajv}
+                  onChange={({ data: updatedData }) => {
+                    setData((prevData) => {
+                      const newData = {
+                        ...prevData,
+                        [selectedSection]: updatedData
+                      };
+                      localStorage.setItem('formData', JSON.stringify(newData));
+                      return newData;
+                    });
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            duration={3000}
+            onClose={() => setToast(null)}
+          />
+        )}
+
+        <div className="preview-container">
+          <Preview />
+        </div>
       </div>
     </div>
   );
