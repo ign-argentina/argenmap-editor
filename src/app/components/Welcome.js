@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import './home.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-export default function Home({ onJsonUpload, hideLayout }) {
+export default function Welcome({ onJsonUpload, hideLayout }) {
   const handleFileUpload = useCallback((file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -48,7 +48,7 @@ export default function Home({ onJsonUpload, hideLayout }) {
       </button>
       <div className="modal-container">
         <div className="modal left-modal">
-          <h2>Modal Izquierdo</h2>
+          <h2>Subir JSON</h2>
           <p>Contenido para el modal de la izquierda.</p>
           <div
             className="big-button"
