@@ -82,11 +82,11 @@ export default function Page() {
   }, [config, selectedLang, language]);
 
   const handleJsonUpload = (parsedData) => {
-    // Limpiar el formulario anterior
-    // Limpiar el estado anterior y establecer solo los datos del nuevo JSON
+    // Código existente para manejar el JSON
     setData(parsedData);
     setIsFormShown(true); // Mostrar el formulario
     showToast('JSON cargado exitosamente', 'success');
+    
     // Volver a generar el esquema con el nuevo JSON
     const generatedSchema = GenerateSchema({ config: parsedData });
     const filteredSchema = FilterEmptySections(generatedSchema);
@@ -95,9 +95,9 @@ export default function Page() {
       translations: language[selectedLang] || language['default'],
       defaultTranslations: language['default'] || {},
     });
-
+  
     setSchema(translatedSchema);
-
+  
     // Seleccionar la primera sección del nuevo esquema
     const sectionKeys = Object.keys(translatedSchema.properties);
     if (sectionKeys.length > 0) {
@@ -105,11 +105,12 @@ export default function Page() {
     } else {
       setSelectedSection(null);
     }
-
+  
     // Limpiar el estado anterior para forzar el re-render
     setIsFormShown(false);
     setTimeout(() => setIsFormShown(true), 0); // Forzar re-render
   };
+  
 
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
@@ -153,7 +154,7 @@ export default function Page() {
           handleSectionChange={handleSectionChange}
           isFormShown={isFormShown}
           handleDownload={handleDownload}
-          setIsFormShown={setIsFormShown}
+          handleJsonUpload={handleJsonUpload}
         />
         {/* <Welcome onJsonUpload={handleJsonUpload}/> */}
 

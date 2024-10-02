@@ -1,8 +1,18 @@
-// components/Navbar.jsx
 import React from 'react';
-import Link from 'next/link';
 
-const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleDownload }) => {
+const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleDownload, handleJsonUpload }) => {
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const jsonData = JSON.parse(e.target.result);
+        handleJsonUpload(jsonData); // Llama a la función para manejar la carga del JSON
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <div className='navbar'>
       <div className="logo-container">
@@ -12,9 +22,19 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         <label>EDITOR v{config ? config.app.version : 'Sin versión...'}</label>
       </div>
 
-      <Link href="/dashboard/home">
-        <div>Ir a Home</div>
-      </Link>
+
+      <label className="upload-button">
+        <input
+          type="file"
+          accept=".json"
+          onChange={handleFileChange}
+        />
+        <button title="Subir JSON">
+          <i className="fa-solid fa-upload"></i>
+          Subir JSON
+        </button>
+      </label>
+
 
       <div className="button-container">
         <div className="select-container">
