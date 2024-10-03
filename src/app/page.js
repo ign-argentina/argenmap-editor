@@ -47,20 +47,8 @@ export default function Page() {
     { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
-  // Load saved data from localStorage on startup
-  useEffect(() => {
-    const storedData = localStorage.getItem('formData');
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      setData(parsedData);
-    } else if (config) {
-      setData(config);
-    }
-  }, [config]);
 
-
-  // Update the schema whenever config or language changes
-  useEffect(() => {
+  const uploadData = () => {
     if (config && language) {
       const generatedSchema = GenerateSchema({ config });
       const filteredSchema = FilterEmptySections(generatedSchema);
@@ -79,38 +67,32 @@ export default function Page() {
         setSelectedSection(null);
       }
     }
-  }, [config, selectedLang, language]);
+  }
+
+
+  // Load saved data from localStorage on startup.
+  useEffect(() => {
+    const storedData = localStorage.getItem('formData');
+    if (storedData) {
+      const parsedStoredData = JSON.parse(storedData);
+      setData(parsedStoredData);
+      uploadData();
+    } else if (config) {
+      setData(config);
+      uploadData();
+    }
+  }, [selectedLang, language]);
+
 
   const handleJsonUpload = (parsedData) => {
-    // Código existente para manejar el JSON
     setData(parsedData);
-    setIsFormShown(true); // Mostrar el formulario
-    showToast('JSON cargado exitosamente', 'success');
-    
-    // Volver a generar el esquema con el nuevo JSON
-    const generatedSchema = GenerateSchema({ config: parsedData });
-    const filteredSchema = FilterEmptySections(generatedSchema);
-    const translatedSchema = TranslateSchema({
-      schema: filteredSchema,
-      translations: language[selectedLang] || language['default'],
-      defaultTranslations: language['default'] || {},
-    });
-  
-    setSchema(translatedSchema);
-  
-    // Seleccionar la primera sección del nuevo esquema
-    const sectionKeys = Object.keys(translatedSchema.properties);
-    if (sectionKeys.length > 0) {
-      setSelectedSection(sectionKeys[0]);
-    } else {
-      setSelectedSection(null);
-    }
-  
-    // Limpiar el estado anterior para forzar el re-render
+    setIsFormShown(true)
+    uploadData();
+
     setIsFormShown(false);
     setTimeout(() => setIsFormShown(true), 0); // Forzar re-render
+    showToast('JSON cargado exitosamente', 'success');
   };
-  
 
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
@@ -126,14 +108,38 @@ export default function Page() {
   };
 
   const [reloadKey, setReloadKey] = useState(0);
+  // const handleClearStorage = () => {
+  //   localStorage.removeItem("formData");
+  //   setData(config);
+  //   setReloadKey(prev => prev + 1);
+  //   // setIsFormShown(false);
+  //   // setTimeout(() => setIsFormShown(true), 0); // Force re-render
+  //   showToast('¡El storage se ha limpiado con éxito!', 'success');
+  // }
+
   const handleClearStorage = () => {
-    localStorage.removeItem("formData");
+    const formData = JSON.parse(localStorage.getItem("formData"));
+  
+    const clearValues = (data) => {
+      for (const key in data) {
+        if (typeof data[key] === "object" && data[key] !== null) {
+          clearValues(data[key]);
+        } else {
+          data[key] = "";
+        }
+      }
+    };
+  
+    clearValues(formData);
+    localStorage.setItem("formData", JSON.stringify(formData));
+  
     setData(config);
-    setReloadKey(prev => prev + 1);
-    setIsFormShown(false);
-    setTimeout(() => setIsFormShown(true), 0); // Force re-render
-    showToast('¡El storage se ha limpiado con éxito!', 'success');
-  }
+    setReloadKey((prev) => prev + 1);
+  
+    showToast("¡Los valores del formData se han limpiado con éxito!", "success");
+  };
+  
+
 
   const { downloadJson } = HandleDownload({ data, config });
   const handleDownload = () => {
@@ -155,6 +161,7 @@ export default function Page() {
           isFormShown={isFormShown}
           handleDownload={handleDownload}
           handleJsonUpload={handleJsonUpload}
+          setIsFormShown={setIsFormShown}
         />
         {/* <Welcome onJsonUpload={handleJsonUpload}/> */}
 
