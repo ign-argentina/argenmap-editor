@@ -49,10 +49,8 @@ export default function Page() {
 
 
   const uploadData = () => {
-    console.log("Data in uploadData:", data); // Verificar valor de `data`
-    console.log("Config in uploadData:", config); // Verificar valor de `config`
-    if (config && language) {
-      const generatedSchema = GenerateSchema({ config });
+    if (data && language) {
+      const generatedSchema = GenerateSchema({ data });
       const filteredSchema = FilterEmptySections(generatedSchema);
       const translatedSchema = TranslateSchema({
         schema: filteredSchema,

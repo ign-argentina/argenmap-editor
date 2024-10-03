@@ -1,4 +1,4 @@
-const GenerateSchema = ({ config }) => {
+const GenerateSchema = ({ data }) => {
   const createSchema = (obj) => {
     if (Array.isArray(obj)) {
       return { type: 'array', items: createSchema(obj[0]) };
@@ -17,7 +17,7 @@ const GenerateSchema = ({ config }) => {
     }
   };
 
-  return createSchema(config);
+  return createSchema(data);
 };
 
 export default GenerateSchema;
