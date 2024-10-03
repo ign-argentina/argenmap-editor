@@ -27,7 +27,7 @@ export default function Page() {
   const [toast, setToast] = useState(null);
 
   // Loads lang from localStorage, if it doesnt exists, use a default
-  const savedLanguage = localStorage.getItem('selectedLang') || 'default';
+  const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
 
   const ajv = new Ajv();
@@ -49,6 +49,8 @@ export default function Page() {
 
 
   const uploadData = () => {
+    console.log("Data in uploadData:", data); // Verificar valor de `data`
+    console.log("Config in uploadData:", config); // Verificar valor de `config`
     if (config && language) {
       const generatedSchema = GenerateSchema({ config });
       const filteredSchema = FilterEmptySections(generatedSchema);
@@ -76,13 +78,17 @@ export default function Page() {
     if (storedData) {
       const parsedStoredData = JSON.parse(storedData);
       setData(parsedStoredData);
-      uploadData();
     } else if (config) {
       setData(config);
+    }
+  }, [config]);
+  
+  useEffect(() => {
+    if (data && Object.keys(data).length > 0 && language) {
       uploadData();
     }
-  }, [selectedLang, language]);
-
+  }, [data, language, selectedLang]);
+  
 
   const handleJsonUpload = (parsedData) => {
     setData(parsedData);
@@ -108,18 +114,9 @@ export default function Page() {
   };
 
   const [reloadKey, setReloadKey] = useState(0);
-  // const handleClearStorage = () => {
-  //   localStorage.removeItem("formData");
-  //   setData(config);
-  //   setReloadKey(prev => prev + 1);
-  //   // setIsFormShown(false);
-  //   // setTimeout(() => setIsFormShown(true), 0); // Force re-render
-  //   showToast('¡El storage se ha limpiado con éxito!', 'success');
-  // }
-
   const handleClearStorage = () => {
     const formData = JSON.parse(localStorage.getItem("formData"));
-  
+
     const clearValues = (data) => {
       for (const key in data) {
         if (typeof data[key] === "object" && data[key] !== null) {
@@ -129,16 +126,16 @@ export default function Page() {
         }
       }
     };
-  
+
     clearValues(formData);
     localStorage.setItem("formData", JSON.stringify(formData));
-  
+
     setData(config);
     setReloadKey((prev) => prev + 1);
-  
+
     showToast("¡Los valores del formData se han limpiado con éxito!", "success");
   };
-  
+
 
 
   const { downloadJson } = HandleDownload({ data, config });
