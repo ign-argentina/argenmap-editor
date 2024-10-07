@@ -67,6 +67,7 @@ export default function Page() {
         setSelectedSection(null);
       }
     }
+    
   }
 
 
@@ -76,16 +77,17 @@ export default function Page() {
     if (storedData) {
       const parsedStoredData = JSON.parse(storedData);
       setData(parsedStoredData);
+      uploadData();
+      console.log("setData localStorage")
+
     } else if (config) {
       setData(config);
-    }
-  }, [config]);
-  
-  useEffect(() => {
-    if (data && Object.keys(data).length > 0 && language) {
       uploadData();
+      console.log("setData config")
+
     }
-  }, [data, language, selectedLang]);
+  }, [config, language, selectedLang]);
+
   
 
   const handleJsonUpload = (parsedData) => {
@@ -96,6 +98,8 @@ export default function Page() {
     setIsFormShown(false);
     setTimeout(() => setIsFormShown(true), 0); // Forzar re-render
     showToast('JSON cargado exitosamente', 'success');
+    console.log("setData upload")
+
   };
 
 
@@ -112,6 +116,7 @@ export default function Page() {
   };
 
   const [reloadKey, setReloadKey] = useState(0);
+
   const handleClearStorage = () => {
     const formData = JSON.parse(localStorage.getItem("formData"));
 
@@ -124,14 +129,13 @@ export default function Page() {
         }
       }
     };
-
     clearValues(formData);
     localStorage.setItem("formData", JSON.stringify(formData));
 
     setData(config);
     setReloadKey((prev) => prev + 1);
-
     showToast("¡Los valores del formData se han limpiado con éxito!", "success");
+    console.log("setData clearStorage")
   };
 
 
@@ -166,7 +170,7 @@ export default function Page() {
               <div className="custom-form-group">
                 <JsonForms
                   schema={schema.properties[selectedSection]}
-                  data={data[selectedSection] || {}}
+                  data={data[selectedSection]}
                   renderers={customRenderers}
                   cells={materialCells}
                   ajv={ajv}
