@@ -6,12 +6,10 @@ import GenerateSchema from '../utils/GenerateSchema';
 import FilterEmptySections from '../utils/FilterEmptySections';
 
 export default function useData() {
-  const { config, loading: configLoading, error: configError } = useConfig(); // Obtener config desde useConfig
+  const { config, loading: configLoading, error: configError } = useConfig();
   const { lang: language, loading: langLoading, error: langError } = useLang();
   const [data, setData] = useState({});
   const [schema, setSchema] = useState({});
-  
-  // const [selectedSection, setSelectedSection] = useState(null);
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
 
@@ -28,15 +26,16 @@ export default function useData() {
 
       setSchema(translatedSchema);
 
-      // const sectionKeys = Object.keys(translatedSchema.properties || {});
-      // if (sectionKeys.length > 0) {
-      //   setSelectedSection(sectionKeys[0]);
-      // } else {
-      //   setSelectedSection(null);
-      // }
+      const sectionKeys = Object.keys(translatedSchema.properties || {});
+      if (sectionKeys.length > 0) {
+        setSelectedSection(sectionKeys[0]);
+      } else {
+        setSelectedSection(null);
+      }
     }
   };
 
+  // Efecto para cargar los datos cuando `config` y `language` estén listos
   useEffect(() => {
     if (config && language) {
       setData(config);
@@ -44,6 +43,6 @@ export default function useData() {
     }
   }, [config, language, selectedLang]);
 
-  // Retornar el config junto con los otros datos
-  return { schema, data, config, selectedLang, setSelectedLang, setData };
+  // Retornar todos los estados y funciones necesarias
+  return { schema, data, config, language, selectedLang};
 }

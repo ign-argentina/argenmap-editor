@@ -18,6 +18,12 @@ import Ajv from 'ajv';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function Page() {
+  // const { schema, data, config, language, selectedLang } = useData();
+  // console.log("schema: ", schema)
+  // console.log("data: ", data)
+  // console.log("config: ", config)
+  // console.log("selectedLang: ", selectedLang)
+
   const { config, loading: configLoading, error: configError } = useConfig();
   const { lang: language, loading: langLoading, error: langError } = useLang();
   const [data, setData] = useState({});
