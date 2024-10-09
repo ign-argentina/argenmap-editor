@@ -4,18 +4,18 @@ import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import Preview from './components/Preview';
-import ColorPickerControl from './components/ColorPickerControl';
-import TranslateSchema from './components/TranslateSchema';
-import GenerateSchema from './components/GenerateSchema';
-import FilterEmptySections from './components/FilterEmptySections';
-import Welcome from './components/Welcome';
 import Navbar from './components/Navbar';
-import HandleDownload from './components/HandleDownload';
+import Welcome from './components/Welcome';
+import ColorPickerControl from './utils/ColorPickerControl';
+import TranslateSchema from './utils/TranslateSchema';
+import GenerateSchema from './utils/GenerateSchema';
+import FilterEmptySections from './utils/FilterEmptySections';
+import HandleDownload from './utils/HandleDownload';
+import Toast from './utils/Toast';
 import useConfig from '../app/hooks/useConfig';
 import useLang from '../app/hooks/useLang';
-import Toast from './utils/Toast';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import Ajv from 'ajv';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();

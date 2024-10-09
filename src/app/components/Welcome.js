@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import './home.css';
+import './Welcome.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function Welcome({ onJsonUpload, hideLayout }) {
