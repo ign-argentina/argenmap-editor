@@ -92,14 +92,10 @@ export default function Page() {
 
   const handleJsonUpload = (parsedData) => {
     setData(parsedData);
-    setIsFormShown(true)
     uploadData();
-
-    setIsFormShown(false);
-    setTimeout(() => setIsFormShown(true), 0); // Forzar re-render
+    window.location.reload();
     showToast('JSON cargado exitosamente', 'success');
     console.log("setData upload")
-
   };
 
 
@@ -114,8 +110,6 @@ export default function Page() {
     setSelectedLang(selectedLanguage);
     localStorage.setItem('selectedLang', selectedLanguage);
   };
-
-  const [reloadKey, setReloadKey] = useState(0);
 
   const handleClearStorage = () => {
     const formData = JSON.parse(localStorage.getItem("formData"));
@@ -133,11 +127,9 @@ export default function Page() {
     localStorage.setItem("formData", JSON.stringify(formData));
 
     setData(config);
-    setReloadKey((prev) => prev + 1);
     showToast("¡Los valores del formData se han limpiado con éxito!", "success");
     console.log("setData clearStorage")
   };
-
 
 
   const { downloadJson } = HandleDownload({ data, config });
@@ -165,7 +157,7 @@ export default function Page() {
         {/* <Welcome onJsonUpload={handleJsonUpload}/> */}
 
         {isFormShown && (
-          <div className="form-container" key={reloadKey}>
+          <div className="form-container">
             {selectedSection && (
               <div className="custom-form-group">
                 <JsonForms
