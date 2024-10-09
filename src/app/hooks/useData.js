@@ -15,6 +15,7 @@ export default function useData() {
 
   // Función para generar y traducir el esquema
   const uploadData = (currentData) => {
+    
     if (currentData && language) {
       const generatedSchema = GenerateSchema({ data: currentData });
       const filteredSchema = FilterEmptySections(generatedSchema);
@@ -25,13 +26,6 @@ export default function useData() {
       });
 
       setSchema(translatedSchema);
-
-      const sectionKeys = Object.keys(translatedSchema.properties || {});
-      if (sectionKeys.length > 0) {
-        setSelectedSection(sectionKeys[0]);
-      } else {
-        setSelectedSection(null);
-      }
     }
   };
 
@@ -43,6 +37,8 @@ export default function useData() {
     }
   }, [config, language, selectedLang]);
 
+  console.log("schema!: ",schema)
+
   // Retornar todos los estados y funciones necesarias
-  return { schema, data, config, language, selectedLang};
+  return { schema, data, config, language, selectedLang, setSelectedLang};
 }
