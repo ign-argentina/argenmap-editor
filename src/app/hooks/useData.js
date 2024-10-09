@@ -37,8 +37,6 @@ export default function useData() {
     }
   }, [config, language, selectedLang]);
 
-  console.log("schema!: ",schema)
-
-  // Retornar todos los estados y funciones necesarias
-  return { schema, data, config, language, selectedLang, setSelectedLang};
+  const dataHook = data;
+  return { schema, dataHook, config, language, selectedLang, setSelectedLang};
 }
