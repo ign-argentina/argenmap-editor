@@ -70,7 +70,6 @@ export default function Page() {
     
   }
 
-
   // Load saved data from localStorage on startup.
   useEffect(() => {
     const storedData = localStorage.getItem('formData');
@@ -127,8 +126,8 @@ export default function Page() {
     localStorage.setItem("formData", JSON.stringify(formData));
 
     setData(config);
+    window.location.reload();
     showToast("¡Los valores del formData se han limpiado con éxito!", "success");
-    console.log("setData clearStorage")
   };
 
 
