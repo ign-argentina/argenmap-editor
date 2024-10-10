@@ -101,24 +101,32 @@ export default function Page() {
     localStorage.setItem('selectedLang', selectedLanguage);
   };
 
+
+
+  const [reloadKey, setReloadKey] = useState(0);
   const handleClearStorage = () => {
-    const formData = JSON.parse(localStorage.getItem("formData"));
 
-    const clearValues = (data) => {
-      for (const key in data) {
-        if (typeof data[key] === "object" && data[key] !== null) {
-          clearValues(data[key]);
-        } else {
-          data[key] = "";
-        }
-      }
-    };
-    clearValues(formData);
-    localStorage.setItem("formData", JSON.stringify(formData));
-
+    localStorage.removeItem("formData");
     setData(config);
-    // window.location.reload();
-    showToast("¡Los valores del formData se han limpiado con éxito!", "success");
+    setReloadKey(prev => prev + 1);
+    showToast('¡El storage se ha limpiado con éxito!', 'success');
+    // const formData = JSON.parse(localStorage.getItem("formData"));
+
+    // const clearValues = (data) => {
+    //   for (const key in data) {
+    //     if (typeof data[key] === "object" && data[key] !== null) {
+    //       clearValues(data[key]);
+    //     } else {
+    //       data[key] = "";
+    //     }
+    //   }
+    // };
+    // clearValues(formData);
+    // localStorage.setItem("formData", JSON.stringify(formData));
+
+    // setData(config);
+    // // window.location.reload();
+    // showToast("¡Los valores del formData se han limpiado con éxito!", "success");
   };
 
 
@@ -129,7 +137,7 @@ export default function Page() {
 
   return (
     <div>
-      <div className="editor-container">
+      <div className="editor-container" key={reloadKey}>
         <Navbar
           config={config}
           language={language}
