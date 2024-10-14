@@ -7,7 +7,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
       const reader = new FileReader();
       reader.onload = (e) => {
         const jsonData = JSON.parse(e.target.result);
-        handleJsonUpload(jsonData); // Llama a la función para manejar la carga del JSON
+        handleJsonUpload(jsonData);
       };
       reader.readAsText(file);
     }
