@@ -10,6 +10,7 @@ import TranslateSchema from './utils/TranslateSchema';
 import GenerateSchema from './utils/GenerateSchema';
 import FilterEmptySections from './utils/FilterEmptySections';
 import HandleDownload from './utils/HandleDownload';
+import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
 import Toast from './utils/Toast';
 import useConfig from '../app/hooks/useConfig';
 import useLang from '../app/hooks/useLang';
@@ -64,13 +65,18 @@ export default function Page() {
       return translatedSchema
     }
   }
-
+  
   // Load saved data from localStorage on startup.
   useEffect(() => {
     const storedData = localStorage.getItem('formData');
+    const defaultData = localStorage.getItem('formDataDefault');
+
+    const parsedStoredData = storedData ? JSON.parse(storedData) : {};
+    const parsedDefaultData = defaultData ? JSON.parse(defaultData) : {};
+
+    const mergedData = MergeDataWithDefaults(parsedStoredData, parsedDefaultData);
     if (storedData) {
-      const parsedStoredData = JSON.parse(storedData);
-      setData(parsedStoredData);
+      setData(mergedData);
       uploadData();
     } else if (config) {
       localStorage.setItem('formDataDefault', JSON.stringify(config));
@@ -79,7 +85,7 @@ export default function Page() {
     }
   }, [config, language, selectedLang]);
 
-  
+
   const handleJsonUpload = (parsedData) => {
     localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
     setData(parsedData);
