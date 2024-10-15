@@ -73,21 +73,21 @@ export default function Page() {
       setData(parsedStoredData);
       uploadData();
     } else if (config) {
+      localStorage.setItem('formDataDefault', JSON.stringify(config));
       setData(config);
       uploadData();
     }
   }, [config, language, selectedLang]);
 
   
-
   const handleJsonUpload = (parsedData) => {
+    localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
     setData(parsedData);
     const uploadedSchema = uploadData();
     setSchema(uploadedSchema)
     window.location.reload();
     showToast('JSON cargado exitosamente', 'success');
   };
-
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
 
@@ -101,34 +101,16 @@ export default function Page() {
     localStorage.setItem('selectedLang', selectedLanguage);
   };
 
-
-
   const [reloadKey, setReloadKey] = useState(0);
-  const handleClearStorage = () => {
 
+  const handleClearStorage = () => {
     localStorage.removeItem("formData");
-    setData(config);
+    const defaultData = localStorage.getItem('formDataDefault')
+    const parsedDefaultData = JSON.parse(defaultData);
+    setData(parsedDefaultData);
     setReloadKey(prev => prev + 1);
     showToast('¡El storage se ha limpiado con éxito!', 'success');
-    // const formData = JSON.parse(localStorage.getItem("formData"));
-
-    // const clearValues = (data) => {
-    //   for (const key in data) {
-    //     if (typeof data[key] === "object" && data[key] !== null) {
-    //       clearValues(data[key]);
-    //     } else {
-    //       data[key] = "";
-    //     }
-    //   }
-    // };
-    // clearValues(formData);
-    // localStorage.setItem("formData", JSON.stringify(formData));
-
-    // setData(config);
-    // // window.location.reload();
-    // showToast("¡Los valores del formData se han limpiado con éxito!", "success");
   };
-
 
   const { downloadJson } = HandleDownload({ data, config });
   const handleDownload = () => {
@@ -169,6 +151,7 @@ export default function Page() {
                         ...prevData,
                         [selectedSection]: updatedData
                       };
+                      // console.log(updatedData)
                       localStorage.setItem('formData', JSON.stringify(newData));
                       return newData;
                     });
