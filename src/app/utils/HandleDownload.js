@@ -1,9 +1,10 @@
-const HandleDownload = ({ data, config }) => {
+const HandleDownload = ({ data, parsedDefaultData }) => {
   const ensureFieldsExist = (obj, reference) => {
     if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
       return obj;
     }
     const result = { ...obj };
+    // Agrega campos borrados, siempre
     Object.keys(reference).forEach((key) => {
       if (!(key in obj)) {
         // If the key doesnt exist in obj, add it empty 
@@ -25,11 +26,12 @@ const HandleDownload = ({ data, config }) => {
     //     }
     //   });
     // }
+    //
     return result;
   };
 
   const downloadJson = () => {
-    const completeData = ensureFieldsExist(data, config);
+    const completeData = ensureFieldsExist(data, parsedDefaultData);
     const fileData = JSON.stringify(completeData, null, 2);
     const blob = new Blob([fileData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);

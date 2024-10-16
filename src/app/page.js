@@ -118,7 +118,9 @@ export default function Page() {
     showToast('¡El storage se ha limpiado con éxito!', 'success');
   };
 
-  const { downloadJson } = HandleDownload({ data, config });
+  const defaultData = localStorage.getItem('formDataDefault')
+  const parsedDefaultData = JSON.parse(defaultData);
+  const { downloadJson } = HandleDownload({ data, parsedDefaultData });
   const handleDownload = () => {
     downloadJson();
   };
@@ -157,7 +159,6 @@ export default function Page() {
                         ...prevData,
                         [selectedSection]: updatedData
                       };
-                      // console.log(updatedData)
                       localStorage.setItem('formData', JSON.stringify(newData));
                       return newData;
                     });
