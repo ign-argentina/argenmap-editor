@@ -19,7 +19,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         <img src="/logos/logo2.png" alt="Logo" className="logo" />
       </div>
       <div className="version-info">
-        <label>EDITOR v{config ? config.app.version : 'Sin versión...'}</label>
+        <label>EDITOR v0.0.0</label>
       </div>
 
 
