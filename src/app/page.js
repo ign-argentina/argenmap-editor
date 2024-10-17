@@ -88,6 +88,7 @@ export default function Page() {
 
   const handleJsonUpload = (parsedData) => {
     localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
+    localStorage.setItem('formData', JSON.stringify(parsedData));
     setData(parsedData);
     const uploadedSchema = uploadData();
     setSchema(uploadedSchema)
