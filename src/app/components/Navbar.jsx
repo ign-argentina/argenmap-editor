@@ -7,7 +7,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
       const reader = new FileReader();
       reader.onload = (e) => {
         const jsonData = JSON.parse(e.target.result);
-        handleJsonUpload(jsonData); // Llama a la función para manejar la carga del JSON
+        handleJsonUpload(jsonData);
       };
       reader.readAsText(file);
     }
@@ -22,19 +22,18 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         <label>EDITOR v0.0.0</label>
       </div>
 
-
-      <label className="upload-button">
+      <label className="navbar-button">
         <input
           type="file"
           accept=".json"
           onChange={handleFileChange}
+          style={{ display: "none" }}
+          title="Subir JSON"
         />
-        <button title="Subir JSON">
-          <i className="fa-solid fa-upload"></i>
-          Subir JSON
-        </button>
+        <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+        
+        Subir JSON
       </label>
-
 
       <div className="button-container">
         <div className="select-container">
