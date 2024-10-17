@@ -4,7 +4,6 @@ const HandleDownload = ({ data, parsedDefaultData }) => {
       return obj;
     }
     const result = { ...obj };
-    // Agrega campos borrados, siempre
     Object.keys(reference).forEach((key) => {
       if (!(key in obj)) {
         // If the key doesnt exist in obj, add it empty 
@@ -14,19 +13,6 @@ const HandleDownload = ({ data, parsedDefaultData }) => {
         result[key] = ensureFieldsExist(obj[key], reference[key]);
       }
     });
-    // Con el problema de campos nuevos corregido pero no agregando los borrados
-    // if (Object.keys(obj).length === 0) {
-    //   Object.keys(reference).forEach((key) => {
-    //     if (!(key in obj)) {
-    //       // Si la clave no existe en obj, agregarla vacía
-    //       result[key] = reference[key] === 'string' ? '' : "";
-    //     } else if (typeof reference[key] === 'object' && reference[key] !== null) {
-    //       // Si la clave existe pero es un objeto, aplicar la función de manera recursiva
-    //       result[key] = ensureFieldsExist(obj[key], reference[key]);
-    //     }
-    //   });
-    // }
-    //
     return result;
   };
 
