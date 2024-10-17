@@ -43,7 +43,6 @@ export default function Page() {
     { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
-
   const uploadData = () => {
     if (data && language) {
       const generatedSchema = GenerateSchema({ data });

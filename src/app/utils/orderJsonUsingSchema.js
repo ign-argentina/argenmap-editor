@@ -1,4 +1,4 @@
-function orderJsonUsingSchema(data, jsonSchema) {
+function OrderJsonUsingSchema(data, jsonSchema) {
     function recurse(data, jsonSchema) {
         const levelCopy = {};
         for (const [key, value] of Object.entries(jsonSchema)) {
@@ -9,11 +9,11 @@ function orderJsonUsingSchema(data, jsonSchema) {
                 case 'array':
                     if (data[key]) {
                         levelCopy[key] = data[key].map((item) => {
-                            // array de objetos
+                            // array object
                             if (jsonSchema[key].items.type === 'object') {
                                 return recurse(item, jsonSchema[key].items.properties);
                             }
-                            // array de strings
+                            // array strings
                             else if (jsonSchema[key].items.type === 'string') {
                                 return item;
                             }
