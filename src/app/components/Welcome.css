@@ -1,0 +1,88 @@
+.about-page {
+    height: 100vh;
+    background-color: var(--primary--color);
+    display: flex;
+    justify-content: center;
+}
+
+.modal-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.modal {
+    width: 40%;
+    height: 50vh;
+    background-color: var(--primary--color);
+    color: white;
+    padding: 20px;
+    border: 2px solid white;
+    border-radius: 8px;
+    box-shadow: var(--modal-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.divider {
+    width: 1px;
+    height: 80vh;
+    background: white;
+    margin: 0 20px;
+}
+
+.big-button {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 89px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.big-button:hover {
+    background-color: var(--active--color);
+    transform: scale(1.1);
+    border-radius: 15px
+}
+
+.big-button i {
+    margin: 0;
+}
+
+.big-button {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px; /* Ajusta el tamaño del icono */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    position: relative; /* Para manejar el posicionamiento del input */
+    overflow: hidden; /* Para asegurarse de que el input no afecte el diseño */
+}
+
+.back-button:hover {
+    background-color: var(--active--color);
+}
+
+.hidden-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Hacer el input invisible */
+    cursor: pointer;
+}

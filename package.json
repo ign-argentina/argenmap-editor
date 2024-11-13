@@ -10,15 +10,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@jsonforms/core": "^3.3.0",
     "@jsonforms/material-renderers": "^3.3.0",
     "@jsonforms/react": "^3.3.0",
-    "@mui/material": "^6.1.0",
     "@reduxjs/toolkit": "^2.2.7",
-    "material-ui-color": "^1.2.0",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
