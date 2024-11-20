@@ -1,4 +1,5 @@
 import React from 'react';
+import LatestRelease from "../components/LatestRelease";
 
 const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleDownload, handleJsonUpload }) => {
   const handleFileChange = (event) => {
@@ -23,7 +24,6 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
           {config?.configVersion ? `Usando config v${config.configVersion}` : "Config sin versión"}
         </label>
       </div>
-
       <label className="navbar-button">
         <input
           type="file"
@@ -83,7 +83,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         Descargar
       </button>
       <div className="version-info">
-        <label>v0.0.0</label>
+        <LatestRelease />
       </div>
     </div>
   );
