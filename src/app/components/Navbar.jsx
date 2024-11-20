@@ -18,12 +18,9 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
       <div className="logo-container">
         <img src="/logos/logo2.png" alt="Logo" className="logo" />
       </div>
-      <div className="version-info">
-        <label>EDITOR v0.0.0</label>
-      </div>
-      <div className="version-info">
+      <div className="configVersion-info">
         <label>
-          {config?.configVersion ? `Config v${config.configVersion}` : "Config Sin versión"}
+          {config?.configVersion ? `Usando config v${config.configVersion}` : "Config sin versión"}
         </label>
       </div>
 
@@ -85,6 +82,9 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         </span>
         Descargar
       </button>
+      <div className="version-info">
+        <label>v0.0.0</label>
+      </div>
     </div>
   );
 };
