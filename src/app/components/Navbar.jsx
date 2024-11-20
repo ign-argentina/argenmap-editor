@@ -21,6 +21,11 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
       <div className="version-info">
         <label>EDITOR v0.0.0</label>
       </div>
+      <div className="version-info">
+        <label>
+          {config?.configVersion ? `Config v${config.configVersion}` : "Config Sin versión"}
+        </label>
+      </div>
 
       <label className="navbar-button">
         <input
@@ -31,7 +36,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
           title="Subir JSON"
         />
         <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-        
+
         Subir JSON
       </label>
 
