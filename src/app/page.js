@@ -10,6 +10,7 @@ import TranslateSchema from './utils/TranslateSchema';
 import GenerateSchema from './utils/GenerateSchema';
 import FilterEmptySections from './utils/FilterEmptySections';
 import HandleDownload from './utils/HandleDownload';
+import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
 import Toast from './utils/Toast';
 import useConfig from '../app/hooks/useConfig';
 import useLang from '../app/hooks/useLang';
@@ -42,7 +43,6 @@ export default function Page() {
     { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
-
   const uploadData = () => {
     if (data && language) {
       const generatedSchema = GenerateSchema({ data });
@@ -64,30 +64,36 @@ export default function Page() {
       return translatedSchema
     }
   }
-
+  
   // Load saved data from localStorage on startup.
   useEffect(() => {
     const storedData = localStorage.getItem('formData');
+    const defaultData = localStorage.getItem('formDataDefault');
+
+    const parsedStoredData = storedData ? JSON.parse(storedData) : {};
+    const parsedDefaultData = defaultData ? JSON.parse(defaultData) : {};
+
+    const mergedData = MergeDataWithDefaults(parsedStoredData, parsedDefaultData);
     if (storedData) {
-      const parsedStoredData = JSON.parse(storedData);
-      setData(parsedStoredData);
+      setData(mergedData);
       uploadData();
     } else if (config) {
+      localStorage.setItem('formDataDefault', JSON.stringify(config));
       setData(config);
       uploadData();
     }
   }, [config, language, selectedLang]);
 
-  
 
   const handleJsonUpload = (parsedData) => {
+    localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
+    localStorage.setItem('formData', JSON.stringify(parsedData));
     setData(parsedData);
     const uploadedSchema = uploadData();
     setSchema(uploadedSchema)
     window.location.reload();
     showToast('JSON cargado exitosamente', 'success');
   };
-
 
   const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
 
@@ -101,40 +107,25 @@ export default function Page() {
     localStorage.setItem('selectedLang', selectedLanguage);
   };
 
-
-
   const [reloadKey, setReloadKey] = useState(0);
-  const handleClearStorage = () => {
 
+  const handleClearStorage = () => {
     localStorage.removeItem("formData");
-    setData(config);
+    const defaultData = localStorage.getItem('formDataDefault')
+    const parsedDefaultData = JSON.parse(defaultData);
+    setData(parsedDefaultData);
     setReloadKey(prev => prev + 1);
     showToast('¡El storage se ha limpiado con éxito!', 'success');
-    // const formData = JSON.parse(localStorage.getItem("formData"));
-
-    // const clearValues = (data) => {
-    //   for (const key in data) {
-    //     if (typeof data[key] === "object" && data[key] !== null) {
-    //       clearValues(data[key]);
-    //     } else {
-    //       data[key] = "";
-    //     }
-    //   }
-    // };
-    // clearValues(formData);
-    // localStorage.setItem("formData", JSON.stringify(formData));
-
-    // setData(config);
-    // // window.location.reload();
-    // showToast("¡Los valores del formData se han limpiado con éxito!", "success");
   };
 
-
-  const { downloadJson } = HandleDownload({ data, config });
+  const defaultData = localStorage.getItem('formDataDefault')
+  const parsedDefaultData = JSON.parse(defaultData);
+  const { downloadJson } = HandleDownload({ data, parsedDefaultData });
   const handleDownload = () => {
     downloadJson();
   };
 
+  
   return (
     <div>
       <div className="editor-container" key={reloadKey}>
