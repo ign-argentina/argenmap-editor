@@ -1,4 +1,5 @@
 import React from 'react';
+import LatestRelease from "../components/LatestRelease";
 
 const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleDownload, handleJsonUpload }) => {
   const handleFileChange = (event) => {
@@ -18,10 +19,11 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
       <div className="logo-container">
         <img src="/logos/logo2.png" alt="Logo" className="logo" />
       </div>
-      <div className="version-info">
-        <label>EDITOR v0.0.0</label>
+      <div className="configVersion-info">
+        <label>
+          {config?.configVersion ? `Usando config v${config.configVersion}` : "Config sin versión"}
+        </label>
       </div>
-
       <label className="navbar-button">
         <input
           type="file"
@@ -31,7 +33,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
           title="Subir JSON"
         />
         <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-        
+
         Subir JSON
       </label>
 
@@ -80,6 +82,9 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         </span>
         Descargar
       </button>
+      <div className="version-info">
+        <LatestRelease />
+      </div>
     </div>
   );
 };

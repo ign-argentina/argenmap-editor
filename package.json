@@ -15,6 +15,7 @@
     "@jsonforms/material-renderers": "^3.3.0",
     "@jsonforms/react": "^3.3.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "axios": "^1.7.7",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
