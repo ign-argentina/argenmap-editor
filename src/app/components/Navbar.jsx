@@ -32,7 +32,9 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
           style={{ display: "none" }}
           title="Subir JSON"
         />
-        <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+        <span className="icon">
+          <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+        </span>
 
         Subir JSON
       </label>
