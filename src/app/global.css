@@ -84,7 +84,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .logo {
-  width: 100px;
+  /* width: 100px; */
   height: auto;
 }
 
@@ -184,7 +184,7 @@ input[type='number']::-webkit-outer-spin-button {
   align-items: center;
   height: 50px;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   font-size: 16px;
   transition: background-color 0.3s;
   text-align: left; 

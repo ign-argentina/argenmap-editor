@@ -130,7 +130,7 @@ export default function Page() {
     <div>
       <div className="editor-container" key={reloadKey}>
         <Navbar
-          config={config}
+          config={data}
           language={language}
           selectedLang={selectedLang}
           handleLanguageChange={handleLanguageChange}
