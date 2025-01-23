@@ -1,5 +1,9 @@
 # **Argenmap Editor**  
 
+<img src="assets/demo-screenshot.png" alt="Vista previa de la app" width="600">
+
+
+
 ## **Índice**  
 1. [Descripción del Proyecto](#descripción-del-proyecto)  
 2. [Características Principales](#características-principales)  
