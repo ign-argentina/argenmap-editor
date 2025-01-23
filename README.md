@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# **Argenmap Editor**  
 
-## Getting Started
+## **Índice**  
+1. [Descripción del Proyecto](#descripción-del-proyecto)  
+2. [Características Principales](#características-principales)  
+3. [Instalación](#instalación)  
+4. [Uso](#uso)  
+5. [Tecnologías Utilizadas](#tecnologías-utilizadas)  
+6. [Estado del Proyecto](#estado-del-proyecto)  
+7. [Próximos Pasos](#próximos-pasos)  
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## **Descripción del Proyecto**  
+Un editor de archivos JSON fácil de usar para facilitar la creación, edición y validación de la configuración del visor Argenmap.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## **Características Principales**  
+- **Edición interactiva:** Abre, edita y guarda archivos JSON con facilidad.  
+- **Validación en tiempo real:** Verifica que la estructura del JSON sea válida al editar.  
+- **Descarga:** Guarda y descarga los cambios realizados en un archivo JSON listo para ser usado por un visor Argenmap.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## **Instalación**  
+1. Clona este repositorio:  
+   ```bash
+   git clone https://github.com/ign-argentina/argenmap-editor.git
+   ```
+2. Instala las dependencias necesarias:  
+   ```bash
+   npm install
+   ```
+3. Inicia la aplicación:  
+   ```bash
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## **Uso**  
+1. Ejecuta la aplicación siguiendo los pasos de instalación.  
+2. Carga un archivo JSON desde tu computadora o utiliza el que está por defecto.  
+3. Realiza cambios utilizando la interfaz interactiva.  
+4. Descarga el archivo actualizado.  
 
-## Learn More
+## **Tecnologías Utilizadas**  
+- Next.js, React, HTML, CSS, JSONForms, `ajv` 
 
-To learn more about Next.js, take a look at the following resources:
+## **Estado del Proyecto**  
+- **Completado:**  
+  - Interfaz para edición de JSON.  
+  - Validación básica de la estructura.  
+  - Funcionalidad de guardar estado del formulario.
+  - Cargar configuración local.
+  - Descarga de la configuración.
+  - Configurar idioma del Editor.
+  - Limpiar memoria del Editor.  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## **Próximos Pasos**  
+  - Implementación del visor.  
+  - Mejorar la fomra de guardar el estado del formulario.
+  - Mejoras en la interfaz.
+  - Varios bugs.  
