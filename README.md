@@ -44,7 +44,7 @@ Un editor de archivos JSON fácil de usar para facilitar la creación, edición 
 4. Descarga el archivo actualizado.  
 
 ## **Tecnologías Utilizadas**  
-- Next.js, React, HTML, CSS, JSONForms, `ajv` 
+- Next.js, React, HTML, CSS, JSONForms, ajv.
 
 ## **Estado del Proyecto**  
 - **Completado:**  
