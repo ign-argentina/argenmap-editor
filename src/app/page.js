@@ -19,7 +19,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function Page() {
   const { config, loading: configLoading, error: configError } = useConfig();
-  const { lang: language, loading: langLoading, error: langError } = useLang();
+  const { language, loading: langLoading, error: langError } = useLang();
   const [data, setData] = useState({});
   const [selectedSection, setSelectedSection] = useState(null);
   const [schema, setSchema] = useState({});
