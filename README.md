@@ -36,7 +36,11 @@ Un editor de archivos JSON fácil de usar para facilitar la creación, edición 
    ```bash
    npm run dev
    ```
-
+4. Cargar archivos JSON:  
+   ```bash
+   Se requieren los archivos config.json y language.json en public\argenmap\src\config\default
+   ```
+   
 ## **Uso**  
 1. Ejecuta la aplicación siguiendo los pasos de instalación.  
 2. Carga un archivo JSON desde tu computadora o utiliza el que está por defecto.  
