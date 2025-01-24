@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const useLang = () => {
-  const [lang, setLang] = useState(null);
+  const [language, setLang] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,7 +21,7 @@ const useLang = () => {
     fetchLang();
   }, []);
 
-  return { lang, loading, error };
+  return { language, loading, error };
 };
 
 export default useLang;
