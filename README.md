@@ -38,7 +38,7 @@ Un editor de archivos JSON fácil de usar para facilitar la creación, edición 
    ```
 4. Cargar archivos JSON:  
    ```bash
-   Se requieren los archivos config.json y language.json
+   Se requieren los archivos config.json y language.json en public\argenmap\src\config\default
    ```
    
 ## **Uso**  
