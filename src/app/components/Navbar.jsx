@@ -65,16 +65,14 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
           key={key}
           onClick={() => handleSectionChange(key)}
           className={`navbar-button ${selectedSection === key ? 'active' : ''}`}
-          title={
-            key.charAt(0).toUpperCase() + key.slice(1)
-          }
+          title={language[selectedLang]?.[key] || key}
         >
           {config[key]?.sectionIcon && (
             <span className="icon">
               <i className={config[key].sectionIcon}></i>
             </span>
           )}
-          {key.charAt(0).toUpperCase() + key.slice(1)}
+          {language[selectedLang]?.[key] || key}
         </button>
       ))}
 
