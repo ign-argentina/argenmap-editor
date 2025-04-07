@@ -1,4 +1,4 @@
-'use client'
+import Ajv from 'ajv';
 import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
@@ -12,12 +12,11 @@ import FilterEmptySections from './utils/FilterEmptySections';
 import HandleDownload from './utils/HandleDownload';
 import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
 import Toast from './utils/Toast';
-import useConfig from '../app/hooks/useConfig';
-import useLang from '../app/hooks/useLang';
-import Ajv from 'ajv';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import useConfig from './hooks/useConfig';
+import useLang from './hooks/useLang';
+import './global.css'
 
-export default function Page() {
+function App() {
   const { config, loading: configLoading, error: configError } = useConfig();
   const { language, loading: langLoading, error: langError } = useLang();
   const [data, setData] = useState({});
@@ -186,3 +185,7 @@ export default function Page() {
     </div>
   );
 }
+
+export default App
+
+

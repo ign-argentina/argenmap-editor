@@ -1,31 +1,34 @@
-const simpleGit = require('simple-git');
-const fs = require('fs');
-const path = require('path');
+import simpleGit from 'simple-git';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const repoUrl = 'https://github.com/ign-argentina/argenmap.git';
 const publicDir = path.join(__dirname, 'public');
-const configDir = path.join(publicDir, 'config'); // Carpeta public/config
-const assetsDir = path.join(__dirname, 'assets'); // Carpeta assets en la raíz del proyecto
+const configDir = path.join(publicDir, 'config');   // File public/config
+const assetsDir = path.join(__dirname, 'assets');   // File assets proyect root
+const repoName = path.basename(repoUrl, '.git');    // Gets the name of the repository
+const repoDir = path.join(publicDir, repoName);     // The destination directory will be public/repoName
 
-const repoName = path.basename(repoUrl, '.git'); // Obtiene el nombre del repositorio
-const repoDir = path.join(publicDir, repoName); // El directorio destino será public/repoName
-
-// Archivos que deseas mover
+// Files you want to move
 const filesToCopy = ['config.json', 'language.json'];
 
-// Verifica si la carpeta public existe, si no, la crea
+// Check if the public folder exists, if not, create it
 if (!fs.existsSync(publicDir)) {
     fs.mkdirSync(publicDir);
     console.log('Carpeta public creada.');
 }
 
-// Verifica si la carpeta config dentro de public existe, si no, la crea
+// Check if the config folder inside public exists, if not, create it
 if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir);
     console.log('Carpeta config creada dentro de public.');
 }
 
-// Verifica si el repositorio ya ha sido clonado
+// Check if the repository has already been cloned
 if (!fs.existsSync(repoDir)) {
     console.log(`Clonando el repositorio en ${repoDir}...`);
     simpleGit().clone(repoUrl, repoDir)
@@ -35,10 +38,10 @@ if (!fs.existsSync(repoDir)) {
     console.log('El repositorio ya ha sido clonado!');
 }
 
-// Copia los archivos desde la carpeta assets a la carpeta public/config
+// Copy the files from the assets folder to the public/config folder
 filesToCopy.forEach(file => {
-    const sourcePath = path.join(assetsDir, file); // Ruta de origen en assets
-    const destPath = path.join(configDir, file); // Ruta de destino en public/config
+    const sourcePath = path.join(assetsDir, file);  // Source path in assets
+    const destPath = path.join(configDir, file);    // Destination path in public/config
 
     if (fs.existsSync(destPath)) {
         console.log(`Archivo ${file} ya existe en ${configDir}, no se copiará nuevamente.`);

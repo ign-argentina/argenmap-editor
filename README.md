@@ -44,7 +44,7 @@ Un editor de archivos JSON fácil de usar para facilitar la creación, edición 
 4. Descarga el archivo actualizado.  
 
 ## **Tecnologías Utilizadas**  
-- Next.js, React, HTML, CSS, JSONForms, ajv.
+- Vite.js, React, HTML, CSS, JSONForms, ajv.
 
 ## **Estado del Proyecto**  
 - **Completado:**  
@@ -54,10 +54,4 @@ Un editor de archivos JSON fácil de usar para facilitar la creación, edición 
   - Cargar configuración local.
   - Descarga de la configuración.
   - Configurar idioma del Editor.
-  - Limpiar memoria del Editor.  
-
-## **Próximos Pasos**  
-  - Implementación del visor.  
-  - Mejorar la fomra de guardar el estado del formulario.
-  - Mejoras en la interfaz.
-  - Varios bugs.  
+  - Limpiar memoria del Editor.
