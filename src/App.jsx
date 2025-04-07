@@ -1,5 +1,4 @@
-// import './App.css'
-import './global.css'
+import Ajv from 'ajv';
 import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
@@ -15,8 +14,7 @@ import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
 import Toast from './utils/Toast';
 import useConfig from './hooks/useConfig';
 import useLang from './hooks/useLang';
-import Ajv from 'ajv';
-// import '@fortawesome/fontawesome-free/css/all.min.css';
+import './global.css'
 
 function App() {
   const { config, loading: configLoading, error: configError } = useConfig();
