@@ -1,5 +1,6 @@
 import React from 'react';
 import LatestRelease from "../components/LatestRelease";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleDownload, handleJsonUpload }) => {
   const handleFileChange = (event) => {
@@ -17,7 +18,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
   return (
     <div className='navbar'>
       <div className="logo-container">
-        <img src="/logos/logo2.png" alt="Logo" className="logo" />
+        <img src="/src/assets/logo.png" alt="Logo" className="logo" />
       </div>
       <div className="configVersion-info">
         <label>
