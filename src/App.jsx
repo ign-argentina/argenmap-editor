@@ -10,6 +10,7 @@ import TranslateSchema from './utils/TranslateSchema';
 import GenerateSchema from './utils/GenerateSchema';
 import FilterEmptySections from './utils/FilterEmptySections';
 import HandleDownload from './utils/HandleDownload';
+import HandleSaveConfig from './utils/HandleSaveConfig';
 import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
 import Toast from './utils/Toast';
 import useConfig from './hooks/useConfig';
@@ -124,6 +125,11 @@ function App() {
     downloadJson();
   };
 
+  const { saveConfigJson } = HandleSaveConfig({data});
+  const handleSaveConfig = () => {
+    saveConfigJson();
+  };
+
   
   return (
     <div>
@@ -139,6 +145,7 @@ function App() {
           handleSectionChange={handleSectionChange}
           isFormShown={isFormShown}
           handleDownload={handleDownload}
+          handleSaveConfig={handleSaveConfig}
           handleJsonUpload={handleJsonUpload}
           setIsFormShown={setIsFormShown}
         />
