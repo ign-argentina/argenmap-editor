@@ -1,8 +1,19 @@
 import React from 'react';
 import LatestRelease from "../components/LatestRelease";
+import ConfigActionsMenu from './ConfigActionsMenu';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleSaveConfig, handleDownload, handleJsonUpload }) => {
+const Navbar = ({
+  config,
+  language,
+  sectionInfo,
+  uiControls,
+  actions
+}) => {
+  const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
+  const { handleLanguageChange, selectedLang, handleClearStorage, isFormShown, setIsFormShown } = uiControls;
+  const { handleDownload, handleSaveConfig, handleJsonUpload } = actions;
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -84,12 +95,7 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         Descargar
       </button>
 
-      <button className="download-button" onClick={handleSaveConfig} title="Save Config DB">
-        <span className="icon">
-          <i className="fa-solid fa-save"></i>
-        </span>
-        Save Config DB
-      </button>
+      <ConfigActionsMenu handleSaveConfig={handleSaveConfig} />
 
       <div className="version-info">
         <LatestRelease />
