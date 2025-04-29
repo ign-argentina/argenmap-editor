@@ -1,8 +1,9 @@
 // backend/server.js
-
 import express from 'express';
 import cors from 'cors';
-import pool from './db.js'; // <-- Usamos tu conexión ya existente
+import pool from './db.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -32,7 +33,7 @@ app.post('/configs', async (req, res) => {
   try {
     const result = await pool.query(
       'INSERT INTO config (json) VALUES ($1) RETURNING *',
-      [json]
+      [JSON.stringify(json)] // <--- ¡IMPORTANTE!
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

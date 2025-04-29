@@ -125,9 +125,9 @@ function App() {
     downloadJson();
   };
 
-  const { saveConfigJson } = HandleSaveConfig({data});
+  const { saveConfigJson } = HandleSaveConfig();
   const handleSaveConfig = () => {
-    saveConfigJson();
+    saveConfigJson(data); // <- pasás el json real acá
   };
 
   
