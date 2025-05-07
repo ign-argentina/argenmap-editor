@@ -5,10 +5,28 @@ class VisorController {
     this.visorService = new VisorService();
   }
 
-  newVisor() {
-    const data = this.visorService.newVisor()
-    return data
-  }
+  saveVisor = async (req, res) => {
+    try {
+      const { json, name, description } = req.body;
+  
+      if (!json || !name) {
+        return res.status(400).json({ error: 'Faltan campos requeridos' });
+      }
+  
+      const result = await this.visorService.saveVisor(json, name, description);
+  
+      if (!result.success) {
+        return res.status(500).json({ error: result.error });
+      }
+  
+      return res.status(201).json(result.data);
+  
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al guardar visor', detail: err.message });
+    }
+  };
+  
+  
 
   // getAllVisors() {
 

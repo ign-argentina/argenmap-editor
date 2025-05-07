@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SaveVisorModal from './SaveVisorModal';
 import './VisorManagerModal.css';
-import { getAllVisors } from '../api/configApi'
+import { getAllVisors, saveVisor } from '../api/configApi'
 
 const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
   const [visores, setVisores] = useState([]);
@@ -17,7 +17,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
         .catch((err) => console.error('Error al obtener visores:', err));
     }
   }, [isOpen]);
-  
+
 
   const handleSave = async ({ name, description }) => {
     try {
@@ -64,7 +64,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
             <button onClick={() => onLoad(selectedVisor)} disabled={!selectedVisor}>
               CARGAR EN EDITOR
             </button>
-            <button onClick={() => setShowSaveModal(true)}>Guardar Plantilla</button>
+            <button onClick={() => setShowSaveModal(true)}>Guardar Visor</button>
             <button onClick={() => alert('Crear grupo (próximamente)')}>Crear Grupo</button>
             <button onClick={onClose}>Cerrar</button>
           </div>
@@ -72,8 +72,24 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
           <SaveVisorModal
             isOpen={showSaveModal}
             onClose={() => setShowSaveModal(false)}
-            onSave={handleSave}
+            onSave={({ name, description }) => {
+              if (!currentJson) {
+                alert('No hay configuración para guardar');
+                return;
+              }
+
+              saveVisor({ name, description, json: currentJson })
+                .then(() => {
+                  alert('Visor guardado correctamente');
+                  setShowSaveModal(false);
+                })
+                .catch((err) => {
+                  console.error('Error al guardar visor:', err);
+                  alert('Error al guardar visor');
+                });
+            }}
           />
+
         </div>
       </div>
     )
