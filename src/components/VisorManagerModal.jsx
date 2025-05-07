@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SaveVisorModal from './SaveVisorModal';
 import './VisorManagerModal.css';
-import { getAllConfigs } from '../api/configApi'
+import { getAllVisors } from '../api/configApi'
 
 const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
   const [visores, setVisores] = useState([]);
@@ -10,7 +10,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
 
   useEffect(() => {
     if (isOpen) {
-      getAllConfigs()
+      getAllVisors()
         .then((data) => {
           setVisores(data); // directamente seteás lo que devuelve .json()
         })
