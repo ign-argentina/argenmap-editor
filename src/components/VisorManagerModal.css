@@ -12,7 +12,7 @@
   }
   
   .visor-modal {
-    background: white;
+    background-color: rgb(255, 255, 255);
     border-radius: 12px;
     width: 600px;
     max-height: 80vh;
