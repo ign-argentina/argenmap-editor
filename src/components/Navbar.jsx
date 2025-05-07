@@ -1,8 +1,22 @@
 import React from 'react';
+import { useState } from 'react';
 import LatestRelease from "../components/LatestRelease";
+import ConfigActionsMenu from './ConfigActionsMenu';
+import SaveVisorModal from './SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleClearStorage, sectionKeys, selectedSection, handleSectionChange, setIsFormShown, isFormShown, handleDownload, handleJsonUpload }) => {
+const Navbar = ({
+  config,
+  language,
+  sectionInfo,
+  uiControls,
+  actions
+}) => {
+  const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
+  const { handleLanguageChange, selectedLang, handleClearStorage, isFormShown, setIsFormShown } = uiControls;
+  const { handleDownload, handleSaveConfig, handleJsonUpload } = actions;
+  const [showSaveModal, setShowSaveModal] = useState(false);
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -12,6 +26,23 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         handleJsonUpload(jsonData);
       };
       reader.readAsText(file);
+    }
+  };
+
+  const handleSaveVisor = async ({ name, description }) => {
+    try {
+      const storedData = localStorage.getItem('formData');
+      const parsedData = storedData ? JSON.parse(storedData) : {};
+      const res = await fetch('http://localhost:3001/visores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, json: parsedData })
+      });
+      const result = await res.json();
+      alert('Guardado con éxito: ' + result.id);
+    } catch (err) {
+      console.error('Error al guardar visor:', err);
+      alert('Error al guardar visor');
     }
   };
 
@@ -83,6 +114,20 @@ const Navbar = ({ config, language, selectedLang, handleLanguageChange, handleCl
         </span>
         Descargar
       </button>
+
+      <ConfigActionsMenu handleSaveConfig={handleSaveConfig} />
+
+      {showSaveModal && (
+        <SaveVisorModal
+          onSave={handleSaveVisor}
+          onClose={() => setShowSaveModal(false)}
+        />
+      )}
+
+      <button onClick={() => setShowSaveModal(true)} title="Guardar como Visor">
+        <i className="fa-solid fa-save"></i> Guardar Visor
+      </button>
+
       <div className="version-info">
         <LatestRelease />
       </div>

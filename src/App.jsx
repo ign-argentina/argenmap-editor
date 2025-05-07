@@ -10,6 +10,7 @@ import TranslateSchema from './utils/TranslateSchema';
 import GenerateSchema from './utils/GenerateSchema';
 import FilterEmptySections from './utils/FilterEmptySections';
 import HandleDownload from './utils/HandleDownload';
+import HandleSaveConfig from './utils/HandleSaveConfig';
 import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
 import Toast from './utils/Toast';
 import useConfig from './hooks/useConfig';
@@ -63,7 +64,7 @@ function App() {
       return translatedSchema
     }
   }
-  
+
   // Load saved data from localStorage on startup.
   useEffect(() => {
     const storedData = localStorage.getItem('formData');
@@ -124,23 +125,35 @@ function App() {
     downloadJson();
   };
 
-  
+  const { saveConfigJson } = HandleSaveConfig();
+  const handleSaveConfig = () => {
+    saveConfigJson(data); // <- pasás el json real acá
+  };
+
+
   return (
     <div>
       <div className="editor-container" key={reloadKey}>
         <Navbar
           config={data}
+          sectionInfo={{
+            sectionKeys,
+            selectedSection,
+            handleSectionChange
+          }}
+          uiControls={{
+            handleLanguageChange,
+            selectedLang,
+            isFormShown,
+            setIsFormShown,
+            handleClearStorage
+          }}
+          actions={{
+            handleDownload,
+            handleSaveConfig,
+            handleJsonUpload
+          }}
           language={language}
-          selectedLang={selectedLang}
-          handleLanguageChange={handleLanguageChange}
-          handleClearStorage={handleClearStorage}
-          sectionKeys={sectionKeys}
-          selectedSection={selectedSection}
-          handleSectionChange={handleSectionChange}
-          isFormShown={isFormShown}
-          handleDownload={handleDownload}
-          handleJsonUpload={handleJsonUpload}
-          setIsFormShown={setIsFormShown}
         />
 
         {isFormShown && (
