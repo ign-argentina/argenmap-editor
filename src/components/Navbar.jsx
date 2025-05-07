@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 import LatestRelease from "../components/LatestRelease";
-import ConfigActionsMenu from './ConfigActionsMenu';
 import SaveVisorModal from './SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -10,7 +9,8 @@ const Navbar = ({
   language,
   sectionInfo,
   uiControls,
-  actions
+  actions,
+  openVisorManager
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
   const { handleLanguageChange, selectedLang, handleClearStorage, isFormShown, setIsFormShown } = uiControls;
@@ -115,8 +115,6 @@ const Navbar = ({
         Descargar
       </button>
 
-      <ConfigActionsMenu handleSaveConfig={handleSaveConfig} />
-
       {showSaveModal && (
         <SaveVisorModal
           onSave={handleSaveVisor}
@@ -124,8 +122,12 @@ const Navbar = ({
         />
       )}
 
-      <button onClick={() => setShowSaveModal(true)} title="Guardar como Visor">
-        <i className="fa-solid fa-save"></i> Guardar Visor
+      <button className="download-button" onClick={handleSaveConfig}>
+        <i className="fa-solid fa-save"></i> save config prueba
+      </button>
+
+      <button className="visor-manager-button" onClick={openVisorManager}>
+        <i className="fa-solid fa-eye"></i> Visor Manager
       </button>
 
       <div className="version-info">

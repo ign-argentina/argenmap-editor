@@ -5,6 +5,7 @@ import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import Preview from './components/Preview';
 import Navbar from './components/Navbar';
+import VisorManagerModal from './components/VisorManagerModal';
 import ColorPickerControl from './utils/ColorPickerControl';
 import TranslateSchema from './utils/TranslateSchema';
 import GenerateSchema from './utils/GenerateSchema';
@@ -27,6 +28,7 @@ function App() {
   const [toast, setToast] = useState(null);
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);  // Loads lang from localStorage, if it doesnt exists, use a default
+  const [isVisorModalOpen, setIsVisorModalOpen] = useState(false);
 
   const ajv = new Ajv();
   ajv.addFormat('color', /^#[0-9A-Fa-f]{6}$/); // Custom format "color" added to JSONForms
@@ -130,6 +132,11 @@ function App() {
     saveConfigJson(data); // <- pasás el json real acá
   };
 
+  const handleLoadVisor = (visor) => {
+    const configJson = typeof visor.json === 'string' ? JSON.parse(visor.json) : visor.json;
+    localStorage.setItem('formData', JSON.stringify(configJson));
+    window.location.reload();
+  };
 
   return (
     <div>
@@ -151,9 +158,10 @@ function App() {
           actions={{
             handleDownload,
             handleSaveConfig,
-            handleJsonUpload
+            handleJsonUpload,
           }}
           language={language}
+          openVisorManager={() => setIsVisorModalOpen(true)}
         />
 
         {isFormShown && (
@@ -181,6 +189,13 @@ function App() {
             )}
           </div>
         )}
+
+        <VisorManagerModal
+          isOpen={isVisorModalOpen}
+          onClose={() => setIsVisorModalOpen(false)}
+          onLoad={handleLoadVisor}
+          currentJson={data} // este es el JSON actual
+        />
 
         {toast && (
           <Toast
