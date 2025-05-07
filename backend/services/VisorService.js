@@ -1,23 +1,22 @@
 import Visor from "../models/Visor.js";
 
-class VisorService{
-    
+class VisorService {
 
-    newService(){
-        return Visor.newVisor();
-    }
+  newService() {
+    return Visor.newVisor();
+  }
 
-    getAllVisors(){
+  getAllVisors() {
 
-    }
+  }
 
-    getvisor(){
+  getvisor() {
 
-    }
+  }
 
-    deletevisor(){
-        
-    }
+  deletevisor() {
+
+  }
 }
 
 export default VisorService

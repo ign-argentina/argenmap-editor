@@ -1,27 +1,27 @@
 import VisorService from "../services/VisorService.js";
 
 class VisorController {
-    constructor(){        
-        this.visorService = new VisorService();
-    }
+  constructor() {
+    this.visorService = new VisorService();
+  }
 
-    newVisor(){
-        const data = this.visorService.newVisor()
-        return data
-    }
+  newVisor() {
+    const data = this.visorService.newVisor()
+    return data
+  }
 
-    getAllVisors(){
+  getAllVisors() {
 
-        return ["v1", "v2", "v3"]
-    }
+    return ["v1", "v2", "v3"]
+  }
 
-    getVisor(){
-        return "A single visor"
-    }
+  getVisor() {
+    return "A single visor"
+  }
 
-    deleteVisor(){
-        return "visor eliminado"
-    }
+  deleteVisor() {
+    return "visor eliminado"
+  }
 }
 
-  export default VisorController;
+export default VisorController;

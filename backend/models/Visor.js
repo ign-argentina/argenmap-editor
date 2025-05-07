@@ -8,51 +8,51 @@ const DELETE_VISOR = 'DELETE FROM visores WHERE id = $1'
 
 class Visor extends BaseModel {
 
-    async newVisor(name, description, json) {
-        try {
-            
-            // Primero insertamos en config
-            const configResult = await super.runQuery(INSERT_VISOR_CONFIG, [JSON.stringify(json)])
+  async newVisor(name, description, json) {
+    try {
 
-            const cid = configResult.rows[0].id;
-            const id = uuidv4();
-            const now = new Date()
+      // Primero insertamos en config
+      const configResult = await super.runQuery(INSERT_VISOR_CONFIG, [JSON.stringify(json)])
 
-            const result = await super.runQuery(INSERT_VISOR, [id, cid, name, description || null, now])
+      const cid = configResult.rows[0].id;
+      const id = uuidv4();
+      const now = new Date()
 
-            return result[0] //por que [0]?
-        } catch (error) {
-            return this.#printError(error)
-        }
+      const result = await super.runQuery(INSERT_VISOR, [id, cid, name, description || null, now])
+
+      return result[0] //por que [0]?
+    } catch (error) {
+      return this.#printError(error)
     }
+  }
 
-    async getAllVisors() {
-        try {
-            const result = await super.runQuery(SELECT_AL_VISORS)
-            return result
-        } catch (error) {
-            return this.#printError(error)
-        }
+  async getAllVisors() {
+    try {
+      const result = await super.runQuery(SELECT_AL_VISORS)
+      return result
+    } catch (error) {
+      return this.#printError(error)
     }
+  }
 
-    getVisor() {
+  getVisor() {
 
+  }
+
+  async deleteVisor(id) {
+    try {
+      const result = await super.runQuery(DELETE_VISOR, [id])
+      return result
+    } catch (error) {
+      return this.#printError(error)
     }
-
-    async deleteVisor(id) {
-        try {
-            const result = await super.runQuery(DELETE_VISOR, [id])
-            return result
-        } catch (error) {
-            return this.#printError(error)
-        }
-    }
+  }
 
 
-    #printError(error) {
-        console.log("VISOR MODEL: ", error)
-        return null
-    }
+  #printError(error) {
+    console.log("VISOR MODEL: ", error)
+    return null
+  }
 }
 
 export default Visor
