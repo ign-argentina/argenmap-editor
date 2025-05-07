@@ -1,6 +1,12 @@
 const API_URL = 'http://localhost:3001';
 
-export async function getConfigs() {
+export async function getViewers() {
+  const res = await fetch(`${API_URL}/visores`);
+  if (!res.ok) throw new Error('Error al obtener visores');
+  return res;
+}
+
+export async function getAllConfigs() {
   const res = await fetch(`${API_URL}/configs`);
   if (!res.ok) throw new Error('Error al obtener configs');
   return res.json();

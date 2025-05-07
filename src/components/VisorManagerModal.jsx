@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SaveVisorModal from './SaveVisorModal';
 import './VisorManagerModal.css';
+import { getAllConfigs } from '../api/configApi'
 
 const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
   const [visores, setVisores] = useState([]);
@@ -9,12 +10,14 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
 
   useEffect(() => {
     if (isOpen) {
-      fetch('http://localhost:3001/visores')
-        .then((res) => res.json())
-        .then((data) => setVisores(data))
+      getAllConfigs()
+        .then((data) => {
+          setVisores(data); // directamente seteás lo que devuelve .json()
+        })
         .catch((err) => console.error('Error al obtener visores:', err));
     }
   }, [isOpen]);
+  
 
   const handleSave = async ({ name, description }) => {
     try {
@@ -41,7 +44,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
     isOpen && (
       <div className="visor-modal-backdrop">
         <div className="visor-modal">
-          <h2>Plantillas de Visores</h2>
+          <h2>Visor Manager</h2>
           <div className="visor-list">
             {visores.map((visor) => (
               <div

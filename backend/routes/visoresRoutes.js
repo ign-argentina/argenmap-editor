@@ -8,5 +8,4 @@ const visorController = new VisorController();
 
 visoresRoutes.post("/", visorController.newVisor);
 
-
 export default visoresRoutes;
