@@ -28,9 +28,9 @@ const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <div className="modal-actions">
-        <button onClick={handleSubmit}>Guardar</button>
-        <button onClick={onClose}>Cancelar</button>
+      <div className="modal-buttons">
+        <button className="save" onClick={handleSubmit}>Guardar</button>
+        <button className="cancel" onClick={onClose}>Cancelar</button>
       </div>
     </div>
   );
