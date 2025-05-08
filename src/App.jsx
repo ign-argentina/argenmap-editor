@@ -11,7 +11,6 @@ import TranslateSchema from './utils/TranslateSchema';
 import GenerateSchema from './utils/GenerateSchema';
 import FilterEmptySections from './utils/FilterEmptySections';
 import HandleDownload from './utils/HandleDownload';
-import HandleSaveConfig from './utils/HandleSaveConfig';
 import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
 import Toast from './utils/Toast';
 import useConfig from './hooks/useConfig';
@@ -127,11 +126,6 @@ function App() {
     downloadJson();
   };
 
-  const { saveConfigJson } = HandleSaveConfig();
-  const handleSaveConfig = () => {
-    saveConfigJson(data); // <- pasás el json real acá
-  };
-
   const handleLoadVisor = (visor) => {
     const configJson = typeof visor.json === 'string' ? JSON.parse(visor.json) : visor.json;
     localStorage.setItem('formData', JSON.stringify(configJson));
@@ -157,7 +151,6 @@ function App() {
           }}
           actions={{
             handleDownload,
-            handleSaveConfig,
             handleJsonUpload,
           }}
           language={language}

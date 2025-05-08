@@ -14,7 +14,7 @@ const Navbar = ({
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
   const { handleLanguageChange, selectedLang, handleClearStorage, isFormShown, setIsFormShown } = uiControls;
-  const { handleDownload, handleSaveConfig, handleJsonUpload } = actions;
+  const { handleDownload, handleJsonUpload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   const handleFileChange = (event) => {
@@ -121,10 +121,6 @@ const Navbar = ({
           onClose={() => setShowSaveModal(false)}
         />
       )}
-
-      <button className="download-button" onClick={handleSaveConfig}>
-        <i className="fa-solid fa-save"></i> save config prueba
-      </button>
 
       <button className="visor-manager-button" onClick={openVisorManager}>
         <i className="fa-solid fa-eye"></i> Visor Manager
