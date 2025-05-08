@@ -1,21 +1,23 @@
 import BaseModel from "./BaseModel.js";
 
-const INSERT_CONFIG = 'INSERT INTO config (json) VALUES ($1) RETURNING *';
+const INSERT_CONFIG = 'INSERT INTO config (json) VALUES ($1) RETURNING id';
 const SELECT_ALL_CONFIGS = 'SELECT * FROM config';
-const UPDATE_CONFIG = ""; // Podés completarlo luego si lo necesitás
+const UPDATE_CONFIG = "";
 
 class Config extends BaseModel {
   static newConfig = async (json) => {
     try {
-      json = JSON.stringify(json);
-      const result = await super.runQuery(INSERT_CONFIG, [json]);
-      return result;
+      const result = await super.runQuery(INSERT_CONFIG, [JSON.stringify(json)]);
+      if (!result || result.length === 0) {
+        throw new Error("No se insertó ninguna config");
+      }
+      return result[0];
     } catch (error) {
       console.log("CONFIG MODEL (newConfig):", error);
       return null;
     }
   };
-
+  
   static updateConfig = async (id, json) => {
     try {
       const result = await super.runQuery(UPDATE_CONFIG, [json, id]);
