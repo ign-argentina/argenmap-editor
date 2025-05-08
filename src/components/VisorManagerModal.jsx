@@ -12,7 +12,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
     if (isOpen) {
       getAllVisors()
         .then((data) => {
-          setVisores(data); // directamente seteás lo que devuelve .json()
+          setVisores(data);
         })
         .catch((err) => console.error('Error al obtener visores:', err));
     }
@@ -44,7 +44,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
     isOpen && (
       <div className="visor-modal-backdrop">
         <div className="visor-modal">
-          <h2>Visor Manager</h2>
+          <h2>VISOR MANAGER</h2>
           <div className="visor-list">
             {visores.map((visor) => (
               <div
@@ -61,12 +61,12 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
             ))}
           </div>
           <div className="visor-modal-actions">
-            <button onClick={() => onLoad(selectedVisor)} disabled={!selectedVisor}>
+            <button className="vmanager-button" onClick={() => onLoad(selectedVisor)} disabled={!selectedVisor}>
               CARGAR EN EDITOR
             </button>
-            <button onClick={() => setShowSaveModal(true)}>Guardar Visor</button>
-            <button onClick={() => alert('Crear grupo (próximamente)')}>Crear Grupo</button>
-            <button onClick={onClose}>Cerrar</button>
+            <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>Guardar Visor</button>
+            <button className="vmanager-button" onClick={() => alert('Crear grupo (próximamente)')}>Crear Grupo</button>
+            <button className="vmanager-button" onClick={onClose}>Cerrar</button>
           </div>
 
           <SaveVisorModal

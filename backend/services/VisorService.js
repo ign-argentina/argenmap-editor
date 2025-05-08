@@ -8,23 +8,19 @@ class VisorService {
     try {
       const configResult = await Config.newConfig(json);
       if (!configResult) {
-        console.log("⚠️ Config.newConfig devolvió null");
         return { success: false, error: 'No se pudo guardar la configuración' };
       }
   
       const cid = configResult.id;
-      console.log("✅ Config guardada con id:", cid);
   
       const visorResult = await Visor.saveVisor(cid, name, description);
       if (!visorResult) {
-        console.log("⚠️ Visor.saveVisor devolvió null");
         return { success: false, error: 'No se pudo guardar el visor' };
       }
   
       return { success: true, data: visorResult };
   
     } catch (err) {
-      console.log("💥 Error en VisorService (saveVisor):", err);
       return { success: false, error: err.message };
     }
   };
