@@ -11,7 +11,7 @@ const SELECT_ALL_VISORS = `
 class Visor extends BaseModel {
   static saveVisor = async (cid, name, description) => {
     try {
-      const result = await super.runQuery(INSERT_VISOR, [cid, name, description]);
+      const result = await super.runQuery(INSERT_VISOR, [name, description, cid]);
       return result;
     } catch (err) {
       console.log("Error en Visor model (saveVisor):", err);
