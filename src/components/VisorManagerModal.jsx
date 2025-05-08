@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import SaveVisorModal from './SaveVisorModal';
-import './VisorManagerModal.css';
 import { getAllVisors, saveVisor } from '../api/configApi'
+import { fetchVisores } from '../utils/FetchVisors';
+import './VisorManagerModal.css';
 
 const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
   const [visores, setVisores] = useState([]);
@@ -10,11 +11,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
 
   useEffect(() => {
     if (isOpen) {
-      getAllVisors()
-        .then((data) => {
-          setVisores(data);
-        })
-        .catch((err) => console.error('Error al obtener visores:', err));
+      fetchVisores(setVisores);
     }
   }, [isOpen]);
 
@@ -85,6 +82,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
                   .then(() => {
                     alert('Visor guardado correctamente');
                     setShowSaveModal(false);
+                    fetchVisores(setVisores);
                   })
                   .catch((err) => {
                     console.error('Error al guardar visor:', err);
