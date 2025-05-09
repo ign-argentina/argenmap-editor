@@ -16,58 +16,44 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
   }, [isOpen]);
 
 
-  const handleSave = async ({ name, description }) => {
-    try {
-      const response = await fetch('http://localhost:3001/api/visores', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          description,
-          json: JSON.stringify(currentJson),
-        }),
-      });
-
-      if (!response.ok) throw new Error('Error al guardar visor');
-      setShowSaveModal(false);
-      alert('Plantilla guardada correctamente');
-    } catch (error) {
-      console.error(error);
-      alert('Ocurrió un error al guardar');
-    }
-  };
-
   return (
     isOpen && (
       <div className="visor-modal-backdrop">
         <div className="modal-wrapper">
           <div className="visor-modal">
             <h2>VISOR MANAGER</h2>
-            <div className="visor-list">
-              {visores.map((visor) => (
-                <div
-                  key={visor.id}
-                  className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedVisor(visor)}
-                >
-                  {visor.img && <img src={visor.img} alt="img" className="visor-image" />}
-                  <div className="visor-info">
-                    <h3>{visor.name}</h3>
-                    <p>{visor.description}</p>
-                  </div>
+            <div className="visor-modal-container">
+              <div className='visor-list-container'>
+                <div className="visor-list">
+                  {visores.map((visor) => (
+                    <div
+                      key={visor.id}
+                      className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
+                      onClick={() => setSelectedVisor(visor)}
+                    >
+                      {visor.img && <img src={visor.img} alt="img" className="visor-image" />}
+                      <div className="visor-info">
+                        <h3>{visor.name}</h3>
+                        <p>{visor.description}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="visor-modal-actions">
-              <button className="vmanager-button" onClick={() => onLoad(selectedVisor)} disabled={!selectedVisor}>
-                CARGAR EN EDITOR
-              </button>
-              <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>Guardar Visor</button>
-              <button className="vmanager-button" onClick={() => alert('Crear grupo (próximamente)')}>Crear Grupo</button>
-              <button className="vmanager-button" onClick={onClose}>Cerrar</button>
+              </div>
+              <div className="visor-modal-actions">
+                <button className="vmanager-button" onClick={() => onLoad(selectedVisor)} disabled={!selectedVisor}>
+                  Abrir
+                </button>
+                <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>Guardar Visor</button>
+                <button className="vmanager-button" >Boton</button>
+                <button className="vmanager-button" >Boton</button>
+                <button className="vmanager-button" >Boton</button>
+                <button className="vmanager-button" >Boton</button>
+                <button className="vmanager-button" onClick={onClose}>Cerrar</button>
+              </div>
             </div>
           </div>
-  
+
           {showSaveModal && (
             <SaveVisorModal
               isOpen={showSaveModal}
@@ -77,7 +63,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
                   alert('No hay configuración para guardar');
                   return;
                 }
-  
+
                 saveVisor({ name, description, json: currentJson })
                   .then(() => {
                     alert('Visor guardado correctamente');
@@ -94,7 +80,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
         </div>
       </div>
     )
-  );  
+  );
 };
 
 export default VisorManagerModal;
