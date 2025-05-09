@@ -3,7 +3,10 @@ import { useState } from 'react';
 import LatestRelease from "../components/LatestRelease";
 import ConfigActionsMenu from './ConfigActionsMenu';
 import SaveVisorModal from './SaveVisorModal';
+import LoginModal from './LoginModal'
+
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import RegisterModal from './RegisterModal';
 
 const Navbar = ({
   config,
@@ -16,6 +19,12 @@ const Navbar = ({
   const { handleLanguageChange, selectedLang, handleClearStorage, isFormShown, setIsFormShown } = uiControls;
   const { handleDownload, handleSaveConfig, handleJsonUpload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  
+  const [userAuth, setUserAuth] = useState(false);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -45,6 +54,7 @@ const Navbar = ({
       alert('Error al guardar visor');
     }
   };
+
 
   return (
     <div className='navbar'>
@@ -124,9 +134,38 @@ const Navbar = ({
         />
       )}
 
+      {showLoginModal && (
+        <LoginModal
+        // onClose={() => setShowLoginModal(false)}
+        />
+      )}
+
+            {showRegisterModal && (
+        <RegisterModal
+      //   onClose={() => setShowRegisterModal(false)}
+        />
+      )}
+
+
       <button onClick={() => setShowSaveModal(true)} title="Guardar como Visor">
         <i className="fa-solid fa-save"></i> Guardar Visor
       </button>
+
+
+
+      {!userAuth && (
+
+        <div id="authContainer">
+          <button onClick={() => setShowLoginModal(true)} title="Iniciar Sesion">
+            <i className="fa-solid fa-hand"></i> Iniciar Sesion
+          </button>
+          <button onClick={() => setShowRegisterModal(true)} title="Registrarse">
+            <i className="fa-solid fa-plus"></i> Registrarse
+          </button>
+        </div>
+
+      )}
+
 
       <div className="version-info">
         <LatestRelease />
