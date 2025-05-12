@@ -13,14 +13,16 @@ class AuthService {
 
             const [userData] = await User.findByEmail(email)
 
-            if (userData && await User.validatePassword(password, userData.password)) {
-                loginSuccess = true;
-                const {id, password, ...user} = userData
-                const token = this.#signToken(id)
-                data = {user, token}
+            if (userData && userData.active) {
+                if (await User.validatePassword(password, userData.password)) {
+                    loginSuccess = true;
+                    const { id, password, ...user } = userData
+                    const token = this.#signToken(id)
+                    data = { user, token }
+                }
             }
 
-           return loginSuccess ? Result.success(data) : Result.fail("El usuario o contraseña son incorrectos")
+            return loginSuccess ? Result.success(data) : Result.fail((!loginSuccess && userData.active) ? "El usuario o contraseña son incorrectos" : "La cuenta está inhabilitada")
         } catch (error) {
             console.log("Error en la capa de servicio", error)
         }
@@ -42,8 +44,11 @@ class AuthService {
         }
     }
 
+    logout = async (res) => {
+        
+    }
     #signToken = (userId) => {
-        return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES })
+        return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: parseInt(process.env.JWT_EXPIRES) })
     }
 
     getDataToken(token) {
@@ -57,6 +62,18 @@ class AuthService {
         } catch (error) {
             console.log("Error en la capa de servicio", error)
         }
+    }
+
+    checkAuth = async (token) => {
+        try{
+            const isAuth = jwt.verify(token, process.env.JWT_SECRET)
+            return Result.success(true)
+        } catch(error){
+            console.log("expirado")
+            return Result.fail("Debes iniciar secion")
+
+        }
+
     }
 }
 

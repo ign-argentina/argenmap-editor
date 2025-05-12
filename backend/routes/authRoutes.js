@@ -7,6 +7,8 @@ const authController = new AuthController();
 //authRoutes.post("/register", [validators.checkDuplicateEmail, validators.checkRoles], authController.register)
 authRoutes.post("/register", authController.register)
 authRoutes.post("/login", authController.login)
+authRoutes.get("/check", authController.checkAuth)
+authRoutes.post("/logout", authController.logout)
 authRoutes.post("/validate", authController.getDataToken)
 
 
