@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SaveVisorModal from './SaveVisorModal';
-import { getAllVisors, saveVisor } from '../api/configApi'
+import { getConfigById, saveVisor } from '../api/configApi'
 import { fetchVisores } from '../utils/FetchVisors';
 import './VisorManagerModal.css';
 
@@ -14,7 +14,6 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
       fetchVisores(setVisores);
     }
   }, [isOpen]);
-
 
   return (
     isOpen && (
@@ -41,9 +40,24 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
                 </div>
               </div>
               <div className="visor-modal-actions">
-                <button className="vmanager-button" onClick={() => onLoad(selectedVisor)} disabled={!selectedVisor}>
+                <button
+                  className="vmanager-button"
+                  onClick={async () => {
+                    if (!selectedVisor) return;
+                    try {
+                      const config = await getConfigById(selectedVisor.cid);
+                      onLoad(config);
+                      onClose();
+                    } catch (err) {
+                      console.error('Error al cargar configuración del visor:', err);
+                      alert('No se pudo cargar la configuración del visor');
+                    }
+                  }}
+                  disabled={!selectedVisor}
+                >
                   Abrir
                 </button>
+
                 <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>Guardar Visor</button>
                 <button className="vmanager-button" >Boton</button>
                 <button className="vmanager-button" >Boton</button>
