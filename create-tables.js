@@ -12,7 +12,7 @@ async function crearTablas() {
 
       CREATE TABLE config (
         id SERIAL PRIMARY KEY,
-        json JSONB NOT NULL
+        json JSON NOT NULL
       );
 
       CREATE TABLE usuarios (
@@ -53,7 +53,7 @@ async function crearTablas() {
         visor_id INTEGER REFERENCES visores(id),
         accion TEXT NOT NULL,
         fecha TIMESTAMP DEFAULT NOW(),
-        datos_previos JSONB
+        datos_previos JSON
       );
     `);
 
