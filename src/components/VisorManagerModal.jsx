@@ -3,35 +3,17 @@ import SaveVisorModal from './SaveVisorModal';
 import { getConfigById, saveVisor } from '../api/configApi'
 import { fetchVisores } from '../utils/FetchVisors';
 import './VisorManagerModal.css';
-import { useFormEngineContext } from '../context/FormEngineContext';
 
 const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
   const [visores, setVisores] = useState([]);
   const [selectedVisor, setSelectedVisor] = useState(null);
   const [showSaveModal, setShowSaveModal] = useState(false);
-  // const { setData, uploadData } = useFormEngineContext();
 
   useEffect(() => {
     if (isOpen) {
       fetchVisores(setVisores);
     }
   }, [isOpen]);
-
-
-  function preservarOrden(jsonOriginal) {
-    if (!jsonOriginal || typeof jsonOriginal !== 'object') return jsonOriginal;
-
-    // Convertimos el objeto en un array de pares clave-valor
-    const entries = Object.entries(jsonOriginal);
-
-    // Volvemos a ordenar las entradas (opcionalmente, pero generalmente lo dejamos igual)
-    // Puedes aplicar alguna lógica extra de ordenamiento si es necesario.
-
-    const ordenado = Object.fromEntries(entries);
-
-    return ordenado;
-  }
-
 
   return (
     isOpen && (
@@ -63,14 +45,8 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
                   onClick={async () => {
                     if (!selectedVisor) return;
                     try {
-                      const config = await getConfigById(selectedVisor.cid); // obtené la config asociada
-                      // localStorage.removeItem('formData');
-                      console.log("VisorManagerConfig", config.json)
-
-                      const configOrdenada = preservarOrden(config.json);
-                      console.log("configOrdenada", configOrdenada)
-
-                      onLoad(config);       // si querés también hacer algo más con el visor
+                      const config = await getConfigById(selectedVisor.cid);
+                      onLoad(config);
                       onClose();
                     } catch (err) {
                       console.error('Error al cargar configuración del visor:', err);
