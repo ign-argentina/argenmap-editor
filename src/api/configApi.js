@@ -19,6 +19,12 @@ export async function saveVisor({ name, description, json }) {
 
 
 //CONFIGS
+export async function getConfigById(id) {
+  const res = await fetch(`${API_URL}/configs/${id}`);
+  if (!res.ok) throw new Error('Error al obtener configuración por ID');
+  return res.json();
+}
+
 export async function getAllConfigs() {
   const res = await fetch(`${API_URL}/configs`);
   if (!res.ok) throw new Error('Error al obtener configs');

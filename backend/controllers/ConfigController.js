@@ -55,25 +55,36 @@ class ConfigController {
   getAllConfigs = async (req, res) => {
     try {
       const result = await this.configService.getAllConfigs();
-  
+
       if (!result.success) {
         throw new Error(result.error);
       }
-  
+
       return res.status(200).json(result.data);
     } catch (err) {
       return res.status(500).json({ error: 'Error al obtener las configuraciones', detail: err.message });
     }
   };
-  
+
 
   // getAllConfigs() {
   //   return ["v1", "v2", "v3"]
   // }
 
-  getConfig() {
-    return "A single visor"
-  }
+  getConfigById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await this.configService.getConfigById(id);
+
+      if (!result.success) {
+        return res.status(404).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al obtener la configuración', detail: err.message });
+    }
+  };
 
   deleteConfig() {
     return "visor eliminado"
