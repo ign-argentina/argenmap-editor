@@ -26,7 +26,7 @@ function App() {
     selectedSection,
     setSelectedSection,
     ajv,
-    uploadData
+    uploadSchema
   } = useFormEngine({ config, language, selectedLang });
 
   const [isFormShown, setIsFormShown] = useState(true);
@@ -63,7 +63,7 @@ function App() {
     localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
     localStorage.setItem('formData', JSON.stringify(parsedData));
     setData(parsedData);
-    uploadData(parsedData);
+    uploadSchema(parsedData);
     window.location.reload();
     showToast('JSON cargado exitosamente', 'success');
   };

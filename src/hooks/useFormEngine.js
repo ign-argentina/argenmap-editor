@@ -18,7 +18,7 @@ const useFormEngine = () => {
   const [selectedSection, setSelectedSection] = useState(null);
 
   // Esta función genera y traduce el schema
-  const uploadData = (newData = data) => {
+  const uploadSchema = (newData = data) => {
     if (!newData || !language) return;
 
     const generatedSchema = GenerateSchema({ data: newData });
@@ -58,14 +58,14 @@ const useFormEngine = () => {
       localStorage.setItem('formDataDefault', JSON.stringify(config));
     }
     setData(finalData);
-    uploadData(finalData);
+    uploadSchema(finalData);
   }, [config]); // 🔁 solo se ejecuta una vez cuando config está disponible
 
   // Cambio de idioma persistente
   const handleLanguageChange = (newLang) => {
     setSelectedLang(newLang);
     localStorage.setItem('selectedLang', newLang);
-    uploadData(data); // Se actualiza el schema traducido al nuevo idioma
+    uploadSchema(data); // Se actualiza el schema traducido al nuevo idioma
   };
 
   return {
@@ -74,7 +74,7 @@ const useFormEngine = () => {
     schema,
     selectedSection,
     setSelectedSection,
-    uploadData,
+    uploadSchema,
     selectedLang,
     setSelectedLang: handleLanguageChange,
     configLoading,
