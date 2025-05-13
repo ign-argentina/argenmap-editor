@@ -51,8 +51,6 @@ export async function updateConfig(id, jsonData) {
   return res.json();
 }
 
-
-
 //Usar estas funciones en tu app
 // import { createConfig } from './api/configApi';
 

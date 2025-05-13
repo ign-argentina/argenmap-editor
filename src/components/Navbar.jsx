@@ -1,8 +1,9 @@
-import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LatestRelease from "../components/LatestRelease";
 import SaveVisorModal from './SaveVisorModal';
+
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import LoginSection from './LoginSection';
 
 const Navbar = ({
   config,
@@ -16,6 +17,9 @@ const Navbar = ({
   const { handleLanguageChange, selectedLang, handleClearStorage, isFormShown, setIsFormShown } = uiControls;
   const { handleDownload, handleJsonUpload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
+
+
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -45,6 +49,7 @@ const Navbar = ({
       alert('Error al guardar visor');
     }
   };
+
 
   return (
     <div className='navbar'>
@@ -125,6 +130,11 @@ const Navbar = ({
       <button className="visor-manager-button" onClick={openVisorManager}>
         <i className="fa-solid fa-eye"></i> Visor Manager
       </button>
+
+
+
+
+     <LoginSection />
 
       <div className="version-info">
         <LatestRelease />
