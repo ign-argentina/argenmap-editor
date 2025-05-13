@@ -40,7 +40,7 @@ class AuthController {
                 throw new Error(`La contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`);
             }
 
-            if (await this.authService.isMailDuplicated(email).success) {
+            if ((await this.authService.isMailDuplicated(email)).success === true) {
                 return res.status(400).json("El correo ya esta en uso")
             }
 

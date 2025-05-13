@@ -13,7 +13,8 @@ class AuthService {
 
             const [userData] = await User.findByEmail(email)
 
-            if (userData && userData.active) {
+            const isActive = (userData?.active ?? false)
+            if (isActive) {
                 if (await User.validatePassword(password, userData.password)) {
                     loginSuccess = true;
                     const { id, password, ...user } = userData
@@ -22,7 +23,7 @@ class AuthService {
                 }
             }
 
-            return loginSuccess ? Result.success(data) : Result.fail((!loginSuccess && userData.active) ? "El usuario o contraseña son incorrectos" : "La cuenta está inhabilitada")
+            return loginSuccess ? Result.success(data) : Result.fail( isActive ? "La cuenta está inhabilitada" : "El usuario o contraseña son incorrectos")
         } catch (error) {
             console.log("Error en la capa de servicio", error)
         }
@@ -47,6 +48,7 @@ class AuthService {
     logout = async (res) => {
         
     }
+
     #signToken = (userId) => {
         return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: parseInt(process.env.JWT_EXPIRES) })
     }
@@ -58,7 +60,7 @@ class AuthService {
     isMailDuplicated = async (email) => {
         try {
             const data = await User.isMailDuplicated(email)
-            return data.length > 0 ? Result.success(data) : Result.fail("El email ya se encuentra en uso")
+            return data ? Result.success() : Result.fail()
         } catch (error) {
             console.log("Error en la capa de servicio", error)
         }
@@ -69,8 +71,7 @@ class AuthService {
             const isAuth = jwt.verify(token, process.env.JWT_SECRET)
             return Result.success(true)
         } catch(error){
-            console.log("expirado")
-            return Result.fail("Debes iniciar secion")
+            return Result.fail("Debes iniciar sesion")
 
         }
 

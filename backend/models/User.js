@@ -20,8 +20,6 @@ class User extends BaseModel {
         try {
             const hashPassword = await bcrypt.hash(password, SALT_ROUNDS)
             const result = await super.runQuery(INSERT_USER, [email, name, lastname, hashPassword])
-
-            console.log(password)
             return result
         } catch (error) {
             console.log("USER MODEL: ", error)
