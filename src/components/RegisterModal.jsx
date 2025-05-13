@@ -19,7 +19,6 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
                 withCredentials: true,
             });
 
-            console.log(res)
             if (res.status === 201) {
                 onRegisterSuccess()
                 alert("Usuario creado correcamente!")
@@ -33,8 +32,8 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
     };
 
     return (
-        <div className="overlay" onClick={onClose}>
-            <div className="modal" >
+        <div className="register-overlay" onClick={onClose}>
+            <div className="register-modal" onClick={(e) => e.stopPropagation()} >
                 <h2>Registro</h2>
                 <form onSubmit={handleSubmit}>
                     <input

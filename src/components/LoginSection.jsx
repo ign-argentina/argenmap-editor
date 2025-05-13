@@ -2,11 +2,12 @@ import { useState, useEffect } from "react"
 import LoginModal from "./LoginModal"
 import RegisterModal from "./RegisterModal"
 import axios from 'axios';
+import ProfileModal from "./ProfileModal";
 function LoginSection() {
 
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
-    const [showProfileModal, setshowProfileModal] = useState(false);
+    const [showProfileModal, setShowProfileModal] = useState(false);
 
     const [userAuth, setUserAuth] = useState(false);
 
@@ -46,25 +47,26 @@ function LoginSection() {
 
     return (
         <>
-            {showLoginModal ? (<LoginModal onLoginSuccess={handleLoginSuccess}/>) : null}
-            {showRegisterModal ? (<RegisterModal onRegisterSuccess={handleRegisterSuccess} />) : null}
+            {showLoginModal ? (<LoginModal onClose={ ()=> setShowLoginModal(false)}onLoginSuccess={handleLoginSuccess}/>) : null}
+            {showRegisterModal ? (<RegisterModal onClose={()=> setShowRegisterModal(false)} onRegisterSuccess={handleRegisterSuccess} />) : null}
+            {(userAuth && showProfileModal) ? (<ProfileModal onClose = {() => setShowProfileModal(false) }/>) : null}
 
             {!userAuth ? (
                 <div id="authContainer">
-                    <button onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
+                    <button className="visor-manager-button" onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
                         <i className="fa-solid fa-hand"></i> Iniciar Sesión
                     </button>
-                    <button onClick={() => setShowRegisterModal(true)} title="Registrarse">
+                    <button className="visor-manager-button" onClick={() => setShowRegisterModal(true)} title="Registrarse">
                         <i className="fa-solid fa-plus"></i> Registrarse
                     </button>
                 </div>
             ) : (
                 <div id="authContainer">
-                    <button onClick={() => setshowProfileModal(true)} title="Perfil">
+                    <button className="visor-manager-button" onClick={() => setShowProfileModal(true)} title="Perfil">
                         <i className="fa-solid fa-person"></i> Perfil
                     </button>
 
-                    <button onClick={handleLogout} title="Cerrar Sesion">
+                    <button className="visor-manager-button" onClick={handleLogout} title="Cerrar Sesion">
                         <i className="fa-solid fa-right-from-bracket"></i> Cerrar Sesion
                     </button>
                 </div>

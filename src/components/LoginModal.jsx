@@ -29,10 +29,10 @@ function LoginModal({ onClose, onLoginSuccess }) {
     };
 
     return (
-        <div className="overlay" onClick={onClose}>
-            <div className="modal" >
+        <div className="login-overlay" onClick={onClose}>
+            <div className="login-modal" onClick={(e) => e.stopPropagation()} >
                 <h2>Iniciar sesión</h2>
-                <form onSubmit={handleSubmit}>
+                <form className="form-login" onSubmit={handleSubmit}>
                     <input
                         type="email"
                         placeholder="Correo electrónico"

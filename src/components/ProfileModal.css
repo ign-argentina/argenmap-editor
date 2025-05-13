@@ -1,4 +1,4 @@
-.register-modal {
+.profile-modal {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,12 +11,12 @@
 
 }
 
-.form-register{
+.form-profile {
   display: flex;
   flex-direction: column;
 }
 
-.register-overlay {
+.profile-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -26,5 +26,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1000; 
 }
