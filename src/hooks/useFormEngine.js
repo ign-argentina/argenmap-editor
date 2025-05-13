@@ -43,7 +43,7 @@ const useFormEngine = () => {
 
   // Inicialización de datos desde config o localStorage
   useEffect(() => {
-    if (!config) return;
+    if (!config || !language) return;
 
     const storedData = localStorage.getItem('formData');
     const defaultData = localStorage.getItem('formDataDefault');
@@ -60,6 +60,15 @@ const useFormEngine = () => {
     setData(finalData);
     uploadSchema(finalData);
   }, [config]); // 🔁 solo se ejecuta una vez cuando config está disponible
+
+
+  // Se ejecuta cada vez que cambia el idioma retraduciendo el formulario.
+  useEffect(() => {
+  if (language && data) {
+    uploadSchema(data);
+  }
+}, [selectedLang]);
+
 
   // Cambio de idioma persistente
   const handleLanguageChange = (newLang) => {

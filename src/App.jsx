@@ -16,8 +16,10 @@ import './global.css';
 function App() {
   const { config } = useConfig();
   const { language } = useLang();
+
+/*   Esto ya lo estamos manejando en el hook. Asi que está de mas
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
-  const [selectedLang, setSelectedLang] = useState(savedLanguage);
+  const [selectedLang, setSelectedLang] = useState(savedLanguage); */
 
   const {
     data,
@@ -26,9 +28,12 @@ function App() {
     selectedSection,
     setSelectedSection,
     ajv,
-    uploadSchema
-  } = useFormEngine({ config, language, selectedLang });
-
+    uploadSchema,
+    selectedLang,
+    setSelectedLang
+  } = useFormEngine(); // Antes era useFormEngine({ config, language, selectedLang }); Use Form Engine no acepta parametros, estan de mas. Y como el hook ya maneja
+                      // el lenguaje, lo traemos de ahi
+    
   const [isFormShown, setIsFormShown] = useState(true);
   const [isVisorModalOpen, setIsVisorModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
@@ -43,6 +48,7 @@ function App() {
     const selectedLanguage = e.target.value;
     setSelectedLang(selectedLanguage);
     localStorage.setItem('selectedLang', selectedLanguage);
+
   };
 
   const handleSectionChange = (section) => {
