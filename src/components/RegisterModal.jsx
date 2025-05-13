@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_URL = "http://localhost:3001"
 
-function RegisterModal({ onClose }) {
+function RegisterModal({ onClose, onRegisterSuccess }) {
 
     const [name, setName] = useState('');
     const [lastname, setLastname] = useState('');
@@ -19,7 +19,11 @@ function RegisterModal({ onClose }) {
                 withCredentials: true,
             });
 
-            console.log("Bienvenido!")
+            console.log(res)
+            if (res.status === 201) {
+                onRegisterSuccess()
+                alert("Usuario creado correcamente!")
+            }
 
             return res.data
         } catch (error) {

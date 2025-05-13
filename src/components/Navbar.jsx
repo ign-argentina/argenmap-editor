@@ -1,13 +1,10 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
 import LatestRelease from "../components/LatestRelease";
 import ConfigActionsMenu from './ConfigActionsMenu';
 import SaveVisorModal from './SaveVisorModal';
-import LoginModal from './LoginModal'
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import RegisterModal from './RegisterModal';
-import axios from 'axios';
+import LoginSection from './LoginSection';
 
 const Navbar = ({
   config,
@@ -21,31 +18,8 @@ const Navbar = ({
   const { handleDownload, handleSaveConfig, handleJsonUpload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
 
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
 
-  const [userAuth, setUserAuth] = useState(false);
-
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3001/auth/check`, {
-          withCredentials: true,
-        });
-        setUserAuth(res.data); // Podés guardar esto en un state, por ejemplo
-      } catch (error) {
-        setUserAuth(false)
-      }
-    };
-    checkAuth();
-  }, []);
-
-  const handleLogout = async () => {
-    await axios.post("http://localhost:3001/auth/logout", {}, {withCredentials: true,})
-    setUserAuth(false)
-  }
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -155,18 +129,6 @@ const Navbar = ({
         />
       )}
 
-      {showLoginModal && (
-        <LoginModal
-        // onClose={() => setShowLoginModal(false)}
-        />
-      )}
-
-      {showRegisterModal && (
-        <RegisterModal
-        //   onClose={() => setShowRegisterModal(false)}
-        />
-      )}
-
 
       <button onClick={() => setShowSaveModal(true)} title="Guardar como Visor">
         <i className="fa-solid fa-save"></i> Guardar Visor
@@ -174,23 +136,8 @@ const Navbar = ({
 
 
 
-      {!userAuth ? (
-        <div id="authContainer">
-          <button onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
-            <i className="fa-solid fa-hand"></i> Iniciar Sesión
-          </button>
-          <button onClick={() => setShowRegisterModal(true)} title="Registrarse">
-            <i className="fa-solid fa-plus"></i> Registrarse
-          </button>
-        </div>
-      ) : (
-        <div id="authContainer">
-          <button onClick={handleLogout} title="Cerrar Sesion">
-            <i className="fa-solid fa-right-from-bracket"></i> Cerrar Sesion
-          </button>
-        </div>
-      )}
 
+     <LoginSection />
 
       <div className="version-info">
         <LatestRelease />

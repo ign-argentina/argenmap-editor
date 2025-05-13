@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_URL = "http://localhost:3001"
 
-function LoginModal({ onClose }) {
+function LoginModal({ onClose, onLoginSuccess }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,9 +17,10 @@ function LoginModal({ onClose }) {
                 withCredentials: true,
             });
 
-
+           if(res.status === 200){
+            onLoginSuccess()
             alert("Bienvenido " + res.data.name)
-            window.location.reload();
+           }
             return res.data
         } catch (error) {
             console.error('Error en login:', error.response?.data || error.message);
