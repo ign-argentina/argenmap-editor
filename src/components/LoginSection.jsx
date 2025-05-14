@@ -4,6 +4,7 @@ import RegisterModal from "./RegisterModal"
 import axios from 'axios';
 import ProfileModal from "./ProfileModal";
 import { useUser } from "../context/UserContext";
+
 function LoginSection() {
 
     const [showLoginModal, setShowLoginModal] = useState(false);

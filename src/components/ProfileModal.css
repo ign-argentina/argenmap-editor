@@ -1,14 +1,16 @@
 .profile-modal {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  width: 30%;
+  flex-direction: row;
+  width: 50%;
   height: 30%;
   background-color: rgb(255, 255, 255);
   z-index: 999;
+}
 
+.profile-modal > * {
+  flex: 1;
+  padding: 1rem;              
+  box-sizing: border-box;     
 }
 
 .form-profile {
@@ -26,5 +28,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; 
+  z-index: 1000;
+}
+
+.profile-data {}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
 }
