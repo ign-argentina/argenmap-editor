@@ -6,5 +6,4 @@ class BaseModel {
     return result.rows;
   }
 }
-
 export default BaseModel;

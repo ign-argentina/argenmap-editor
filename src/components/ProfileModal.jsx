@@ -34,6 +34,11 @@ function ProfileModal({ onClose, userData, onPasswordChange }) {
                 <h2>Perfil de Usuario</h2>
                 <form className="form-profile" onSubmit={handleSubmit}>
                     <input
+                        type="email"
+                        value={userData?.email}
+                        disabled
+                    /><br />
+                    <input
                         type="text"
                         value={userData?.name}
                         disabled
@@ -44,11 +49,6 @@ function ProfileModal({ onClose, userData, onPasswordChange }) {
                         disabled
                     /><br />
                     <input
-                        type="email"
-                        value={userData?.email}
-                        disabled
-                    /><br />
-                    <input
                         type="password"
                         placeholder="Nueva contraseña"
                         value={password}
@@ -56,6 +56,7 @@ function ProfileModal({ onClose, userData, onPasswordChange }) {
                         required
                     /><br />
                     <button type="submit">Cambiar Contraseña</button>
+                    <button type="submit">Actualizar Datos</button>
                 </form>
             </div>
         </div>

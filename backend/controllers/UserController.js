@@ -1,30 +1,39 @@
-/* import UserService from "../services/UserService.js"
+import UserService from "../services/UserService.js"
+import AuthService from "../services/AuthService.js"
 
-
-
-userRoutes.post("/", UserController.newUser) // 2.1.3
-userRoutes.post("/update", UserController.updateUser) // 2.4.1
-userRoutes.post("/recovery", UserController.recoveryPassword) // 2.5.2
-userRoutes.post("/recovery/auth") // 2.5.6
-
-
-class UserController{
+class UserController {
+    constructor() {
+        this.userService = new UserService()
+        this.authService = new AuthService()
+    }
 
     newUser = (req, res) => {
 
     }
 
-    updateUser = (req, res) => {s
+    updateUser = async (req, res) => {
+        try {
+           const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+           //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQ3MjI4MDk2LCJleHAiOjE3NDczMTQ0OTZ9.1jj6dRKZhUx82lwJ4EP2AYNmo5-QL0V85GFM2QUKibQ"
+            const { name, lastname, password } = req.body
 
+            if (!token || !(await this.authService.checkAuth(token)).success) {
+                return res.status(401).json("Permisos denegados")
+            }
+
+            const result = await this.userService.updateUser(name, lastname, password, this.authService.getDataToken(token).id)
+            return res.status(200).json(result.data)
+
+        } catch (error) {
+            return res.status(500).json({ error });
+        }
     }
 
     recoveryPassword = (req, res) => {
 
     }
 
-    
-
 }
 
 
-export default UserController */
+export default UserController

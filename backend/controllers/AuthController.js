@@ -1,7 +1,11 @@
 import AuthService from "../services/AuthService.js"
 
+/* 
+import dotenv from 'dotenv'
+dotenv.config()
+ */
+const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME
 const MIN_PASSWORD_LENGTH = 10
-const AUTH_COOKIE_NAME = "authArgenmap"
 
 class AuthController {
     constructor() {
