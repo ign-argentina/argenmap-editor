@@ -76,13 +76,31 @@ function App() {
   ];
 
   const handleJsonUpload = (parsedData) => {
+    // Guardar parsedData como formDataDefault
     localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
-    localStorage.setItem('formData', JSON.stringify(parsedData));
+
+    // Actualizar visorMetadata
+    try {
+      const rawMetadata = localStorage.getItem('visorMetadata');
+      const metadata = rawMetadata ? JSON.parse(rawMetadata) : {};
+
+      // Asegurarse de que existan los objetos necesarios
+      metadata.config = metadata.config || {};
+      metadata.config.json = parsedData;
+
+      // Guardar visorMetadata actualizado
+      localStorage.setItem('visorMetadata', JSON.stringify(metadata));
+    } catch (e) {
+      console.error('Error actualizando visorMetadata:', e);
+    }
+
+    // Aplicar cambios
     setData(parsedData);
     uploadSchema(parsedData);
     window.location.reload();
     showToast('JSON cargado exitosamente', 'success');
   };
+
 
   //DESHABILITADO HASTA REALIZARLE UN REWORK
   // const handleClearStorage = () => {
@@ -107,11 +125,18 @@ function App() {
       ? JSON.parse(visorCompleto.config.json)
       : visorCompleto.config.json;
 
-    localStorage.setItem('formData', JSON.stringify(configJson));
-    setLoadedVisor(visorCompleto); // Guardamos visor completo
-    localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
+    // Actualizar visorMetadata con visorCompleto y su config.json
+    try {
+      visorCompleto.config.json = configJson;
+      localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
+    } catch (e) {
+      console.error('Error guardando visorMetadata:', e);
+    }
+
+    setLoadedVisor(visorCompleto);
     window.location.reload();
   };
+
 
   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : [];
 
@@ -152,10 +177,22 @@ function App() {
                       ...prevData,
                       [selectedSection]: updatedData
                     };
-                    localStorage.setItem('formData', JSON.stringify(newData));
+
+                    // Guardar en visorMetadata.config.json
+                    try {
+                      const rawMetadata = localStorage.getItem('visorMetadata');
+                      const metadata = rawMetadata ? JSON.parse(rawMetadata) : {};
+                      metadata.config = metadata.config || {};
+                      metadata.config.json = newData;
+                      localStorage.setItem('visorMetadata', JSON.stringify(metadata));
+                    } catch (e) {
+                      console.error('Error actualizando visorMetadata:', e);
+                    }
+
                     return newData;
                   });
                 }}
+
               />
             </div>
           </div>

@@ -34,8 +34,17 @@ const Navbar = ({
 
   const handleSaveVisor = async ({ name, description }) => {
     try {
-      const storedData = localStorage.getItem('formData');
-      const parsedData = storedData ? JSON.parse(storedData) : {};
+      let parsedData = {};
+
+      try {
+        const rawMetadata = localStorage.getItem('visorMetadata');
+        const metadata = rawMetadata ? JSON.parse(rawMetadata) : null;
+        parsedData = metadata?.config?.json || {};
+      } catch (e) {
+        console.warn('Error parsing visorMetadata:', e);
+        parsedData = {};
+      }
+
       const res = await fetch('http://localhost:3001/visores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

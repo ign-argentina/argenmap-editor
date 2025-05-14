@@ -45,11 +45,31 @@ const useFormEngine = () => {
   useEffect(() => {
     if (!config || !language) return;
 
-    const storedData = localStorage.getItem('formData');
-    const defaultData = localStorage.getItem('formDataDefault');
-    
-    const parsedStoredData = storedData ? JSON.parse(storedData) : {};
-    const parsedDefaultData = defaultData ? JSON.parse(defaultData) : {};
+    let storedData = null;
+    try {
+      const storedJSON = localStorage.getItem('visorMetadata');
+      const parsed = storedJSON ? JSON.parse(storedJSON) : null;
+      if (parsed?.config?.json) {
+        storedData = JSON.stringify(parsed.config.json);
+      }
+    } catch (e) {
+      console.warn('Error parsing visorMetadata:', e);
+    }
+
+    let parsedStoredData = {};
+    try {
+      parsedStoredData = storedData ? JSON.parse(storedData) : {};
+    } catch (e) {
+      console.warn('Error parsing storedData:', e);
+    }
+
+    let parsedDefaultData = {};
+    try {
+      const defaultData = localStorage.getItem('formDataDefault');
+      parsedDefaultData = defaultData ? JSON.parse(defaultData) : {};
+    } catch (e) {
+      console.warn('Error parsing formDataDefault:', e);
+    }
 
     const mergedData = MergeDataWithDefaults(parsedStoredData, parsedDefaultData);
     const finalData = storedData ? mergedData : config;
@@ -57,17 +77,18 @@ const useFormEngine = () => {
     if (!storedData) {
       localStorage.setItem('formDataDefault', JSON.stringify(config));
     }
+
     setData(finalData);
     uploadSchema(finalData);
-  }, [config]); // 🔁 solo se ejecuta una vez cuando config está disponible
+  }, [config]);
 
 
   // Se ejecuta cada vez que cambia el idioma retraduciendo el formulario.
   useEffect(() => {
-  if (language && data) {
-    uploadSchema(data);
-  }
-}, [selectedLang]);
+    if (language && data) {
+      uploadSchema(data);
+    }
+  }, [selectedLang]);
 
 
   // Cambio de idioma persistente
