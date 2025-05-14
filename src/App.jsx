@@ -12,6 +12,8 @@ import ColorPickerControl from './utils/ColorPickerControl';
 import HandleDownload from './utils/HandleDownload';
 import Toast from './utils/Toast';
 import './global.css';
+import { updateVisorConfigJson} from './utils/visorStorage';
+
 
 function App() {
   const { config } = useConfig();
@@ -97,7 +99,7 @@ function App() {
     // Aplicar cambios
     setData(parsedData);
     uploadSchema(parsedData);
-    window.location.reload();
+    // window.location.reload();
     showToast('JSON cargado exitosamente', 'success');
   };
 
@@ -125,17 +127,14 @@ function App() {
       ? JSON.parse(visorCompleto.config.json)
       : visorCompleto.config.json;
 
-    // Actualizar visorMetadata con visorCompleto y su config.json
-    try {
-      visorCompleto.config.json = configJson;
-      localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
-    } catch (e) {
-      console.error('Error guardando visorMetadata:', e);
-    }
+    visorCompleto.config.json = configJson;
+    localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
+    updateVisorConfigJson(configJson); // ← esto puede ser opcional aquí, si ya estás guardando todo el objeto arriba
 
     setLoadedVisor(visorCompleto);
-    window.location.reload();
+    // window.location.reload();
   };
+
 
 
   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : [];
@@ -179,15 +178,7 @@ function App() {
                     };
 
                     // Guardar en visorMetadata.config.json
-                    try {
-                      const rawMetadata = localStorage.getItem('visorMetadata');
-                      const metadata = rawMetadata ? JSON.parse(rawMetadata) : {};
-                      metadata.config = metadata.config || {};
-                      metadata.config.json = newData;
-                      localStorage.setItem('visorMetadata', JSON.stringify(metadata));
-                    } catch (e) {
-                      console.error('Error actualizando visorMetadata:', e);
-                    }
+                    updateVisorConfigJson(newData);
 
                     return newData;
                   });
