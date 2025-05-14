@@ -46,8 +46,7 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
                     if (!selectedVisor) return;
                     try {
                       const visorCompleto = await getVisorById(selectedVisor.id);
-                      const { config } = visorCompleto;
-                      onLoad(config, visorCompleto); // Si querés pasar ambos objetos (por ej. para mostrar en navbar)
+                      onLoad(visorCompleto);
                       onClose();
                     } catch (err) {
                       console.error('Error al cargar visor:', err);

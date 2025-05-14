@@ -7,6 +7,7 @@ import LoginSection from './LoginSection';
 
 const Navbar = ({
   config,
+  visor,
   language,
   sectionInfo,
   uiControls,
@@ -14,11 +15,9 @@ const Navbar = ({
   openVisorManager
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
-  const { handleLanguageChange, selectedLang, handleClearStorage, isFormShown, setIsFormShown } = uiControls;
+  const { handleLanguageChange, selectedLang, /*handleClearStorage,*/ isFormShown, setIsFormShown } = uiControls;
   const { handleDownload, handleJsonUpload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
-
-
 
 
   const handleFileChange = (event) => {
@@ -58,7 +57,8 @@ const Navbar = ({
       </div>
       <div className="configVersion-info">
         <label>
-          {config?.configVersion ? `Usando config v${config.configVersion}` : "Config sin versión"}
+          {visor?.name ? `${visor.name}` : "Usando Visor Estándar"}
+          {visor?.config?.json.configVersion && ` (v${visor.config.json.configVersion})`}
         </label>
       </div>
       <label className="navbar-button">
@@ -88,9 +88,9 @@ const Navbar = ({
           </select>
         </div>
 
-        <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
+        {/* <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
           <i className="fa-solid fa-trash-can"></i>
-        </button>
+        </button> */}
 
         <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
           <i className={isFormShown ? "fa-solid fa-play" : "fa-solid fa-play fa-flip-horizontal"}></i>
@@ -134,7 +134,7 @@ const Navbar = ({
 
 
 
-     <LoginSection />
+      <LoginSection />
 
       <div className="version-info">
         <LatestRelease />

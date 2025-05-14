@@ -17,9 +17,9 @@ function App() {
   const { config } = useConfig();
   const { language } = useLang();
 
-/*   Esto ya lo estamos manejando en el hook. Asi que está de mas
-  const savedLanguage = localStorage.getItem('selectedLang') || 'es';
-  const [selectedLang, setSelectedLang] = useState(savedLanguage); */
+  /*   Esto ya lo estamos manejando en el hook. Asi que está de mas
+    const savedLanguage = localStorage.getItem('selectedLang') || 'es';
+    const [selectedLang, setSelectedLang] = useState(savedLanguage); */
 
   const {
     data,
@@ -32,12 +32,22 @@ function App() {
     selectedLang,
     setSelectedLang
   } = useFormEngine(); // Antes era useFormEngine({ config, language, selectedLang }); Use Form Engine no acepta parametros, estan de mas. Y como el hook ya maneja
-                      // el lenguaje, lo traemos de ahi
-    
+  // el lenguaje, lo traemos de ahi
+
   const [isFormShown, setIsFormShown] = useState(true);
   const [isVisorModalOpen, setIsVisorModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [loadedVisor, setLoadedVisor] = useState(null);
+
+  //useEffect para cargar mostrar los datos del visor cargado
+  useEffect(() => {
+    const savedVisor = localStorage.getItem('visorMetadata');
+    if (savedVisor) {
+      setLoadedVisor(JSON.parse(savedVisor));
+    }
+  }, []);
+
 
   const showToast = (message, type) => {
     setToast({ message, type });
@@ -74,14 +84,15 @@ function App() {
     showToast('JSON cargado exitosamente', 'success');
   };
 
-  const handleClearStorage = () => {
-    localStorage.removeItem("formData");
-    const defaultData = localStorage.getItem('formDataDefault');
-    const parsedDefaultData = JSON.parse(defaultData);
-    setData(parsedDefaultData);
-    setReloadKey(prev => prev + 1);
-    showToast('¡El storage se ha limpiado con éxito!', 'success');
-  };
+  //DESHABILITADO HASTA REALIZARLE UN REWORK
+  // const handleClearStorage = () => {
+  //   localStorage.removeItem("formData");
+  //   const defaultData = localStorage.getItem('formDataDefault');
+  //   const parsedDefaultData = JSON.parse(defaultData);
+  //   setData(parsedDefaultData);
+  //   setReloadKey(prev => prev + 1);
+  //   showToast('¡El storage se ha limpiado con éxito!', 'success');
+  // };
 
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
@@ -91,9 +102,14 @@ function App() {
     downloadJson();
   };
 
-  const handleLoadVisor = (visor) => {
-    const configJson = typeof visor.json === 'string' ? JSON.parse(visor.json) : visor.json;
+  const handleLoadVisor = (visorCompleto) => {
+    const configJson = typeof visorCompleto.config.json === 'string'
+      ? JSON.parse(visorCompleto.config.json)
+      : visorCompleto.config.json;
+
     localStorage.setItem('formData', JSON.stringify(configJson));
+    setLoadedVisor(visorCompleto); // Guardamos visor completo
+    localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
     window.location.reload();
   };
 
@@ -104,13 +120,14 @@ function App() {
       <div className="editor-container" key={reloadKey}>
         <Navbar
           config={data}
+          visor={loadedVisor}
           sectionInfo={{ sectionKeys, selectedSection, handleSectionChange }}
           uiControls={{
             handleLanguageChange,
             selectedLang,
             isFormShown,
             setIsFormShown,
-            handleClearStorage
+            // handleClearStorage
           }}
           actions={{
             handleDownload,
