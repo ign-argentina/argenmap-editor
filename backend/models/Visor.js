@@ -8,6 +8,9 @@ const INSERT_VISOR = `
 const SELECT_ALL_VISORS = `
   SELECT * FROM visores`;
 
+const SELECT_VISOR_BY_ID = `
+  SELECT * FROM visores WHERE id = $1`;
+
 class Visor extends BaseModel {
   static saveVisor = async (cid, name, description) => {
     try {
@@ -25,6 +28,16 @@ class Visor extends BaseModel {
       return result;
     } catch (error) {
       console.log("VISOR MODEL (getAllVisors):", error);
+      return null;
+    }
+  };
+
+  static getVisorById = async (id) => {
+    try {
+      const result = await super.runQuery(SELECT_VISOR_BY_ID, [id]);
+      return result?.[0] || null;
+    } catch (err) {
+      console.log("Error en Visor model (getVisorById):", err);
       return null;
     }
   };

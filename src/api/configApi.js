@@ -17,6 +17,12 @@ export async function saveVisor({ name, description, json }) {
   return res.json();
 }
 
+export async function getVisorById(id) {
+  const res = await fetch(`${API_URL}/visores/${id}`);
+  if (!res.ok) throw new Error('Error al obtener visor por ID');
+  return res.json();
+}
+
 
 //CONFIGS
 export async function getConfigById(id) {

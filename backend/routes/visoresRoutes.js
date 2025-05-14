@@ -8,5 +8,6 @@ const visorController = new VisorController();
 
 visoresRoutes.post("/", visorController.saveVisor);
 visoresRoutes.get("/", visorController.getAllVisors);
+visoresRoutes.get("/:id", visorController.getVisorById);
 
 export default visoresRoutes;

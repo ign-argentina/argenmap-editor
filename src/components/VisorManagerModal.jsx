@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SaveVisorModal from './SaveVisorModal';
-import { getConfigById, saveVisor } from '../api/configApi'
+import { getVisorById, saveVisor } from '../api/configApi'
 import { fetchVisores } from '../utils/FetchVisors';
 import './VisorManagerModal.css';
 
@@ -45,12 +45,13 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
                   onClick={async () => {
                     if (!selectedVisor) return;
                     try {
-                      const config = await getConfigById(selectedVisor.cid);
-                      onLoad(config);
+                      const visorCompleto = await getVisorById(selectedVisor.id);
+                      const { config } = visorCompleto;
+                      onLoad(config, visorCompleto); // Si querés pasar ambos objetos (por ej. para mostrar en navbar)
                       onClose();
                     } catch (err) {
-                      console.error('Error al cargar configuración del visor:', err);
-                      alert('No se pudo cargar la configuración del visor');
+                      console.error('Error al cargar visor:', err);
+                      alert('No se pudo cargar el visor');
                     }
                   }}
                   disabled={!selectedVisor}
