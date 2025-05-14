@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './ProfileModal.css';
 import axios from 'axios';
+import { useUser } from '../context/UserContext';
 
 const API_URL = "http://localhost:3001";
 
 function ProfileModal({ onClose, userData, onPasswordChange }) {
     const [password, setPassword] = useState('');
+    const {user} = useUser()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+            console.log(user)
         try {
             const res = await axios.post(`${API_URL}/auth/change-password`, {
-                email: userData?.email,
+                email: user?.email,
                 password
             }, {
                 withCredentials: true,
@@ -35,17 +38,17 @@ function ProfileModal({ onClose, userData, onPasswordChange }) {
                 <form className="form-profile" onSubmit={handleSubmit}>
                     <input
                         type="email"
-                        value={userData?.email}
+                        value={user?.email}
                         disabled
                     /><br />
                     <input
                         type="text"
-                        value={userData?.name}
+                        value={user?.name}
                         disabled
                     /><br />
                     <input
                         type="text"
-                        value={userData?.lastname}
+                        value={user?.lastname}
                         disabled
                     /><br />
                     <input
