@@ -230,6 +230,30 @@ input[type='number']::-webkit-outer-spin-button {
 .download-button:hover {
   background-color: var(--active--color);
 }
+
+/* VISOR MANAGER BUTTON */
+.visor-manager-button {
+  background-color: rgb(140, 140, 140);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  margin-bottom: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  text-align: left; 
+  margin-top: auto;
+}
+
+.visor-manager-button:hover {
+  background-color: var(--active--color);
+}
 /* NAVBAR */
 
 

@@ -1,6 +1,37 @@
 const API_URL = 'http://localhost:3001';
 
-export async function getConfigs() {
+//VISORS
+export async function getAllVisors() {
+  const res = await fetch(`${API_URL}/visores`);
+  if (!res.ok) throw new Error('Error al obtener visores');
+  return res.json();
+}
+
+export async function saveVisor({ name, description, json }) {
+  const res = await fetch(`${API_URL}/visores`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, description, json }),
+  });
+  if (!res.ok) throw new Error('Error al guardar visor');
+  return res.json();
+}
+
+export async function getVisorById(id) {
+  const res = await fetch(`${API_URL}/visores/${id}`);
+  if (!res.ok) throw new Error('Error al obtener visor por ID');
+  return res.json();
+}
+
+
+//CONFIGS
+export async function getConfigById(id) {
+  const res = await fetch(`${API_URL}/configs/${id}`);
+  if (!res.ok) throw new Error('Error al obtener configuración por ID');
+  return res.json();
+}
+
+export async function getAllConfigs() {
   const res = await fetch(`${API_URL}/configs`);
   if (!res.ok) throw new Error('Error al obtener configs');
   return res.json();
@@ -25,8 +56,6 @@ export async function updateConfig(id, jsonData) {
   if (!res.ok) throw new Error('Error al actualizar config');
   return res.json();
 }
-
-
 
 //Usar estas funciones en tu app
 // import { createConfig } from './api/configApi';

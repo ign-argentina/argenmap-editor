@@ -1,58 +1,46 @@
 import BaseModel from "./BaseModel.js";
-import { v4 as uuidv4 } from 'uuid';
 
-const INSERT_VISOR = `INSERT INTO visores (id, cid, name, description, lastUpdate) VALUES ($1, $2, $3, $4, $5) RETURNING *`
-const INSERT_VISOR_CONFIG = 'INSERT INTO config (json) VALUES ($1) RETURNING id'
-const SELECT_AL_VISORS = `SELECT v.id, v.name, v.description, v.lastUpdate, c.json FROM visores v JOIN config c ON v.cid = c.id ORDER BY v.lastUpdate DESC`
-const DELETE_VISOR = 'DELETE FROM visores WHERE id = $1'
+const INSERT_VISOR = `
+  INSERT INTO visores (name, description, cid)
+  VALUES ($1, $2, $3)
+  RETURNING *`;
+
+const SELECT_ALL_VISORS = `
+  SELECT * FROM visores`;
+
+const SELECT_VISOR_BY_ID = `
+  SELECT * FROM visores WHERE id = $1`;
 
 class Visor extends BaseModel {
-
-    async newVisor(name, description, json) {
-        try {
-            
-            // Primero insertamos en config
-            const configResult = await super.runQuery(INSERT_VISOR_CONFIG, [JSON.stringify(json)])
-
-            const cid = configResult.rows[0].id;
-            const id = uuidv4();
-            const now = new Date()
-
-            const result = await super.runQuery(INSERT_VISOR, [id, cid, name, description || null, now])
-
-            return result[0] //por que [0]?
-        } catch (error) {
-            return this.#printError(error)
-        }
+  static saveVisor = async (cid, name, description) => {
+    try {
+      const result = await super.runQuery(INSERT_VISOR, [name, description, cid]);
+      return result;
+    } catch (err) {
+      console.log("Error en Visor model (saveVisor):", err);
+      return null;
     }
+  };
 
-    async getAllVisors() {
-        try {
-            const result = await super.runQuery(SELECT_AL_VISORS)
-            return result
-        } catch (error) {
-            return this.#printError(error)
-        }
+  static getAllVisors = async () => {
+    try {
+      const result = await super.runQuery(SELECT_ALL_VISORS);
+      return result;
+    } catch (error) {
+      console.log("VISOR MODEL (getAllVisors):", error);
+      return null;
     }
+  };
 
-    getVisor() {
-
+  static getVisorById = async (id) => {
+    try {
+      const result = await super.runQuery(SELECT_VISOR_BY_ID, [id]);
+      return result?.[0] || null;
+    } catch (err) {
+      console.log("Error en Visor model (getVisorById):", err);
+      return null;
     }
-
-    async deleteVisor(id) {
-        try {
-            const result = await super.runQuery(DELETE_VISOR, [id])
-            return result
-        } catch (error) {
-            return this.#printError(error)
-        }
-    }
-
-
-    #printError(error) {
-        console.log("VISOR MODEL: ", error)
-        return null
-    }
+  };
 }
 
-export default Visor
+export default Visor;
