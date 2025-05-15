@@ -132,6 +132,9 @@ function App() {
     updateVisorConfigJson(configJson); // ← esto puede ser opcional aquí, si ya estás guardando todo el objeto arriba
 
     setLoadedVisor(visorCompleto);
+    
+    setData(configJson);
+    uploadSchema(configJson);
     // window.location.reload();
   };
 
