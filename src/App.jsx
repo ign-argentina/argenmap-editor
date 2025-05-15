@@ -1,186 +1,203 @@
-import Ajv from 'ajv';
 import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
-import Preview from './components/Preview';
-import Navbar from './components/Navbar';
-import ColorPickerControl from './utils/ColorPickerControl';
-import TranslateSchema from './utils/TranslateSchema';
-import GenerateSchema from './utils/GenerateSchema';
-import FilterEmptySections from './utils/FilterEmptySections';
-import HandleDownload from './utils/HandleDownload';
-import HandleSaveConfig from './utils/HandleSaveConfig';
-import MergeDataWithDefaults from './utils/MergeDataWithDefaults';
-import Toast from './utils/Toast';
 import useConfig from './hooks/useConfig';
 import useLang from './hooks/useLang';
-import './global.css'
+import useFormEngine from './hooks/useFormEngine';
+import Preview from './components/Preview';
+import Navbar from './components/Navbar';
+import VisorManagerModal from './components/VisorManagerModal';
+import ColorPickerControl from './utils/ColorPickerControl';
+import HandleDownload from './utils/HandleDownload';
+import Toast from './utils/Toast';
+import './global.css';
+import { updateVisorConfigJson} from './utils/visorStorage';
+
 
 function App() {
-  const { config, loading: configLoading, error: configError } = useConfig();
-  const { language, loading: langLoading, error: langError } = useLang();
-  const [data, setData] = useState({});
-  const [selectedSection, setSelectedSection] = useState(null);
-  const [schema, setSchema] = useState({});
-  const [isFormShown, setIsFormShown] = useState(true);
-  const [toast, setToast] = useState(null);
-  const savedLanguage = localStorage.getItem('selectedLang') || 'es';
-  const [selectedLang, setSelectedLang] = useState(savedLanguage);  // Loads lang from localStorage, if it doesnt exists, use a default
+  const { config } = useConfig();
+  const { language } = useLang();
 
-  const ajv = new Ajv();
-  ajv.addFormat('color', /^#[0-9A-Fa-f]{6}$/); // Custom format "color" added to JSONForms
-  const showToast = (message, type) => { // Toast (message)
+  /*   Esto ya lo estamos manejando en el hook. Asi que está de mas
+    const savedLanguage = localStorage.getItem('selectedLang') || 'es';
+    const [selectedLang, setSelectedLang] = useState(savedLanguage); */
+
+  const {
+    data,
+    setData,
+    schema,
+    selectedSection,
+    setSelectedSection,
+    ajv,
+    uploadSchema,
+    selectedLang,
+    setSelectedLang
+  } = useFormEngine(); // Antes era useFormEngine({ config, language, selectedLang }); Use Form Engine no acepta parametros, estan de mas. Y como el hook ya maneja
+  // el lenguaje, lo traemos de ahi
+
+  const [isFormShown, setIsFormShown] = useState(true);
+  const [isVisorModalOpen, setIsVisorModalOpen] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
+  const [loadedVisor, setLoadedVisor] = useState(null);
+
+  //useEffect para cargar mostrar los datos del visor cargado
+  useEffect(() => {
+    const savedVisor = localStorage.getItem('visorMetadata');
+    if (savedVisor) {
+      setLoadedVisor(JSON.parse(savedVisor));
+    }
+  }, []);
+
+
+  const showToast = (message, type) => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
-  };
-  const colorPickerTester = rankWith(
-    3,
-    and(uiTypeIs('Control'), schemaMatches((schema) => schema.format === 'color'))
-  );
-  const customRenderers = [
-    ...materialRenderers,
-    { tester: colorPickerTester, renderer: ColorPickerControl }
-  ];
-
-  const uploadData = () => {
-    if (data && language) {
-      const generatedSchema = GenerateSchema({ data });
-      const filteredSchema = FilterEmptySections(generatedSchema);
-      const translatedSchema = TranslateSchema({
-        schema: filteredSchema,
-        translations: language[selectedLang] || language['default'],
-        defaultTranslations: language['default'] || {},
-      });
-
-      setSchema(translatedSchema);
-
-      const sectionKeys = Object.keys(translatedSchema.properties);
-      if (sectionKeys.length > 0) {
-        setSelectedSection(sectionKeys[0]);
-      } else {
-        setSelectedSection(null);
-      }
-      return translatedSchema
-    }
-  }
-
-  // Load saved data from localStorage on startup.
-  useEffect(() => {
-    const storedData = localStorage.getItem('formData');
-    const defaultData = localStorage.getItem('formDataDefault');
-
-    const parsedStoredData = storedData ? JSON.parse(storedData) : {};
-    const parsedDefaultData = defaultData ? JSON.parse(defaultData) : {};
-
-    const mergedData = MergeDataWithDefaults(parsedStoredData, parsedDefaultData);
-    if (storedData) {
-      setData(mergedData);
-      uploadData();
-    } else if (config) {
-      localStorage.setItem('formDataDefault', JSON.stringify(config));
-      setData(config);
-      uploadData();
-    }
-  }, [config, language, selectedLang]);
-
-
-  const handleJsonUpload = (parsedData) => {
-    localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
-    localStorage.setItem('formData', JSON.stringify(parsedData));
-    setData(parsedData);
-    const uploadedSchema = uploadData();
-    setSchema(uploadedSchema)
-    window.location.reload();
-    showToast('JSON cargado exitosamente', 'success');
-  };
-
-  const sectionKeys = schema && schema.properties ? Object.keys(schema.properties) : [];
-
-  const handleSectionChange = (section) => {
-    setSelectedSection(section);
   };
 
   const handleLanguageChange = (e) => {
     const selectedLanguage = e.target.value;
     setSelectedLang(selectedLanguage);
     localStorage.setItem('selectedLang', selectedLanguage);
+
   };
 
-  const [reloadKey, setReloadKey] = useState(0);
-
-  const handleClearStorage = () => {
-    localStorage.removeItem("formData");
-    const defaultData = localStorage.getItem('formDataDefault')
-    const parsedDefaultData = JSON.parse(defaultData);
-    setData(parsedDefaultData);
-    setReloadKey(prev => prev + 1);
-    showToast('¡El storage se ha limpiado con éxito!', 'success');
+  const handleSectionChange = (section) => {
+    setSelectedSection(section);
   };
 
-  const defaultData = localStorage.getItem('formDataDefault')
+  const colorPickerTester = rankWith(
+    3,
+    and(uiTypeIs('Control'), schemaMatches((schema) => schema.format === 'color'))
+  );
+
+  const customRenderers = [
+    ...materialRenderers,
+    { tester: colorPickerTester, renderer: ColorPickerControl }
+  ];
+
+  const handleJsonUpload = (parsedData) => {
+    // Guardar parsedData como formDataDefault
+    localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
+
+    // Actualizar visorMetadata
+    try {
+      const rawMetadata = localStorage.getItem('visorMetadata');
+      const metadata = rawMetadata ? JSON.parse(rawMetadata) : {};
+
+      // Asegurarse de que existan los objetos necesarios
+      metadata.config = metadata.config || {};
+      metadata.config.json = parsedData;
+
+      // Guardar visorMetadata actualizado
+      localStorage.setItem('visorMetadata', JSON.stringify(metadata));
+    } catch (e) {
+      console.error('Error actualizando visorMetadata:', e);
+    }
+
+    // Aplicar cambios
+    setData(parsedData);
+    uploadSchema(parsedData);
+    // window.location.reload();
+    showToast('JSON cargado exitosamente', 'success');
+  };
+
+
+  //DESHABILITADO HASTA REALIZARLE UN REWORK
+  // const handleClearStorage = () => {
+  //   localStorage.removeItem("formData");
+  //   const defaultData = localStorage.getItem('formDataDefault');
+  //   const parsedDefaultData = JSON.parse(defaultData);
+  //   setData(parsedDefaultData);
+  //   setReloadKey(prev => prev + 1);
+  //   showToast('¡El storage se ha limpiado con éxito!', 'success');
+  // };
+
+  const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
   const { downloadJson } = HandleDownload({ data, parsedDefaultData });
+
   const handleDownload = () => {
     downloadJson();
   };
 
-  const { saveConfigJson } = HandleSaveConfig();
-  const handleSaveConfig = () => {
-    saveConfigJson(data); // <- pasás el json real acá
+  const handleLoadVisor = (visorCompleto) => {
+    const configJson = typeof visorCompleto.config.json === 'string'
+      ? JSON.parse(visorCompleto.config.json)
+      : visorCompleto.config.json;
+
+    visorCompleto.config.json = configJson;
+    localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
+    updateVisorConfigJson(configJson); // ← esto puede ser opcional aquí, si ya estás guardando todo el objeto arriba
+
+    setLoadedVisor(visorCompleto);
+    
+    setData(configJson);
+    uploadSchema(configJson);
+    // window.location.reload();
   };
 
+
+
+  const sectionKeys = schema?.properties ? Object.keys(schema.properties) : [];
 
   return (
     <div>
       <div className="editor-container" key={reloadKey}>
         <Navbar
           config={data}
-          sectionInfo={{
-            sectionKeys,
-            selectedSection,
-            handleSectionChange
-          }}
+          visor={loadedVisor}
+          sectionInfo={{ sectionKeys, selectedSection, handleSectionChange }}
           uiControls={{
             handleLanguageChange,
             selectedLang,
             isFormShown,
             setIsFormShown,
-            handleClearStorage
+            // handleClearStorage
           }}
           actions={{
             handleDownload,
-            handleSaveConfig,
-            handleJsonUpload
+            handleJsonUpload,
           }}
           language={language}
+          openVisorManager={() => setIsVisorModalOpen(true)}
         />
 
-        {isFormShown && (
+        {isFormShown && selectedSection && (
           <div className="form-container">
-            {selectedSection && (
-              <div className="custom-form-group">
-                <JsonForms
-                  schema={schema.properties[selectedSection]}
-                  data={data[selectedSection]}
-                  renderers={customRenderers}
-                  cells={materialCells}
-                  ajv={ajv}
-                  onChange={({ data: updatedData }) => {
-                    setData((prevData) => {
-                      const newData = {
-                        ...prevData,
-                        [selectedSection]: updatedData
-                      };
-                      localStorage.setItem('formData', JSON.stringify(newData));
-                      return newData;
-                    });
-                  }}
-                />
-              </div>
-            )}
+            <div className="custom-form-group">
+              <JsonForms
+                schema={schema.properties[selectedSection]}
+                data={data[selectedSection]}
+                renderers={customRenderers}
+                cells={materialCells}
+                ajv={ajv}
+                onChange={({ data: updatedData }) => {
+                  setData(prevData => {
+                    const newData = {
+                      ...prevData,
+                      [selectedSection]: updatedData
+                    };
+
+                    // Guardar en visorMetadata.config.json
+                    updateVisorConfigJson(newData);
+
+                    return newData;
+                  });
+                }}
+
+              />
+            </div>
           </div>
         )}
+
+        <VisorManagerModal
+          isOpen={isVisorModalOpen}
+          onClose={() => setIsVisorModalOpen(false)}
+          onLoad={handleLoadVisor}
+          currentJson={data}
+        />
 
         {toast && (
           <Toast
@@ -199,6 +216,4 @@ function App() {
   );
 }
 
-export default App
-
-
+export default App;

@@ -1,0 +1,43 @@
+.profile-modal {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  height: 30%;
+  background-color: var(--primary--color);
+  z-index: 999;
+}
+
+.profile-modal>* {
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: var(--secondary--color);
+  color: white;
+
+}
+
+.form-profile {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.profile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.profile-data {}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+}
