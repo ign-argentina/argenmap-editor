@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './LoginModal.css';
 import axios from 'axios';
+import { useUser } from '../context/UserContext';
 
 const API_URL = "http://localhost:3001"
 
@@ -8,6 +9,7 @@ function LoginModal({ onClose, onLoginSuccess }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { login } = useUser(); // Context
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,14 +19,15 @@ function LoginModal({ onClose, onLoginSuccess }) {
                 withCredentials: true,
             });
 
-           if(res.status === 200){
-            onLoginSuccess()
-            alert("Bienvenido " + res.data.name)
-           }
+            if (res.status === 200) {
+                console.log(res.data)
+                login(res.data) // Cargamos los datos de usuario en el contexto
+                onLoginSuccess()
+                alert("Bienvenido " + res.data.name)
+            }
             return res.data
         } catch (error) {
             console.error('Error en login:', error.response?.data || error.message);
-            throw error;
         }
     };
 

@@ -14,6 +14,7 @@ class AuthService {
             const [userData] = await User.findByEmail(email)
 
             const isActive = (userData?.active ?? false)
+
             if (isActive) {
                 if (await User.validatePassword(password, userData.password)) {
                     loginSuccess = true;
@@ -23,7 +24,7 @@ class AuthService {
                 }
             }
 
-            return loginSuccess ? Result.success(data) : Result.fail( isActive ? "La cuenta está inhabilitada" : "El usuario o contraseña son incorrectos")
+            return loginSuccess ? Result.success(data) : Result.fail( !isActive ? "La cuenta está inhabilitada" : "El usuario o contraseña son incorrectos")
         } catch (error) {
             console.log("Error en la capa de servicio", error)
         }

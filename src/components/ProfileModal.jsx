@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './ProfileModal.css';
 import axios from 'axios';
+import { useUser } from '../context/UserContext';
+import ProfileUpdateForm from './ProfileUpdateForm';
 
 const API_URL = "http://localhost:3001";
 
-function ProfileModal({ onClose, userData, onPasswordChange }) {
+function ProfileModal({ onClose, onPasswordChange }) {
     const [password, setPassword] = useState('');
+    const { user } = useUser()
+
+    const [showUpdateForm, setShowUpdateForm] = useState(false)
+    const [showChangePasswordForm, setChangePasswordForm] = useState(false)
+
+    const showForm = (form) => {
+
+        if (form === 0) {
+            setShowUpdateForm(!showUpdateForm)
+            setChangePasswordForm(false)
+        } else if (form === 1){
+            setChangePasswordForm(!showChangePasswordForm)
+            setShowUpdateForm(false)
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             const res = await axios.post(`${API_URL}/auth/change-password`, {
-                email: userData?.email,
+                email: user?.email,
                 password
             }, {
                 withCredentials: true,
@@ -31,33 +48,26 @@ function ProfileModal({ onClose, userData, onPasswordChange }) {
     return (
         <div className="profile-overlay" onClick={onClose}>
             <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
-                <h2>Perfil de Usuario</h2>
-                <form className="form-profile" onSubmit={handleSubmit}>
-                    <input
-                        type="email"
-                        value={userData?.email}
-                        disabled
-                    /><br />
-                    <input
-                        type="text"
-                        value={userData?.name}
-                        disabled
-                    /><br />
-                    <input
-                        type="text"
-                        value={userData?.lastname}
-                        disabled
-                    /><br />
-                    <input
-                        type="password"
-                        placeholder="Nueva contraseña"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    /><br />
-                    <button type="submit">Cambiar Contraseña</button>
-                    <button type="submit">Actualizar Datos</button>
-                </form>
+                <div className="profile-data">
+                    <h2>Perfil de Usuario</h2>
+                    Email: {user.email}<br /><br />
+                    Nombre: {user.name}<br></br>
+                    Apellido: {user.lastname}<br></br>
+                </div>
+
+                <div className="profile-actions">
+                    <h2>Acciones</h2>
+
+                    <button onClick={() => showForm(0)}>MODIFICAR DATOS</button>
+                    <button onClick={() => showForm(1)}>CAMBIAR CONTRASEÑA</button>
+                </div>
+
+                <div className="profile-form">
+
+                    {showUpdateForm ? <ProfileUpdateForm personalData={true} /> : null}
+                    {showChangePasswordForm ? <ProfileUpdateForm personalData={false} /> : null}
+
+                </div>
             </div>
         </div>
     );
