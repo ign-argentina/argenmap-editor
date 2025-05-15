@@ -20,6 +20,7 @@ const Navbar = ({
   const { handleDownload, handleJsonUpload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
 
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -61,13 +62,15 @@ const Navbar = ({
 
   return (
     <UserProvider> {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
+
       <div className='navbar'>
         <div className="logo-container">
           <img src="/assets/logo.png" alt="Logo" className="logo" />
         </div>
         <div className="configVersion-info">
           <label>
-            {config?.configVersion ? `Usando config v${config.configVersion}` : "Config sin versión"}
+            {visor?.name ? `${visor.name}` : "Usando Visor Estándar"}
+            {visor?.config?.json.configVersion && ` (v${visor.config.json.configVersion})`}
           </label>
         </div>
         <label className="navbar-button">
@@ -97,9 +100,9 @@ const Navbar = ({
             </select>
           </div>
 
-          <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
-            <i className="fa-solid fa-trash-can"></i>
-          </button>
+          {/* <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
+          <i className="fa-solid fa-trash-can"></i>
+        </button> */}
 
           <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
             <i className={isFormShown ? "fa-solid fa-play" : "fa-solid fa-play fa-flip-horizontal"}></i>
@@ -149,7 +152,6 @@ const Navbar = ({
           <LatestRelease />
         </div>
       </div>
-      {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
     </UserProvider>
   );
 };
