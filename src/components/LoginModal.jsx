@@ -28,7 +28,6 @@ function LoginModal({ onClose, onLoginSuccess }) {
             return res.data
         } catch (error) {
             console.error('Error en login:', error.response?.data || error.message);
-            throw error;
         }
     };
 

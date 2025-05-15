@@ -3,17 +3,29 @@ import { useUser } from "../context/UserContext";
 import axios from "axios";
 
 const UpdatePersonalDataForm = () => {
-    const { user } = useUser()
+    const { login, user } = useUser()
     const [name, setName] = useState(user.name)
     const [lastname, setLastname] = useState(user.lastname)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await axios.post("http://localhost:3001/users/update", {
-            name: name,
-            lastname: lastname
-        }, { withCredentials: true })
-        alert("Actualizar datos personales")
+
+        const userConfirm = confirm(`¿Desea realizar los siguientes cambios? Tus nuevos datos de perfil seran los siguientes:
+                Nombre: ${name} 
+                Apellido: ${lastname}`);
+
+        if (userConfirm && user.name != name || user.lastname != lastname) {
+            const result = await axios.post("http://localhost:3001/users/update", {
+                name: name,
+                lastname: lastname
+            }, { withCredentials: true })
+
+            console.log(result.data)
+            login(result.data)
+            alert("Los cambios han sido guardados")
+        } else {
+            alert("No se han efectuado cambios o has cancelado la modificacion")
+        }
     }
 
     return (
@@ -49,10 +61,18 @@ const ChangePasswordForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await axios.post("http://localhost:3001/users/update", {
-            password: rePassword
-        }, { withCredentials: true })
-        alert("Cambiar contraseña")
+
+        const userConfirm = confirm(`¿Desea cambiar su contraseña?`);
+
+        if (userConfirm && (password != "" || password.length < 10) && rePassword != "") {
+            const result = await axios.post("http://localhost:3001/users/update", {
+                password: rePassword
+            }, { withCredentials: true })
+            alert("Contraseña cambiada con exito")
+        }
+        else {
+            alert("La contraseña debe tener al menos 10 caracteres")
+        }
     }
 
     useEffect(() => {
@@ -69,6 +89,7 @@ const ChangePasswordForm = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Ingrese la contraseña nueva"
+                    onClick={() => setPassword('')}
                 />
             </label>
             <label>
@@ -78,6 +99,7 @@ const ChangePasswordForm = () => {
                     value={rePassword}
                     onChange={(e) => setRePassword(e.target.value)}
                     placeholder="Reingrese la contraseña"
+                    onClick={() => setRePassword('')}
                 />
             </label>
             <button disabled={!matchPassword} type="submit">Cambiar contraseña</button>

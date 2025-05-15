@@ -3,19 +3,23 @@
   flex-direction: row;
   width: 50%;
   height: 30%;
-  background-color: rgb(255, 255, 255);
+  background-color: var(--primary--color);
   z-index: 999;
 }
 
-.profile-modal > * {
+.profile-modal>* {
   flex: 1;
-  padding: 1rem;              
-  box-sizing: border-box;     
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: var(--secondary--color);
+  color: white;
+
 }
 
 .form-profile {
   display: flex;
   flex-direction: column;
+
 }
 
 .profile-overlay {
