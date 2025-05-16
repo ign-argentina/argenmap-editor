@@ -9,7 +9,7 @@ function LoginModal({ onClose, onLoginSuccess }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login } = useUser(); // Context
+    const { login } = useUser();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,7 +21,7 @@ function LoginModal({ onClose, onLoginSuccess }) {
 
             if (res.status === 200) {
                 console.log(res.data)
-                login(res.data) // Cargamos los datos de usuario en el contexto
+                login(res.data)
                 onLoginSuccess()
                 alert("Bienvenido " + res.data.name)
             }

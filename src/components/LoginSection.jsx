@@ -4,6 +4,7 @@ import RegisterModal from "./RegisterModal"
 import axios from 'axios';
 import ProfileModal from "./ProfileModal";
 import { useUser } from "../context/UserContext";
+import './LoginSection.css';
 
 function LoginSection() {
 
@@ -58,20 +59,20 @@ function LoginSection() {
 
             {!userAuth ? (
                 <div id="authContainer">
-                    <button className="visor-manager-button" onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
+                    <button className="login-button" onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
                         <i className="fa-solid fa-hand"></i> Iniciar Sesión
                     </button>
-                    <button className="visor-manager-button" onClick={() => setShowRegisterModal(true)} title="Registrarse">
+                    <button className="login-button" onClick={() => setShowRegisterModal(true)} title="Registrarse">
                         <i className="fa-solid fa-plus"></i> Registrarse
                     </button>
                 </div>
             ) : (
                 <div id="authContainer">
-                    <button className="visor-manager-button" onClick={() => setShowProfileModal(true)} title="Perfil">
+                    <button className="login-button" onClick={() => setShowProfileModal(true)} title="Perfil">
                         <i className="fa-solid fa-person"></i> Perfil
                     </button>
 
-                    <button className="visor-manager-button" onClick={handleLogout} title="Cerrar Sesion">
+                    <button className="login-button" onClick={handleLogout} title="Cerrar Sesion"> 
                         <i className="fa-solid fa-right-from-bracket"></i> Cerrar Sesion
                     </button>
                 </div>
