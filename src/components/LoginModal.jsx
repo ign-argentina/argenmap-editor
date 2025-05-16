@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './LoginModal.css';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
@@ -30,6 +30,15 @@ function LoginModal({ onClose, onLoginSuccess }) {
             console.error('Error en login:', error.response?.data || error.message);
         }
     };
+
+
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [onClose]);
 
     return (
         <div className="login-overlay" onClick={onClose}>
