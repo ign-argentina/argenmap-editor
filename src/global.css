@@ -39,6 +39,15 @@ C:0% M:0% Y:0% K:0% */
   --active-default--color: #E7BA61;
 }
 
+/* RESET GOBAL de formato predeterminado de los navegadores (El famoso borde blanco al renderizar) */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Con border-box el ellemento entero mide lo que se declara y el contenido se ajusta automaticamente
+                              (Ejemplo 200px va a ser 200px en total) Con content-box el contenido mide 200px pero el elemento total puede medir mas sumando paddings, etc */
+    font-family: Helvetica;    
+  }
+
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
@@ -56,7 +65,7 @@ input[type='number']::-webkit-outer-spin-button {
 
 
 /* NAVBAR */
-.navbar {
+.navbarOld {
   background-color: var(--primary--color);
   padding: 5px;
   display: flex;
@@ -67,7 +76,7 @@ input[type='number']::-webkit-outer-spin-button {
   width: 10%;
 }
 
-.navbar ul {
+.navbarOld ul {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -75,7 +84,7 @@ input[type='number']::-webkit-outer-spin-button {
   flex-direction: column;
 }
 
-.navbar ul li {
+.navbarOld ul li {
   margin-bottom: 10px;
 }
 
