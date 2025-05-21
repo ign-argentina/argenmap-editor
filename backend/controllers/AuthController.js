@@ -55,7 +55,7 @@ class AuthController {
 
             this.#sendAuthCookie(res, result.data.token)
 
-            return res.status(201).json(result.data)
+            return res.status(201).json(result.data.user)
 
         } catch (error) {
             console.log(error)

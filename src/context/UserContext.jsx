@@ -6,6 +6,7 @@ export const UserProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
 
+    
     const login = (userData) => {
         setUser(userData)
         localStorage.setItem('user', JSON.stringify(userData));
