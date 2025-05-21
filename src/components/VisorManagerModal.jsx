@@ -4,10 +4,13 @@ import { getVisorById, saveVisor } from '../api/configApi'
 import { fetchVisores } from '../utils/FetchVisors';
 import './VisorManagerModal.css';
 
+
 const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
   const [visores, setVisores] = useState([]);
   const [selectedVisor, setSelectedVisor] = useState(null);
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
 
   useEffect(() => {
     if (isOpen) {
@@ -40,6 +43,8 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
         </div>
         <div className="visor-modal-actions">
           <button className="vmanager-button" >Nuevo Visor</button>
+          <button className="vmanager-button" onClick={() => setShowPreview(true)}>Abrir</button>
+
           <button
             className="vmanager-button"
             onClick={async () => {
@@ -55,10 +60,9 @@ const VisorManagerModal = ({ isOpen, onClose, onLoad, currentJson }) => {
             }}
             disabled={!selectedVisor}
           >
-            Abrir
+            Editar Visor
           </button>
           <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>Guardar Visor</button>
-          <button className="vmanager-button" >Editar Visor</button>
           <button className="download-button" >Descargar</button>
           <button className="vmanager-button" onClick={onClose}>Cerrar</button>
         </div>

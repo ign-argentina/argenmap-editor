@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
-import useConfig from './hooks/useConfig';
 import useLang from './hooks/useLang';
 import useFormEngine from './hooks/useFormEngine';
-import Preview from './components/Preview';
 import Navbar from './components/Navbar';
 import ColorPickerControl from './utils/ColorPickerControl';
 import HandleDownload from './utils/HandleDownload';
@@ -15,7 +13,7 @@ import { updateVisorConfigJson} from './utils/visorStorage';
 
 
 function App() {
-  const { config } = useConfig();
+
   const { language } = useLang();
 
   /*   Esto ya lo estamos manejando en el hook. Asi que está de mas
@@ -185,9 +183,7 @@ function App() {
           />
         )}
 
-        <div className="preview-container">
-          <Preview />
-        </div>
+
       </div>
     </div>
   );
