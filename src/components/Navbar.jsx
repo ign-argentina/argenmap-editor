@@ -58,7 +58,6 @@ function Navbar() {
                 </div>
                 <div className="nav-links">
                     <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>Home</NavLink>
-                    <NavLink to="/ejemplo" className={({ isActive }) => (isActive ? "active" : undefined)}>Navlink de Ejemplo</NavLink>
                     <NavLink to="/ejemploDos" className={({ isActive }) => (isActive ? "active" : undefined)}>
                         <i className="fa-solid fa-right-from-bracket"></i> Navlink de Ejemplo
                     </NavLink>
@@ -75,7 +74,7 @@ function Navbar() {
                 ) : (
                 <>
                     <button className="nav-button" onClick={() => setShowProfileModal(true)} title="Perfil">
-                        <i className="fa-solid fa-person"></i> Perfil
+                        <i class="fa-solid fa-user"></i> Perfil
                     </button>
 
                     <button className="nav-button" onClick={handleLogout} title="Cerrar Sesion">
