@@ -1,9 +1,5 @@
 import AuthService from "../services/AuthService.js"
 
-/* 
-import dotenv from 'dotenv'
-dotenv.config()
- */
 const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME
 const MIN_PASSWORD_LENGTH = 10
 
@@ -35,7 +31,10 @@ class AuthController {
         try {
             const { email, name, lastname, password } = req.body
 
-
+            if (process.env.ALLOW_PUBLIC_REGISTER === '0'){
+                return res.status(400).json("El registro publico ha sido dehabilitado por la administracion")
+            }
+            
             if (!password || !name || !lastname || !email) { // A CHEQUEAR SI JS LE HACE UN .length A UNA CADENA STRING
                 throw new Error("Se deben completar todos los campos para crear un nuevo usuario.")
             }
@@ -91,7 +90,7 @@ class AuthController {
 
 
     getDataToken = (req, res) => {
-
+        // ***** TO DO ******
     }
 
     #sendAuthCookie(res, token) {
