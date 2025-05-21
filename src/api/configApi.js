@@ -23,7 +23,6 @@ export async function getVisorById(id) {
   return res.json();
 }
 
-
 //CONFIGS
 export async function getConfigById(id) {
   const res = await fetch(`${API_URL}/configs/${id}`);
