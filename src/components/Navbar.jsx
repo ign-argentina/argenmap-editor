@@ -68,7 +68,7 @@ function Navbar() {
                                 <i className="fa-solid fa-right-from-bracket"></i>Iniciar Sesión
                             </button>
                             <button className="nav-button" onClick={() => setShowRegisterModal(true)} title="Registrarse">
-                                <i class="fa-solid fa-user-plus"></i> Registrarse
+                                <i className="fa-solid fa-user-plus"></i> Registrarse
                         </button>
                 </>
                 ) : (

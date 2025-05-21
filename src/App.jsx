@@ -7,7 +7,6 @@ import useLang from './hooks/useLang';
 import useFormEngine from './hooks/useFormEngine';
 import Preview from './components/Preview';
 import Navbar from './components/Navbar';
-import VisorManagerModal from './components/VisorManagerModal';
 import ColorPickerControl from './utils/ColorPickerControl';
 import HandleDownload from './utils/HandleDownload';
 import Toast from './utils/Toast';
@@ -37,7 +36,6 @@ function App() {
   // el lenguaje, lo traemos de ahi
 
   const [isFormShown, setIsFormShown] = useState(true);
-  const [isVisorModalOpen, setIsVisorModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [loadedVisor, setLoadedVisor] = useState(null);
@@ -122,21 +120,7 @@ function App() {
     downloadJson();
   };
 
-  const handleLoadVisor = (visorCompleto) => {
-    const configJson = typeof visorCompleto.config.json === 'string'
-      ? JSON.parse(visorCompleto.config.json)
-      : visorCompleto.config.json;
 
-    visorCompleto.config.json = configJson;
-    localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
-    updateVisorConfigJson(configJson); // ← esto puede ser opcional aquí, si ya estás guardando todo el objeto arriba
-
-    setLoadedVisor(visorCompleto);
-    
-    setData(configJson);
-    uploadSchema(configJson);
-    // window.location.reload();
-  };
 
 
 
@@ -161,7 +145,6 @@ function App() {
             handleJsonUpload,
           }}
           language={language}
-          openVisorManager={() => setIsVisorModalOpen(true)}
         />
 
         {isFormShown && selectedSection && (
@@ -192,12 +175,6 @@ function App() {
           </div>
         )}
 
-        <VisorManagerModal
-          isOpen={isVisorModalOpen}
-          onClose={() => setIsVisorModalOpen(false)}
-          onLoad={handleLoadVisor}
-          currentJson={data}
-        />
 
         {toast && (
           <Toast

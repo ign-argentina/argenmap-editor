@@ -1,4 +1,4 @@
-.visor-modal-backdrop {
+/* .visor-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .visor-modal-container {
   display: flex;
@@ -33,6 +33,7 @@
   padding: 20px;
   position: relative;
   color: var(--text--color);
+  border: 2px solid var(--secondary--color); /* ← esto agrega un borde rojo de 2px */
 }
 
 .visor-list-container {
