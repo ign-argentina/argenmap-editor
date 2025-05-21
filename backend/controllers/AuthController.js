@@ -31,9 +31,8 @@ class AuthController {
         try {
             const { email, name, lastname, password } = req.body
 
-
             if (process.env.ALLOW_PUBLIC_REGISTER === '0'){
-                throw new Error("El registro publico ha sido deshabilitado por la administración.")
+                return res.status(400).json("El registro publico ha sido dehabilitado por la administracion")
             }
             
             if (!password || !name || !lastname || !email) { // A CHEQUEAR SI JS LE HACE UN .length A UNA CADENA STRING
