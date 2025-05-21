@@ -57,7 +57,7 @@ function Navbar() {
                     <img src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg" alt="Logo IGN" />
                 </div>
                 <div className="nav-links">
-                    <NavLink to="/welcome-page" className={({ isActive }) => (isActive ? "active" : undefined)}>Home</NavLink>
+                    <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>Home</NavLink>
                     <NavLink to="/ejemplo" className={({ isActive }) => (isActive ? "active" : undefined)}>Navlink de Ejemplo</NavLink>
                     <NavLink to="/ejemploDos" className={({ isActive }) => (isActive ? "active" : undefined)}>
                         <i className="fa-solid fa-right-from-bracket"></i> Navlink de Ejemplo
