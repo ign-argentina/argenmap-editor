@@ -1,0 +1,18 @@
+.welcome-screen {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary--color);
+}
+
+.welcome-screen-modal {
+  width: 500px;
+  padding: 40px;
+  background-color: var(--secondary--color);
+  border-radius: 8px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
