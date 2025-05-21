@@ -66,28 +66,28 @@ function Navbar() {
                     {!userAuth ? (
                         <>
                             <button className="nav-button" onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
-                                <i className="fa-solid fa-hand"></i> Iniciar Sesión
+                                <i className="fa-solid fa-right-from-bracket"></i>Iniciar Sesión
                             </button>
                             <button className="nav-button" onClick={() => setShowRegisterModal(true)} title="Registrarse">
-                                <i className="fa-solid fa-plus"></i> Registrarse
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <button className="nav-button" onClick={() => setShowProfileModal(true)} title="Perfil">
-                                <i className="fa-solid fa-person"></i> Perfil
-                            </button>
+                                <i class="fa-solid fa-user-plus"></i> Registrarse
+                        </button>
+                </>
+                ) : (
+                <>
+                    <button className="nav-button" onClick={() => setShowProfileModal(true)} title="Perfil">
+                        <i className="fa-solid fa-person"></i> Perfil
+                    </button>
 
-                            <button className="nav-button" onClick={handleLogout} title="Cerrar Sesion">
-                                <i className="fa-solid fa-right-from-bracket"></i> Cerrar Sesion
-                            </button>
-                        </>
+                    <button className="nav-button" onClick={handleLogout} title="Cerrar Sesion">
+                        <i className="fa-solid fa-right-from-bracket"></i> Cerrar Sesion
+                    </button>
+                </>
                     )}
 
-                </div>
+            </div>
 
-            </nav>
-        </header>
+        </nav>
+        </header >
     )
 }
 

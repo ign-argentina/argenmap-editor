@@ -10,7 +10,7 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {login} = useUser()    
+    const { login } = useUser()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,14 +23,16 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
             }, { withCredentials: true });
 
             if (res.status === 201) {
+                login(res.data)
                 onRegisterSuccess();
                 alert("Usuario creado correctamente!");
-                login(res.data)
             }
         } catch (error) {
             console.error('Error en registro:', error.response?.data || error.message);
         }
     };
+
+
 
     return (
         <div className="register-overlay" onClick={onClose}>
