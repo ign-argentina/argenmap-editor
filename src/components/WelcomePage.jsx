@@ -4,6 +4,7 @@ import Preview from './Preview';
 import { getVisorById, saveVisor } from '../api/configApi';
 import { fetchVisores } from '../utils/FetchVisors';
 import './WelcomePage.css'; // Asegurate de incluir los estilos de VisorManagerModal aquí
+import { updateVisorConfigJson} from '../utils/visorStorage';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
