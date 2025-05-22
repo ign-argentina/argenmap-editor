@@ -85,7 +85,7 @@ const WelcomePage = () => {
                     if (!selectedVisor) return;
                     try {
                       const visorCompleto = await getVisorById(selectedVisor.id);
-                      navigate('/editor')
+                      navigate('/form')
                       handleLoadVisor(visorCompleto);
                       // setIsVisorManagerVisible(false);
                       // console.log("Llegué")
