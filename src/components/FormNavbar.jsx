@@ -13,7 +13,7 @@ const FormNavbar = ({
   actions,
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
-  const { handleLanguageChange, selectedLang, /*handleClearStorage,*/ isFormShown, setIsFormShown } = uiControls;
+  const { handleLanguageChange, selectedLang, isFormShown, setIsFormShown } = uiControls;
   const { handleDownload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
 
