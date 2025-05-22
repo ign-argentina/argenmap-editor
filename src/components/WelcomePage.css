@@ -1,10 +1,19 @@
-.welcome-screen {
+.welcome-screen-container {
+  display: flex;
   height: 100%;
+  width: 100%;
+}
+
+.welcome-screen {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--primary--color);
+  height: 100%;
 }
+
+
 
 .welcome-screen-modal {
   width: 500px;
@@ -15,12 +24,6 @@
   text-align: center;
   font-weight: bold;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.welcome-screen-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
 }
 
 /* .visor-modal-backdrop {

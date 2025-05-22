@@ -69,14 +69,15 @@ input[type='number']::-webkit-outer-spin-button {
   min-height: 100vh;
 }
 
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 main, .content {
   flex: 1;
 }
-
-.content {
-  flex: 1;
-}
-
 
 /* NAVBAR */
 .logo-container {

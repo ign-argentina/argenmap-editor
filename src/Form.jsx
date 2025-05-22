@@ -101,14 +101,14 @@ function Form() {
 
 
   //DESHABILITADO HASTA REALIZARLE UN REWORK
-  // const handleClearStorage = () => {
-  //   localStorage.removeItem("formData");
-  //   const defaultData = localStorage.getItem('formDataDefault');
-  //   const parsedDefaultData = JSON.parse(defaultData);
-  //   setData(parsedDefaultData);
-  //   setReloadKey(prev => prev + 1);
-  //   showToast('¡El storage se ha limpiado con éxito!', 'success');
-  // };
+  const handleClearStorage = () => {
+    localStorage.removeItem("visorMetadata");
+    const defaultData = localStorage.getItem('formDataDefault');
+    const parsedDefaultData = JSON.parse(defaultData);
+    setData(parsedDefaultData);
+    uploadSchema(parsedDefaultData);
+    // showToast('¡El storage se ha limpiado con éxito!', 'success');
+  };
 
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);

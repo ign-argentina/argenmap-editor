@@ -1,0 +1,7 @@
+.side-panel {
+  display: block;
+}
+
+.side-panel.visible {
+  display: block;
+}

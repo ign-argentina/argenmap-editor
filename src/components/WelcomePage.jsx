@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Preview from './Preview';
 import { getVisorById, saveVisor } from '../api/configApi';
 import { fetchVisores } from '../utils/FetchVisors';
-import './WelcomePage.css'; // Asegurate de incluir los estilos de VisorManagerModal aquí
+import './WelcomePage.css';
+import './Preview.css';
 import { updateVisorConfigJson } from '../utils/visorStorage';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,7 +72,15 @@ const WelcomePage = () => {
                 </div>
               </div>
               <div className="visor-modal-actions">
-                <button className="vmanager-button">Nuevo Visor</button>
+
+                <button 
+                  className="vmanager-button"
+                  onClick={() => navigate('/form')}
+                >
+                <i className="fa-solid fa-right-from-bracket"></i>
+                  Nuevo Visor
+                </button>
+
                 <button
                   className="vmanager-button"
                   onClick={() => setShowPreview(true)}
@@ -79,6 +88,7 @@ const WelcomePage = () => {
                 >
                   Visualizar
                 </button>
+
                 <button
                   className="vmanager-button"
                   onClick={async () => {
@@ -99,12 +109,12 @@ const WelcomePage = () => {
                   Editar Visor
                 </button>
 
-
-
                 <button className="download-button">Descargar</button>
+
                 <button className="vmanager-button" onClick={() => setIsVisorManagerVisible(false)}>
                   Cerrar
                 </button>
+
               </div>
             </div>
           </div>
@@ -112,7 +122,7 @@ const WelcomePage = () => {
       </div>
 
       {showPreview && (
-        <div style={{ width: '100%', height: '500px', marginTop: '20px' }}>
+        <div className='side-panel'>
           <Preview />
         </div>
       )}

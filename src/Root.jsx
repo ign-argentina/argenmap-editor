@@ -10,10 +10,9 @@ function Root() {
     <div className="app-container">
       <UserProvider>
         <Navbar />
-          <main className="content">
-
-        <Outlet />
-          </main>
+        <main className="content">
+          <Outlet />
+        </main>
         <Footer />
       </UserProvider>
     </div>
