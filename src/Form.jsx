@@ -4,15 +4,15 @@ import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import useLang from './hooks/useLang';
 import useFormEngine from './hooks/useFormEngine';
-import Navbar from './components/Navbar';
+import FormNavbar from './components/FormNavbar';
 import ColorPickerControl from './utils/ColorPickerControl';
 import HandleDownload from './utils/HandleDownload';
 import Toast from './utils/Toast';
 import './global.css';
-import { updateVisorConfigJson} from './utils/visorStorage';
+import { updateVisorConfigJson } from './utils/visorStorage';
 
 
-function App() {
+function Form() {
 
   const { language } = useLang();
 
@@ -127,7 +127,7 @@ function App() {
   return (
     <div>
       <div className="editor-container" key={reloadKey}>
-        <Navbar
+        <FormNavbar
           config={data}
           visor={loadedVisor}
           sectionInfo={{ sectionKeys, selectedSection, handleSectionChange }}
@@ -189,4 +189,4 @@ function App() {
   );
 }
 
-export default App;
+export default Form;

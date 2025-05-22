@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
-import LatestRelease from "../components/LatestRelease";
 import SaveVisorModal from './SaveVisorModal';
-
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import LoginSection from './LoginSection';
 import { UserProvider } from '../context/UserContext';
+import './FormNavbar.css';
 
-const Navbar = ({
+const FormNavbar = ({
   config,
   visor,
   language,
   sectionInfo,
   uiControls,
   actions,
-  openVisorManager
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
   const { handleLanguageChange, selectedLang, /*handleClearStorage,*/ isFormShown, setIsFormShown } = uiControls;
@@ -63,17 +60,14 @@ const Navbar = ({
   return (
     <UserProvider> {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
 
-      <div className='navbar'>
-        <div className="logo-container">
-          <img src="/assets/logo.png" alt="Logo" className="logo" />
-        </div>
+      <div className='editor-navbar'>
         <div className="configVersion-info">
           <label>
             {visor?.name ? `${visor.name}` : "Usando Visor Estándar"}
             {visor?.config?.json.configVersion && ` (v${visor.config.json.configVersion})`}
           </label>
         </div>
-        <label className="navbar-button">
+        {/* <label className="navbar-button">
           <input
             type="file"
             accept=".json"
@@ -86,7 +80,7 @@ const Navbar = ({
           </span>
 
           Subir JSON
-        </label>
+        </label> */}
 
         <div className="button-container">
           <div className="select-container">
@@ -134,26 +128,45 @@ const Navbar = ({
 
         {showSaveModal && (
           <SaveVisorModal
-            onSave={handleSaveVisor}
+            isOpen={showSaveModal}
             onClose={() => setShowSaveModal(false)}
+            onSave={({ name, description }) => {
+              const currentJson = localStorage.getItem('visorConfig');
+              if (!currentJson) {
+                alert('No hay configuración para guardar');
+                return;
+              }
+
+              saveVisor({ name, description, json: JSON.parse(currentJson) })
+                .then(() => {
+                  alert('Visor guardado correctamente');
+                  setShowSaveModal(false);
+                  fetchVisores(setVisores);
+                })
+                .catch((err) => {
+                  console.error('Error al guardar visor:', err);
+                  alert('Error al guardar visor');
+                });
+            }}
           />
         )}
 
-        <button className="visor-manager-button" onClick={openVisorManager}>
-          <i className="fa-solid fa-eye"></i> Visor Manager
+
+        <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>
+          Guardar Visor
         </button>
 
 
+        {/* {showSaveModal && (
+          <SaveVisorModal
+            onSave={handleSaveVisor}
+            onClose={() => setShowSaveModal(false)}
+          />
+        )} */}
 
-
-        <LoginSection />
-
-        <div className="version-info">
-          <LatestRelease />
-        </div>
       </div>
     </UserProvider>
   );
 };
 
-export default Navbar;
+export default FormNavbar;
