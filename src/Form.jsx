@@ -45,12 +45,6 @@ function Form() {
     }
   }, []);
 
-
-  // const showToast = (message, type) => {
-  //   setToast({ message, type });
-  //   setTimeout(() => setToast(null), 3000);
-  // };
-
   const handleLanguageChange = (e) => {
     const selectedLanguage = e.target.value;
     setSelectedLang(selectedLanguage);
@@ -72,8 +66,6 @@ function Form() {
     { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
-
-
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
   const { downloadJson } = HandleDownload({ data, parsedDefaultData });
@@ -81,7 +73,6 @@ function Form() {
   const handleDownload = () => {
     downloadJson();
   };
-
 
   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : [];
 

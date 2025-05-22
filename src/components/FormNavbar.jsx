@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import SaveVisorModal from './SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../context/UserContext';
@@ -17,34 +17,6 @@ const FormNavbar = ({
   const { handleLanguageChange, selectedLang, isFormShown, setIsFormShown } = uiControls;
   const { handleDownload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
-
-
-  // const handleSaveVisor = async ({ name, description }) => {
-  //   try {
-  //     let parsedData = {};
-
-  //     try {
-  //       const rawMetadata = localStorage.getItem('visorMetadata');
-  //       const metadata = rawMetadata ? JSON.parse(rawMetadata) : null;
-  //       parsedData = metadata?.config?.json || {};
-  //     } catch (e) {
-  //       console.warn('Error parsing visorMetadata:', e);
-  //       parsedData = {};
-  //     }
-
-  //     const res = await fetch('http://localhost:3001/visores', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ name, description, json: parsedData })
-  //     });
-  //     const result = await res.json();
-  //     alert('Guardado con éxito: ' + result.id);
-  //   } catch (err) {
-  //     console.error('Error al guardar visor:', err);
-  //     alert('Error al guardar visor');
-  //   }
-  // };
-
 
   return (
     <UserProvider> {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
@@ -69,10 +41,6 @@ const FormNavbar = ({
               ))}
             </select>
           </div>
-
-          {/* <button className="clear-storage" onClick={handleClearStorage} title="Limpiar Memoria">
-          <i className="fa-solid fa-trash-can"></i>
-        </button> */}
 
           <button className="showHide-button" onClick={() => setIsFormShown(!isFormShown)} title="Mostrar/Ocultar Formularios">
             <i className={isFormShown ? "fa-solid fa-play" : "fa-solid fa-play fa-flip-horizontal"}></i>
@@ -133,14 +101,6 @@ const FormNavbar = ({
         <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>
           Guardar como
         </button>
-
-
-        {/* {showSaveModal && (
-          <SaveVisorModal
-            onSave={handleSaveVisor}
-            onClose={() => setShowSaveModal(false)}
-          />
-        )} */}
 
       </div>
     </UserProvider>
