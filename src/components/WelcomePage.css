@@ -26,19 +26,6 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-/* .visor-modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
 .visor-modal-container {
   display: flex;
   align-items: flex-start;
@@ -153,4 +140,57 @@
 .vmanager-button:hover {
   background-color: var(--active--color);
   color: black;
+}
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown .vmanager-button {
+  background-color: var(--secondary--color);
+  color: var(--text--color);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+  margin-bottom: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  text-align: left;
+  margin-top: auto;
+}
+
+.dropdown .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--secondary--color);
+  min-width: 160px;
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.dropdown .dropdown-content button {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  color: white;
+  cursor: pointer;
+}
+
+.dropdown .dropdown-content button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }

@@ -81,12 +81,13 @@ const WelcomePage = () => {
               </div>
               <div className="visor-modal-actions">
 
-                <button
-                  className="vmanager-button"
-                  onClick={handleNewVisor}                >
-                  <i className="fa-solid fa-right-from-bracket"></i>
-                  Nuevo Visor
-                </button>
+                <div className="dropdown">
+                  <button className="vmanager-button">Nuevo Visor ▾</button>
+                  <div className="dropdown-content">
+                    <button onClick={handleNewVisor}>🆕 En Blanco</button>
+                    <button onClick={handleNewVisor}>📁 Subir JSON</button>
+                  </div>
+                </div>
 
                 <button
                   className="vmanager-button"
