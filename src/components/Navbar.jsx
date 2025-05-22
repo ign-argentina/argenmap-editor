@@ -58,9 +58,6 @@ function Navbar() {
         </div>
         <div className="nav-links">
           <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>Home</NavLink>
-          <NavLink to="/form" className={({ isActive }) => (isActive ? "active" : undefined)}>
-            <i className="fa-solid fa-right-from-bracket"></i> Formulario
-          </NavLink>
 
           {!userAuth ? (
             <>

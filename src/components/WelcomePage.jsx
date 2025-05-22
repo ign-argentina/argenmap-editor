@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Preview from './Preview';
-import { getVisorById, saveVisor } from '../api/configApi';
+import { useNavigate } from 'react-router-dom';
+import { handleClearStorage } from '../utils/HandleClearStorage';
 import { fetchVisores } from '../utils/FetchVisors';
+import { updateVisorConfigJson } from '../utils/visorStorage';
+import { getVisorById } from '../api/configApi';
+import useFormEngine from '../hooks/useFormEngine';
+import Preview from './Preview';
 import './WelcomePage.css';
 import './Preview.css';
-import { updateVisorConfigJson } from '../utils/visorStorage';
-import { useNavigate } from 'react-router-dom';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
@@ -13,6 +15,12 @@ const WelcomePage = () => {
   const [selectedVisor, setSelectedVisor] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
+  const { setData, uploadSchema } = useFormEngine();
+
+  const handleNewVisor = () => {
+    handleClearStorage(setData, uploadSchema);
+    navigate('/form');
+  };
 
   const handleLoadVisor = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
@@ -73,11 +81,10 @@ const WelcomePage = () => {
               </div>
               <div className="visor-modal-actions">
 
-                <button 
+                <button
                   className="vmanager-button"
-                  onClick={() => navigate('/form')}
-                >
-                <i className="fa-solid fa-right-from-bracket"></i>
+                  onClick={handleNewVisor}                >
+                  <i className="fa-solid fa-right-from-bracket"></i>
                   Nuevo Visor
                 </button>
 
@@ -97,8 +104,6 @@ const WelcomePage = () => {
                       const visorCompleto = await getVisorById(selectedVisor.id);
                       navigate('/form')
                       handleLoadVisor(visorCompleto);
-                      // setIsVisorManagerVisible(false);
-                      // console.log("Llegué")
                     } catch (err) {
                       console.error('Error al cargar visor:', err);
                       alert('No se pudo cargar el visor');

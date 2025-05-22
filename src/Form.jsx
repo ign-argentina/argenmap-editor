@@ -4,22 +4,20 @@ import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import useLang from './hooks/useLang';
 import useFormEngine from './hooks/useFormEngine';
-import FormNavbar from './components/FormNavbar';
-import ColorPickerControl from './utils/ColorPickerControl';
+import ColorPickerControl from './components/ColorPickerControl';
 import HandleDownload from './utils/HandleDownload';
-import Toast from './utils/Toast';
-import './global.css';
+import Toast from './components/Toast';
 import { updateVisorConfigJson } from './utils/visorStorage';
-
+import { handleClearStorage } from './utils/HandleClearStorage';
+import FormNavbar from './components/FormNavbar';
+import './global.css';
 
 function Form() {
 
   const { language } = useLang();
-
   /*   Esto ya lo estamos manejando en el hook. Asi que está de mas
     const savedLanguage = localStorage.getItem('selectedLang') || 'es';
     const [selectedLang, setSelectedLang] = useState(savedLanguage); */
-
   const {
     data,
     setData,
@@ -37,6 +35,7 @@ function Form() {
   const [toast, setToast] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [loadedVisor, setLoadedVisor] = useState(null);
+  const clearStorage = () => handleClearStorage(setData, uploadSchema);
 
   //useEffect para cargar mostrar los datos del visor cargado
   useEffect(() => {
@@ -95,19 +94,7 @@ function Form() {
     // Aplicar cambios
     setData(parsedData);
     uploadSchema(parsedData);
-    // window.location.reload();
     showToast('JSON cargado exitosamente', 'success');
-  };
-
-
-  //DESHABILITADO HASTA REALIZARLE UN REWORK
-  const handleClearStorage = () => {
-    localStorage.removeItem("visorMetadata");
-    const defaultData = localStorage.getItem('formDataDefault');
-    const parsedDefaultData = JSON.parse(defaultData);
-    setData(parsedDefaultData);
-    uploadSchema(parsedDefaultData);
-    // showToast('¡El storage se ha limpiado con éxito!', 'success');
   };
 
   const defaultData = localStorage.getItem('formDataDefault');
@@ -117,9 +104,6 @@ function Form() {
   const handleDownload = () => {
     downloadJson();
   };
-
-
-
 
 
   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : [];
@@ -161,9 +145,7 @@ function Form() {
                       [selectedSection]: updatedData
                     };
 
-                    // Guardar en visorMetadata.config.json
                     updateVisorConfigJson(newData);
-
                     return newData;
                   });
                 }}
@@ -182,8 +164,6 @@ function Form() {
             onClose={() => setToast(null)}
           />
         )}
-
-
       </div>
     </div>
   );
