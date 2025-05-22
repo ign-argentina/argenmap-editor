@@ -6,15 +6,15 @@ import { UserProvider } from './context/UserContext'
 
 function Root() {
 
-    return (
-        <>
-            <UserProvider>
-                <Navbar />
-                <Outlet />
-                <Footer />
-            </UserProvider>
-        </>
-    )
+  return (
+    <>
+      <UserProvider>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </UserProvider>
+    </>
+  )
 }
 
 export default Root

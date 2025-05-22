@@ -13,57 +13,57 @@ const SALT_ROUNDS = 10
 
 class User extends BaseModel {
 
-    static findByEmail = async (email) => {
-        try {
-            return await super.runQuery(SELECT_BY_EMAIL, [email])
-        } catch(error){
-            console.log("USER MODEL", error)
-            return null;
-        }
+  static findByEmail = async (email) => {
+    try {
+      return await super.runQuery(SELECT_BY_EMAIL, [email])
+    } catch (error) {
+      console.log("USER MODEL", error)
+      return null;
     }
-    static newUser = async (email, name, lastname, password) => {
-        try {
-            const hashPassword = await this.#hashPassword(password)
-            const result = await super.runQuery(INSERT_USER, [email, name, lastname, hashPassword])
-            return result
-        } catch (error) {
-            console.log("USER MODEL: ", error)
-            return null;
-        }
+  }
+  static newUser = async (email, name, lastname, password) => {
+    try {
+      const hashPassword = await this.#hashPassword(password)
+      const result = await super.runQuery(INSERT_USER, [email, name, lastname, hashPassword])
+      return result
+    } catch (error) {
+      console.log("USER MODEL: ", error)
+      return null;
     }
+  }
 
-    static updateUser = async (name, lastname, password, id) => {
-        try{
-            let hashPassword = null
+  static updateUser = async (name, lastname, password, id) => {
+    try {
+      let hashPassword = null
 
-            if (password){
-                hashPassword = await this.#hashPassword(password)
-            }            
+      if (password) {
+        hashPassword = await this.#hashPassword(password)
+      }
 
-            const result = await super.runQuery(UPDATE_USER, [name, lastname, hashPassword, id])
-            return result
-        } catch(error){
-            console.log("USER MODEL: ", error)
-        }
+      const result = await super.runQuery(UPDATE_USER, [name, lastname, hashPassword, id])
+      return result
+    } catch (error) {
+      console.log("USER MODEL: ", error)
     }
+  }
 
-    static isMailDuplicated = async (email) => {
-        try {
-            const result = await super.runQuery(SELECT_1_EMAIL, [email])
-            return result.length > 0
-        } catch (error) {
-            console.log("USER MODEL", error)
-            return null;
-        }
+  static isMailDuplicated = async (email) => {
+    try {
+      const result = await super.runQuery(SELECT_1_EMAIL, [email])
+      return result.length > 0
+    } catch (error) {
+      console.log("USER MODEL", error)
+      return null;
     }
+  }
 
-    static validatePassword = async (password, hashPass) => {
-        return await bcrypt.compare(password, hashPass)
-    }
+  static validatePassword = async (password, hashPass) => {
+    return await bcrypt.compare(password, hashPass)
+  }
 
-    static #hashPassword = async (password) => {
-        return await bcrypt.hash(password, SALT_ROUNDS)
-    }
+  static #hashPassword = async (password) => {
+    return await bcrypt.hash(password, SALT_ROUNDS)
+  }
 }
 
 export default User
