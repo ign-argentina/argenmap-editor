@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react';
-import LatestRelease from "../components/LatestRelease";
 import SaveVisorModal from './SaveVisorModal';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import LoginSection from './LoginSection';
 import { UserProvider } from '../context/UserContext';
+import './EditorNavbar.css';
 
-const Navbar = ({
+const EditorNavbar = ({
   config,
   visor,
   language,
   sectionInfo,
   uiControls,
   actions,
-  openVisorManager
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
   const { handleLanguageChange, selectedLang, /*handleClearStorage,*/ isFormShown, setIsFormShown } = uiControls;
@@ -63,17 +61,14 @@ const Navbar = ({
   return (
     <UserProvider> {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
 
-      <div className='navbar'>
-        <div className="logo-container">
-          <img src="/assets/logo.png" alt="Logo" className="logo" />
-        </div>
+      <div className='editor-navbar'>
         <div className="configVersion-info">
           <label>
             {visor?.name ? `${visor.name}` : "Usando Visor Estándar"}
             {visor?.config?.json.configVersion && ` (v${visor.config.json.configVersion})`}
           </label>
         </div>
-        <label className="navbar-button">
+        {/* <label className="navbar-button">
           <input
             type="file"
             accept=".json"
@@ -86,7 +81,7 @@ const Navbar = ({
           </span>
 
           Subir JSON
-        </label>
+        </label> */}
 
         <div className="button-container">
           <div className="select-container">
@@ -139,21 +134,9 @@ const Navbar = ({
           />
         )}
 
-        <button className="visor-manager-button" onClick={openVisorManager}>
-          <i className="fa-solid fa-eye"></i> Visor Manager
-        </button>
-
-
-
-
-        <LoginSection />
-
-        <div className="version-info">
-          <LatestRelease />
-        </div>
       </div>
     </UserProvider>
   );
 };
 
-export default Navbar;
+export default EditorNavbar;

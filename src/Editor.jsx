@@ -4,7 +4,7 @@ import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import useLang from './hooks/useLang';
 import useFormEngine from './hooks/useFormEngine';
-import Navbar from './components/Navbar';
+import EditorNavbar from './components/EditorNavbar';
 import ColorPickerControl from './utils/ColorPickerControl';
 import HandleDownload from './utils/HandleDownload';
 import Toast from './utils/Toast';
@@ -12,7 +12,7 @@ import './global.css';
 import { updateVisorConfigJson} from './utils/visorStorage';
 
 
-function App() {
+function Editor() {
 
   const { language } = useLang();
 
@@ -127,7 +127,7 @@ function App() {
   return (
     <div>
       <div className="editor-container" key={reloadKey}>
-        <Navbar
+        <EditorNavbar
           config={data}
           visor={loadedVisor}
           sectionInfo={{ sectionKeys, selectedSection, handleSectionChange }}
@@ -189,4 +189,4 @@ function App() {
   );
 }
 
-export default App;
+export default Editor;
