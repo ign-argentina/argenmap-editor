@@ -3,6 +3,7 @@ import SaveVisorModal from './SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../context/UserContext';
 import './FormNavbar.css';
+import { saveVisor } from '../api/configApi';
 
 const FormNavbar = ({
   config,
@@ -18,31 +19,31 @@ const FormNavbar = ({
   const [showSaveModal, setShowSaveModal] = useState(false);
 
 
-  const handleSaveVisor = async ({ name, description }) => {
-    try {
-      let parsedData = {};
+  // const handleSaveVisor = async ({ name, description }) => {
+  //   try {
+  //     let parsedData = {};
 
-      try {
-        const rawMetadata = localStorage.getItem('visorMetadata');
-        const metadata = rawMetadata ? JSON.parse(rawMetadata) : null;
-        parsedData = metadata?.config?.json || {};
-      } catch (e) {
-        console.warn('Error parsing visorMetadata:', e);
-        parsedData = {};
-      }
+  //     try {
+  //       const rawMetadata = localStorage.getItem('visorMetadata');
+  //       const metadata = rawMetadata ? JSON.parse(rawMetadata) : null;
+  //       parsedData = metadata?.config?.json || {};
+  //     } catch (e) {
+  //       console.warn('Error parsing visorMetadata:', e);
+  //       parsedData = {};
+  //     }
 
-      const res = await fetch('http://localhost:3001/visores', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, json: parsedData })
-      });
-      const result = await res.json();
-      alert('Guardado con éxito: ' + result.id);
-    } catch (err) {
-      console.error('Error al guardar visor:', err);
-      alert('Error al guardar visor');
-    }
-  };
+  //     const res = await fetch('http://localhost:3001/visores', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ name, description, json: parsedData })
+  //     });
+  //     const result = await res.json();
+  //     alert('Guardado con éxito: ' + result.id);
+  //   } catch (err) {
+  //     console.error('Error al guardar visor:', err);
+  //     alert('Error al guardar visor');
+  //   }
+  // };
 
 
   return (
@@ -106,17 +107,19 @@ const FormNavbar = ({
             isOpen={showSaveModal}
             onClose={() => setShowSaveModal(false)}
             onSave={({ name, description }) => {
-              const currentJson = localStorage.getItem('visorConfig');
-              if (!currentJson) {
+              const currentJsonRaw = localStorage.getItem('visorMetadata');
+              const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
+              const configOnly = currentJsonParsed.config;
+
+              if (!currentJsonRaw) {
                 alert('No hay configuración para guardar');
                 return;
               }
-
-              saveVisor({ name, description, json: JSON.parse(currentJson) })
+              saveVisor({ name, description, json: configOnly.json })
                 .then(() => {
                   alert('Visor guardado correctamente');
                   setShowSaveModal(false);
-                  fetchVisores(setVisores);
+                  // fetchVisores(setVisores);
                 })
                 .catch((err) => {
                   console.error('Error al guardar visor:', err);
@@ -128,7 +131,7 @@ const FormNavbar = ({
 
 
         <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>
-          Guardar Visor
+          Guardar como
         </button>
 
 
