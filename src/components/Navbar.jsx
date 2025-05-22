@@ -19,7 +19,7 @@ function Navbar() {
       } catch (error) {
         setUserAuth(false)
       }
-    };
+    };0
     checkAuth();
   }, []);
 
