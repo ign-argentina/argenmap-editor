@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser"
 import cors from "cors";
 import routes from './routes/routes.js'
 
-
 const app = express();
 
 console.log(process.env.PORT != undefined ? "Varibles de entorno leidas correctamente" : "ERROR AL LEER LAS VARIABLES DE ENTORNO")
@@ -24,7 +23,6 @@ app.use(cookieParser());
 app.get("/", (_req, res) => {
   res.json("API Editor Argenmap" );
 });
-
 
 // Uso de rutas
 app.use(`/`, routes);
