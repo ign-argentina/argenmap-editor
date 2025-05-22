@@ -72,30 +72,7 @@ function Form() {
     { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
-  const handleJsonUpload = (parsedData) => {
-    // Guardar parsedData como formDataDefault
-    localStorage.setItem('formDataDefault', JSON.stringify(parsedData));
 
-    // Actualizar visorMetadata
-    try {
-      const rawMetadata = localStorage.getItem('visorMetadata');
-      const metadata = rawMetadata ? JSON.parse(rawMetadata) : {};
-
-      // Asegurarse de que existan los objetos necesarios
-      metadata.config = metadata.config || {};
-      metadata.config.json = parsedData;
-
-      // Guardar visorMetadata actualizado
-      localStorage.setItem('visorMetadata', JSON.stringify(metadata));
-    } catch (e) {
-      console.error('Error actualizando visorMetadata:', e);
-    }
-
-    // Aplicar cambios
-    setData(parsedData);
-    uploadSchema(parsedData);
-    showToast('JSON cargado exitosamente', 'success');
-  };
 
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
@@ -124,7 +101,6 @@ function Form() {
           }}
           actions={{
             handleDownload,
-            handleJsonUpload,
           }}
           language={language}
         />

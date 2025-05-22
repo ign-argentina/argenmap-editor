@@ -8,6 +8,7 @@ import useFormEngine from '../hooks/useFormEngine';
 import Preview from './Preview';
 import './WelcomePage.css';
 import './Preview.css';
+import { handleFileChange } from '../utils/HandleJsonUpload'
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
@@ -19,6 +20,11 @@ const WelcomePage = () => {
 
   const handleNewVisor = () => {
     handleClearStorage(setData, uploadSchema);
+    navigate('/form');
+  };
+
+  const handleFileUpload = (event) => {
+    handleFileChange(event, setData, uploadSchema);
     navigate('/form');
   };
 
@@ -84,8 +90,23 @@ const WelcomePage = () => {
                 <div className="dropdown">
                   <button className="vmanager-button">Nuevo Visor ▾</button>
                   <div className="dropdown-content">
-                    <button onClick={handleNewVisor}>🆕 En Blanco</button>
-                    <button onClick={handleNewVisor}>📁 Subir JSON</button>
+                    <button className="vmanager-button" onClick={handleNewVisor}>🆕 En Blanco</button>
+
+                    <label className="vmanager-button">
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleFileUpload}
+                        style={{ display: "none" }}
+                        title="Subir JSON"
+                      />
+                      <span className="icon">
+                        <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+                      </span>
+
+                      Subir JSON
+                    </label>
+
                   </div>
                 </div>
 

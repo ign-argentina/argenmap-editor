@@ -14,21 +14,9 @@ const FormNavbar = ({
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
   const { handleLanguageChange, selectedLang, /*handleClearStorage,*/ isFormShown, setIsFormShown } = uiControls;
-  const { handleDownload, handleJsonUpload } = actions;
+  const { handleDownload } = actions;
   const [showSaveModal, setShowSaveModal] = useState(false);
 
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const jsonData = JSON.parse(e.target.result);
-        handleJsonUpload(jsonData);
-      };
-      reader.readAsText(file);
-    }
-  };
 
   const handleSaveVisor = async ({ name, description }) => {
     try {
@@ -67,20 +55,7 @@ const FormNavbar = ({
             {visor?.config?.json.configVersion && ` (v${visor.config.json.configVersion})`}
           </label>
         </div>
-        {/* <label className="navbar-button">
-          <input
-            type="file"
-            accept=".json"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-            title="Subir JSON"
-          />
-          <span className="icon">
-            <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-          </span>
 
-          Subir JSON
-        </label> */}
 
         <div className="button-container">
           <div className="select-container">
