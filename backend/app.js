@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser"
 import cors from "cors";
 import routes from './routes/routes.js'
 
-
 const app = express();
 
 console.log(process.env.PORT != undefined ? "Varibles de entorno leidas correctamente" : "ERROR AL LEER LAS VARIABLES DE ENTORNO")
