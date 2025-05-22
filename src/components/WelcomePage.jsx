@@ -4,7 +4,8 @@ import Preview from './Preview';
 import { getVisorById, saveVisor } from '../api/configApi';
 import { fetchVisores } from '../utils/FetchVisors';
 import './WelcomePage.css'; // Asegurate de incluir los estilos de VisorManagerModal aquí
-import { updateVisorConfigJson} from '../utils/visorStorage';
+import { updateVisorConfigJson } from '../utils/visorStorage';
+import { useNavigate } from 'react-router-dom';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
@@ -12,6 +13,7 @@ const WelcomePage = () => {
   const [selectedVisor, setSelectedVisor] = useState(null);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const navigate = useNavigate();
 
   const handleLoadVisor = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
@@ -22,9 +24,11 @@ const WelcomePage = () => {
     localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
     // Asegúrate de definir estas funciones globalmente o importarlas si no están declaradas
     updateVisorConfigJson(configJson);
-    setLoadedVisor(visorCompleto);
-    setData(configJson);
-    uploadSchema(configJson);
+
+    //INVESTIGAR SI ESTO ESTA DE MAS 
+    // setLoadedVisor(visorCompleto);
+    // setData(configJson);
+    // uploadSchema(configJson);
   };
 
   useEffect(() => {
@@ -75,7 +79,7 @@ const WelcomePage = () => {
                   onClick={() => setShowPreview(true)}
                   disabled={!selectedVisor}
                 >
-                  Abrir
+                  Visualizar
                 </button>
                 <button
                   className="vmanager-button"
@@ -83,8 +87,10 @@ const WelcomePage = () => {
                     if (!selectedVisor) return;
                     try {
                       const visorCompleto = await getVisorById(selectedVisor.id);
+                      navigate('/editor')
                       handleLoadVisor(visorCompleto);
-                      setIsVisorManagerVisible(false);
+                      // setIsVisorManagerVisible(false);
+                      // console.log("Llegué")
                     } catch (err) {
                       console.error('Error al cargar visor:', err);
                       alert('No se pudo cargar el visor');
@@ -94,6 +100,9 @@ const WelcomePage = () => {
                 >
                   Editar Visor
                 </button>
+
+
+
                 <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>
                   Guardar Visor
                 </button>
