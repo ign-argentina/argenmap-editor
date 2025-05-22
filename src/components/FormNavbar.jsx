@@ -3,9 +3,9 @@ import SaveVisorModal from './SaveVisorModal';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../context/UserContext';
-import './EditorNavbar.css';
+import './FormNavbar.css';
 
-const EditorNavbar = ({
+const FormNavbar = ({
   config,
   visor,
   language,
@@ -139,4 +139,4 @@ const EditorNavbar = ({
   );
 };
 
-export default EditorNavbar;
+export default FormNavbar;
