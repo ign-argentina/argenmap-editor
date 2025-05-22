@@ -24,7 +24,6 @@ app.get("/", (_req, res) => {
   res.json("API Editor Argenmap" );
 });
 
-
 // Uso de rutas
 app.use(`/`, routes);
 
