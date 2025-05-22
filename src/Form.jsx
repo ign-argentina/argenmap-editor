@@ -9,7 +9,7 @@ import ColorPickerControl from './utils/ColorPickerControl';
 import HandleDownload from './utils/HandleDownload';
 import Toast from './utils/Toast';
 import './global.css';
-import { updateVisorConfigJson} from './utils/visorStorage';
+import { updateVisorConfigJson } from './utils/visorStorage';
 
 
 function Form() {

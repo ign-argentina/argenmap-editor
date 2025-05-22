@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import SaveVisorModal from './SaveVisorModal';
-
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../context/UserContext';
 import './FormNavbar.css';
@@ -129,10 +128,41 @@ const FormNavbar = ({
 
         {showSaveModal && (
           <SaveVisorModal
+            isOpen={showSaveModal}
+            onClose={() => setShowSaveModal(false)}
+            onSave={({ name, description }) => {
+              const currentJson = localStorage.getItem('visorConfig');
+              if (!currentJson) {
+                alert('No hay configuración para guardar');
+                return;
+              }
+
+              saveVisor({ name, description, json: JSON.parse(currentJson) })
+                .then(() => {
+                  alert('Visor guardado correctamente');
+                  setShowSaveModal(false);
+                  fetchVisores(setVisores);
+                })
+                .catch((err) => {
+                  console.error('Error al guardar visor:', err);
+                  alert('Error al guardar visor');
+                });
+            }}
+          />
+        )}
+
+
+        <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>
+          Guardar Visor
+        </button>
+
+
+        {/* {showSaveModal && (
+          <SaveVisorModal
             onSave={handleSaveVisor}
             onClose={() => setShowSaveModal(false)}
           />
-        )}
+        )} */}
 
       </div>
     </UserProvider>

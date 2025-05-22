@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import SaveVisorModal from './SaveVisorModal';
 import Preview from './Preview';
 import { getVisorById, saveVisor } from '../api/configApi';
 import { fetchVisores } from '../utils/FetchVisors';
@@ -11,7 +10,6 @@ const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
   const [visores, setVisores] = useState([]);
   const [selectedVisor, setSelectedVisor] = useState(null);
-  const [showSaveModal, setShowSaveModal] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
 
@@ -103,40 +101,12 @@ const WelcomePage = () => {
 
 
 
-                <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>
-                  Guardar Visor
-                </button>
                 <button className="download-button">Descargar</button>
                 <button className="vmanager-button" onClick={() => setIsVisorManagerVisible(false)}>
                   Cerrar
                 </button>
               </div>
             </div>
-
-            {showSaveModal && (
-              <SaveVisorModal
-                isOpen={showSaveModal}
-                onClose={() => setShowSaveModal(false)}
-                onSave={({ name, description }) => {
-                  const currentJson = localStorage.getItem('visorConfig'); // O como lo estés manejando
-                  if (!currentJson) {
-                    alert('No hay configuración para guardar');
-                    return;
-                  }
-
-                  saveVisor({ name, description, json: JSON.parse(currentJson) })
-                    .then(() => {
-                      alert('Visor guardado correctamente');
-                      setShowSaveModal(false);
-                      fetchVisores(setVisores);
-                    })
-                    .catch((err) => {
-                      console.error('Error al guardar visor:', err);
-                      alert('Error al guardar visor');
-                    });
-                }}
-              />
-            )}
           </div>
         )}
       </div>
