@@ -1,19 +1,22 @@
 .welcome-screen-container {
   display: flex;
-  height: 100%;
-  width: 100%;
+  height: 84vh;
 }
 
 .welcome-screen {
-  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--primary--color);
-  height: 100%;
 }
 
+.flex-0 {
+  flex: 0;
+}
 
+.flex-1 {
+  flex: 1;
+}
 
 .welcome-screen-modal {
   width: 500px;
@@ -168,9 +171,7 @@
 
 .dropdown .dropdown-content {
   display: none;
-  position: absolute;
   background-color: var(--secondary--color);
-  min-width: 160px;
   z-index: 1;
   border-radius: 4px;
   overflow: hidden;

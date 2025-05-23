@@ -225,7 +225,6 @@ main, .content {
   font-size: 16px;
   transition: background-color 0.3s;
   text-align: left; 
-  margin-top: auto;
 }
 
 .download-button:hover {
@@ -262,7 +261,7 @@ main, .content {
 .editor-container {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 84vh;
 }
 /* EDITOR CONTAINER */
 
@@ -272,7 +271,6 @@ main, .content {
   width: 50%;
   border-right: 2px solid #ccc;
   display: grid;
-  height: 100vh;
   overflow: scroll;
   /* background-color: var(--secondary--color); */
 }

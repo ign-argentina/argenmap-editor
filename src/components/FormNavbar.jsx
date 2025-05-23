@@ -98,7 +98,7 @@ const FormNavbar = ({
         )}
 
 
-        <button className="vmanager-button" onClick={() => setShowSaveModal(true)}>
+        <button className="navbar-button" onClick={() => setShowSaveModal(true)}>
           Guardar como
         </button>
 

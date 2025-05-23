@@ -1,5 +1,6 @@
 .side-panel {
   display: block;
+  width: 100%;
 }
 
 .side-panel.visible {

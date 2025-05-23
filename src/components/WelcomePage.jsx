@@ -52,7 +52,7 @@ const WelcomePage = () => {
 
   return (
     <div className="welcome-screen-container">
-      <div className="welcome-screen">
+      <div className={`welcome-screen ${showPreview ? 'flex-0' : 'flex-1'}`}>
         {!isVisorManagerVisible ? (
           <div className="welcome-screen-modal">
             <h2>BIENVENIDO AL EDITOR ARGENMAP</h2>
@@ -74,7 +74,14 @@ const WelcomePage = () => {
                     <div
                       key={visor.id}
                       className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
-                      onClick={() => setSelectedVisor(visor)}
+                      onClick={() => {
+                        if (selectedVisor?.id === visor.id) {
+                          setShowPreview((prev) => !prev);
+                        } else {
+                          setSelectedVisor(visor);
+                          setShowPreview(true);
+                        }
+                      }}
                     >
                       {visor.img && <img src={visor.img} alt="img" className="visor-image" />}
                       <div className="visor-info">
@@ -112,14 +119,6 @@ const WelcomePage = () => {
 
                 <button
                   className="vmanager-button"
-                  onClick={() => setShowPreview(true)}
-                  disabled={!selectedVisor}
-                >
-                  Visualizar
-                </button>
-
-                <button
-                  className="vmanager-button"
                   onClick={async () => {
                     if (!selectedVisor) return;
                     try {
@@ -138,7 +137,13 @@ const WelcomePage = () => {
 
                 <button className="download-button">Descargar</button>
 
-                <button className="vmanager-button" onClick={() => setIsVisorManagerVisible(false)}>
+                <button
+                  className="vmanager-button"
+                  onClick={() => {
+                    setIsVisorManagerVisible(false);
+                    setShowPreview(false);
+                  }}
+                >
                   Cerrar
                 </button>
 
