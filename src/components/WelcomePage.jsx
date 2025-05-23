@@ -87,6 +87,11 @@ const WelcomePage = () => {
                       key={visor.id}
                       className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
                       onClick={async () => {
+                        if (selectedVisor?.id === visor.id) {
+                          setSelectedVisor(null);
+                          setShowPreview(false);
+                          return;
+                        }
                         try {
                           const visorCompleto = await getVisorById(visor.id);
                           setSelectedVisor(visorCompleto);
