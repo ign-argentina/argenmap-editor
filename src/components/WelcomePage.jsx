@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { handleClearStorage } from '../utils/HandleClearStorage';
 import { fetchVisores } from '../utils/FetchVisors';
 import { updateVisorConfigJson } from '../utils/visorStorage';
+import HandleDownload from '../utils/HandleDownload';
 import { getVisorById } from '../api/configApi';
 import useFormEngine from '../hooks/useFormEngine';
 import Preview from './Preview';
 import './WelcomePage.css';
 import './Preview.css';
-import { handleFileChange } from '../utils/HandleJsonUpload'
+import { handleFileChange } from '../utils/HandleJsonUpload';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
@@ -17,6 +18,23 @@ const WelcomePage = () => {
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
   const { setData, uploadSchema } = useFormEngine();
+
+  const defaultData = localStorage.getItem('formDataDefault');
+  const parsedDefaultData = JSON.parse(defaultData);
+
+  const handleDownload = () => {
+    if (!selectedVisor?.config?.json) {
+      alert('No hay visor seleccionado con configuración válida');
+      return;
+    }
+
+    const configJson = typeof selectedVisor.config.json === 'string'
+      ? JSON.parse(selectedVisor.config.json)
+      : selectedVisor.config.json;
+
+    const { downloadJson } = HandleDownload({ data: configJson, parsedDefaultData });
+    downloadJson();
+  };
 
   const handleNewVisor = () => {
     handleClearStorage(setData, uploadSchema);
@@ -35,13 +53,7 @@ const WelcomePage = () => {
 
     visorCompleto.config.json = configJson;
     localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
-    // Asegúrate de definir estas funciones globalmente o importarlas si no están declaradas
     updateVisorConfigJson(configJson);
-
-    //INVESTIGAR SI ESTO ESTA DE MAS 
-    // setLoadedVisor(visorCompleto);
-    // setData(configJson);
-    // uploadSchema(configJson);
   };
 
   useEffect(() => {
@@ -74,12 +86,14 @@ const WelcomePage = () => {
                     <div
                       key={visor.id}
                       className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
-                      onClick={() => {
-                        if (selectedVisor?.id === visor.id) {
-                          setShowPreview((prev) => !prev);
-                        } else {
-                          setSelectedVisor(visor);
+                      onClick={async () => {
+                        try {
+                          const visorCompleto = await getVisorById(visor.id);
+                          setSelectedVisor(visorCompleto);
                           setShowPreview(true);
+                        } catch (error) {
+                          console.error('Error al obtener visor completo:', error);
+                          alert('No se pudo cargar el visor');
                         }
                       }}
                     >
@@ -93,14 +107,11 @@ const WelcomePage = () => {
                 </div>
               </div>
               <div className="visor-modal-actions">
-
                 <div className="global-buttons">
                   <div className="dropdown">
                     <button className="navbar">Nuevo Visor ▾</button>
                     <div className="dropdown-content">
                       <button className="navbar" onClick={handleNewVisor}>🆕 En Blanco</button>
-                      <div>
-                      </div>
                       <label className="vmanager-button">
                         <input
                           type="file"
@@ -112,32 +123,29 @@ const WelcomePage = () => {
                         <span className="icon">
                           <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
                         </span>
-
                         Subir JSON
                       </label>
-
                     </div>
                   </div>
 
                   <button
                     className="navbar"
-                    onClick={async () => {
+                    onClick={() => {
                       if (!selectedVisor) return;
-                      try {
-                        const visorCompleto = await getVisorById(selectedVisor.id);
-                        navigate('/form')
-                        handleLoadVisor(visorCompleto);
-                      } catch (err) {
-                        console.error('Error al cargar visor:', err);
-                        alert('No se pudo cargar el visor');
-                      }
+                      handleLoadVisor(selectedVisor);
+                      navigate('/form');
                     }}
                     disabled={!selectedVisor}
                   >
                     Editar Visor
                   </button>
 
-                  <button className="download">Descargar</button>
+                  <button className="download" onClick={handleDownload} title="Descargar JSON">
+                    <span className="icon">
+                      <i className="fa-solid fa-download"></i>
+                    </span>
+                    Descargar
+                  </button>
 
                   <button
                     className="navbar"
@@ -148,10 +156,7 @@ const WelcomePage = () => {
                   >
                     Cerrar
                   </button>
-
-
                 </div>
-
               </div>
             </div>
           </div>

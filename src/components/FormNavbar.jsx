@@ -88,7 +88,6 @@ const FormNavbar = ({
                   .then(() => {
                     alert('Visor guardado correctamente');
                     setShowSaveModal(false);
-                    // fetchVisores(setVisores);
                   })
                   .catch((err) => {
                     console.error('Error al guardar visor:', err);
