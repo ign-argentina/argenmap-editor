@@ -47,61 +47,63 @@ const FormNavbar = ({
           </button>
         </div>
 
-        {sectionKeys.map((key) => (
-          <button
-            key={key}
-            onClick={() => handleSectionChange(key)}
-            className={`navbar-button ${selectedSection === key ? 'active' : ''}`}
-            title={language[selectedLang]?.[key] || key}
-          >
-            {config[key]?.sectionIcon && (
-              <span className="icon">
-                <i className={config[key].sectionIcon}></i>
-              </span>
-            )}
-            {language[selectedLang]?.[key] || key}
+        <div className="global-buttons">
+          {sectionKeys.map((key) => (
+            <button
+              key={key}
+              onClick={() => handleSectionChange(key)}
+              className={`navbar ${selectedSection === key ? 'active' : ''}`}
+              title={language[selectedLang]?.[key] || key}
+            >
+              {config[key]?.sectionIcon && (
+                <span className="icon">
+                  <i className={config[key].sectionIcon}></i>
+                </span>
+              )}
+              {language[selectedLang]?.[key] || key}
+            </button>
+          ))}
+
+          <button className="download" onClick={handleDownload} title="Descargar JSON">
+            <span className="icon">
+              <i className="fa-solid fa-download"></i>
+            </span>
+            Descargar
           </button>
-        ))}
 
-        <button className="download-button" onClick={handleDownload} title="Descargar JSON">
-          <span className="icon">
-            <i className="fa-solid fa-download"></i>
-          </span>
-          Descargar
-        </button>
+          {showSaveModal && (
+            <SaveVisorModal
+              isOpen={showSaveModal}
+              onClose={() => setShowSaveModal(false)}
+              onSave={({ name, description }) => {
+                const currentJsonRaw = localStorage.getItem('visorMetadata');
+                const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
+                const configOnly = currentJsonParsed.config;
 
-        {showSaveModal && (
-          <SaveVisorModal
-            isOpen={showSaveModal}
-            onClose={() => setShowSaveModal(false)}
-            onSave={({ name, description }) => {
-              const currentJsonRaw = localStorage.getItem('visorMetadata');
-              const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
-              const configOnly = currentJsonParsed.config;
-
-              if (!currentJsonRaw) {
-                alert('No hay configuración para guardar');
-                return;
-              }
-              saveVisor({ name, description, json: configOnly.json })
-                .then(() => {
-                  alert('Visor guardado correctamente');
-                  setShowSaveModal(false);
-                  // fetchVisores(setVisores);
-                })
-                .catch((err) => {
-                  console.error('Error al guardar visor:', err);
-                  alert('Error al guardar visor');
-                });
-            }}
-          />
-        )}
+                if (!currentJsonRaw) {
+                  alert('No hay configuración para guardar');
+                  return;
+                }
+                saveVisor({ name, description, json: configOnly.json })
+                  .then(() => {
+                    alert('Visor guardado correctamente');
+                    setShowSaveModal(false);
+                    // fetchVisores(setVisores);
+                  })
+                  .catch((err) => {
+                    console.error('Error al guardar visor:', err);
+                    alert('Error al guardar visor');
+                  });
+              }}
+            />
+          )}
 
 
-        <button className="navbar-button" onClick={() => setShowSaveModal(true)}>
-          Guardar como
-        </button>
+          <button className="navbar" onClick={() => setShowSaveModal(true)}>
+            Guardar como
+          </button>
 
+        </div>
       </div>
     </UserProvider>
   );

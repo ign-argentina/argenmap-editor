@@ -94,58 +94,63 @@ const WelcomePage = () => {
               </div>
               <div className="visor-modal-actions">
 
-                <div className="dropdown">
-                  <button className="vmanager-button">Nuevo Visor ▾</button>
-                  <div className="dropdown-content">
-                    <button className="vmanager-button" onClick={handleNewVisor}>🆕 En Blanco</button>
+                <div className="global-buttons">
+                  <div className="dropdown">
+                    <button className="navbar">Nuevo Visor ▾</button>
+                    <div className="dropdown-content">
+                      <button className="navbar" onClick={handleNewVisor}>🆕 En Blanco</button>
+                      <div>
+                      </div>
+                      <label className="vmanager-button">
+                        <input
+                          type="file"
+                          accept=".json"
+                          onChange={handleFileUpload}
+                          style={{ display: "none" }}
+                          title="Subir JSON"
+                        />
+                        <span className="icon">
+                          <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+                        </span>
 
-                    <label className="vmanager-button">
-                      <input
-                        type="file"
-                        accept=".json"
-                        onChange={handleFileUpload}
-                        style={{ display: "none" }}
-                        title="Subir JSON"
-                      />
-                      <span className="icon">
-                        <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-                      </span>
+                        Subir JSON
+                      </label>
 
-                      Subir JSON
-                    </label>
-
+                    </div>
                   </div>
+
+                  <button
+                    className="navbar"
+                    onClick={async () => {
+                      if (!selectedVisor) return;
+                      try {
+                        const visorCompleto = await getVisorById(selectedVisor.id);
+                        navigate('/form')
+                        handleLoadVisor(visorCompleto);
+                      } catch (err) {
+                        console.error('Error al cargar visor:', err);
+                        alert('No se pudo cargar el visor');
+                      }
+                    }}
+                    disabled={!selectedVisor}
+                  >
+                    Editar Visor
+                  </button>
+
+                  <button className="download">Descargar</button>
+
+                  <button
+                    className="navbar"
+                    onClick={() => {
+                      setIsVisorManagerVisible(false);
+                      setShowPreview(false);
+                    }}
+                  >
+                    Cerrar
+                  </button>
+
+
                 </div>
-
-                <button
-                  className="vmanager-button"
-                  onClick={async () => {
-                    if (!selectedVisor) return;
-                    try {
-                      const visorCompleto = await getVisorById(selectedVisor.id);
-                      navigate('/form')
-                      handleLoadVisor(visorCompleto);
-                    } catch (err) {
-                      console.error('Error al cargar visor:', err);
-                      alert('No se pudo cargar el visor');
-                    }
-                  }}
-                  disabled={!selectedVisor}
-                >
-                  Editar Visor
-                </button>
-
-                <button className="download-button">Descargar</button>
-
-                <button
-                  className="vmanager-button"
-                  onClick={() => {
-                    setIsVisorManagerVisible(false);
-                    setShowPreview(false);
-                  }}
-                >
-                  Cerrar
-                </button>
 
               </div>
             </div>

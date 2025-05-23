@@ -178,61 +178,6 @@ main,
   color: var(--active--color);
 }
 
-.navbar-button {
-  background-color: var(--secondary--color);
-  color: var(--text--color);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 50px;
-  width: 100%;
-  margin-bottom: 5px;
-  font-size: 13px;
-  transition: background-color 0.3s;
-  text-align: left;
-  user-select: none;
-}
-
-.navbar-button:hover {
-  background-color: var(--active--color);
-}
-
-.navbar-button .icon {
-  margin-right: 8px;
-  font-size: 20px;
-}
-
-.navbar-button.active {
-  background-color: var(--active--color);
-}
-
-/* DOWNLAOD BUTTON */
-.download-button {
-  background-color: rgb(5, 142, 0);
-  color: rgb(255, 255, 255);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 50px;
-  width: 100%;
-  margin-bottom: 5px;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  text-align: left;
-}
-
-.download-button:hover {
-  background-color: var(--active--color);
-}
-
 /* VISOR MANAGER BUTTON */
 .visor-manager-button {
   background-color: rgb(140, 140, 140);
@@ -252,8 +197,48 @@ main,
   background-color: var(--active--color);
 }
 
-/* NAVBAR */
+.global-buttons button {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  margin-bottom: 5px;
+  font-size: 13px;
+  transition: background-color 0.3s;
+  text-align: left;
+  user-select: none;
+}
 
+.global-buttons button.navbar {
+  background-color: var(--secondary--color);
+  color: var(--text--color);
+}
+
+.global-buttons button.navbar:hover {
+  background-color: var(--active--color);
+}
+
+.global-buttons button.download {
+  background-color: rgb(5, 142, 0);
+  color: var(--text--color);
+}
+
+.global-buttons button.cancel {
+  background-color: #ccc;
+  color: black;
+}
+
+.global-buttons button.cancel:hover {
+  background-color: #999;
+}
+
+
+/* NAVBAR */
 
 /* EDITOR CONTAINER */
 .editor-container {
