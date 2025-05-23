@@ -29,6 +29,19 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+.welcome-screen-modal h2,
+.welcome-screen-modal h2 {
+  margin-bottom: 1rem;
+  font-size: 22px;
+  border-bottom: 1px solid var(--active--color);
+  padding-bottom: 0.5rem;
+}
+
+.welcome-screen-modal p {
+  margin: 0.5rem 0;
+  font-size: 16px;
+}
+
 .visor-modal-container {
   display: flex;
   align-items: flex-start;

@@ -71,7 +71,7 @@ function Navbar() {
           ) : (
             <>
               <button className="nav-button" onClick={() => setShowProfileModal(true)} title="Perfil">
-                <i class="fa-solid fa-user"></i> Perfil
+                <i className="fa-solid fa-user"></i> Perfil
               </button>
 
               <button className="nav-button" onClick={handleLogout} title="Cerrar Sesion">

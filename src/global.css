@@ -40,13 +40,14 @@ C:0% M:0% Y:0% K:0% */
 }
 
 /* RESET GOBAL de formato predeterminado de los navegadores (El famoso borde blanco al renderizar) */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box; /* Con border-box el ellemento entero mide lo que se declara y el contenido se ajusta automaticamente
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* Con border-box el ellemento entero mide lo que se declara y el contenido se ajusta automaticamente
                               (Ejemplo 200px va a ser 200px en total) Con content-box el contenido mide 200px pero el elemento total puede medir mas sumando paddings, etc */
-    font-family: Helvetica;    
-  }
+  font-family: Helvetica;
+}
 
 input[type='number'] {
   -moz-appearance: textfield;
@@ -75,7 +76,8 @@ input[type='number']::-webkit-outer-spin-button {
   flex-direction: column;
 }
 
-main, .content {
+main,
+.content {
   flex: 1;
 }
 
@@ -106,7 +108,7 @@ main, .content {
 
 .button-container {
   display: flex;
-  align-items: center; 
+  align-items: center;
   gap: 10px;
   margin: 15px;
 }
@@ -173,7 +175,7 @@ main, .content {
 .lang-select:disabled {
   background-color: #e9ecef;
   cursor: not-allowed;
-  color: var(--active--color); 
+  color: var(--active--color);
 }
 
 .navbar-button {
@@ -191,12 +193,12 @@ main, .content {
   margin-bottom: 5px;
   font-size: 13px;
   transition: background-color 0.3s;
-  text-align: left; 
+  text-align: left;
   user-select: none;
 }
 
 .navbar-button:hover {
-  background-color: var(--active--color); 
+  background-color: var(--active--color);
 }
 
 .navbar-button .icon {
@@ -205,7 +207,7 @@ main, .content {
 }
 
 .navbar-button.active {
-  background-color: var(--active--color); 
+  background-color: var(--active--color);
 }
 
 /* DOWNLAOD BUTTON */
@@ -224,7 +226,7 @@ main, .content {
   margin-bottom: 5px;
   font-size: 16px;
   transition: background-color 0.3s;
-  text-align: left; 
+  text-align: left;
 }
 
 .download-button:hover {
@@ -239,21 +241,17 @@ main, .content {
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   height: 50px;
-  width: 100%;
-  margin-bottom: 5px;
   font-size: 16px;
   transition: background-color 0.3s;
-  text-align: left; 
-  margin-top: auto;
+  text-align: center;
+  width: 100%;
 }
 
 .visor-manager-button:hover {
   background-color: var(--active--color);
 }
+
 /* NAVBAR */
 
 
@@ -263,6 +261,7 @@ main, .content {
   width: 100%;
   height: 84vh;
 }
+
 /* EDITOR CONTAINER */
 
 
@@ -274,6 +273,7 @@ main, .content {
   overflow: scroll;
   /* background-color: var(--secondary--color); */
 }
+
 /* FORMULARIO EXTERNO */
 
 
@@ -282,6 +282,7 @@ main, .content {
   width: 100%;
   height: 100vh;
 }
+
 /* PREVIEW */
 
 
@@ -317,6 +318,7 @@ main, .content {
 .tab-button:hover {
   background-color: var(--active--color);
 }
+
 /* TABS */
 
 
@@ -325,6 +327,7 @@ main, .content {
   overflow-y: auto;
   padding: 5px;
 }
+
 /* FORMULARIO INTERNO */
 
 
@@ -352,42 +355,43 @@ main, .content {
 } */
 
 .color-picker-label {
-	color: rgba(0, 0, 0, 0.6);
-	font-family: "Roboto","Helvetica","Arial",sans-serif;
-	font-weight: 500;
-	font-size: 0.8rem;
-	line-height: 1.4375em;
-	letter-spacing: 0.00938em;
-	padding: 0;
-	position: relative;
-	display: block;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+  display: block;
 }
 
 .css-18pjc51-MuiFormLabel-root-MuiInputLabel-root {
-	color: rgba(0, 0, 0, 0.6);
-	font-family: "Roboto","Helvetica","Arial",sans-serif;
-	font-weight: 400;
-	font-size: 1rem;
-	line-height: 1.4375em;
-	letter-spacing: 0.00938em;
-	padding: 0;
-	position: relative;
-	display: block;
-	transform-origin: top left;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+  display: block;
+  transform-origin: top left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 /* Paddings de formularios */
 .css-46bh2p-MuiCardContent-root:last-child {
   padding-bottom: 0px;
-	padding: 0px;
+  padding: 0px;
 }
+
 /* .css-46bh2p-MuiCardContent-root {
 	padding: 0px;
   padding-bottom: 0px;
