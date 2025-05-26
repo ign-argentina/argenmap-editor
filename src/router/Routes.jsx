@@ -3,6 +3,7 @@ import Root from "../Root";
 import WelcomePage from '../components/WelcomePage';
 import Form from '../Form';
 import Management from "../pages/Management";
+import Dashboard from "../pages/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -10,6 +11,7 @@ const router = createBrowserRouter([
       { path: "/", element: <WelcomePage/> },
       { path: "/editor", element: <Form/> },
       { path: "/management", element: <Management/> },
+       { path: "/admin/dashboard", element: <Dashboard/> },
     ]
   },
 ])

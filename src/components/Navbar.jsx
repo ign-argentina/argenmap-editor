@@ -20,7 +20,7 @@ function Navbar() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const { logout } = useUser()
+  const { logout, setGroupAdmin, setSuperAdmin } = useUser()
 
 
   const checkAuth = async () => {
@@ -31,10 +31,17 @@ function Navbar() {
       setUserAuth(res.data);
       setIsGroupAdmin(res.data.isag)
       setIsSuperAdmin(res.data.isa)
+
+      // Context Vars
+      setGroupAdmin(res.data.isag)
+      setSuperAdmin(res.data.isa)
     } catch (error) {
       setUserAuth(false)
       setIsGroupAdmin(false)
       setIsSuperAdmin(false)
+      //Context Vars
+      setGroupAdmin(false)
+      setSuperAdmin(false)
     }
   };
 
@@ -73,7 +80,7 @@ function Navbar() {
 
           {isSuperAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>Admin Dashboard</NavLink></>) : null}
           {isGroupAdmin ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
-            <i class="fa-solid fa-people-group"></i>Administrar Grupos
+            <i className="fa-solid fa-people-group"></i>Administrar Grupos
           </NavLink></>) : null}
 
           {!userAuth ? (
