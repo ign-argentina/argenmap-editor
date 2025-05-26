@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Preview from './Preview';
-import { getVisorById, saveVisor } from '../api/configApi';
-import { fetchVisores } from '../utils/FetchVisors';
-import './WelcomePage.css'; // Asegurate de incluir los estilos de VisorManagerModal aquí
-import { updateVisorConfigJson } from '../utils/visorStorage';
 import { useNavigate } from 'react-router-dom';
+import { handleClearStorage } from '../utils/HandleClearStorage';
+import { fetchVisores } from '../utils/FetchVisors';
+import { updateVisorConfigJson } from '../utils/visorStorage';
+import HandleDownload from '../utils/HandleDownload';
+import { getVisorById } from '../api/configApi';
+import useFormEngine from '../hooks/useFormEngine';
+import Preview from './Preview';
+import './WelcomePage.css';
+import './Preview.css';
+import { handleFileChange } from '../utils/HandleJsonUpload';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
@@ -12,6 +17,35 @@ const WelcomePage = () => {
   const [selectedVisor, setSelectedVisor] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
+  const { setData, uploadSchema } = useFormEngine();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const defaultData = localStorage.getItem('formDataDefault');
+  const parsedDefaultData = JSON.parse(defaultData);
+
+  const handleDownload = () => {
+    if (!selectedVisor?.config?.json) {
+      alert('No hay visor seleccionado con configuración válida');
+      return;
+    }
+
+    const configJson = typeof selectedVisor.config.json === 'string'
+      ? JSON.parse(selectedVisor.config.json)
+      : selectedVisor.config.json;
+
+    const { downloadJson } = HandleDownload({ data: configJson, parsedDefaultData });
+    downloadJson();
+  };
+
+  const handleNewVisor = () => {
+    handleClearStorage(setData, uploadSchema);
+    navigate('/form');
+  };
+
+  const handleFileUpload = (event) => {
+    handleFileChange(event, setData, uploadSchema);
+    navigate('/form');
+  };
 
   const handleLoadVisor = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
@@ -20,13 +54,7 @@ const WelcomePage = () => {
 
     visorCompleto.config.json = configJson;
     localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
-    // Asegúrate de definir estas funciones globalmente o importarlas si no están declaradas
     updateVisorConfigJson(configJson);
-
-    //INVESTIGAR SI ESTO ESTA DE MAS 
-    // setLoadedVisor(visorCompleto);
-    // setData(configJson);
-    // uploadSchema(configJson);
   };
 
   useEffect(() => {
@@ -37,12 +65,12 @@ const WelcomePage = () => {
 
   return (
     <div className="welcome-screen-container">
-      <div className="welcome-screen">
+      <div className={`welcome-screen ${showPreview ? 'flex-0' : 'flex-1'}`}>
         {!isVisorManagerVisible ? (
           <div className="welcome-screen-modal">
             <h2>BIENVENIDO AL EDITOR ARGENMAP</h2>
             <p>
-              Esta app hace esto y lo otro. También hace eso. Pero lo otro no. Y también algunas cosas.
+              Un editor de archivos JSON fácil de usar para facilitar la creación, edición y validación de la configuración del visor Argenmap.
             </p>
             <p style={{ marginTop: '20px' }}>Para ver los visores, entre aquí:</p>
             <button className="visor-manager-button" onClick={() => setIsVisorManagerVisible(true)}>
@@ -59,9 +87,27 @@ const WelcomePage = () => {
                     <div
                       key={visor.id}
                       className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
-                      onClick={() => setSelectedVisor(visor)}
+                      onClick={async () => {
+                        if (selectedVisor?.id === visor.id) {
+                          setSelectedVisor(null);
+                          setShowPreview(false);
+                          return;
+                        }
+                        try {
+                          const visorCompleto = await getVisorById(visor.id);
+                          setSelectedVisor(visorCompleto);
+                          setShowPreview(true);
+                        } catch (error) {
+                          console.error('Error al obtener visor completo:', error);
+                          alert('No se pudo cargar el visor');
+                        }
+                      }}
                     >
-                      {visor.img && <img src={visor.img} alt="img" className="visor-image" />}
+                      <img
+                        src={visor.img || '/assets/no-image.png'}
+                        alt="img"
+                        className="visor-image"
+                      />
                       <div className="visor-info">
                         <h3>{visor.name}</h3>
                         <p>{visor.description}</p>
@@ -71,40 +117,79 @@ const WelcomePage = () => {
                 </div>
               </div>
               <div className="visor-modal-actions">
-                <button className="vmanager-button">Nuevo Visor</button>
-                <button
-                  className="vmanager-button"
-                  onClick={() => setShowPreview(true)}
-                  disabled={!selectedVisor}
-                >
-                  Visualizar
-                </button>
-                <button
-                  className="vmanager-button"
-                  onClick={async () => {
-                    if (!selectedVisor) return;
-                    try {
-                      const visorCompleto = await getVisorById(selectedVisor.id);
-                      navigate('/editor')
-                      handleLoadVisor(visorCompleto);
-                      // setIsVisorManagerVisible(false);
-                      // console.log("Llegué")
-                    } catch (err) {
-                      console.error('Error al cargar visor:', err);
-                      alert('No se pudo cargar el visor');
-                    }
-                  }}
-                  disabled={!selectedVisor}
-                >
-                  Editar Visor
-                </button>
+                <div className="global-buttons">
+                  <div className="dropdown">
+                    <div className="dropdown">
+                      <button
+                        className="common-button"
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                      >
+                        <i className="fa-solid fa-plus"></i>
+                        Nuevo Visor
+                      </button>
+                      {dropdownOpen && (
+                        <div className="dropdown-content">
+                          <button className="common-button" onClick={() => {
+                            setDropdownOpen(false);
+                            handleNewVisor();
+                          }}>
+                            <i className="fa-solid fa-earth-americas"></i>
+                            En Blanco
+                          </button>
 
+                          <label className="vmanager-button">
+                            <input
+                              type="file"
+                              accept=".json"
+                              onChange={(e) => {
+                                setDropdownOpen(false);
+                                handleFileUpload(e);
+                              }}
+                              style={{ display: "none" }}
+                              title="Subir JSON"
+                            />
+                            <span className="icon">
+                              <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+                            </span>
+                            Subir JSON
+                          </label>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
+                  <button
+                    className="common-button"
+                    onClick={() => {
+                      if (!selectedVisor) return;
+                      handleLoadVisor(selectedVisor);
+                      navigate('/form');
+                    }}
+                    disabled={!selectedVisor}
+                  >
+                    <i className="fa-solid fa-pen-to-square"></i>
+                    Editar Visor
+                  </button>
 
-                <button className="download-button">Descargar</button>
-                <button className="vmanager-button" onClick={() => setIsVisorManagerVisible(false)}>
-                  Cerrar
-                </button>
+                  <button
+                    className="download"
+                    onClick={handleDownload}
+                    title="Descargar JSON">
+                    <i className="fa-solid fa-download"></i>
+                    Descargar
+                  </button>
+
+                  <button
+                    className="cancel"
+                    onClick={() => {
+                      setIsVisorManagerVisible(false);
+                      setShowPreview(false);
+                    }}
+                  >
+                    <i className="fa-solid fa-xmark"></i>
+                    Cerrar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -112,7 +197,7 @@ const WelcomePage = () => {
       </div>
 
       {showPreview && (
-        <div style={{ width: '100%', height: '500px', marginTop: '20px' }}>
+        <div className='side-panel'>
           <Preview />
         </div>
       )}

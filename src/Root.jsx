@@ -7,13 +7,15 @@ import { UserProvider } from './context/UserContext'
 function Root() {
 
   return (
-    <>
+    <div className="app-container">
       <UserProvider>
         <Navbar />
-        <Outlet />
+        <main className="content">
+          <Outlet />
+        </main>
         <Footer />
       </UserProvider>
-    </>
+    </div>
   )
 }
 

@@ -7,13 +7,13 @@ class VisorController {
 
   saveVisor = async (req, res) => {
     try {
-      const { json, name, description } = req.body;
+      const { json, name, description, img } = req.body;
 
       if (!json || !name) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
 
-      const result = await this.visorService.saveVisor(json, name, description);
+      const result = await this.visorService.saveVisor(json, name, description, img);
 
       if (!result.success) {
         return res.status(500).json({ error: result.error });

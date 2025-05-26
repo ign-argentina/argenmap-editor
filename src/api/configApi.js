@@ -7,15 +7,16 @@ export async function getAllVisors() {
   return res.json();
 }
 
-export async function saveVisor({ name, description, json }) {
+export async function saveVisor({ name, description, json, img }) {
   const res = await fetch(`${API_URL}/visores`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, description, json }),
+    body: JSON.stringify({ name, description, json, img }),
   });
   if (!res.ok) throw new Error('Error al guardar visor');
   return res.json();
 }
+
 
 export async function getVisorById(id) {
   const res = await fetch(`${API_URL}/visores/${id}`);
