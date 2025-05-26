@@ -39,9 +39,11 @@ function Management() {
     getManageGroups();
   }, []);
 
-  return (
-    <>
-      {groupAdmin ? (<><h1>Hola Usuario admin de grupo</h1>
+return (
+  <>
+    {groupAdmin && (
+      <>
+        <h1>Hola Usuario admin de grupo</h1>
 
         <br />
 
@@ -54,17 +56,26 @@ function Management() {
 
         <br />
         <br />
+
         <h2>Grupos que administro:</h2>
-        <ul>
+        <select
+          onChange={(e) => {
+            const selectedId = e.target.value;
+            const grupo = adminGroup.find(g => g.id === parseInt(selectedId));
+            if (grupo) alert(`Seleccionaste: ${grupo.name}`);
+          }}
+        >
+          <option value="">-- Seleccioná un grupo --</option>
           {adminGroup.map((grupo) => (
-            <li key={grupo.id}>{grupo.name}</li>
+            <option key={grupo.id} value={grupo.id}>
+              {grupo.name}
+            </option>
           ))}
-        </ul>
-      </>) : null}
-
-
-    </>
-  )
+        </select>
+      </>
+    )}
+  </>
+);
 }
 
 export default Management
