@@ -52,7 +52,7 @@ const FormNavbar = ({
             <button
               key={key}
               onClick={() => handleSectionChange(key)}
-              className={`navbar ${selectedSection === key ? 'active' : ''}`}
+              className={`common-button ${selectedSection === key ? 'active' : ''}`}
               title={language[selectedLang]?.[key] || key}
             >
               {config[key]?.sectionIcon && (
@@ -101,7 +101,7 @@ const FormNavbar = ({
             </div>
           )}
 
-          <button className="navbar" onClick={() => setShowSaveModal(true)}>
+          <button className="common-button" onClick={() => setShowSaveModal(true)}>
             Guardar como
           </button>
 

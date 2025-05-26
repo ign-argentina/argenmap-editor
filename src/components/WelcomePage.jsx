@@ -121,18 +121,20 @@ const WelcomePage = () => {
                   <div className="dropdown">
                     <div className="dropdown">
                       <button
-                        className="navbar"
+                        className="common-button"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
-                        Nuevo Visor ▾
+                        <i className="fa-solid fa-plus"></i>
+                        Nuevo Visor
                       </button>
                       {dropdownOpen && (
                         <div className="dropdown-content">
-                          <button className="navbar" onClick={() => {
+                          <button className="common-button" onClick={() => {
                             setDropdownOpen(false);
                             handleNewVisor();
                           }}>
-                            🆕 En Blanco
+                            <i className="fa-solid fa-earth-americas"></i>
+                            En Blanco
                           </button>
 
                           <label className="vmanager-button">
@@ -157,7 +159,7 @@ const WelcomePage = () => {
                   </div>
 
                   <button
-                    className="navbar"
+                    className="common-button"
                     onClick={() => {
                       if (!selectedVisor) return;
                       handleLoadVisor(selectedVisor);
@@ -165,13 +167,15 @@ const WelcomePage = () => {
                     }}
                     disabled={!selectedVisor}
                   >
+                    <i className="fa-solid fa-pen-to-square"></i>
                     Editar Visor
                   </button>
 
-                  <button className="download" onClick={handleDownload} title="Descargar JSON">
-                    <span className="icon">
-                      <i className="fa-solid fa-download"></i>
-                    </span>
+                  <button
+                    className="download"
+                    onClick={handleDownload}
+                    title="Descargar JSON">
+                    <i className="fa-solid fa-download"></i>
                     Descargar
                   </button>
 
@@ -182,6 +186,7 @@ const WelcomePage = () => {
                       setShowPreview(false);
                     }}
                   >
+                    <i className="fa-solid fa-xmark"></i>
                     Cerrar
                   </button>
                 </div>

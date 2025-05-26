@@ -212,14 +212,15 @@ main,
   transition: background-color 0.3s;
   text-align: left;
   user-select: none;
+  gap: 0.5rem;
 }
 
-.global-buttons button.navbar {
+.global-buttons button.common-button {
   background-color: var(--secondary--color);
   color: var(--text--color);
 }
 
-.global-buttons button.navbar:hover {
+.global-buttons button.common-button:hover {
   background-color: var(--active--color);
 }
 
@@ -229,12 +230,12 @@ main,
 }
 
 .global-buttons button.cancel {
-  background-color: #ff0000;
-  color: var(--text--color);
+  background-color: #999;
 }
 
 .global-buttons button.cancel:hover {
-  background-color: #999;
+  background-color: #ff0000;
+  color: var(--text--color);
 }
 
 
