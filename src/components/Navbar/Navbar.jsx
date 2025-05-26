@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useUser } from "../context/UserContext";
-import LoginModal from "./LoginModal"
-import RegisterModal from "./RegisterModal"
-import ProfileModal from "./ProfileModal";
+import { useUser } from "/src/context/UserContext";
+import LoginModal from "../LoginModal/LoginModal"
+import RegisterModal from "../RegisterModal/RegisterModal"
+import ProfileModal from "../ProfileModal/ProfileModal";
 import axios from 'axios';
 import './Navbar.css'
 
@@ -76,7 +76,7 @@ function Navbar() {
           <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>Home</NavLink>
 
           {isSuperAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
-                              <i class="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
+                              <i className="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
                               </NavLink></>) : null}
           {isGroupAdmin ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
                               <i className="fa-solid fa-people-group"></i>Administrar Grupos

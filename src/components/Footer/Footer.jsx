@@ -1,5 +1,5 @@
 /* import { NavLink } from "react-router-dom"; */
-import LatestRelease from './LatestRelease';
+import LatestRelease from '../LatestRelease/LatestRelease';
 import './Footer.css'
 
 function Footer() {

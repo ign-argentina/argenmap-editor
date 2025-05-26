@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterModal.css';
 import axios from 'axios';
-import { useUser } from '../context/UserContext';
+import { useUser } from '/src/context/UserContext';
 
 const API_URL = "http://localhost:3001";
 

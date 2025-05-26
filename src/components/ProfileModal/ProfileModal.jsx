@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import './ProfileModal.css';
 import axios from 'axios';
-import { useUser } from '../context/UserContext';
-import ProfileUpdateForm from './ProfileUpdateForm';
+import { useUser } from '../../context/UserContext';
+import ProfileUpdateForm from '../ProfileUpdateForm/ProfileUpdateForm';
 
 function ProfileModal({ onClose }) {
   const { user } = useUser();

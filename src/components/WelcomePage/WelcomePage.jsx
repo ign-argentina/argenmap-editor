@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleClearStorage } from '../utils/HandleClearStorage';
-import { fetchVisores } from '../utils/FetchVisors';
-import { updateVisorConfigJson } from '../utils/visorStorage';
-import HandleDownload from '../utils/HandleDownload';
-import { getVisorById } from '../api/configApi';
-import useFormEngine from '../hooks/useFormEngine';
-import Preview from './Preview';
+import { handleClearStorage } from '../../utils/HandleClearStorage';
+import { fetchVisores } from '../../utils/FetchVisors';
+import { updateVisorConfigJson } from '../../utils/visorStorage';
+import HandleDownload from '../../utils/HandleDownload';
+import { getVisorById } from '../../api/configApi';
+import useFormEngine from '../../hooks/useFormEngine';
+import Preview from '../Preview/Preview';
 import './WelcomePage.css';
-import './Preview.css';
-import { handleFileChange } from '../utils/HandleJsonUpload';
+import '../Preview/Preview.css';
+import { handleFileChange } from '../../utils/HandleJsonUpload';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);

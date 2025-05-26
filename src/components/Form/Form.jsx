@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
-import useLang from './hooks/useLang';
-import useFormEngine from './hooks/useFormEngine';
-import ColorPickerControl from './components/ColorPickerControl';
-import Preview from './components/Preview';
-import HandleDownload from './utils/HandleDownload';
-import Toast from './components/Toast';
-import { updateVisorConfigJson } from './utils/visorStorage';
-import { handleClearStorage } from './utils/HandleClearStorage';
-import FormNavbar from './components/FormNavbar';
-import './global.css';
+import useLang from '../../hooks/useLang';
+import useFormEngine from '../../hooks/useFormEngine';
+import ColorPickerControl from '../ColorPickerControl/ColorPickerControl';
+import Preview from '../Preview/Preview';
+import Toast from '../Toast/Toast';
+import FormNavbar from '../FormNavbar/FormNavbar';
+import HandleDownload from '../../utils/HandleDownload';
+import { updateVisorConfigJson } from '../../utils/visorStorage';
+import { handleClearStorage } from '../../utils/HandleClearStorage';
+import '/src/global.css';
 
 function Form() {
 

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "../Root";
-import WelcomePage from '../components/WelcomePage';
-import Form from '../Form';
+import WelcomePage from '../components/WelcomePage/WelcomePage';
+import Form from '../components/Form/Form';
 import Management from "../pages/Management";
 import Dashboard from "../pages/Dashboard";
 

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import SaveVisorModal from './SaveVisorModal';
+import SaveVisorModal from '../SaveVisorModal/SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { UserProvider } from '../context/UserContext';
+import { UserProvider } from '../../context/UserContext';
 import './FormNavbar.css';
-import { saveVisor } from '../api/configApi';
+import { saveVisor } from '../../api/configApi';
 
 const FormNavbar = ({
   config,
