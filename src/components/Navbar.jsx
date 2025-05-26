@@ -10,40 +10,49 @@ import './Navbar.css'
 function Navbar() {
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3001/auth/check`, {
-          withCredentials: true,
-        });
-        setUserAuth(res.data);
-      } catch (error) {
-        setUserAuth(false)
-      }
-    };0
     checkAuth();
   }, []);
 
 
   const [userAuth, setUserAuth] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [isGroupAdmin, setIsGroupAdmin] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const { logout } = useUser()
 
 
+  const checkAuth = async () => {
+    try {
+      const res = await axios.get(`http://localhost:3001/auth/check`, {
+        withCredentials: true,
+      });
+      setUserAuth(res.data);
+      setIsGroupAdmin(res.data.isag)
+      setIsSuperAdmin(res.data.isa)
+    } catch (error) {
+      setUserAuth(false)
+      setIsGroupAdmin(false)
+      setIsSuperAdmin(false)
+    }
+  };
+
   const handleLogout = async () => {
     await axios.post("http://localhost:3001/auth/logout", {}, { withCredentials: true, })
     setUserAuth(false)
+    setIsGroupAdmin(false)
+    setIsSuperAdmin(false)
     logout() // Cerramos sesion. Podriamos para el proximo sprint refactorear y persistir mas en memoria estos datos ya que están a mano
   }
 
   const handleLoginSuccess = () => {
-    setUserAuth(true)
+    checkAuth()
     setShowLoginModal(false)
   }
 
   const handleRegisterSuccess = () => {
-    setUserAuth(true)
+    checkAuth()
     setShowRegisterModal(false)
   }
 
@@ -61,6 +70,11 @@ function Navbar() {
           <NavLink to="/editor" className={({ isActive }) => (isActive ? "active" : undefined)}>
             <i className="fa-solid fa-right-from-bracket"></i> Formulario
           </NavLink>
+
+          {isSuperAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>Admin Dashboard</NavLink></>) : null}
+          {isGroupAdmin ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
+            <i class="fa-solid fa-people-group"></i>Administrar Grupos
+          </NavLink></>) : null}
 
           {!userAuth ? (
             <>
@@ -82,7 +96,6 @@ function Navbar() {
               </button>
             </>
           )}
-
         </div>
 
       </nav>

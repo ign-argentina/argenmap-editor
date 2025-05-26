@@ -69,8 +69,8 @@ class AuthService {
 
   checkAuth = async (token) => {
     try {
-      const isAuth = this.#decodeToken(token, process.env.JWT_SECRET)
-      return Result.success(true)
+      const isAuth = this.#decodeToken(token)
+      return Result.success({isa: isAuth.isa, isag: isAuth.isag})
     } catch (error) {
       return Result.fail("Debes iniciar sesion")
     }
