@@ -72,31 +72,34 @@ const FormNavbar = ({
           </button>
 
           {showSaveModal && (
-            <SaveVisorModal
-              isOpen={showSaveModal}
-              onClose={() => setShowSaveModal(false)}
-              onSave={({ name, description }) => {
-                const currentJsonRaw = localStorage.getItem('visorMetadata');
-                const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
-                const configOnly = currentJsonParsed.config;
+            <div className="save-visor-modal-overlay">
+              <SaveVisorModal
+                isOpen={showSaveModal}
+                onClose={() => setShowSaveModal(false)}
+                onSave={({ name, description, img }) => {
+                  const currentJsonRaw = localStorage.getItem('visorMetadata');
+                  const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
+                  const configOnly = currentJsonParsed.config;
 
-                if (!currentJsonRaw) {
-                  alert('No hay configuración para guardar');
-                  return;
-                }
-                saveVisor({ name, description, json: configOnly.json })
-                  .then(() => {
-                    alert('Visor guardado correctamente');
-                    setShowSaveModal(false);
-                  })
-                  .catch((err) => {
-                    console.error('Error al guardar visor:', err);
-                    alert('Error al guardar visor');
-                  });
-              }}
-            />
+                  if (!currentJsonRaw) {
+                    alert('No hay configuración para guardar');
+                    return;
+                  }
+
+                  saveVisor({ name, description, json: configOnly.json, img })
+                    .then(() => {
+                      alert('Visor guardado correctamente');
+                      setShowSaveModal(false);
+                    })
+                    .catch((err) => {
+                      console.error('Error al guardar visor:', err);
+                      alert('Error al guardar visor');
+                    });
+                }}
+
+              />
+            </div>
           )}
-
 
           <button className="navbar" onClick={() => setShowSaveModal(true)}>
             Guardar como

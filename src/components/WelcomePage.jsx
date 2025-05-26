@@ -102,7 +102,11 @@ const WelcomePage = () => {
                         }
                       }}
                     >
-                      {visor.img && <img src={visor.img} alt="img" className="visor-image" />}
+                      <img
+                        src={visor.img || '/assets/no-image.png'}
+                        alt="img"
+                        className="visor-image"
+                      />
                       <div className="visor-info">
                         <h3>{visor.name}</h3>
                         <p>{visor.description}</p>

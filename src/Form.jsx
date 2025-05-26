@@ -5,6 +5,7 @@ import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import useLang from './hooks/useLang';
 import useFormEngine from './hooks/useFormEngine';
 import ColorPickerControl from './components/ColorPickerControl';
+import Preview from './components/Preview';
 import HandleDownload from './utils/HandleDownload';
 import Toast from './components/Toast';
 import { updateVisorConfigJson } from './utils/visorStorage';
@@ -122,6 +123,9 @@ function Form() {
           </div>
         )}
 
+        <div className='side-panel'>
+          <Preview />
+        </div>
 
         {toast && (
           <Toast
