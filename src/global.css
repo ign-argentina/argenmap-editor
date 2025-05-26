@@ -229,6 +229,10 @@ main,
   color: var(--text--color);
 }
 
+.global-buttons button.download:hover {
+  background-color: var(--active--color);
+}
+
 .global-buttons button.cancel {
   background-color: #999;
 }
