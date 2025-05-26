@@ -78,10 +78,12 @@ function Navbar() {
             <i className="fa-solid fa-right-from-bracket"></i> Formulario
           </NavLink>
 
-          {isSuperAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>Admin Dashboard</NavLink></>) : null}
+          {isSuperAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
+                              <i class="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
+                              </NavLink></>) : null}
           {isGroupAdmin ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
-            <i className="fa-solid fa-people-group"></i>Administrar Grupos
-          </NavLink></>) : null}
+                              <i className="fa-solid fa-people-group"></i>Administrar Grupos
+                              </NavLink></>) : null}
 
           {!userAuth ? (
             <>
