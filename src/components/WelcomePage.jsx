@@ -176,7 +176,7 @@ const WelcomePage = () => {
                   </button>
 
                   <button
-                    className="navbar"
+                    className="cancel"
                     onClick={() => {
                       setIsVisorManagerVisible(false);
                       setShowPreview(false);

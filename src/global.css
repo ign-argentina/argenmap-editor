@@ -229,8 +229,8 @@ main,
 }
 
 .global-buttons button.cancel {
-  background-color: #ccc;
-  color: black;
+  background-color: #ff0000;
+  color: var(--text--color);
 }
 
 .global-buttons button.cancel:hover {
