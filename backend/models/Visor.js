@@ -5,11 +5,9 @@ const INSERT_VISOR = `
   VALUES ($1, $2, $3)
   RETURNING *`;
 
-const SELECT_ALL_VISORS = `
-  SELECT * FROM visores`;
+const SELECT_ALL_VISORS = `SELECT * FROM visores`;
 
-const SELECT_VISOR_BY_ID = `
-  SELECT * FROM visores WHERE id = $1`;
+const SELECT_VISOR_BY_ID = `SELECT * FROM visores WHERE id = $1`;
 
 class Visor extends BaseModel {
   static saveVisor = async (cid, name, description) => {

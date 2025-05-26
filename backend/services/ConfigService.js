@@ -27,7 +27,7 @@ class ConfigService {
       return { success: false, error: error.message };
     }
   };
-  
+
   getConfigById = async (id) => {
     try {
       const config = await Config.getConfigById(id);
