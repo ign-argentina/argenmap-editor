@@ -54,6 +54,8 @@ function ProfileModal({ onClose }) {
         </div>
       </div>
     </div>
+
+    
   );
 }
 

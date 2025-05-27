@@ -23,7 +23,7 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
       }, { withCredentials: true });
 
       if (res.status === 201) {
-        login(res.data)
+        login(email, password)
         onRegisterSuccess();
         alert("Usuario creado correctamente!");
       }

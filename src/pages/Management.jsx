@@ -6,7 +6,7 @@ import axios from "axios";
 function Management() {
 
   const navigate = useNavigate();
-  const { groupAdmin, superAdmin, loadingUser } = useUser();
+  const { groupAdmin, superAdmin, loadingUser, user } = useUser();
   const [myGroups, setMyGroups] = useState([]);
   const [adminGroup, setAdminGroup] = useState([]);
   const [selectedGroupData, setSelectedGroupData] = useState(null);
@@ -49,7 +49,7 @@ function Management() {
   };
 
   useEffect(() => {
-    if (loadingUser) return;
+    if (loadingUser) return; // Esperamos a que termine de cargar el usuario 
     if (!superAdmin && !groupAdmin) {
       navigate('/')
     } else {
@@ -61,18 +61,10 @@ function Management() {
 
   return (
     <>
+      <h1>¡Hola {user?.name}!</h1>
       {groupAdmin && (
-        <>
-          <h1>Hola Usuario admin de grupo</h1>
-
-          <h2>Mis grupos:</h2>
-          <ul>
-            {myGroups.map((grupo) => (
-              <li key={grupo.id}>{grupo.name}</li>
-            ))}
-          </ul>
-
-          <h2>Grupos que administro:</h2>
+        <section className="group-management-dashboard" >
+          <h5>Selecciona el grupo que quieras administrar:</h5>
           <select onChange={handleSelectChange}>
             <option value="">-- Seleccioná un grupo --</option>
             {adminGroup.map((grupo) => (
@@ -107,7 +99,7 @@ function Management() {
               </table>
             </>
           )}
-        </>
+        </section>
       )}
     </>
   );

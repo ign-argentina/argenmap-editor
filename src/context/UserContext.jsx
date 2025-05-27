@@ -23,18 +23,13 @@ export const UserProvider = ({ children }) => {
       }, { withCredentials: true });
 
       const userData = res.data;
-      console.log(userData)
-      setAuth(true)
-      localStorage.setItem('user', JSON.stringify(userData));
-      setGroupAdmin(userData.isag);
-      setSuperAdmin(userData.isa);
+      updateAuth(true, userData.isag, userData.isa)
+      updateUser(userData)
       checkAuth();
       return res.status;
     } catch (error) {
       console.error('Error en login:', error.response?.data || error.message);
-      setAuth(false);
-      setGroupAdmin(false);
-      setSuperAdmin(false);
+      removeUser()
     } finally {
       setLoadingUser(false);
     }
@@ -42,11 +37,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     await axios.post("http://localhost:3001/auth/logout", {}, { withCredentials: true });
-    setAuth(false);
-    setGroupAdmin(false);
-    setSuperAdmin(false);
-    setLoadingUser(false);
-    localStorage.removeItem('user');
+    removeUser();
   };
 
   const checkAuth = async () => {
@@ -56,25 +47,46 @@ export const UserProvider = ({ children }) => {
         withCredentials: true,
       });
       const authFlags = res.data;
-      setAuth(true)
-      setGroupAdmin(authFlags.isag);
-      setSuperAdmin(authFlags.isa);
+      updateAuth(true, authFlags.isag, authFlags.isa)
     } catch (error) {
-      setAuth(false);
-      setGroupAdmin(false);
-      setSuperAdmin(false);
+      removeUser()
     } finally {
       setLoadingUser(false);
     }
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    updateUser();
     checkAuth();
   }, []);
+
+  const updateUser = (userData = null) => {
+    if (userData) {
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+    } else {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    }
+  }
+
+  const removeUser = () => {
+    setAuth(false);
+    setGroupAdmin(false);
+    setSuperAdmin(false);
+    localStorage.removeItem('user');
+    setUser(null)
+  }
+
+  const updateAuth = (auth, isAdminGroup, isSuperAdmin) => {
+    setAuth(auth)
+    setGroupAdmin(isAdminGroup);
+    setSuperAdmin(isSuperAdmin);
+  }
 
   return (
     <UserContext.Provider value={{ isAuth, login, logout, setGroupAdmin, setSuperAdmin, groupAdmin, superAdmin, loadingUser, checkAuth, user }}>

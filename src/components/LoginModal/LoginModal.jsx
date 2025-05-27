@@ -15,7 +15,6 @@ function LoginModal({ onClose, onLoginSuccess }) {
 
     if (result === 200) {
       onLoginSuccess(); //cerrar modal
-      console.log(user)
       alert("Bienvenido " + user.name);
     } else {
       alert("Error en login: ");
