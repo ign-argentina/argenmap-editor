@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import ManagementTable from "../components/ManagementTable";
 import axios from "axios";
 
 function Management() {
@@ -64,43 +65,32 @@ function Management() {
       <h1>¡Hola {user?.name}!</h1>
       {groupAdmin && (
         <section className="group-management-dashboard" >
-          <h5>Selecciona el grupo que quieras administrar:</h5>
-          <select onChange={handleSelectChange}>
-            <option value="">-- Seleccioná un grupo --</option>
-            {adminGroup.map((grupo) => (
-              <option key={grupo.id} value={grupo.id}>
-                {grupo.name}
-              </option>
-            ))}
-          </select>
+          <div className="dashboard-header">
+            <h5>Selecciona el grupo que quieras administrar:</h5>
+            <select onChange={handleSelectChange}>
+              <option value="">-- Seleccioná un grupo --</option>
+              {adminGroup.map((grupo) => (
+                <option key={grupo.id} value={grupo.id}>
+                  {grupo.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <br /><br />
+          <div className="dashboard-body">
 
-          {selectedGroupData && (
-            <>
-              <h3>Información del grupo seleccionado</h3>
-              <table border="1" cellPadding="8">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Fecha de creación</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{selectedGroupData.id}</td>
-                    <td>{selectedGroupData.name}</td>
-                    <td>{selectedGroupData.description || "Sin descripción"}</td>
-                    <td>{selectedGroupData.created_at?.slice(0, 10) || "N/A"}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </>
-          )}
-        </section>
-      )}
+            {selectedGroupData && (
+              <>
+                <h3>Información del grupo seleccionado</h3>
+                <ManagementTable headers = {{name: "Nombre", description: "Descripción", created_at: "Fecha de creación" }}
+                                 data={selectedGroupData ? [selectedGroupData] : []}>
+                </ManagementTable>
+              </>
+            )}
+          </div>
+        </section >
+      )
+      }
     </>
   );
 }
