@@ -1,4 +1,5 @@
 import Group from "../models/Group.js"
+import User from "../models/User.js"
 import Result from "../utils/Result.js";
 class GroupService {
 
@@ -42,7 +43,13 @@ class GroupService {
 
   getGroupUserList = async (id, uid, isSuperAdmin) => {
     try {
-      const result = await Group.getGroupUserList(id, uid, isSuperAdmin)
+      let result = []
+      if (isSuperAdmin){
+        const isAdmin = await User.isSuperAdmin(uid)
+        result = isAdmin ? await Group.getGroupUserList(id) : result
+      } else if (await Group.isAdminForThisGroup(id, uid)){
+        result = await Group.getGroupUserList(id)
+      }
       return result.length > 0 ? Result.success(result) : Result.fail("Error obteniendo listado de usuarios del grupo: " + id)
     } catch (error) {
       console.log("Error en la capa de servicio: " + error)

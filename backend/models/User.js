@@ -28,7 +28,6 @@ const IS_GROUP_ADMIN = `
 const SALT_ROUNDS = 10
 
 class User extends BaseModel {
-
   static findByEmail = async (email) => {
     try {
       return await super.runQuery(SELECT_BY_EMAIL, [email])

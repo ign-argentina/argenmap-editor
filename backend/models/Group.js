@@ -18,21 +18,16 @@ const FIND_BY_ID_WITH_ACCESS = `SELECT g.*
 // 2 = GroupAdmin rolId
 
 const GET_GROUP_USER_LIST = `SELECT 
-  u.id AS uid,
-  u.name,
-  u.lastname,
-  u.email,
-  r.name AS rol
-FROM usuarios_por_grupo upg
-JOIN usuarios u ON upg.usuarioid = u.id
-JOIN roles r ON upg.rolid = r.id
-JOIN grupos g ON upg.grupoid = g.id
-WHERE upg.grupoid = $1
-  AND EXISTS (
-    SELECT 1
-    FROM usuarios_por_grupo
-    WHERE grupoid = $1 AND usuarioid = $2 AND rolid = 2
-  );`
+                                u.id AS uid,
+                                u.name,
+                                u.lastname,
+                                u.email,
+                                r.name AS rol
+                            FROM usuarios_por_grupo upg
+                            JOIN usuarios u ON upg.usuarioid = u.id
+                            JOIN roles r ON upg.rolid = r.id
+                            JOIN grupos g ON upg.grupoid = g.id
+                            WHERE upg.grupoid = $1;`
 
 class Group extends BaseModel {
 
@@ -47,8 +42,12 @@ class Group extends BaseModel {
     return await super.runQuery(GET_GROUP_ADMIN_LIST)
   }
 
-  static getGroupUserList = async (groupId, userId) => {
-    return await super.runQuery(GET_GROUP_USER_LIST, [groupId, userId])
+  static getGroupUserList = async (groupId) => {
+    return await super.runQuery(GET_GROUP_USER_LIST, [groupId])
+  }
+
+  static isAdminForThisGroup = async (groupId, userId) => {
+    return await super.runQuery('SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2 AND rolid = 2;', [groupId, userId])
   }
 }
 
