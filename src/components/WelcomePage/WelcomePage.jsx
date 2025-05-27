@@ -64,7 +64,7 @@ const WelcomePage = () => {
   }, [isVisorManagerVisible]);
 
   return (
-    <div className="welcome-screen-container">
+    <div className={`${showPreview ? 'container-display-1' : 'container-display-0'}`}>
       <div className={`welcome-screen ${showPreview ? 'flex-0' : 'flex-1'}`}>
         {!isVisorManagerVisible ? (
           <div className="welcome-screen-modal">
