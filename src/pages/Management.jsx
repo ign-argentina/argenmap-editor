@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Management() {
-  const { groupAdmin } = useUser();
 
+  const navigate = useNavigate();
+  const { groupAdmin, superAdmin, loadingUser } = useUser();
   const [myGroups, setMyGroups] = useState([]);
   const [adminGroup, setAdminGroup] = useState([]);
   const [selectedGroupData, setSelectedGroupData] = useState(null);
@@ -47,9 +49,15 @@ function Management() {
   };
 
   useEffect(() => {
-    getGrupos();
-    getManageGroups();
-  }, []);
+    if (loadingUser) return;
+    if (!superAdmin && !groupAdmin) {
+      navigate('/')
+    } else {
+      getGrupos();
+      getManageGroups();
+    }
+  }, [loadingUser, superAdmin, groupAdmin, navigate]);
+
 
   return (
     <>

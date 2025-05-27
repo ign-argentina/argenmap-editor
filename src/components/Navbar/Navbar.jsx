@@ -4,7 +4,6 @@ import { useUser } from "/src/context/UserContext";
 import LoginModal from "../LoginModal/LoginModal"
 import RegisterModal from "../RegisterModal/RegisterModal"
 import ProfileModal from "../ProfileModal/ProfileModal";
-import axios from 'axios';
 import './Navbar.css'
 
 function Navbar() {
@@ -14,43 +13,14 @@ function Navbar() {
   }, []);
 
 
-  const [userAuth, setUserAuth] = useState(false);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-  const [isGroupAdmin, setIsGroupAdmin] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const { logout, setGroupAdmin, setSuperAdmin } = useUser()
 
-
-  const checkAuth = async () => {
-    try {
-      const res = await axios.get(`http://localhost:3001/auth/check`, {
-        withCredentials: true,
-      });
-      setUserAuth(res.data);
-      setIsGroupAdmin(res.data.isag)
-      setIsSuperAdmin(res.data.isa)
-
-      // Context Vars
-      setGroupAdmin(res.data.isag)
-      setSuperAdmin(res.data.isa)
-    } catch (error) {
-      setUserAuth(false)
-      setIsGroupAdmin(false)
-      setIsSuperAdmin(false)
-      //Context Vars
-      setGroupAdmin(false)
-      setSuperAdmin(false)
-    }
-  };
+  const { user, superAdmin, groupAdmin, logout, loadingUser, checkAuth } = useUser();
 
   const handleLogout = async () => {
-    await axios.post("http://localhost:3001/auth/logout", {}, { withCredentials: true, })
-    setUserAuth(false)
-    setIsGroupAdmin(false)
-    setIsSuperAdmin(false)
-    logout() // Cerramos sesion. Podriamos para el proximo sprint refactorear y persistir mas en memoria estos datos ya que están a mano
+    await logout()
   }
 
   const handleLoginSuccess = () => {
@@ -63,11 +33,15 @@ function Navbar() {
     setShowRegisterModal(false)
   }
 
+  if (loadingUser) {
+    return null;
+  }
+
   return (
     <header>
       {showLoginModal ? (<LoginModal onClose={() => setShowLoginModal(false)} onLoginSuccess={handleLoginSuccess} />) : null}
       {showRegisterModal ? (<RegisterModal onClose={() => setShowRegisterModal(false)} onRegisterSuccess={handleRegisterSuccess} />) : null}
-      {(userAuth && showProfileModal) ? (<ProfileModal onClose={() => setShowProfileModal(false)} />) : null}
+      {(user && showProfileModal) ? (<ProfileModal onClose={() => setShowProfileModal(false)} />) : null}
       <nav className="navbar">
         <div className="logo">
           <img src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg" alt="Logo IGN" />
@@ -75,14 +49,14 @@ function Navbar() {
         <div className="nav-links">
           <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>Home</NavLink>
 
-          {isSuperAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
-                              <i className="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
-                              </NavLink></>) : null}
-          {isGroupAdmin ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
-                              <i className="fa-solid fa-people-group"></i>Administrar Grupos
-                              </NavLink></>) : null}
+          {superAdmin  ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
+            <i className="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
+          </NavLink></>) : null}
+          {groupAdmin  ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
+            <i className="fa-solid fa-people-group"></i>Administrar Grupos
+          </NavLink></>) : null}
 
-          {!userAuth ? (
+          {!user ? (
             <>
               <button className="nav-button" onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
                 <i className="fa-solid fa-right-from-bracket"></i>Iniciar Sesión
