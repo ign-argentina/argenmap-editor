@@ -47,7 +47,9 @@ function Navbar() {
           <img src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg" alt="Logo IGN" />
         </div>
         <div className="nav-links">
-          <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>Home</NavLink>
+          <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>
+          <i className="fa-solid fa-house"></i> Home
+          </NavLink>
 
           {superAdmin  ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
             <i className="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
