@@ -121,7 +121,7 @@ const WelcomePage = () => {
                   <div className="dropdown">
                     <div className="dropdown">
                       <button
-                        className="common-button"
+                        className="common"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
                         <i className="fa-solid fa-plus"></i>
@@ -129,7 +129,7 @@ const WelcomePage = () => {
                       </button>
                       {dropdownOpen && (
                         <div className="dropdown-content">
-                          <button className="common-button" onClick={() => {
+                          <button className="common" onClick={() => {
                             setDropdownOpen(false);
                             handleNewVisor();
                           }}>
@@ -159,7 +159,7 @@ const WelcomePage = () => {
                   </div>
 
                   <button
-                    className="common-button"
+                    className="common"
                     onClick={() => {
                       if (!selectedVisor) return;
                       handleLoadVisor(selectedVisor);

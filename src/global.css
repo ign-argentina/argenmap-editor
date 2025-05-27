@@ -215,12 +215,12 @@ main,
   gap: 0.5rem;
 }
 
-.global-buttons button.common-button {
+.global-buttons button.common {
   background-color: var(--secondary--color);
   color: var(--text--color);
 }
 
-.global-buttons button.common-button:hover {
+.global-buttons button.common:hover {
   background-color: var(--active--color);
 }
 
