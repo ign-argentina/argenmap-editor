@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
+import './Management.css'
 import axios from "axios";
 
 function Management() {
@@ -11,6 +12,7 @@ function Management() {
   const [myGroups, setMyGroups] = useState([]);
   const [adminGroup, setAdminGroup] = useState([]);
   const [selectedGroupData, setSelectedGroupData] = useState(null);
+  const [selectedGroupUserList, setSelectedGroupUserList] = useState(null)
 
   const getGrupos = async () => {
     try {
@@ -42,7 +44,12 @@ function Management() {
       const res = await axios.get(`http://localhost:3001/groups/management/${selectedId}`, {
         withCredentials: true,
       });
+
+      const userList = await axios.get(`http://localhost:3001/groups/management/userlist/${selectedId}`, {
+        withCredentials: true,
+      });
       setSelectedGroupData(res.data);
+      setSelectedGroupUserList(userList.data)
     } catch (error) {
       console.error("Error al obtener info del grupo:", error);
       setSelectedGroupData(null);
@@ -61,14 +68,15 @@ function Management() {
 
 
   return (
-    <>
-      <h1>¡Hola {user?.name}!</h1>
+    <div className="management-container">
+      <h1 className="dashboard-title">¡Hola {user?.name}!</h1>
+
       {groupAdmin && (
-        <section className="group-management-dashboard" >
-          <div className="dashboard-header">
-            <h5>Selecciona el grupo que quieras administrar:</h5>
-            <select onChange={handleSelectChange}>
-              <option value="">-- Seleccioná un grupo --</option>
+        <section className="dashboard-section">
+          <div className="dashboard-group-select">
+            <label htmlFor="group-select">Selecciona el grupo que quieras administrar:</label>
+            <select id="group-select" onChange={handleSelectChange}>
+              <option value="">-- Selecciona un grupo --</option>
               {adminGroup.map((grupo) => (
                 <option key={grupo.id} value={grupo.id}>
                   {grupo.name}
@@ -77,21 +85,34 @@ function Management() {
             </select>
           </div>
 
-          <div className="dashboard-body">
+          {/* Tabla de informacion */}
+          {selectedGroupData && (
+            <div className="group-data-table">
+              <h2>{selectedGroupData.name}</h2>
+              <ManagementTable
+                headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
+                data={[selectedGroupData]}
+              />
+            </div>
+          )}
 
-            {selectedGroupData && (
-              <>
-                <h3>Información del grupo seleccionado</h3>
-                <ManagementTable headers = {{name: "Nombre", description: "Descripción", created_at: "Fecha de creación" }}
-                                 data={selectedGroupData ? [selectedGroupData] : []}>
-                </ManagementTable>
-              </>
-            )}
+          {/* Tabla de usuarios */}
+          {selectedGroupData && (
+            <div className="group-data-table">
+              <h2>Usuarios del grupo: {selectedGroupData.name}</h2>
+              <ManagementTable
+                headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
+                data={selectedGroupUserList}
+              />
+            </div>
+          )}
+
+          <div className="users-table-placeholder">
+            {/* TODO: Tabla de usuarios del grupo */}
           </div>
-        </section >
-      )
-      }
-    </>
+        </section>
+      )}
+    </div>
   );
 }
 

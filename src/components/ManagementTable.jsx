@@ -1,3 +1,5 @@
+import "./ManagementTable.css"
+
 function ManagementTable({ headers, data }) {
   if (!data || data.length === 0) {
     return <p>No hay datos para mostrar.</p>;
@@ -6,11 +8,11 @@ function ManagementTable({ headers, data }) {
   const keys = Object.keys(headers); // Headers que provienen del componente padre.
 
   return (
-    <table style={{ borderCollapse: "collapse", width: "100%" }} border="1" cellPadding="8">
-      <thead style={{ backgroundColor: "#f4f4f4" }}>
+    <table>
+      <thead>
         <tr>
           {keys.map((key) => (
-            <th key={key} style={{ textAlign: "left" }}>{headers[key]}</th>
+            <th key={key}>{headers[key]}</th>
           ))}
         </tr>
       </thead>

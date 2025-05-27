@@ -11,6 +11,7 @@ groupRoutes.delete("/:id", PROTECT.REQUIRE_GROUP_ADMIN, groupController.deleteGr
 groupRoutes.get("/", PROTECT.REQUIRE_AUTH, groupController.getGroupList) // Devuelve el listado de id's grupos al cual uno pertenece. Si sos superadmin, todos. Si no, tus grupos
 groupRoutes.get("/management", PROTECT.REQUIRE_GROUP_ADMIN, groupController.getManageGroupList) // Si sos superadmin, devuelve todos los grupos. Si no, tus grupos
 groupRoutes.get("/management/:id", PROTECT.REQUIRE_GROUP_ADMIN, groupController.getGroup) // Devuelve informacion del grupo si sos admin del grupo o superadmin
+groupRoutes.get("/management/userlist/:id", PROTECT.REQUIRE_GROUP_ADMIN, groupController.getGroupUserList)
 
 
 export default groupRoutes;
