@@ -55,6 +55,23 @@ class GroupController {
       return res.status(500).json(error)
     }
   }
+
+  getGroupUserList = async (req, res) => {
+    try{
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const {id} = req.params
+      const {uid, isa} = this.authService.getDataToken(token)
+      const result = await this.groupService.getGroupUserList(id, uid, isa);
+
+      if (!result.success){
+        throw Error("Error boteniendo listado de usuarios: ")
+      }
+      return res.status(200).json(result.data)
+    }catch(error){
+      console.log("Error en el controlador" + error)
+      return res.status(500).json(error)
+    }
+  }
 }
 
 export default GroupController;

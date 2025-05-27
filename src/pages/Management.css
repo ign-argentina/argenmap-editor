@@ -1,0 +1,48 @@
+.management-container {
+  padding: 2rem;
+  background: linear-gradient(
+    to bottom right,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  color: var(--primary--color);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-title {
+  color: var(--primary--color);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-section {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(36, 44, 79, 0.1);
+}
+
+/* .dashboard-group-select {
+}
+ */
+.dashboard-group-select label {
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.dashboard-group-select select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--secondary--color);
+  background-color: #f9f9f9;
+}
+
+.group-data-table{
+  text-align: center;
+}
+.group-data-table h2 {
+  padding: 1rem;
+  color: var(--secondary--color);
+}
