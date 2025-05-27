@@ -17,7 +17,7 @@ function Navbar() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const { user, superAdmin, groupAdmin, logout, loadingUser, checkAuth } = useUser();
+  const { isAuth, superAdmin, groupAdmin, logout, loadingUser, checkAuth } = useUser();
 
   const handleLogout = async () => {
     await logout()
@@ -41,7 +41,7 @@ function Navbar() {
     <header>
       {showLoginModal ? (<LoginModal onClose={() => setShowLoginModal(false)} onLoginSuccess={handleLoginSuccess} />) : null}
       {showRegisterModal ? (<RegisterModal onClose={() => setShowRegisterModal(false)} onRegisterSuccess={handleRegisterSuccess} />) : null}
-      {(user && showProfileModal) ? (<ProfileModal onClose={() => setShowProfileModal(false)} />) : null}
+      {(isAuth && showProfileModal) ? (<ProfileModal onClose={() => setShowProfileModal(false)} />) : null}
       <nav className="navbar">
         <div className="logo">
           <img src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg" alt="Logo IGN" />
@@ -56,7 +56,7 @@ function Navbar() {
             <i className="fa-solid fa-people-group"></i>Administrar Grupos
           </NavLink></>) : null}
 
-          {!user ? (
+          {!isAuth ? (
             <>
               <button className="nav-button" onClick={() => setShowLoginModal(true)} title="Iniciar Sesión">
                 <i className="fa-solid fa-right-from-bracket"></i>Iniciar Sesión
