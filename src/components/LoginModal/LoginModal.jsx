@@ -3,35 +3,25 @@ import './LoginModal.css';
 import axios from 'axios';
 import { useUser } from '/src/context/UserContext';
 
-const API_URL = "http://localhost:3001"
-
 function LoginModal({ onClose, onLoginSuccess }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useUser();
+  const { login, user } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const result = await login(email, password);
 
-    try {
-      const res = await axios.post(`${API_URL}/auth/login`, { email, password }, {
-        withCredentials: true,
-      });
-
-      if (res.status === 200) {
-        console.log(res.data)
-        login(res.data)
-        onLoginSuccess()
-        alert("Bienvenido " + res.data.name)
-      }
-      return res.data
-    } catch (error) {
-      console.error('Error en login:', error.response?.data || error.message);
+    if (result === 200) {
+      onLoginSuccess(); //cerrar modal
+      console.log(user)
+      alert("Bienvenido " + user.name);
+    } else {
+      alert("Error en login: ");
     }
   };
-
-
+  
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') onClose();
