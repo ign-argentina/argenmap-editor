@@ -51,12 +51,12 @@ class User extends BaseModel {
   static updateUser = async (name, lastname, password, id) => {
     try {
       let hashPassword = null
-
       if (password) {
         hashPassword = await this.#hashPassword(password)
       }
 
       const result = await super.runQuery(UPDATE_USER, [name, lastname, hashPassword, id])
+
       return result
     } catch (error) {
       console.log("USER MODEL: ", error)

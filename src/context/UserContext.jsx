@@ -89,7 +89,7 @@ export const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ isAuth, login, logout, setGroupAdmin, setSuperAdmin, groupAdmin, superAdmin, loadingUser, checkAuth, user }}>
+    <UserContext.Provider value={{ isAuth, login, logout, setGroupAdmin, setSuperAdmin, groupAdmin, superAdmin, loadingUser, checkAuth, user, updateUser }}>
       {children}
     </UserContext.Provider>
   );
