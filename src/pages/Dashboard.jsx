@@ -8,7 +8,7 @@ function Dashboard() {
   return (
     <>
     
-    {superAdmin ? (<h1>Hola Superadmin</h1>) : null}
+    {superAdmin ? (<h1>Feature en construccion...</h1>) : null}
     </>
   )
 }
