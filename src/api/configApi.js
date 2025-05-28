@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const API_URL = 'http://localhost:3001';
 
 //VISORS
@@ -56,6 +58,70 @@ export async function updateConfig(id, jsonData) {
   if (!res.ok) throw new Error('Error al actualizar config');
   return res.json();
 }
+
+
+
+
+// ***** GROUPS METHODS ***** 
+export const getGrupos = async () => {
+  try {
+    const res = await axios.get(`http://localhost:3001/groups/`, {
+      withCredentials: true,
+    });
+    return res.data
+  } catch (error) {
+    console.error("Error al obtener grupos:", error);
+  }
+};
+
+export const getManageGroups = async () => {
+  try {
+    const res = await axios.get(`http://localhost:3001/groups/management`, {
+      withCredentials: true,
+    });
+    return res.data
+  } catch (error) {
+    console.error("Error al obtener grupos:", error);
+  }
+};
+
+export const getGroup = async (id) => {
+  try {
+    const res = await axios.get(`http://localhost:3001/groups/management/${id}`, {
+      withCredentials: true,
+    });
+    return res.data
+  } catch (error) { console.log("Error al obtener grupos", error) }
+}
+
+export const getGroupUserList = async (id) => {
+  try {
+    const res = await axios.get(`http://localhost:3001/groups/management/userlist/${id}`, {
+      withCredentials: true,
+    });
+    return res.data
+  } catch (error) { console.log("Error al botener listado de usuarios " + error) }
+}
+
+export const addUserToGroup = async (id, gid) => {
+    const res = await axios.post(`http://localhost:3001/groups/management/`,
+      {id, gid}, { withCredentials: true, validateStatus: () => true });
+    return res.data
+}
+// ***** END GROUP METHODS *****
+
+
+// ***** USER METHODS *****
+export const getUserList = async () => {
+  try {
+    const res = await axios.get(`http://localhost:3001/users`, {
+      withCredentials: true,
+    });
+    return res.data
+  } catch (error) { console.log("Error al botener listado de usuarios " + error) }
+}
+// ***** END USER METHODS *****
+
 
 //Usar estas funciones en tu app
 // import { createConfig } from './api/configApi';

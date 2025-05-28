@@ -69,6 +69,24 @@ class GroupController {
       return res.status(500).json(error)
     }
   }
+
+  addUserToGroup = async (req, res) => {
+    try{
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const {id, gid} = req.body
+      const {uid, isa} = this.authService.getDataToken(token)
+      const result = await this.groupService.addUserToGroup(id, uid, isa, gid) 
+      
+      if(!result.success){
+        return res.status(400).json(result)
+      }
+      return res.status(200).json(result)
+
+    } catch(error){
+      console.log("Error en el controlador " + error)
+      return res.status(500).json(error)
+    }
+  }
 }
 
 export default GroupController;

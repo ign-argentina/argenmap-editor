@@ -44,15 +44,34 @@ class GroupService {
   getGroupUserList = async (id, uid, isSuperAdmin) => {
     try {
       let result = []
-      if (isSuperAdmin){
+      if (isSuperAdmin) {
         const isAdmin = await User.isSuperAdmin(uid)
         result = isAdmin ? await Group.getGroupUserList(id) : result
-      } else if (await Group.isAdminForThisGroup(id, uid)){
+      } else if (await Group.isAdminForThisGroup(id, uid)) {
         result = await Group.getGroupUserList(id)
       }
       return result.length > 0 ? Result.success(result) : Result.fail("Error obteniendo listado de usuarios del grupo: " + id)
     } catch (error) {
       console.log("Error en la capa de servicio: " + error)
+    }
+  }
+
+  addUserToGroup = async (id, uid, isSuperAdmin, gid) => {
+    try {
+      let result = []
+
+      const [userAlreadyExists] = await Group.userExists(gid, id)
+
+      if (isSuperAdmin) {
+        const isAdmin = await User.isSuperAdmin(uid)
+        result = (isAdmin && !userAlreadyExists.exists) ? await Group.addUserToGroup(id, gid) : result
+      } else if (await Group.isAdminForThisGroup(gid, uid) && !userAlreadyExists.exists) {
+        result = await Group.addUserToGroup(id, gid)
+      }
+
+      return result.length > 0 ? Result.success(result) : Result.fail("Nos se ha podido agregar el usuario al grupo " + gid)
+    } catch (error) {
+      return Result.fail("Nos se ha podido agregar el usuario al grupo " + gid)
     }
   }
 }

@@ -28,6 +28,12 @@ const IS_GROUP_ADMIN = `
 const SALT_ROUNDS = 10
 
 class User extends BaseModel {
+
+  static getUserList = async () => {
+    const result = await super.runQuery(`SELECT id, name, lastname, email FROM usuarios`)
+    return result
+  }
+
   static findByEmail = async (email) => {
     try {
       return await super.runQuery(SELECT_BY_EMAIL, [email])
@@ -36,6 +42,7 @@ class User extends BaseModel {
       return null;
     }
   }
+
   static newUser = async (email, name, lastname, password) => {
     try {
       const hashPassword = await this.#hashPassword(password)
