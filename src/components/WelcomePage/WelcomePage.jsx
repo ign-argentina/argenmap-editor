@@ -136,9 +136,11 @@ const WelcomePage = () => {
               </div>
               <div className="visor-modal-actions">
                 <div className="global-buttons">
-                  <button className="common" onClick={() => {
-                    handleNewVisor();
-                  }}>
+                  <button
+                    className="common"
+                    onClick={() => {
+                      handleNewVisor();
+                    }}>
                     <i className="fa-solid fa-plus"></i>
                     Nuevo Visor
                   </button>
