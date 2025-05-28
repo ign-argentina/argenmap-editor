@@ -6,7 +6,7 @@ import './Management.css'
 import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup } from "../api/configApi.js"
 
 
-function AddUserModal({ onClose, groupId}) {
+function AddUserModal({ onClose, groupId, onSuccess }) {
 
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
@@ -15,7 +15,7 @@ function AddUserModal({ onClose, groupId}) {
     const res = await addUserToGroup(userSelected, groupId)
     if(res.success){
       alert("Usuario agregado al grupo!")
-      
+      onSuccess()
     } else {
       alert("No se ha podido agregar el usuario al grupo")
     }
@@ -68,6 +68,7 @@ function AddUserModal({ onClose, groupId}) {
     </div>
   );
 }
+
 function Management() {
 
   const navigate = useNavigate();
@@ -181,7 +182,7 @@ function Management() {
 
           )}
 
-          {showAddUserModal ? (<AddUserModal onClose={() => setShowAddUserModal(false)} groupId={selectedGroupData.id} />) : null}
+          {showAddUserModal ? (<AddUserModal onClose={() => setShowAddUserModal(false) } groupId={selectedGroupData.id} onSuccess={async ()=> await updateGroupUserList(selectedGroupData.id)} />) : null}
 
           <div className="users-table-placeholder">
             {/* TODO: Tabla de usuarios del grupo */}
