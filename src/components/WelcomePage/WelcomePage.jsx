@@ -4,12 +4,12 @@ import { handleClearStorage } from '../../utils/HandleClearStorage';
 import { fetchVisores } from '../../utils/FetchVisors';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
+import { handleFileChange } from '../../utils/HandleJsonUpload';
 import { getVisorById } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './WelcomePage.css';
 import '../Preview/Preview.css';
-import { handleFileChange } from '../../utils/HandleJsonUpload';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
@@ -18,7 +18,8 @@ const WelcomePage = () => {
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
   const { setData, uploadSchema } = useFormEngine();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
 
@@ -58,7 +59,14 @@ const WelcomePage = () => {
 
   useEffect(() => {
     if (isVisorManagerVisible) {
-      fetchVisores(setVisores);
+      setIsLoading(true);
+      setHasFetched(false);
+
+      fetchVisores((data) => {
+        setVisores(data);
+        setIsLoading(false);
+        setHasFetched(true);
+      });
     }
   }, [isVisorManagerVisible]);
 
@@ -82,7 +90,18 @@ const WelcomePage = () => {
             <div className="visor-modal-container">
               <div className='visor-list-container'>
                 <div className="visor-list">
-                  {visores.map((visor) => (
+
+                  {isLoading && (
+                    <div className="loading-message">
+                      <span className="spinner" />
+                      <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
+                    </div>
+                  )}
+                  {!isLoading && hasFetched && visores.length === 0 && (
+                    <p className="no-visors-message">No hay visores disponibles.</p>
+                  )}
+
+                  {!isLoading && visores.length > 0 && visores.map((visor) => (
                     <div
                       key={visor.id}
                       className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
