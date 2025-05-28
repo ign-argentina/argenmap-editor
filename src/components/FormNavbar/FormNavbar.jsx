@@ -102,6 +102,7 @@ const FormNavbar = ({
           )}
 
           <button className="common" onClick={() => setShowSaveModal(true)}>
+            <i class="fa-solid fa-floppy-disk"></i>
             Guardar como
           </button>
 
