@@ -12,6 +12,7 @@ import HandleDownload from '../../utils/HandleDownload';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import { handleClearStorage } from '../../utils/HandleClearStorage';
 import '/src/global.css';
+import './Form.css';
 
 function Form() {
 

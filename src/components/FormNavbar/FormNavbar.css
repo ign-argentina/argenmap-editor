@@ -18,3 +18,71 @@
 .editor-navbar ul li {
   margin-bottom: 10px;
 }
+
+.lang-select {
+  background-color: var(--primary--color);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  color: var(--text--color);
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  width: 53px;
+}
+
+.lang-select option {
+  background-color: var(--primary--color);
+  color: var(--text--color);
+}
+
+.lang-select:hover {
+  border-color: var(--active--color);
+}
+
+.lang-select:focus {
+  border-color: var(--active--color);
+  color: var(--active--color);
+}
+
+.lang-select:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  color: var(--active--color);
+}
+
+.select-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.select-container i {
+  color: var(--text--color);
+}
+
+.showHide-button {
+  color: var(--text--color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px;
+}
+
+.configVersion-info {
+  font-size: 13px;
+  font-weight: inherit;
+  color: var(--text--color);
+  user-select: none;
+}
