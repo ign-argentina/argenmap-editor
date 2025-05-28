@@ -18,7 +18,6 @@ const WelcomePage = () => {
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
   const { setData, uploadSchema } = useFormEngine();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
@@ -118,45 +117,28 @@ const WelcomePage = () => {
               </div>
               <div className="visor-modal-actions">
                 <div className="global-buttons">
-                  <div className="dropdown">
-                    <div className="dropdown">
-                      <button
-                        className="common"
-                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                      >
-                        <i className="fa-solid fa-plus"></i>
-                        Nuevo Visor
-                      </button>
-                      {dropdownOpen && (
-                        <div className="dropdown-content">
-                          <button className="common" onClick={() => {
-                            setDropdownOpen(false);
-                            handleNewVisor();
-                          }}>
-                            <i className="fa-solid fa-earth-americas"></i>
-                            En Blanco
-                          </button>
+                  <button className="common" onClick={() => {
+                    handleNewVisor();
+                  }}>
+                    <i className="fa-solid fa-plus"></i>
+                    Nuevo Visor
+                  </button>
 
-                          <label className="vmanager-button">
-                            <input
-                              type="file"
-                              accept=".json"
-                              onChange={(e) => {
-                                setDropdownOpen(false);
-                                handleFileUpload(e);
-                              }}
-                              style={{ display: "none" }}
-                              title="Subir JSON"
-                            />
-                            <span className="icon">
-                              <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-                            </span>
-                            Subir JSON
-                          </label>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <label className="common">
+                    <input
+                      type="file"
+                      accept=".json"
+                      onChange={(e) => {
+                        handleFileUpload(e);
+                      }}
+                      style={{ display: "none" }}
+                      title="Subir JSON"
+                    />
+                    <span className="icon">
+                      <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+                    </span>
+                    Subir Json
+                  </label>
 
                   <button
                     className="common"

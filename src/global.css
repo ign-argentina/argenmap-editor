@@ -121,6 +121,7 @@ main,
   display: flex;
   justify-content: center;
   align-items: center;
+  background: none;
 }
 
 /* CLEAR BUTTON */
@@ -197,7 +198,8 @@ main,
   background-color: var(--active--color);
 }
 
-.global-buttons button {
+.global-buttons button,
+.global-buttons label {
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
@@ -215,29 +217,29 @@ main,
   gap: 0.5rem;
 }
 
-.global-buttons button.common {
+.global-buttons .common {
   background-color: var(--secondary--color);
   color: var(--text--color);
 }
 
-.global-buttons button.common:hover {
+.global-buttons .common:hover {
   background-color: var(--active--color);
 }
 
-.global-buttons button.download {
+.global-buttons .download {
   background-color: rgb(5, 142, 0);
   color: var(--text--color);
 }
 
-.global-buttons button.download:hover {
+.global-buttons .download:hover {
   background-color: var(--active--color);
 }
 
-.global-buttons button.cancel {
+.global-buttons .cancel {
   background-color: #999;
 }
 
-.global-buttons button.cancel:hover {
+.global-buttons .cancel:hover {
   background-color: #ff0000;
   color: var(--text--color);
 }
