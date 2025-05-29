@@ -153,7 +153,7 @@ function Management() {
                   <button
                     className={activeTab === "usuarios" ? "active" : ""}
                     onClick={() => setActiveTab("usuarios")}
-                  >
+                  > {/* <i className="fa-solid fa-people-group"></i> */}
                     Lista de Usuarios
                   </button>
                   <button
@@ -192,10 +192,6 @@ function Management() {
             groupId={selectedGroupData.id}
             onSuccess={async () => await updateGroupUserList(selectedGroupData.id)}
             groupUserList={selectedGroupUserList} />) : null}
-
-          <div className="users-table-placeholder">
-            {/* TODO: Tabla de usuarios del grupo */}
-          </div>
         </section>
       )}
     </div>
