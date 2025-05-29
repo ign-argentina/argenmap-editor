@@ -129,3 +129,27 @@
   background-color: #ccc;
   color: #333;
 }
+
+.dash-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+  margin-bottom: 0.5rem;
+
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  background-color: var(--secondary--color);
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.dash-button:hover,
+.dash-button.active {
+  color: var(--active--color);
+  
+}

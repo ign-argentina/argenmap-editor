@@ -166,7 +166,7 @@ function Management() {
 
                 {activeTab === "usuarios" && (
                   <>
-                    <button className="nav-button" onClick={() => setShowAddUserModal(true)} > Agregar Usuario </button>
+                    <button className="dash-button" onClick={() => setShowAddUserModal(true)} > Agregar Usuario </button>
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
                       data={selectedGroupUserList?.filter(user => user.rol !== 'visor')}
@@ -176,7 +176,7 @@ function Management() {
 
                 {activeTab === "visores" && (
                   <>
-                    <button className="nav-button" onClick={() => alert("Auch")} > Nuevo Visor </button>
+                    <button className="dash-button" onClick={() => alert("Auch")} > Nuevo Visor </button>
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
                       data={selectedGroupUserList?.filter(user => user.rol === 'visor')}
