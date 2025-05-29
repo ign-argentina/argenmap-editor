@@ -4,12 +4,12 @@ import { handleClearStorage } from '../../utils/HandleClearStorage';
 import { fetchVisores } from '../../utils/FetchVisors';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
+import { handleFileChange } from '../../utils/HandleJsonUpload';
 import { getVisorById } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './WelcomePage.css';
 import '../Preview/Preview.css';
-import { handleFileChange } from '../../utils/HandleJsonUpload';
 
 const WelcomePage = () => {
   const [isVisorManagerVisible, setIsVisorManagerVisible] = useState(false);
@@ -18,8 +18,8 @@ const WelcomePage = () => {
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
   const { setData, uploadSchema } = useFormEngine();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
 
@@ -59,7 +59,14 @@ const WelcomePage = () => {
 
   useEffect(() => {
     if (isVisorManagerVisible) {
-      fetchVisores(setVisores);
+      setIsLoading(true);
+      setHasFetched(false);
+
+      fetchVisores((data) => {
+        setVisores(data);
+        setIsLoading(false);
+        setHasFetched(true);
+      });
     }
   }, [isVisorManagerVisible]);
 
@@ -83,7 +90,18 @@ const WelcomePage = () => {
             <div className="visor-modal-container">
               <div className='visor-list-container'>
                 <div className="visor-list">
-                  {visores.map((visor) => (
+
+                  {isLoading && (
+                    <div className="loading-message">
+                      <span className="spinner" />
+                      <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
+                    </div>
+                  )}
+                  {!isLoading && hasFetched && visores.length === 0 && (
+                    <p className="no-visors-message">No hay visores disponibles.</p>
+                  )}
+
+                  {!isLoading && visores.length > 0 && visores.map((visor) => (
                     <div
                       key={visor.id}
                       className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
@@ -118,48 +136,33 @@ const WelcomePage = () => {
               </div>
               <div className="visor-modal-actions">
                 <div className="global-buttons">
-                  <div className="dropdown">
-                    <div className="dropdown">
-                      <button
-                        className="common-button"
-                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                      >
-                        <i className="fa-solid fa-plus"></i>
-                        Nuevo Visor
-                      </button>
-                      {dropdownOpen && (
-                        <div className="dropdown-content">
-                          <button className="common-button" onClick={() => {
-                            setDropdownOpen(false);
-                            handleNewVisor();
-                          }}>
-                            <i className="fa-solid fa-earth-americas"></i>
-                            En Blanco
-                          </button>
+                  <button
+                    className="common"
+                    onClick={() => {
+                      handleNewVisor();
+                    }}>
+                    <i className="fa-solid fa-plus"></i>
+                    Nuevo Visor
+                  </button>
 
-                          <label className="vmanager-button">
-                            <input
-                              type="file"
-                              accept=".json"
-                              onChange={(e) => {
-                                setDropdownOpen(false);
-                                handleFileUpload(e);
-                              }}
-                              style={{ display: "none" }}
-                              title="Subir JSON"
-                            />
-                            <span className="icon">
-                              <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-                            </span>
-                            Subir JSON
-                          </label>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <label className="common">
+                    <input
+                      type="file"
+                      accept=".json"
+                      onChange={(e) => {
+                        handleFileUpload(e);
+                      }}
+                      style={{ display: "none" }}
+                      title="Subir JSON"
+                    />
+                    <span className="icon">
+                      <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+                    </span>
+                    Subir Json
+                  </label>
 
                   <button
-                    className="common-button"
+                    className="common"
                     onClick={() => {
                       if (!selectedVisor) return;
                       handleLoadVisor(selectedVisor);

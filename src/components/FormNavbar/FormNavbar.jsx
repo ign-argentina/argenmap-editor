@@ -2,8 +2,8 @@ import { useState } from 'react';
 import SaveVisorModal from '../SaveVisorModal/SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../../context/UserContext';
-import './FormNavbar.css';
 import { saveVisor } from '../../api/configApi';
+import './FormNavbar.css';
 
 const FormNavbar = ({
   config,
@@ -52,7 +52,7 @@ const FormNavbar = ({
             <button
               key={key}
               onClick={() => handleSectionChange(key)}
-              className={`common-button ${selectedSection === key ? 'active' : ''}`}
+              className={`common ${selectedSection === key ? 'active' : ''}`}
               title={language[selectedLang]?.[key] || key}
             >
               {config[key]?.sectionIcon && (
@@ -101,7 +101,8 @@ const FormNavbar = ({
             </div>
           )}
 
-          <button className="common-button" onClick={() => setShowSaveModal(true)}>
+          <button className="common" onClick={() => setShowSaveModal(true)}>
+            <i class="fa-solid fa-floppy-disk"></i>
             Guardar como
           </button>
 

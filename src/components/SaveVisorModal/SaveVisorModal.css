@@ -70,10 +70,44 @@
 }
 
 .modal-buttons button.save {
-  background-color: #007bff;
+  background-color: var(--secondary--color);
   color: white;
 }
 
 .modal-buttons button.save:hover {
-  background-color: #0056b3;
+  background-color: var(--active--color);
+}
+
+.save-visor-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.image-options {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}
+
+.upload-button {
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  color: #333;
+}
+
+.upload-button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }

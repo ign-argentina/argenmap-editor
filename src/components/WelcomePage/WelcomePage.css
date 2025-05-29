@@ -34,7 +34,6 @@
   border-radius: 8px;
   color: white;
   text-align: center;
-  font-weight: bold;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -149,76 +148,40 @@
   flex-shrink: 0;
 }
 
-.vmanager-button {
-  background-color: var(--secondary--color);
-  color: var(--text--color);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
+.loading-message {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  height: 50px;
-  margin-bottom: 5px;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  text-align: left;
-  margin-top: auto;
+  justify-content: center;
+  width: 49vw;
+  height: 44vh;
+  color: #000000;
+  font-size: 1.2rem;
+  gap: 16px;
 }
 
-.vmanager-button:hover {
-  background-color: var(--active--color);
-  color: black;
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.dropdown .vmanager-button {
-  background-color: var(--secondary--color);
-  color: var(--text--color);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 50px;
-  margin-bottom: 5px;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  text-align: left;
-  margin-top: auto;
-}
-
-.dropdown .dropdown-content {
-  display: none;
-  background-color: var(--secondary--color);
-  z-index: 1;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.dropdown .dropdown-content button {
-  width: 100%;
-  padding: 10px;
-  background: none;
-  border: none;
-  text-align: left;
-  color: white;
-  cursor: pointer;
-}
-
-.dropdown .dropdown-content button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
+.no-visors-message {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  margin-top: 20px;
 }

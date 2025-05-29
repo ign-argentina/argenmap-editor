@@ -81,102 +81,6 @@ main,
   flex: 1;
 }
 
-/* NAVBAR */
-.logo-container {
-  margin-bottom: 10px;
-}
-
-.logo {
-  /* width: 100px; */
-  height: auto;
-  pointer-events: none;
-}
-
-.version-info {
-  font-size: 14px;
-  color: var(--text--color);
-  font-weight: lighter;
-  user-select: none;
-}
-
-.configVersion-info {
-  font-size: 13px;
-  font-weight: inherit;
-  color: var(--text--color);
-  user-select: none;
-}
-
-.button-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 15px;
-}
-
-.showHide-button {
-  color: var(--text--color);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* CLEAR BUTTON */
-.clear-storage {
-  color: var(--text--color);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* .clear-storage:hover {
-  background-color: var(--active--color);
-} */
-
-.select-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.select-container i {
-  color: var(--text--color);
-}
-
-.lang-select {
-  background-color: var(--primary--color);
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  font-family: 'Arial', sans-serif;
-  color: var(--text--color);
-  outline: none;
-  transition: all 0.3s ease-in-out;
-  cursor: pointer;
-  width: 53px;
-}
-
-.lang-select option {
-  background-color: var(--primary--color);
-  color: var(--text--color);
-}
-
-.lang-select:hover {
-  border-color: var(--active--color);
-}
-
-.lang-select:focus {
-  border-color: var(--active--color);
-  color: var(--active--color);
-}
-
-.lang-select:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-  color: var(--active--color);
-}
 
 /* VISOR MANAGER BUTTON */
 .visor-manager-button {
@@ -197,7 +101,10 @@ main,
   background-color: var(--active--color);
 }
 
-.global-buttons button {
+/* GLOBAL BUTTONS */
+
+.global-buttons button,
+.global-buttons label {
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
@@ -215,111 +122,35 @@ main,
   gap: 0.5rem;
 }
 
-.global-buttons button.common-button {
+.global-buttons .common {
   background-color: var(--secondary--color);
   color: var(--text--color);
 }
 
-.global-buttons button.common-button:hover {
+.global-buttons .common:hover {
   background-color: var(--active--color);
 }
 
-.global-buttons button.download {
+.global-buttons .download {
   background-color: rgb(5, 142, 0);
   color: var(--text--color);
 }
 
-.global-buttons button.download:hover {
+.global-buttons .download:hover {
   background-color: var(--active--color);
 }
 
-.global-buttons button.cancel {
+.global-buttons .cancel {
   background-color: #999;
 }
 
-.global-buttons button.cancel:hover {
+.global-buttons .cancel:hover {
   background-color: #ff0000;
   color: var(--text--color);
 }
 
 
-/* NAVBAR */
-
-/* EDITOR CONTAINER */
-.editor-container {
-  display: flex;
-  width: 100%;
-  height: 84vh;
-}
-
-/* EDITOR CONTAINER */
-
-
-/* FORMULARIO EXTERNO */
-.form-container {
-  width: 50%;
-  border-right: 2px solid #ccc;
-  display: grid;
-  overflow: scroll;
-  /* background-color: var(--secondary--color); */
-}
-
-/* FORMULARIO EXTERNO */
-
-
-/* PREVIEW */
-.preview-container {
-  width: 100%;
-  height: 100vh;
-}
-
-/* PREVIEW */
-
-
-/* TABS */
-.tabs {
-  display: flex;
-  border-bottom: 1px solid #ccc;
-  padding: 5px;
-  background-color: var(--primary--color);
-  gap: 5px;
-}
-
-.tab {
-  padding: 10px 20px;
-  cursor: pointer;
-  border: none;
-  background-color: var(--secondary--color);
-}
-
-.tab.active {
-  font-weight: bold;
-  background-color: var(--active--color);
-}
-
-.tab-button {
-  background-color: var(--secondary--color);
-  color: rgb(255, 255, 255);
-  border-radius: 5px;
-  padding: 6px 10px;
-  text-align: center;
-}
-
-.tab-button:hover {
-  background-color: var(--active--color);
-}
-
-/* TABS */
-
-
-/* FORMULARIO INTERNO */
-.form-content {
-  overflow-y: auto;
-  padding: 5px;
-}
-
-/* FORMULARIO INTERNO */
-
+/* JSON FOMR styles */
 
 /* .MuiCardHeader-root {
   background-color: yellow;
