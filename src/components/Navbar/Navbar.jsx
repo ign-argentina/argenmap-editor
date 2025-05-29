@@ -48,13 +48,13 @@ function Navbar() {
         </div>
         <div className="nav-links">
           <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>
-          <i className="fa-solid fa-house"></i> Home
+            <i className="fa-solid fa-house"></i> Home
           </NavLink>
 
-          {superAdmin  ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
+          {superAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
             <i className="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
           </NavLink></>) : null}
-          {groupAdmin  ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
+          {groupAdmin ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
             <i className="fa-solid fa-people-group"></i>Administrar Grupos
           </NavLink></>) : null}
 
@@ -70,7 +70,7 @@ function Navbar() {
           ) : (
             <>
               <button className="nav-button" onClick={() => setShowProfileModal(true)} title="Perfil">
-                <i className="fa-solid fa-user"></i> {user.name}
+                <i className="fa-solid fa-user"></i> {user?.name}
               </button>
 
               <button className="nav-button" onClick={handleLogout} title="Cerrar Sesion">
