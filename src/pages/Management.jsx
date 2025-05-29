@@ -6,14 +6,14 @@ import './Management.css'
 import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup } from "../api/configApi.js"
 
 
-function AddUserModal({ onClose, groupId, onSuccess }) {
+function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
 
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
 
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
-    if(res.success){
+    if (res.success) {
       alert("Usuario agregado al grupo!")
       onSuccess()
     } else {
@@ -22,17 +22,23 @@ function AddUserModal({ onClose, groupId, onSuccess }) {
   };
 
   const handleUserChange = (e) => {
-  //  setUserSelected(parseInt(e.target.value));
     setUserSelected(e.target.value)
-
   }
+
   useEffect(() => {
     const loadUsers = async () => {
       const list = await getUserList();
-      setUserList(list)
+      const filteredList = list.filter( // Filtramos la lista de usuarios conrespecto a la de usuarios en el grupo. Obteniendo finalmente un listado de usuarios que no están en el grupo
+        (user) =>
+          !groupUserList.some(
+            (groupUser) => groupUser.uid === user.id
+          )
+      );
+
+      setUserList(filteredList)
     }
     loadUsers();
-  }, []);
+  }, [groupUserList]);
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -75,7 +81,7 @@ function Management() {
   const { groupAdmin, superAdmin, loadingUser, user } = useUser();
   const [adminGroup, setAdminGroup] = useState([]);
   const [selectedGroupData, setSelectedGroupData] = useState(null);
-  const [selectedGroupUserList, setSelectedGroupUserList] = useState(null)
+  const [selectedGroupUserList, setSelectedGroupUserList] = useState([])
 
   const [activeTab, setActiveTab] = useState("usuarios");
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -182,7 +188,10 @@ function Management() {
 
           )}
 
-          {showAddUserModal ? (<AddUserModal onClose={() => setShowAddUserModal(false) } groupId={selectedGroupData.id} onSuccess={async ()=> await updateGroupUserList(selectedGroupData.id)} />) : null}
+          {showAddUserModal ? (<AddUserModal onClose={() => setShowAddUserModal(false)}
+            groupId={selectedGroupData.id}
+            onSuccess={async () => await updateGroupUserList(selectedGroupData.id)}
+            groupUserList={selectedGroupUserList} />) : null}
 
           <div className="users-table-placeholder">
             {/* TODO: Tabla de usuarios del grupo */}
