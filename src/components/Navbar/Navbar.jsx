@@ -17,7 +17,7 @@ function Navbar() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const { isAuth, superAdmin, groupAdmin, logout, loadingUser, checkAuth } = useUser();
+  const { isAuth, superAdmin, groupAdmin, logout, loadingUser, checkAuth, user } = useUser();
 
   const handleLogout = async () => {
     await logout()
@@ -70,7 +70,7 @@ function Navbar() {
           ) : (
             <>
               <button className="nav-button" onClick={() => setShowProfileModal(true)} title="Perfil">
-                <i className="fa-solid fa-user"></i> Perfil
+                <i className="fa-solid fa-user"></i> {user.name}
               </button>
 
               <button className="nav-button" onClick={handleLogout} title="Cerrar Sesion">
