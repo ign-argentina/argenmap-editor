@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterModal.css';
 import axios from 'axios';
-import { useUser } from '../context/UserContext';
+import { useUser } from '/src/context/UserContext';
 
 const API_URL = "http://localhost:3001";
 
@@ -23,7 +23,7 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
       }, { withCredentials: true });
 
       if (res.status === 201) {
-        login(res.data)
+        login(email, password)
         onRegisterSuccess();
         alert("Usuario creado correctamente!");
       }

@@ -1,34 +1,98 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
 
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
+  const [isAuth, setAuth] = useState(false);
+  const [groupAdmin, setGroupAdmin] = useState(false)
+  const [superAdmin, setSuperAdmin] = useState(false)
 
-    
-    const login = (userData) => {
-        setUser(userData)
-        localStorage.setItem('user', JSON.stringify(userData));
+  //Para evitar parpadeos o malas renderizaciones.
+  const [loadingUser, setLoadingUser] = useState(true);
+
+
+  const login = async (email, password) => {
+    setLoadingUser(true);
+    try {
+      const res = await axios.post("http://localhost:3001/auth/login", {
+        email,
+        password
+      }, { withCredentials: true });
+
+      const userData = res.data;
+      updateAuth(true, userData.isag, userData.isa)
+      updateUser(userData)
+      checkAuth();
+      return res.status;
+    } catch (error) {
+      console.error('Error en login:', error.response?.data || error.message);
+      removeUser()
+    } finally {
+      setLoadingUser(false);
     }
+  };
 
-    const logout = () => {
-        setUser(null)
-        localStorage.removeItem('user');
+  const logout = async () => {
+    await axios.post("http://localhost:3001/auth/logout", {}, { withCredentials: true });
+    removeUser();
+  };
+
+  const checkAuth = async () => {
+    setLoadingUser(true);
+    try {
+      const res = await axios.get(`http://localhost:3001/auth/check`, {
+        withCredentials: true,
+      });
+      const authFlags = res.data;
+      updateAuth(true, authFlags.isag, authFlags.isa)
+    } catch (error) {
+      removeUser()
+    } finally {
+      setLoadingUser(false);
     }
+  };
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
+  useEffect(() => {
+    updateUser();
+    checkAuth();
+  }, []);
 
-    return (
-        <UserContext.Provider value={{ user, login, logout }}>
-            {children}
-        </UserContext.Provider>
-    );
+  const updateUser = (userData = null) => {
+    if (userData) {
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+    } else {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    }
+  }
+
+  const removeUser = () => {
+    setAuth(false);
+    setGroupAdmin(false);
+    setSuperAdmin(false);
+    localStorage.removeItem('user');
+    setUser(null)
+  }
+
+  const updateAuth = (auth, isAdminGroup, isSuperAdmin) => {
+    setAuth(auth)
+    setGroupAdmin(isAdminGroup);
+    setSuperAdmin(isSuperAdmin);
+  }
+
+  return (
+    <UserContext.Provider value={{ isAuth, login, logout, setGroupAdmin, setSuperAdmin, groupAdmin, superAdmin, loadingUser, checkAuth, user, updateUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export const useUser = () => useContext(UserContext); // Hook

@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import './ProfileModal.css';
-import axios from 'axios';
-import { useUser } from '../context/UserContext';
-import ProfileUpdateForm from './ProfileUpdateForm';
+import { useUser } from '../../context/UserContext';
+import ProfileUpdateForm from '../ProfileUpdateForm/ProfileUpdateForm';
 
 function ProfileModal({ onClose }) {
   const { user } = useUser();
 
-  const [showUpdateForm, setShowUpdateForm] = useState(false);
-  const [showChangePasswordForm, setChangePasswordForm] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false)
+  const [showChangePasswordForm, setChangePasswordForm] = useState(false)
 
   const showForm = (form) => {
     if (form === 0) {
@@ -27,7 +26,6 @@ function ProfileModal({ onClose }) {
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, [onClose]);
-
 
   return (
     <div className="profile-overlay" onClick={onClose}>
@@ -56,6 +54,8 @@ function ProfileModal({ onClose }) {
         </div>
       </div>
     </div>
+
+    
   );
 }
 

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
 import LoginModal from "./LoginModal"
-import RegisterModal from "./RegisterModal"
+import RegisterModal from "../RegisterModal"
 import axios from 'axios';
-import ProfileModal from "./ProfileModal";
-import { useUser } from "../context/UserContext";
+import ProfileModal from "../ProfileModal/ProfileModal";
+import { useUser } from "../../context/UserContext";
 import './LoginSection.css';
 
 function LoginSection() {

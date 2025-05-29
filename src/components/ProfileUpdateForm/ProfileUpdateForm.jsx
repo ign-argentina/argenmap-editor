@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useUser } from "../context/UserContext";
+import { useUser } from "../../context/UserContext";
 import axios from "axios";
 import './ProfileUpdateForm.css';
 
 const UpdatePersonalDataForm = () => {
-  const { login, user } = useUser();
+  const { updateUser, user } = useUser();
   const [name, setName] = useState(user.name);
   const [lastname, setLastname] = useState(user.lastname);
 
@@ -19,7 +19,8 @@ const UpdatePersonalDataForm = () => {
         lastname
       }, { withCredentials: true });
 
-      login(result.data);
+      console.log(result.data)
+      updateUser(result.data);
       alert("Los cambios han sido guardados");
     } else {
       alert("No se han efectuado cambios o se canceló la modificación.");

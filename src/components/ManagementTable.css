@@ -1,0 +1,30 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  color: var(--primary--color);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+thead {
+  background-color: var(--primary--color);
+  color: var(--text--color);
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--secondary--color);
+}
+
+tr:hover {
+  background-color: rgba(36, 44, 79, 0.05); /* fallback si rgba con --primary--color no funciona */
+}
+
+td {
+  color: var(--primary--color);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}

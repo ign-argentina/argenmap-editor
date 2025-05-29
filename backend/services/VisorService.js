@@ -4,7 +4,7 @@ import Result from "../utils/Result.js";
 
 class VisorService {
 
-  saveVisor = async (json, name, description) => {
+  saveVisor = async (json, name, description, img) => {
     try {
       const configResult = await Config.newConfig(json);
       if (!configResult) {
@@ -13,7 +13,7 @@ class VisorService {
 
       const cid = configResult.id;
 
-      const visorResult = await Visor.saveVisor(cid, name, description);
+      const visorResult = await Visor.saveVisor(cid, name, description, img);
       if (!visorResult) {
         return { success: false, error: 'No se pudo guardar el visor' };
       }
