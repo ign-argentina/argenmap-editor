@@ -39,6 +39,16 @@ C:0% M:0% Y:0% K:0% */
   --active-default--color: #E7BA61;
 }
 
+/* RESET GOBAL de formato predeterminado de los navegadores (El famoso borde blanco al renderizar) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* Con border-box el ellemento entero mide lo que se declara y el contenido se ajusta automaticamente
+                              (Ejemplo 200px va a ser 200px en total) Con content-box el contenido mide 200px pero el elemento total puede medir mas sumando paddings, etc */
+  font-family: Helvetica;
+}
+
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
@@ -54,182 +64,23 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
-
-/* NAVBAR */
-.navbar {
-  background-color: var(--primary--color);
-  padding: 5px;
+.app-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  /* padding: 20px 0; */
-  width: 10%;
+  min-height: 100vh;
 }
 
-.navbar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.content {
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.navbar ul li {
-  margin-bottom: 10px;
+main,
+.content {
+  flex: 1;
 }
 
-.logo-container {
-  margin-bottom: 10px;
-}
-
-.logo {
-  /* width: 100px; */
-  height: auto;
-  pointer-events: none;
-}
-
-.version-info {
-  font-size: 14px;
-  color: var(--text--color);
-  font-weight: lighter;
-  user-select: none;
-}
-
-.configVersion-info {
-  font-size: 13px;
-  font-weight: inherit;
-  color: var(--text--color);
-  user-select: none;
-}
-
-.button-container {
-  display: flex;
-  align-items: center; 
-  gap: 10px;
-  margin: 15px;
-}
-
-.showHide-button {
-  color: var(--text--color);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* CLEAR BUTTON */
-.clear-storage {
-  color: var(--text--color);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* .clear-storage:hover {
-  background-color: var(--active--color);
-} */
-
-.select-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.select-container i {
-  color: var(--text--color);
-}
-
-.lang-select {
-  background-color: var(--primary--color);
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  font-family: 'Arial', sans-serif;
-  color: var(--text--color);
-  outline: none;
-  transition: all 0.3s ease-in-out;
-  cursor: pointer;
-  width: 53px;
-}
-
-.lang-select option {
-  background-color: var(--primary--color);
-  color: var(--text--color);
-}
-
-.lang-select:hover {
-  border-color: var(--active--color);
-}
-
-.lang-select:focus {
-  border-color: var(--active--color);
-  color: var(--active--color);
-}
-
-.lang-select:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-  color: var(--active--color); 
-}
-
-.navbar-button {
-  background-color: var(--secondary--color);
-  color: var(--text--color);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 50px;
-  width: 100%;
-  margin-bottom: 5px;
-  font-size: 13px;
-  transition: background-color 0.3s;
-  text-align: left; 
-  user-select: none;
-}
-
-.navbar-button:hover {
-  background-color: var(--active--color); 
-}
-
-.navbar-button .icon {
-  margin-right: 8px;
-  font-size: 20px;
-}
-
-.navbar-button.active {
-  background-color: var(--active--color); 
-}
-
-/* DOWNLAOD BUTTON */
-.download-button {
-  background-color: rgb(5, 142, 0);
-  color: rgb(255, 255, 255);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 50px;
-  width: 100%;
-  margin-bottom: 5px;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  text-align: left; 
-  margin-top: auto;
-}
-
-.download-button:hover {
-  background-color: var(--active--color);
-}
 
 /* VISOR MANAGER BUTTON */
 .visor-manager-button {
@@ -239,95 +90,67 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+  height: 50px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  text-align: center;
+  width: 100%;
+}
+
+.visor-manager-button:hover {
+  background-color: var(--active--color);
+}
+
+/* GLOBAL BUTTONS */
+
+.global-buttons button,
+.global-buttons label {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 50px;
   width: 100%;
   margin-bottom: 5px;
-  font-size: 16px;
+  font-size: 13px;
   transition: background-color 0.3s;
-  text-align: left; 
-  margin-top: auto;
+  text-align: left;
+  user-select: none;
+  gap: 0.5rem;
 }
 
-.visor-manager-button:hover {
-  background-color: var(--active--color);
-}
-/* NAVBAR */
-
-
-/* EDITOR CONTAINER */
-.editor-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-/* EDITOR CONTAINER */
-
-
-/* FORMULARIO EXTERNO */
-.form-container {
-  width: 50%;
-  border-right: 2px solid #ccc;
-  display: grid;
-  height: 100vh;
-  overflow: scroll;
-  /* background-color: var(--secondary--color); */
-}
-/* FORMULARIO EXTERNO */
-
-
-/* PREVIEW */
-.preview-container {
-  width: 100%;
-  height: 100vh;
-}
-/* PREVIEW */
-
-
-/* TABS */
-.tabs {
-  display: flex;
-  border-bottom: 1px solid #ccc;
-  padding: 5px;
-  background-color: var(--primary--color);
-  gap: 5px;
-}
-
-.tab {
-  padding: 10px 20px;
-  cursor: pointer;
-  border: none;
+.global-buttons .common {
   background-color: var(--secondary--color);
+  color: var(--text--color);
 }
 
-.tab.active {
-  font-weight: bold;
+.global-buttons .common:hover {
   background-color: var(--active--color);
 }
 
-.tab-button {
-  background-color: var(--secondary--color);
-  color: rgb(255, 255, 255);
-  border-radius: 5px;
-  padding: 6px 10px;
-  text-align: center;
+.global-buttons .download {
+  background-color: rgb(5, 142, 0);
+  color: var(--text--color);
 }
 
-.tab-button:hover {
+.global-buttons .download:hover {
   background-color: var(--active--color);
 }
-/* TABS */
 
-
-/* FORMULARIO INTERNO */
-.form-content {
-  overflow-y: auto;
-  padding: 5px;
+.global-buttons .cancel {
+  background-color: #999;
 }
-/* FORMULARIO INTERNO */
 
+.global-buttons .cancel:hover {
+  background-color: #ff0000;
+  color: var(--text--color);
+}
+
+
+/* JSON FOMR styles */
 
 /* .MuiCardHeader-root {
   background-color: yellow;
@@ -353,42 +176,43 @@ input[type='number']::-webkit-outer-spin-button {
 } */
 
 .color-picker-label {
-	color: rgba(0, 0, 0, 0.6);
-	font-family: "Roboto","Helvetica","Arial",sans-serif;
-	font-weight: 500;
-	font-size: 0.8rem;
-	line-height: 1.4375em;
-	letter-spacing: 0.00938em;
-	padding: 0;
-	position: relative;
-	display: block;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+  display: block;
 }
 
 .css-18pjc51-MuiFormLabel-root-MuiInputLabel-root {
-	color: rgba(0, 0, 0, 0.6);
-	font-family: "Roboto","Helvetica","Arial",sans-serif;
-	font-weight: 400;
-	font-size: 1rem;
-	line-height: 1.4375em;
-	letter-spacing: 0.00938em;
-	padding: 0;
-	position: relative;
-	display: block;
-	transform-origin: top left;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+  display: block;
+  transform-origin: top left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 /* Paddings de formularios */
 .css-46bh2p-MuiCardContent-root:last-child {
   padding-bottom: 0px;
-	padding: 0px;
+  padding: 0px;
 }
+
 /* .css-46bh2p-MuiCardContent-root {
 	padding: 0px;
   padding-bottom: 0px;

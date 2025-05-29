@@ -9,61 +9,101 @@ const UPDATE_USER = `UPDATE usuarios SET name = COALESCE($1, name), lastname = C
                      AND (COALESCE($1, name) IS DISTINCT FROM name OR COALESCE($2, lastname) IS DISTINCT FROM lastname OR COALESCE($3, password) IS DISTINCT FROM password)
                      RETURNING email, name, lastname;`;
 
+const IS_SUPER_ADMIN = `
+  SELECT EXISTS (
+    SELECT 1
+    FROM usuarios_por_grupo
+    WHERE usuarioId = $1 AND rolId = 1
+  ) as superadmin
+`;
+
+const IS_GROUP_ADMIN = `
+  SELECT EXISTS (
+    SELECT 1
+    FROM usuarios_por_grupo
+    WHERE usuarioId = $1 AND rolId = 2
+  ) as groupadmin
+`;
+
 const SALT_ROUNDS = 10
 
 class User extends BaseModel {
 
-    static findByEmail = async (email) => {
-        try {
-            return await super.runQuery(SELECT_BY_EMAIL, [email])
-        } catch(error){
-            console.log("USER MODEL", error)
-            return null;
-        }
-    }
-    static newUser = async (email, name, lastname, password) => {
-        try {
-            const hashPassword = await this.#hashPassword(password)
-            const result = await super.runQuery(INSERT_USER, [email, name, lastname, hashPassword])
-            return result
-        } catch (error) {
-            console.log("USER MODEL: ", error)
-            return null;
-        }
-    }
+  static getUserList = async () => {
+    const result = await super.runQuery(`SELECT id, name, lastname, email FROM usuarios`)
+    return result
+  }
 
-    static updateUser = async (name, lastname, password, id) => {
-        try{
-            let hashPassword = null
-
-            if (password){
-                hashPassword = await this.#hashPassword(password)
-            }            
-
-            const result = await super.runQuery(UPDATE_USER, [name, lastname, hashPassword, id])
-            return result
-        } catch(error){
-            console.log("USER MODEL: ", error)
-        }
+  static findByEmail = async (email) => {
+    try {
+      return await super.runQuery(SELECT_BY_EMAIL, [email])
+    } catch (error) {
+      console.log("USER MODEL", error)
+      return null;
     }
+  }
 
-    static isMailDuplicated = async (email) => {
-        try {
-            const result = await super.runQuery(SELECT_1_EMAIL, [email])
-            return result.length > 0
-        } catch (error) {
-            console.log("USER MODEL", error)
-            return null;
-        }
+  static newUser = async (email, name, lastname, password) => {
+    try {
+      const hashPassword = await this.#hashPassword(password)
+      const result = await super.runQuery(INSERT_USER, [email, name, lastname, hashPassword])
+      return result
+    } catch (error) {
+      console.log("USER MODEL: ", error)
+      return null;
     }
+  }
 
-    static validatePassword = async (password, hashPass) => {
-        return await bcrypt.compare(password, hashPass)
-    }
+  static updateUser = async (name, lastname, password, id) => {
+    try {
+      let hashPassword = null
+      if (password) {
+        hashPassword = await this.#hashPassword(password)
+      }
 
-    static #hashPassword = async (password) => {
-        return await bcrypt.hash(password, SALT_ROUNDS)
+      const result = await super.runQuery(UPDATE_USER, [name, lastname, hashPassword, id])
+
+      return result
+    } catch (error) {
+      console.log("USER MODEL: ", error)
     }
+  }
+
+  static isMailDuplicated = async (email) => {
+    try {
+      const result = await super.runQuery(SELECT_1_EMAIL, [email])
+      return result.length > 0
+    } catch (error) {
+      console.log("USER MODEL", error)
+      return null;
+    }
+  }
+
+  static validatePassword = async (password, hashPass) => {
+    return await bcrypt.compare(password, hashPass)
+  }
+
+  static #hashPassword = async (password) => {
+    return await bcrypt.hash(password, SALT_ROUNDS)
+  }
+
+  static isSuperAdmin = async (id) => {
+    try {
+      const [user] = await super.runQuery(IS_SUPER_ADMIN, [id])
+      return user.superadmin
+    } catch (error) {
+      console.log("USER MODEL: ", error)
+    }
+  }
+
+  static isGroupAdmin = async (id) => {
+    try {
+      const [user] = await super.runQuery(IS_GROUP_ADMIN, [id])
+      return user.groupadmin
+    } catch (error) {
+      console.log("USER MODEL: ", error)
+    }
+  }
 }
 
 export default User

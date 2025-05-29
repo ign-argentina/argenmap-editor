@@ -1,0 +1,85 @@
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.login-modal {
+  background-color: var(--primary--color);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  padding: 30px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.login-modal h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: var(--text--color);
+  text-align: center;
+}
+
+.form-login {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-login input {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--secondary--color);
+  background-color: var(--secondary--color);
+  color: var(--text--color);
+  font-size: 16px;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-login input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.form-login input:focus {
+  border-color: var(--active--color);
+  outline: none;
+  background-color: var(--secondary-default--color);
+}
+
+.form-login button {
+  padding: 12px;
+  background-color: var(--active--color);
+  color: var(--primary--color);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-login button:hover {
+  background-color: #d6a850; /* un poco más oscuro para hover */
+}

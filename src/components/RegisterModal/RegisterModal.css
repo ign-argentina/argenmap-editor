@@ -1,0 +1,85 @@
+.register-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.register-modal {
+  background-color: var(--primary--color);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  padding: 30px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.register-modal h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: var(--text--color);
+  text-align: center;
+}
+
+.form-register {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-register input {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--secondary--color);
+  background-color: var(--secondary--color);
+  color: var(--text--color);
+  font-size: 16px;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-register input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.form-register input:focus {
+  border-color: var(--active--color);
+  outline: none;
+  background-color: var(--secondary-default--color);
+}
+
+.form-register button {
+  padding: 12px;
+  background-color: var(--active--color);
+  color: var(--primary--color);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-register button:hover {
+  background-color: #d6a850;
+}

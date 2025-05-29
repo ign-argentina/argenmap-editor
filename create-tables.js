@@ -1,61 +1,111 @@
-import pool from './backend/db.js';
+import pool from './backend/db/database.js';
 
 async function crearTablas() {
   try {
     await pool.query(`
-      CREATE TABLE grupos (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        description TEXT,
-        img TEXT
-      );
+-- CREAR TABLA USUARIOS
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    lastOnline TIMESTAMP,
+    active BOOLEAN DEFAULT TRUE
+);
 
-      CREATE TABLE config (
-        id SERIAL PRIMARY KEY,
-        json JSON NOT NULL
-      );
+-- CREAR TABLA GRUPOS
+CREATE TABLE grupos (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    img TEXT
+);
 
-      CREATE TABLE usuarios (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        lastname TEXT,
-        pwd TEXT NOT NULL,
-        gid INTEGER REFERENCES grupos(id),
-        lastOnline TIMESTAMP
-      );
+-- INSERTAR GRUPO DEFAULT
+INSERT INTO grupos (id, name, description, img)
+VALUES (0, 'Grupo General', 'Grupo default que pertenecen todos los usuarios.', '');
 
-      CREATE TABLE grupos_usuarios (
-        grupo_id INTEGER REFERENCES grupos(id),
-        usuario_id INTEGER REFERENCES usuarios(id),
-        PRIMARY KEY (grupo_id, usuario_id)
-      );
+-- CREAR TABLA ROLES
+CREATE TABLE roles (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
 
-      CREATE TABLE visores (
-        id SERIAL PRIMARY KEY,
-        gid INTEGER REFERENCES grupos(id),
-        cid INTEGER REFERENCES config(id),
-        uid INTEGER REFERENCES usuarios(id),
-        name TEXT NOT NULL,
-        description TEXT,
-        img TEXT,
-        lastUpdate TIMESTAMP
-      );
+-- INSERTAR ROLES
+INSERT INTO roles (name) VALUES
+('superadmin'),
+('groupadmin'),
+('editor'),
+('lector');
 
-      CREATE TABLE aplicacion (
-        name TEXT PRIMARY KEY,
-        logo TEXT,
-        description TEXT
-      );
+-- CREAR TABLA INTERMEDIA USUARIOS_POR_GRUPO
+CREATE TABLE usuarios_por_grupo (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    usuarioId INT NOT NULL,
+    grupoId INT NOT NULL,
+    rolId INT NOT NULL DEFAULT 4,  -- Suponiendo que 4 es el id de "lector"
 
-      CREATE TABLE historial (
-        id SERIAL PRIMARY KEY,
-        usuario_id INTEGER REFERENCES usuarios(id),
-        visor_id INTEGER REFERENCES visores(id),
-        accion TEXT NOT NULL,
-        fecha TIMESTAMP DEFAULT NOW(),
-        datos_previos JSON
-      );
-    `);
+    CONSTRAINT fk_usuario FOREIGN KEY (usuarioId) REFERENCES usuarios(id) ON DELETE CASCADE,
+    CONSTRAINT fk_grupo FOREIGN KEY (grupoId) REFERENCES grupos(id) ON DELETE CASCADE,
+    CONSTRAINT fk_rol FOREIGN KEY (rolId) REFERENCES roles(id),
+    CONSTRAINT unique_usuario_grupo UNIQUE (usuarioId, grupoId)
+);
+
+-- CREAR TABLA CONFIG
+CREATE TABLE config (
+    id SERIAL PRIMARY KEY,
+    json JSON NOT NULL
+);
+
+-- CREAR TABLA VISORES
+CREATE TABLE visores (
+    id SERIAL PRIMARY KEY,
+    gid INTEGER REFERENCES grupos(id),
+    cid INTEGER REFERENCES config(id),
+    uid INTEGER REFERENCES usuarios(id),
+    name TEXT NOT NULL,
+    description TEXT,
+    img TEXT,
+    lastUpdate TIMESTAMP NOT NULL DEFAULT NOW(),
+    publico BOOLEAN NOT NULL DEFAULT FALSE,
+    deleted BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+-- FUNCIÓN PARA BORRAR CONFIG RELACIONADA A UN VISOR
+CREATE OR REPLACE FUNCTION borrar_config_del_visor()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF OLD.cid IS NOT NULL THEN
+        DELETE FROM config WHERE id = OLD.cid;
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- TRIGGER QUE LLAMA A LA FUNCIÓN AL ELIMINAR UN VISOR
+CREATE TRIGGER trg_borrar_config
+AFTER DELETE ON visores
+FOR EACH ROW
+EXECUTE FUNCTION borrar_config_del_visor();
+
+-- CREAR TABLA APLICACION
+CREATE TABLE aplicacion (
+    name TEXT PRIMARY KEY,
+    logo TEXT,
+    description TEXT
+);
+
+-- CREAR TABLA HISTORIAL
+CREATE TABLE historial (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER REFERENCES usuarios(id),
+    visor_id INTEGER REFERENCES visores(id),
+    accion TEXT NOT NULL,
+    fecha TIMESTAMP DEFAULT NOW(),
+    datos_previos JSON
+);
+`);
 
     console.log('✅ Todas las tablas fueron creadas con éxito.');
   } catch (err) {

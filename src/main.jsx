@@ -1,13 +1,17 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import FormEngineProvider from './context/FormEngineProvider';
+import { RouterProvider } from 'react-router-dom';
+// import Form from './Form.jsx'
+// import FormEngineProvider from './context/FormEngineProvider';
+import router from './router/Routes.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <FormEngineProvider>
-      <App />
-    </FormEngineProvider>
+
+    <RouterProvider router={router} />
+    {/*<FormEngineProvider>
+      <Form />
+    </FormEngineProvider> */}
 
   </StrictMode>,
 )
