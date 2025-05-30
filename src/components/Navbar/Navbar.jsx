@@ -37,6 +37,7 @@ function Navbar() {
     return null;
   }
 
+
   return (
     <header>
       {showLoginModal ? (<LoginModal onClose={() => setShowLoginModal(false)} onLoginSuccess={handleLoginSuccess} />) : null}
@@ -54,7 +55,7 @@ function Navbar() {
           {superAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
             <i className="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
           </NavLink></>) : null}
-          {groupAdmin ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
+          {(groupAdmin || superAdmin) ? (<> <NavLink to="/management" className={({ isActive }) => (isActive ? "active" : undefined)}>
             <i className="fa-solid fa-people-group"></i>Administrar Grupos
           </NavLink></>) : null}
 

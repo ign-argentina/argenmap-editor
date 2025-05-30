@@ -123,7 +123,7 @@ function Management() {
     <div className="management-container">
       <h1 className="dashboard-title">¡Hola {user?.name}!</h1>
 
-      {groupAdmin && (
+      {(superAdmin || groupAdmin) && (
         <section className="dashboard-section">
           <div className="dashboard-group-select">
             <label htmlFor="group-select">Selecciona el grupo que quieras administrar:</label>
