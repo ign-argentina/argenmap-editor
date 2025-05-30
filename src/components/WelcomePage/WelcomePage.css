@@ -4,10 +4,13 @@
   align-items: center;
   background-color: var(--primary--color);
   height: 84vh;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .welcome-screen-modal {
-  width: 500px;
+  flex: 1 1 400px; /* se adapta mínimo a 400px */
+  max-width: 500px;
   padding: 40px;
   background-color: var(--secondary--color);
   border-radius: 8px;
@@ -28,4 +31,17 @@
   margin: 0.5rem 0;
   font-size: 16px;
   text-align: justify;
+}
+
+
+
+.welcome-content {
+  display: flex;
+  flex-wrap: wrap; /* Para que en pantallas pequeñas se apilen */
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
 }

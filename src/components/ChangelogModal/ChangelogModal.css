@@ -1,12 +1,10 @@
 .changelog-modal-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
+  flex: 1 1 400px; /* se adapta mínimo a 400px */
+  max-width: 600px;
+  box-sizing: border-box;
 }
 
 .changelog-modal {
-  width: 100%;
-  max-width: 600px;
   background-color: var(--primary--color);
   padding: 1rem;
   border-radius: 8px;
@@ -19,6 +17,7 @@
   color: black;
   padding: 1rem;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .changelog-close-button {
@@ -53,7 +52,6 @@
   line-height: 1.5;
   max-height: 300px;
   overflow-y: auto;
-  margin-bottom: 1.5rem;
 }
 
 .changelog-link {
