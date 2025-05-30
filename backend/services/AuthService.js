@@ -81,9 +81,10 @@ class AuthService {
       let isSuperAdmin = false;
       const isAuth = await this.checkAuth(token)
       if (isAuth.success) {
-        const { id } = this.#decodeToken(token)
-        isSuperAdmin = await User.isSuperAdmin(id)
+        const { uid } = this.#decodeToken(token)
+        isSuperAdmin = await User.isSuperAdmin(uid)
       }
+      console.log(isSuperAdmin)
       return isSuperAdmin ? Result.success(isSuperAdmin) : Result.fail("Acceso restringido")
     } catch (error) {
       console.log("Error en servicio: " + error)
@@ -93,14 +94,14 @@ class AuthService {
   isSuperAdminOrGroupAdmin = async (token) => {
     try {
       const isAuth = await this.checkAuth(token)
-      let isSuperAdmin = false;
-      let isGroupAdmin = false;
+      let haveAccess = false;
       if (isAuth.success) {
         const { uid } = this.#decodeToken(token)
-        isSuperAdmin = await User.isSuperAdmin(uid)
-        isSuperAdmin = await User.isGroupAdmin(uid)
+        const isSuperAdmin = await User.isSuperAdmin(uid)
+        const isGroupAdmin = await User.isGroupAdmin(uid)
+        haveAccess = (isSuperAdmin || isGroupAdmin)
       }
-      return (isSuperAdmin || isGroupAdmin) ? Result.success(isSuperAdmin) : Result.fail("Acceso restringido")
+      return haveAccess ? Result.success(haveAccess) : Result.fail("Acceso restringido")
     } catch (error) {
       console.log("Error en servicio: " + error)
     }

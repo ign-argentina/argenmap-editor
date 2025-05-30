@@ -3,10 +3,11 @@ import User from "../models/User.js"
 import Result from "../utils/Result.js";
 class GroupService {
 
-  getGroupList = async (userId, isSuperAdmin = false, isGroupAdmin = false) => {
+  getGroupList = async (userId, isGroupAdmin) => {
     try {
       let rolId = null;
       let data = []
+      const isSuperAdmin = await User.isSuperAdmin(userId)
       if (isSuperAdmin) {
         data = await this.#getAllGroups(userId)
       } else {
