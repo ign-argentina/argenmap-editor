@@ -48,8 +48,12 @@ function Navbar() {
           <img src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg" alt="Logo IGN" />
         </div>
         <div className="nav-links">
+          <NavLink to="/info" className={({ isActive }) => (isActive ? "active" : undefined)}>
+            <i className="fa-solid fa-circle-info"></i>
+          </NavLink>
+
           <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>
-            <i className="fa-solid fa-house"></i> Home
+            <i className="fa-solid fa-house"></i> Visores
           </NavLink>
 
           {superAdmin ? (<> <NavLink to="/admin/dashboard" className={({ isActive }) => (isActive ? "active" : undefined)}>
@@ -65,7 +69,7 @@ function Navbar() {
                 <i className="fa-solid fa-right-from-bracket"></i>Iniciar Sesión
               </button>
               <button className="nav-button" onClick={() => setShowRegisterModal(true)} title="Registrarse">
-                <i className="fa-solid fa-user-plus"></i> Registrarse
+                <i className="fa-solid fa-user-plus"></i>
               </button>
             </>
           ) : (
