@@ -57,14 +57,14 @@ const VisorManager = () => {
   };
 
   useEffect(() => {
-      setIsLoading(true);
-      setHasFetched(false);
+    setIsLoading(true);
+    setHasFetched(false);
 
-      fetchVisores((data) => {
-        setVisores(data);
-        setIsLoading(false);
-        setHasFetched(true);
-      });
+    fetchVisores((data) => {
+      setVisores(data);
+      setIsLoading(false);
+      setHasFetched(true);
+    });
   }, []);
 
   return (
@@ -160,6 +160,14 @@ const VisorManager = () => {
                 >
                   <i className="fa-solid fa-pen-to-square"></i>
                   Editar Visor
+                </button>
+
+                <button
+                  className="delete"
+                  // onClick={}
+                  title="Borrar Visor">
+                  <i class="fa-solid fa-trash-can"></i>
+                  Borrar Visor
                 </button>
 
                 <button

@@ -140,6 +140,17 @@ main,
   background-color: var(--active--color);
 }
 
+.global-buttons .delete {
+  background-color: #ff0000;
+  color: var(--text--color);
+    cursor: not-allowed;
+}
+
+.global-buttons .delete:hover {
+  background-color: #bb0000;
+  color: var(--text--color);
+}
+
 .global-buttons .cancel {
   background-color: #999;
 }

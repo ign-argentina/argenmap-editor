@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './WelcomePage.css';
 
 const WelcomePage = () => {
+  const navigate = useNavigate();
 
   return (
     <div className="welcome-screen">
@@ -11,7 +13,7 @@ const WelcomePage = () => {
           Un editor de archivos JSON fácil de usar para facilitar la creación, edición y validación de la configuración del visor Argenmap.
         </p>
         <p style={{ marginTop: '20px' }}>Para ver los visores, entre aquí:</p>
-        <button className="visor-manager-button" onClick={() => setIsVisorManagerVisible(true)}>
+        <button className="visor-manager-button" onClick={() => navigate('/')}>
           <i className="fa-solid fa-eye"></i> Visor Manager
         </button>
       </div>
