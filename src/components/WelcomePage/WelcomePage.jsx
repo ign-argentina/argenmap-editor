@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChangelogModal from "../ChangelogModal/ChangelogModal";
 import './WelcomePage.css';
 
 const WelcomePage = () => {
@@ -17,6 +18,11 @@ const WelcomePage = () => {
           <i className="fa-solid fa-eye"></i> Visor Manager
         </button>
       </div>
+
+      <div>
+        <ChangelogModal />
+      </div>
+
     </div>
   );
 };

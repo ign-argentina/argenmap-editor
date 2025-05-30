@@ -166,7 +166,7 @@ const VisorManager = () => {
                   className="delete"
                   // onClick={}
                   title="Borrar Visor">
-                  <i class="fa-solid fa-trash-can"></i>
+                  <i className="fa-solid fa-trash-can"></i>
                   Borrar Visor
                 </button>
 
