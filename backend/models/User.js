@@ -63,6 +63,7 @@ class User extends BaseModel {
     }
   }
 
+  // Verifica que el mail no esté duplicado.
   static isMailDuplicated = async (email) => {
     try {
       const result = await super.runQuery(SELECT_1_EMAIL, [email])
@@ -81,6 +82,7 @@ class User extends BaseModel {
     return await bcrypt.hash(password, SALT_ROUNDS)
   }
 
+  // Devuelve la flag "superadmin" en la tabla usuarios. (Columna superadmin)
   static isSuperAdmin = async (id) => {
     try {
       const [user] = await super.runQuery(IS_SUPER_ADMIN, [id])
@@ -90,6 +92,7 @@ class User extends BaseModel {
     }
   }
 
+  // Recorre la tabla "Usuarios por grupo" y finaliza al encontrar un grupo en el cual el usuario es admin.  Devuelve true o false
   static isGroupAdmin = async (id) => {
     try {
       const [user] = await super.runQuery(IS_GROUP_ADMIN, [id])
