@@ -127,8 +127,8 @@ function Management() {
         <section className="dashboard-section">
           <div className="dashboard-group-select">
             <label htmlFor="group-select">Selecciona el grupo que quieras administrar:</label>
-            <select id="group-select" onChange={handleSelectChange}>
-              <option value="">-- Selecciona un grupo --</option>
+            <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
+              <option disabled value="no-group">-- Selecciona un grupo --</option>
               {adminGroup?.map((grupo) => (
                 <option key={grupo.id} value={grupo.id}>
                   {grupo.name}
