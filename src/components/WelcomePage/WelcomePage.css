@@ -1,13 +1,9 @@
-.welcome-screen-container {
+.welcome-screen {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary--color);
   height: 84vh;
-}
-
-.modal-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-  align-items: flex-start;
 }
 
 .welcome-screen-modal {
