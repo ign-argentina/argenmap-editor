@@ -88,7 +88,7 @@ function Management() {
 
   const handleSelectChange = async (e) => {
     const selectedId = e.target.value;
-    if (!selectedId) return setSelectedGroupData(null);
+    if (!selectedId) return setSelectedGroupData([]);
 
     try {
       const groupData = await getGroup(selectedId)
@@ -101,8 +101,8 @@ function Management() {
   };
 
   const updateGroupUserList = async (id) => {
-    const userList = await getGroupUserList(id)
-    setSelectedGroupUserList(userList)
+    const userList = await getGroupUserList(id)  
+    setSelectedGroupUserList(userList ? userList : [])
   }
   useEffect(() => {
     const loadGroups = async () => {
@@ -123,13 +123,13 @@ function Management() {
     <div className="management-container">
       <h1 className="dashboard-title">¡Hola {user?.name}!</h1>
 
-      {groupAdmin && (
+      {(superAdmin || groupAdmin) && (
         <section className="dashboard-section">
           <div className="dashboard-group-select">
             <label htmlFor="group-select">Selecciona el grupo que quieras administrar:</label>
             <select id="group-select" onChange={handleSelectChange}>
               <option value="">-- Selecciona un grupo --</option>
-              {adminGroup.map((grupo) => (
+              {adminGroup?.map((grupo) => (
                 <option key={grupo.id} value={grupo.id}>
                   {grupo.name}
                 </option>

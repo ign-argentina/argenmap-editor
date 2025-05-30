@@ -82,6 +82,7 @@ const WelcomePage = () => {
             <p style={{ marginTop: '20px' }}>Para ver los visores, entre aquí:</p>
             <button className="visor-manager-button" onClick={() => setIsVisorManagerVisible(true)}>
               <i className="fa-solid fa-eye"></i> Visor Manager
+              
             </button>
           </div>
         ) : (
@@ -121,6 +122,7 @@ const WelcomePage = () => {
                         }
                       }}
                     >
+                      
                       <img
                         src={visor.img || '/assets/no-image.png'}
                         alt="img"
@@ -131,7 +133,9 @@ const WelcomePage = () => {
                         <p>{visor.description}</p>
                       </div>
                     </div>
+                    
                   ))}
+                  
                 </div>
               </div>
               <div className="visor-modal-actions">

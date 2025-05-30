@@ -9,13 +9,7 @@ const UPDATE_USER = `UPDATE usuarios SET name = COALESCE($1, name), lastname = C
                      AND (COALESCE($1, name) IS DISTINCT FROM name OR COALESCE($2, lastname) IS DISTINCT FROM lastname OR COALESCE($3, password) IS DISTINCT FROM password)
                      RETURNING email, name, lastname;`;
 
-const IS_SUPER_ADMIN = `
-  SELECT EXISTS (
-    SELECT 1
-    FROM usuarios_por_grupo
-    WHERE usuarioId = $1 AND rolId = 1
-  ) as superadmin
-`;
+const IS_SUPER_ADMIN = `SELECT superadmin FROM usuarios WHERE id = $1`;
 
 const IS_GROUP_ADMIN = `
   SELECT EXISTS (

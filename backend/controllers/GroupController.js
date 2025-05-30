@@ -34,8 +34,8 @@ class GroupController {
   getManageGroupList = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { uid, isa, isag } = this.authService.getDataToken(token)
-      const result = await this.groupService.getGroupList(uid, isa, isag)
+      const { uid, isag } = this.authService.getDataToken(token)
+      const result = await this.groupService.getGroupList(uid, isag)
       return res.status(200).json(result)
     } catch (error) {
       console.log("Error en Controlador: " + error)
