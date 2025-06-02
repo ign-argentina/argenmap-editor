@@ -14,7 +14,7 @@ function ManagementTable({ headers, data, onDelete, onUpdate }) {
   }
 
   const handleUpdate = (id) => {
-    onUpdate()
+    onUpdate(id)
   }
   return (
     <>

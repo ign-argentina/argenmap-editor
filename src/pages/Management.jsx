@@ -3,7 +3,7 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
 import './Management.css'
-import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup } from "../api/configApi.js"
+import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup } from "../api/configApi.js"
 
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
@@ -127,6 +127,11 @@ function Management() {
     await updateGroupUserList(selectedGroupData.id)
   }
 
+  const handleUpdateUser = async (uid) => {
+    await updateUserRolFromGroup(uid, selectedGroupData.id)
+    await updateGroupUserList(selectedGroupData.id)
+  }
+
   return (
     <div className="management-container">
       <h1 className="dashboard-title">¡Hola {user?.name}!</h1>
@@ -153,6 +158,7 @@ function Management() {
                 <ManagementTable
                   headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
                   data={[selectedGroupData]}
+
                 />
               </div>
 
@@ -179,6 +185,7 @@ function Management() {
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
                       data={selectedGroupUserList?.filter(user => user.rol !== 'visor')}
                       onDelete={handleDeleteUser}
+                      onUpdate={handleUpdateUser}
                     />
                   </>
                 )}
