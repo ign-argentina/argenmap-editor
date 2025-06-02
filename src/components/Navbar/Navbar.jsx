@@ -70,7 +70,7 @@ function Navbar() {
             </>
           ) : (
             <>
-              <button className="nav-button" onClick={() => setShowProfileModal(true)} title="Perfil">
+              <button className="nav-button profile-button" onClick={() => setShowProfileModal(true)} title="Perfil">
                 <i className="fa-solid fa-user"></i> {user?.name}
               </button>
 
