@@ -54,7 +54,10 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
         <h2>Agregar usuario al grupo</h2>
 
         <label htmlFor="user-select">Selecciona un usuario:</label>
-        <select id="user-select" className="modal-select" onChange={handleUserChange}>
+        <select defaultValue = "DEFAULT" id="user-select" className="modal-select" onChange={handleUserChange}>
+          <option disabled value="DEFAULT">
+            Seleccione un usuario...
+          </option>
           {userList.map((user) => (
             <option key={user.id} value={user.id}>
               {user.email} {/* Nombre: {user.name} {user.lastname}  */}
@@ -101,7 +104,7 @@ function Management() {
   };
 
   const updateGroupUserList = async (id) => {
-    const userList = await getGroupUserList(id)  
+    const userList = await getGroupUserList(id)
     setSelectedGroupUserList(userList ? userList : [])
   }
   useEffect(() => {
