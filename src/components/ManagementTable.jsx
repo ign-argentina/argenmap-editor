@@ -1,6 +1,6 @@
 import "./ManagementTable.css"
 
-function ManagementTable({ headers, data, onDelete }) {
+function ManagementTable({ headers, data, onDelete, onUpdate }) {
   if (!data || data.length === 0) {
     return <p>No hay datos para mostrar.</p>;
   }
@@ -10,7 +10,11 @@ function ManagementTable({ headers, data, onDelete }) {
 
   const handleDelete = (id) => {
     onDelete(id)
-    alert("Vas a eliminar al wachin: " + id)
+
+  }
+
+  const handleUpdate = (id) => {
+    onUpdate()
   }
   return (
     <>
@@ -36,7 +40,7 @@ function ManagementTable({ headers, data, onDelete }) {
                 </td>
               ))}
               <td>
-                <button title="Editar" className='btn-management btn-edit' onClick={() => alert("Acción no implementada")}>   <i className="fas fa-pencil-alt"></i> </button>
+                <button title="Editar" className='btn-management btn-edit' onClick={() => handleUpdate(row.id)}>   <i className="fas fa-pencil-alt"></i> </button>
                 <button title="Eliminar" className='btn-management btn-delete' onClick={() => handleDelete(row.id)}> <i className="fas fa-circle-minus" ></i></button>
               </td>
             </tr>
