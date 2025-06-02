@@ -52,7 +52,7 @@ function Navbar() {
             <i className="fa-solid fa-circle-info"></i>
           </NavLink>
 
-          <NavLink to="/" className={({ isActive }) => (isActive ? "active" : undefined)}>
+          <NavLink to="/visores" className={({ isActive }) => (isActive ? "active" : undefined)}>
             <i className="fa-solid fa-house"></i> Visores
           </NavLink>
 
