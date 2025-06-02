@@ -3,7 +3,7 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
 import './Management.css'
-import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup } from "../api/configApi.js"
+import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup } from "../api/configApi.js"
 
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
@@ -31,7 +31,7 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
       const filteredList = list.filter( // Filtramos la lista de usuarios conrespecto a la de usuarios en el grupo. Obteniendo finalmente un listado de usuarios que no están en el grupo
         (user) =>
           !groupUserList.some(
-            (groupUser) => groupUser.uid === user.id
+            (groupUser) => groupUser.id === user.id
           )
       );
 
@@ -54,7 +54,7 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
         <h2>Agregar usuario al grupo</h2>
 
         <label htmlFor="user-select">Selecciona un usuario:</label>
-        <select defaultValue = "DEFAULT" id="user-select" className="modal-select" onChange={handleUserChange}>
+        <select defaultValue="DEFAULT" id="user-select" className="modal-select" onChange={handleUserChange}>
           <option disabled value="DEFAULT">
             Seleccione un usuario...
           </option>
@@ -107,12 +107,13 @@ function Management() {
     const userList = await getGroupUserList(id)
     setSelectedGroupUserList(userList ? userList : [])
   }
-  useEffect(() => {
-    const loadGroups = async () => {
-      const groupList = await getManageGroups()
-      setAdminGroup(groupList);
-    }
 
+  const loadGroups = async () => {
+    const groupList = await getManageGroups()
+    setAdminGroup(groupList);
+  }
+
+  useEffect(() => {
     if (loadingUser) return; // Esperamos a que termine de cargar el usuario 
     if (!superAdmin && !groupAdmin) {
       navigate('/')
@@ -121,6 +122,10 @@ function Management() {
     }
   }, [loadingUser, superAdmin, groupAdmin, navigate]);
 
+  const handleDeleteUser = async (uid) => {
+    await deleteUserFromGroup(uid, selectedGroupData.id)
+    await updateGroupUserList(selectedGroupData.id)
+  }
 
   return (
     <div className="management-container">
@@ -173,6 +178,7 @@ function Management() {
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
                       data={selectedGroupUserList?.filter(user => user.rol !== 'visor')}
+                      onDelete={handleDeleteUser}
                     />
                   </>
                 )}

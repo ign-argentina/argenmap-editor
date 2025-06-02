@@ -65,7 +65,7 @@ export async function updateConfig(id, jsonData) {
 // ***** GROUPS METHODS ***** 
 export const getGrupos = async () => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/`, {
+    const res = await axios.get(`${API_URL}/groups/`, {
       withCredentials: true,
     });
     return res.data
@@ -76,7 +76,7 @@ export const getGrupos = async () => {
 
 export const getManageGroups = async () => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/management`, {
+    const res = await axios.get(`${API_URL}/groups/management`, {
       withCredentials: true,
     });
     return res.data
@@ -87,7 +87,7 @@ export const getManageGroups = async () => {
 
 export const getGroup = async (id) => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/management/${id}`, {
+    const res = await axios.get(`${API_URL}/groups/management/${id}`, {
       withCredentials: true,
     });
     return res.data
@@ -96,7 +96,7 @@ export const getGroup = async (id) => {
 
 export const getGroupUserList = async (id) => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/management/userlist/${id}`, {
+    const res = await axios.get(`${API_URL}/groups/management/userlist/${id}`, {
       withCredentials: true,
     });
     return res.data
@@ -104,9 +104,18 @@ export const getGroupUserList = async (id) => {
 }
 
 export const addUserToGroup = async (id, gid) => {
-    const res = await axios.post(`http://localhost:3001/groups/management/`,
-      {id, gid}, { withCredentials: true, validateStatus: () => true });
-    return res.data
+  const res = await axios.post(`${API_URL}/groups/management/`,
+    { id, gid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const deleteUserFromGroup = async (deleteUserId, gid) => {
+  const res = await axios.delete(`${API_URL}/groups/management`, {
+    data: { deleteUserId, gid },
+    withCredentials: true,
+    validateStatus: () => true,
+  });
+  return res.data
 }
 // ***** END GROUP METHODS *****
 
@@ -114,7 +123,7 @@ export const addUserToGroup = async (id, gid) => {
 // ***** USER METHODS *****
 export const getUserList = async () => {
   try {
-    const res = await axios.get(`http://localhost:3001/users`, {
+    const res = await axios.get(`${API_URL}/users`, {
       withCredentials: true,
     });
     return res.data
