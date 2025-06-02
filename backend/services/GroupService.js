@@ -34,7 +34,7 @@ class GroupService {
     }
   }
 
-  #getAllGroups = async (userId) => {
+  #getAllGroups = async () => {
     try {
       return await Group.getAllGroups()
     } catch (error) {
@@ -57,22 +57,36 @@ class GroupService {
     }
   }
 
-  addUserToGroup = async (id, uid, isSuperAdmin, gid) => {
+  addUserToGroup = async (addUserId, uid, gid) => {
     try {
       let result = []
+      const [userAlreadyExists] = await Group.userExists(gid, addUserId)
 
-      const [userAlreadyExists] = await Group.userExists(gid, id)
-
-      if (isSuperAdmin) {
-        const isAdmin = await User.isSuperAdmin(uid)
-        result = (isAdmin && !userAlreadyExists.exists) ? await Group.addUserToGroup(id, gid) : result
-      } else if (await Group.isAdminForThisGroup(gid, uid) && !userAlreadyExists.exists) {
-        result = await Group.addUserToGroup(id, gid)
+      if (!userAlreadyExists.exists) {
+        if (await Group.isAdminForThisGroup(gid, uid)) {
+          result = await Group.addUserToGroup(gid, addUserId)
+        } else if (await User.isSuperAdmin(uid)) {
+          result = await Group.addUserToGroup(gid, addUserId)
+        }
       }
 
       return result.length > 0 ? Result.success(result) : Result.fail("Nos se ha podido agregar el usuario al grupo " + gid)
     } catch (error) {
       return Result.fail("Nos se ha podido agregar el usuario al grupo " + gid)
+    }
+  }
+
+  deleteUserFromGroup = async (deleteUserId, uid, gid) => {
+    try {
+      let result = []
+      if (await Group.isAdminForThisGroup(gid, uid)) {
+        result = await Group.deleteUserFromGroup(gid, deleteUserId)
+      } else if (await User.isSuperAdmin(uid)) {
+        result = await Group.deleteUserFromGroup(gid, deleteUserId)
+      }
+      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido eliminar al usuario")
+    } catch (error) {
+      console.log("Error en la capa de servicio " + error)
     }
   }
 }

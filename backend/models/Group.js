@@ -1,3 +1,4 @@
+import { deleteUserFromGroup } from "../../src/api/configApi.js";
 import BaseModel from "./BaseModel.js";
 
 const GET_GROUP_LIST = `SELECT g.* FROM grupos g JOIN usuarios_por_grupo ug ON ug.grupoId = g.id WHERE ug.usuarioId = $1 AND ($2::int IS NULL OR ug.rolId = $2); `
@@ -20,7 +21,7 @@ const FIND_BY_ID_WITH_ACCESS = `SELECT g.*
 
 
 const GET_GROUP_USER_LIST = `SELECT 
-                                u.id AS uid,
+                                u.id,
                                 u.name,
                                 u.lastname,
                                 u.email,
@@ -56,7 +57,11 @@ class Group extends BaseModel {
   }
 
   static addUserToGroup = async (groupId, userId) => {
-      return await super.runQuery(`INSERT INTO usuarios_por_grupo(usuarioid, grupoid) VALUES ($1, $2) RETURNING *`, [groupId, userId])
+      return await super.runQuery(`INSERT INTO usuarios_por_grupo(grupoid, usuarioid) VALUES ($1, $2) RETURNING *`, [groupId, userId])
+  }
+
+  static deleteUserFromGroup = async (groupId, userId) => {
+    return await super.runQuery('DELETE FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2 RETURNING true', [groupId, userId])
   }
 }
 

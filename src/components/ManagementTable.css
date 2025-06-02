@@ -11,20 +11,76 @@ thead {
   color: var(--text--color);
 }
 
-th, td {
+th,
+td {
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--secondary--color);
 }
 
 tr:hover {
-  background-color: rgba(36, 44, 79, 0.05); /* fallback si rgba con --primary--color no funciona */
+  background-color: rgba(36, 44, 79, 0.05);
+  /* fallback si rgba con --primary--color no funciona */
 }
 
 td {
   color: var(--primary--color);
 }
 
+td:last-child {
+  /* aplica solo a la "botonera" (acciones) */
+  display: flex;
+  gap: 0.5rem;
+}
+
 tbody tr:last-child td {
   border-bottom: none;
 }
+
+.btn-management {
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+
+  border-radius: 20%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-management:hover {
+  background: rgba(0, 0, 0, 0.205);
+}
+
+.btn-management i {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.btn-delete {
+  color: red;
+}
+
+.btn-edit{
+  color: var(--secondary--color)
+}
+
+/* .btn-management-delete {
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  color: red;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-management-delete:hover {
+  background: rgba(0, 0, 0, 0.37);
+}
+
+.btn-management-delete i {
+  font-size: 1.6rem;
+  line-height: 1; 
+} */

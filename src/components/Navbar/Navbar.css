@@ -58,3 +58,11 @@
 .nav-button.active {
   color: var(--active--color);
 }
+
+.profile-button{
+    background-color: var(--active--color);
+}
+
+.profile-button:hover{
+ color: var(--primary--color);
+}
