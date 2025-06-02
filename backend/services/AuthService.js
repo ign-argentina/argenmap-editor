@@ -84,7 +84,6 @@ class AuthService {
         const { uid } = this.#decodeToken(token)
         isSuperAdmin = await User.isSuperAdmin(uid)
       }
-      console.log(isSuperAdmin)
       return isSuperAdmin ? Result.success(isSuperAdmin) : Result.fail("Acceso restringido")
     } catch (error) {
       console.log("Error en servicio: " + error)
