@@ -1,0 +1,67 @@
+.changelog-modal-wrapper {
+  flex: 1 1 400px; /* se adapta mínimo a 400px */
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+.changelog-modal {
+  background-color: var(--primary--color);
+  padding: 1rem;
+  border-radius: 8px;
+  position: relative;
+  border: 2px solid var(--secondary--color);
+}
+
+.changelog-modal > *:not(.changelog-close-button) {
+  background-color: white;
+  color: black;
+  padding: 1rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.changelog-close-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: white;
+  cursor: pointer;
+}
+
+.changelog-close-button:hover {
+  color: black;
+}
+
+.changelog-modal h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.changelog-date {
+  font-size: 0.875rem;
+  color: gray;
+  margin-bottom: 1rem;
+}
+
+.changelog-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.changelog-link {
+  display: inline-block;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.changelog-link:hover {
+  text-decoration: underline;
+}

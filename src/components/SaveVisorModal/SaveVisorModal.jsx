@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import './SaveVisorModal.css';
+import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import './SaveVisorModal.css';
 
 const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imageData, setImageData] = useState(null);
-  const [source, setSource] = useState(null); // 'captura' o 'upload'
+  const [source, setSource] = useState(null);
+  const navigate = useNavigate();
 
   const captureIframeImage = async () => {
     const iframe = document.querySelector('iframe');
@@ -66,6 +68,7 @@ const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
     setDescription('');
     setImageData(null);
     setSource(null);
+    navigate('/')
   };
 
   if (!isOpen) return null;
