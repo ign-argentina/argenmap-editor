@@ -16,8 +16,8 @@ class AuthService {
       if (isActive) {
         if (await User.validatePassword(password, userData.password)) {
           loginSuccess = true;
-          const { id, password, ...user } = userData
-          const token = await this.#signToken(id)
+          const { password, ...user } = userData
+          const token = await this.#signToken(user.id)
           data = { user, token }
         }
       }
