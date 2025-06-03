@@ -22,11 +22,11 @@ class GroupController {
   deleteUserFromGroup = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const {deleteUserId, gid} = req.body
-      const {uid} = this.authService.getDataToken(token)
+      const { deleteUserId, gid } = req.body
+      const { uid } = this.authService.getDataToken(token)
       const result = await this.groupService.deleteUserFromGroup(deleteUserId, uid, gid)
 
-      if (!result.success){
+      if (!result.success) {
         return res.status(500).json(result.error)
       }
       return res.status(200).json(result)
@@ -100,6 +100,20 @@ class GroupController {
       }
       return res.status(200).json(result)
 
+    } catch (error) {
+      console.log("Error en el controlador " + error)
+      return res.status(500).json(error)
+    }
+  }
+
+  updateUserRolFromGroup = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { userId, rolId, groupId } = req.body
+      const { uid } = this.authService.getDataToken(token)
+      const result = await this.groupService.updateUserRolFromGroup(uid, userId, rolId, groupId)
+
+      return res.status(200).json()
     } catch (error) {
       console.log("Error en el controlador " + error)
       return res.status(500).json(error)

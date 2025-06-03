@@ -48,7 +48,7 @@ class GroupService {
       if (isSuperAdmin) {
         const isAdmin = await User.isSuperAdmin(uid)
         result = isAdmin ? await Group.getGroupUserList(id) : result
-      } else if (await Group.isAdminForThisGroup(id, uid)) {
+      } else if (await Group.isAdminForThisGroup(id, uid).exists) {
         result = await Group.getGroupUserList(id)
       }
       return result.length > 0 ? Result.success(result) : Result.fail("Error obteniendo listado de usuarios del grupo: " + id)
@@ -63,7 +63,8 @@ class GroupService {
       const [userAlreadyExists] = await Group.userExists(gid, addUserId)
 
       if (!userAlreadyExists.exists) {
-        if (await Group.isAdminForThisGroup(gid, uid)) {
+        const isGroupAdmin = await Group.isAdminForThisGroup(gid, uid)
+        if (isGroupAdmin.exists) {
           result = await Group.addUserToGroup(gid, addUserId)
         } else if (await User.isSuperAdmin(uid)) {
           result = await Group.addUserToGroup(gid, addUserId)
@@ -79,7 +80,8 @@ class GroupService {
   deleteUserFromGroup = async (deleteUserId, uid, gid) => {
     try {
       let result = []
-      if (await Group.isAdminForThisGroup(gid, uid)) {
+      const isGroupAdmin = await Group.isAdminForThisGroup(gid, uid)
+      if (isGroupAdmin.exists) {
         result = await Group.deleteUserFromGroup(gid, deleteUserId)
       } else if (await User.isSuperAdmin(uid)) {
         result = await Group.deleteUserFromGroup(gid, deleteUserId)
@@ -89,6 +91,24 @@ class GroupService {
       console.log("Error en la capa de servicio " + error)
     }
   }
+
+  updateUserRolFromGroup = async (uid, userId, rolId, groupId) => {
+    try {
+      let result = []
+      const isGroupAdmin = await Group.isAdminForThisGroup(groupId, uid)
+
+      if (isGroupAdmin.exists) {
+        result = await Group.updateUserRolFromGroup(userId, rolId, groupId)
+      } else if (await User.isSuperAdmin(uid)) {
+        result = await Group.updateUserRolFromGroup(userId, rolId, groupId)
+      }
+      
+      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido eliminar al usuario")
+    } catch (error) {
+      console.log("Error en la capa de servicio " + error)
+    }
+  }
+
 }
 
 export default GroupService
