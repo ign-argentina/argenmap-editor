@@ -42,7 +42,6 @@ C:0% M:0% Y:0% K:0% */
 /* RESET GOBAL de formato predeterminado de los navegadores (El famoso borde blanco al renderizar) */
 * {
   margin: 0;
-  padding: 0;
   box-sizing: border-box;
   /* Con border-box el ellemento entero mide lo que se declara y el contenido se ajusta automaticamente
                               (Ejemplo 200px va a ser 200px en total) Con content-box el contenido mide 200px pero el elemento total puede medir mas sumando paddings, etc */
@@ -81,28 +80,7 @@ main,
   flex: 1;
 }
 
-
-/* VISOR MANAGER BUTTON */
-.visor-manager-button {
-  background-color: rgb(140, 140, 140);
-  color: rgb(255, 255, 255);
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 50px;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  text-align: center;
-  width: 100%;
-}
-
-.visor-manager-button:hover {
-  background-color: var(--active--color);
-}
-
 /* GLOBAL BUTTONS */
-
 .global-buttons button,
 .global-buttons label {
   border: none;
