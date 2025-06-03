@@ -42,6 +42,7 @@ export const UserProvider = ({ children }) => {
 
   const checkAuth = async () => {
     setLoadingUser(true);
+    
     try {
       const res = await axios.get(`http://localhost:3001/auth/check`, {
         withCredentials: true,

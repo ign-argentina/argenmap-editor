@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./ManagementTable.css";
+import { useUser } from "../context/UserContext";
 
 function ManagementTable({ headers, data, onDelete, onUpdate, editableFields = [], rolOptions = [] }) {
   const [editRowId, setEditRowId] = useState(null);
   const [editedData, setEditedData] = useState({});
+  const { user } = useUser();
 
   if (!data || data.length === 0) {
     return <p>No hay datos para mostrar.</p>;
@@ -94,6 +96,7 @@ function ManagementTable({ headers, data, onDelete, onUpdate, editableFields = [
                 </button>
               ) : (
                 <button
+                  style={{ visibility: row.id === user?.id ? 'hidden' : 'visible' }}
                   title="Editar"
                   className="btn-management btn-edit"
                   onClick={() => handleEditClick(row)}
@@ -102,6 +105,7 @@ function ManagementTable({ headers, data, onDelete, onUpdate, editableFields = [
                 </button>
               )}
               <button
+                style={{ visibility: row.id === user?.id ? 'hidden' : 'visible' }}
                 title="Eliminar"
                 className="btn-management btn-delete"
                 onClick={() => handleDelete(row.id)}

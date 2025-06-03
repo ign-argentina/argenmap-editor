@@ -1,9 +1,7 @@
 table {
   width: 100%;
-  border-collapse: collapse;
   background-color: #fff;
   color: var(--primary--color);
-  font-family: 'Segoe UI', sans-serif;
 }
 
 thead {
@@ -29,10 +27,6 @@ td {
 td:last-child {  /* aplica solo a la "botonera" (acciones) */
   display: flex;
   gap: 0.5rem;
-}
-
-tbody tr:last-child td {
-  border-bottom: none;
 }
 
 .btn-management {
