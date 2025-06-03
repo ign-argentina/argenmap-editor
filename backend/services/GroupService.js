@@ -45,6 +45,7 @@ class GroupService {
   getGroupUserList = async (id, uid, isSuperAdmin) => {
     try {
       let result = []
+
       if (isSuperAdmin) {
         const isAdmin = await User.isSuperAdmin(uid)
         result = isAdmin ? await Group.getGroupUserList(id) : result

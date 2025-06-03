@@ -24,7 +24,7 @@ const SALT_ROUNDS = 10
 class User extends BaseModel {
 
   static getUserList = async () => {
-    const result = await super.runQuery(`SELECT id, name, lastname, email FROM usuarios`)
+    const result = await super.runQuery(`SELECT id, name, lastname, email FROM usuarios WHERE NOT superadmin`)
     return result
   }
 
