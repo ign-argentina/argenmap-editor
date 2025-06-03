@@ -12,7 +12,23 @@ class GroupController {
   }
 
   updateGroup = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { name, description, img, gid } = req.body
+      const { uid } = this.authService.getDataToken(token)
 
+      const result = await this.groupService.updateGroup(name, description, img, gid, uid)
+
+      if (!result.success) {
+        return res.status(400).json(result.error)
+      }
+
+      return res.status(200).json(result)
+
+    } catch (error) {
+      console.log("Error en el controlador " + error)
+      return res.status(500).json(error)
+    }
   }
 
   deleteGroup = async (req, res) => {

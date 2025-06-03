@@ -3,6 +3,22 @@ import User from "../models/User.js"
 import Result from "../utils/Result.js";
 class GroupService {
 
+  updateGroup = async (name, description, img, gid, uid) => {
+    try {
+      console.log(name, description, img, gid, uid)
+      let result = []
+
+      if (await Group.isAdminForThisGroup(gid, uid) || await User.isSuperAdmin(uid)) {
+        console.log("Have access")
+        result = await Group.updateGroup(name, description, img, gid)
+      }
+
+      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido eliminar al usuario")
+
+    } catch (error) {
+      console.log("Error en la capa de servicio " + error)
+    }
+  }
   getGroupList = async (userId, isGroupAdmin) => {
     try {
       let rolId = null;
