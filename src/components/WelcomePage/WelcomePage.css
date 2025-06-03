@@ -1,22 +1,22 @@
 .welcome-screen {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
   background-color: var(--primary--color);
   height: 84vh;
-  padding: 1rem;
   box-sizing: border-box;
 }
 
 .welcome-screen-modal {
-  flex: 1 1 400px; /* se adapta mínimo a 400px */
+  flex: 1 1 400px;
   max-width: 500px;
   padding: 40px;
-  background-color: var(--secondary--color);
+  background-color: var(--primary--color);
   border-radius: 8px;
   color: white;
   text-align: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--secondary--color);
 }
 
 .welcome-screen-modal h2,
@@ -33,15 +33,49 @@
   text-align: justify;
 }
 
-
-
 .welcome-content {
   display: flex;
-  flex-wrap: wrap; /* Para que en pantallas pequeñas se apilen */
+  flex-wrap: wrap;
   gap: 2rem;
-  justify-content: center;
   align-items: flex-start;
+  height: 55vh;
   width: 100%;
   max-width: 1200px;
   box-sizing: border-box;
+}
+
+.welcome-page-button {
+  background-color: var(--active--color);
+  color: var(--primary--color);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 50px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  text-align: center;
+  width: 100%;
+}
+
+.welcome-page-button:hover {
+  background-color: #FBD68E;
+}
+
+.checkbox-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.welcome-checkbox {
+  accent-color: #007bff;
+  width: 16px;
+  height: 16px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
