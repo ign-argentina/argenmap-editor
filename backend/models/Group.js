@@ -33,6 +33,10 @@ const GET_GROUP_USER_LIST = `SELECT
                             WHERE upg.grupoid = $1;`
 
 class Group extends BaseModel {
+
+  static deleteGroup = async (gid) => {
+    return await super.runQuery('DELETE FROM grupos WHERE id = $1', [gid])
+  }
   static getGroup = async (groupId, userId = null) => {
     return await super.runQuery(FIND_BY_ID_WITH_ACCESS, [groupId, userId])
   }

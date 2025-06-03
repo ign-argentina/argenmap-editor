@@ -3,6 +3,17 @@ import User from "../models/User.js"
 import Result from "../utils/Result.js";
 class GroupService {
 
+  deleteGroup = async (gid, uid) => {
+    try {
+      let result = []
+      if (await Group.isAdminForThisGroup(gid, uid) || await User.isSuperAdmin(uid)){
+         result = await Group.deleteGroup(gid)
+      }
+      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido eliminar al usuario")
+    } catch (error) {
+      console.log("Error en la capa de servicio " + error)
+    }
+  }
   updateGroup = async (name, description, img, gid, uid) => {
     try {
       let result = []

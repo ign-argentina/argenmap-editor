@@ -144,7 +144,10 @@ function Management() {
     setSelectedGroupData(groupInfo);
   }
   const handleDeleteGroup = async () => {
-    await deleteGroup(selectedGroupData.id)
+    if(confirm('Estas seguro que queres eliminar este grupo?')){
+      await deleteGroup(selectedGroupData.id)
+       window.location.reload()
+    }   
   }
 
   return (
