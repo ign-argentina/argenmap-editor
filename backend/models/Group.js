@@ -49,16 +49,16 @@ class Group extends BaseModel {
   }
 
   static isAdminForThisGroup = async (groupId, userId) => {
-    return await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2 AND rolid = 2)', [groupId, userId]) // EL rol id, esta harcodeado id 2 = groupAdmin
-  //  return await super.runQuery('SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2 AND rolid = 2;', [groupId, userId]) // Checkea si el usuario es admin del grupo
-  }
+    const data = await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2 AND rolid = 2)', [groupId, userId]);
+    return data[0]?.exists ?? false;
+  };
 
   static userExists = async (groupId, userId) => {
     return await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE usuarioid = $1 AND grupoid = $2); ', [userId, groupId]) // Devuelve true o false si el usuario ya existe en el grupo
   }
 
   static addUserToGroup = async (groupId, userId) => {
-      return await super.runQuery(`INSERT INTO usuarios_por_grupo(grupoid, usuarioid) VALUES ($1, $2) RETURNING *`, [groupId, userId])
+    return await super.runQuery(`INSERT INTO usuarios_por_grupo(grupoid, usuarioid) VALUES ($1, $2) RETURNING *`, [groupId, userId])
   }
 
   static deleteUserFromGroup = async (groupId, userId) => {
