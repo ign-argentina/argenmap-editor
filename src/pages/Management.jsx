@@ -138,8 +138,10 @@ function Management() {
   }
 
   const handleUpdateGroup = async (groupData) => {
-    const {name, description, img} = groupData
+    const { name, description, img } = groupData
     await updateGroup(name, description, img, selectedGroupData.id)
+    const groupInfo = await getGroup(selectedGroupData.id)
+    setSelectedGroupData(groupInfo);
   }
   const handleDeleteGroup = async () => {
     await deleteGroup(selectedGroupData.id)
