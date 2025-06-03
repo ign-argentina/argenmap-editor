@@ -45,11 +45,10 @@ class GroupService {
   getGroupUserList = async (id, uid, isSuperAdmin) => {
     try {
       let result = []
-
       if (isSuperAdmin) {
         const isAdmin = await User.isSuperAdmin(uid)
         result = isAdmin ? await Group.getGroupUserList(id) : result
-      } else if (await Group.isAdminForThisGroup(id, uid).exists) {
+      } else if (await Group.isAdminForThisGroup(id, uid)) {
         result = await Group.getGroupUserList(id)
       }
       return result.length > 0 ? Result.success(result) : Result.fail("Error obteniendo listado de usuarios del grupo: " + id)
@@ -64,8 +63,8 @@ class GroupService {
       const [userAlreadyExists] = await Group.userExists(gid, addUserId)
 
       if (!userAlreadyExists.exists) {
-        const isGroupAdmin = await Group.isAdminForThisGroup(gid, uid)
-        if (isGroupAdmin.exists) {
+        if (await Group.isAdminForThisGroup(gid, uid)) {
+          console.log("pepe")
           result = await Group.addUserToGroup(gid, addUserId)
         } else if (await User.isSuperAdmin(uid)) {
           result = await Group.addUserToGroup(gid, addUserId)
@@ -81,8 +80,7 @@ class GroupService {
   deleteUserFromGroup = async (deleteUserId, uid, gid) => {
     try {
       let result = []
-      const isGroupAdmin = await Group.isAdminForThisGroup(gid, uid)
-      if (isGroupAdmin.exists) {
+      if (await Group.isAdminForThisGroup(gid, uid)) {
         result = await Group.deleteUserFromGroup(gid, deleteUserId)
       } else if (await User.isSuperAdmin(uid)) {
         result = await Group.deleteUserFromGroup(gid, deleteUserId)
@@ -93,17 +91,15 @@ class GroupService {
     }
   }
 
-  updateUserRolFromGroup = async (uid, userId, rolId, groupId) => {
+  updateUserRolFromGroup = async (uid, userId, rolId, gid) => {
     try {
       let result = []
-      const isGroupAdmin = await Group.isAdminForThisGroup(groupId, uid)
-
-      if (isGroupAdmin.exists) {
-        result = await Group.updateUserRolFromGroup(userId, rolId, groupId)
+      if (await Group.isAdminForThisGroup(gid, uid)) {
+        result = await Group.updateUserRolFromGroup(userId, rolId, gid)
       } else if (await User.isSuperAdmin(uid)) {
-        result = await Group.updateUserRolFromGroup(userId, rolId, groupId)
+        result = await Group.updateUserRolFromGroup(userId, rolId, gid)
       }
-      
+
       return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido eliminar al usuario")
     } catch (error) {
       console.log("Error en la capa de servicio " + error)

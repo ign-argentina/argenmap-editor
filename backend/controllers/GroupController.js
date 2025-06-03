@@ -81,6 +81,8 @@ class GroupController {
       const { uid, isa } = this.authService.getDataToken(token)
       const result = await this.groupService.getGroupUserList(id, uid, isa);
 
+      if (!result.success) return res.status(400).json(result)
+
       return res.status(200).json(result.data)
     } catch (error) {
       console.log("Error en el controlador" + error)
