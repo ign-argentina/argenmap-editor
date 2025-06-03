@@ -68,6 +68,10 @@ class Group extends BaseModel {
   static updateUserRolFromGroup = async (userId, rolId, groupId) => {
     return await super.runQuery('UPDATE usuarios_por_grupo SET rolid = $3 WHERE grupoid = $1 AND usuarioid = $2 RETURNING true', [groupId, userId, rolId])
   }
+
+  static updateGroup = async (name, description, img, gid) => {
+    return await super.runQuery('UPDATE grupos SET name = $1, description = $2, img = $3 WHERE id = $4 RETURNING true', [name, description, img, gid])
+  }
 }
 
 export default Group

@@ -3,8 +3,7 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
 import './Management.css'
-import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles } from "../api/configApi.js"
-
+import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/configApi.js"
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
 
@@ -138,11 +137,14 @@ function Management() {
     await updateGroupUserList(selectedGroupData.id)
   }
 
-  const handleUpdateGroup = async (gid) => {
-
+  const handleUpdateGroup = async (groupData) => {
+    const { name, description, img } = groupData
+    await updateGroup(name, description, img, selectedGroupData.id)
+    const groupInfo = await getGroup(selectedGroupData.id)
+    setSelectedGroupData(groupInfo);
   }
-  const handleDeleteGroup = async (gid) => {
-
+  const handleDeleteGroup = async () => {
+    await deleteGroup(selectedGroupData.id)
   }
 
   return (
@@ -172,8 +174,8 @@ function Management() {
                   headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
                   data={[selectedGroupData]}
                   editableFields={["name", "description", "img"]}
-                  onUpdate={handleUpdateGroup} // <-- Asegurate de definir esta función
-                  onDelete={handleDeleteGroup} // (opcional, si querés permitir eliminar)
+                  onUpdate={handleUpdateGroup} // Actualizar Grupo
+                  onDelete={handleDeleteGroup} // Eliminar grupo
                 />
               </div>
 
@@ -212,7 +214,9 @@ function Management() {
                     <button className="dash-button" onClick={() => alert("Auch")} > Nuevo Visor </button>
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
-                      data={selectedGroupUserList?.filter(user => user.rol === 'visor')}
+                      data={[]}
+                      editableFields={[]}
+                      rolOptions={[]}
                     />
                   </>
                 )}
