@@ -3,13 +3,14 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
 import './Management.css'
-import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup } from "../api/configApi.js"
+import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles } from "../api/configApi.js"
 
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
 
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
+
 
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
@@ -26,6 +27,7 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
   }
 
   useEffect(() => {
+
     const loadUsers = async () => {
       const list = await getUserList();
       const filteredList = list.filter( // Filtramos la lista de usuarios conrespecto a la de usuarios en el grupo. Obteniendo finalmente un listado de usuarios que no están en el grupo
@@ -89,6 +91,8 @@ function Management() {
   const [activeTab, setActiveTab] = useState("usuarios");
   const [showAddUserModal, setShowAddUserModal] = useState(false);
 
+  const [roles, setRoles] = useState([])
+
   const handleSelectChange = async (e) => {
     const selectedId = e.target.value;
     if (!selectedId) return setSelectedGroupData([]);
@@ -110,6 +114,8 @@ function Management() {
 
   const loadGroups = async () => {
     const groupList = await getManageGroups()
+    const rolList = await getRoles()
+    setRoles(rolList)
     setAdminGroup(groupList);
   }
 
@@ -125,6 +131,18 @@ function Management() {
   const handleDeleteUser = async (uid) => {
     await deleteUserFromGroup(uid, selectedGroupData.id)
     await updateGroupUserList(selectedGroupData.id)
+  }
+
+  const handleUpdateRolUser = async (user) => {
+    await updateUserRolFromGroup(user.id, user.rol, selectedGroupData.id)
+    await updateGroupUserList(selectedGroupData.id)
+  }
+
+  const handleUpdateGroup = async (gid) => {
+
+  }
+  const handleDeleteGroup = async (gid) => {
+
   }
 
   return (
@@ -153,6 +171,9 @@ function Management() {
                 <ManagementTable
                   headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
                   data={[selectedGroupData]}
+                  editableFields={["name", "description", "img"]}
+                  onUpdate={handleUpdateGroup} // <-- Asegurate de definir esta función
+                  onDelete={handleDeleteGroup} // (opcional, si querés permitir eliminar)
                 />
               </div>
 
@@ -177,8 +198,11 @@ function Management() {
                     <button className="dash-button" onClick={() => setShowAddUserModal(true)} > Agregar Usuario </button>
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
-                      data={selectedGroupUserList?.filter(user => user.rol !== 'visor')}
+                      data={selectedGroupUserList}
                       onDelete={handleDeleteUser}
+                      onUpdate={handleUpdateRolUser}
+                      editableFields={["rol"]}
+                      rolOptions={roles}
                     />
                   </>
                 )}

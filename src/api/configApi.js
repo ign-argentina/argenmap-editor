@@ -117,6 +117,21 @@ export const deleteUserFromGroup = async (deleteUserId, gid) => {
   });
   return res.data
 }
+
+export const updateUserRolFromGroup = async (userId, rolId, groupId) => {
+  const res = await axios.put(`${API_URL}/groups/management`,
+    { userId, rolId, groupId }, { withCredentials: true, validateStatus: () => true });
+
+  return res.data
+}
+
+export const getRoles = async () => {
+  const res = await axios.get(`${API_URL}/roles/`, {
+    withCredentials: true,
+    validateStatus: () => true,
+  });
+  return res.data
+}
 // ***** END GROUP METHODS *****
 
 
