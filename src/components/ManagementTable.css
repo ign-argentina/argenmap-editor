@@ -1,5 +1,6 @@
 table {
   width: 100%;
+  table-layout: fixed;
   background-color: #fff;
   color: var(--primary--color);
 }
@@ -20,14 +21,21 @@ tr:hover {
   background-color: rgba(36, 44, 79, 0.05);
 }
 
-td {
+td {  
   color: var(--primary--color);
 }
 
 td:last-child {  /* aplica solo a la "botonera" (acciones) */
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
 }
+
+th:last-child {  /* aplica solo a la "botonera" (acciones) */
+  width: 8%;
+}
+
 
 .btn-management {
   width: 2rem;
