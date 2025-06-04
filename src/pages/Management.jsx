@@ -144,10 +144,10 @@ function Management() {
     setSelectedGroupData(groupInfo);
   }
   const handleDeleteGroup = async () => {
-    if(confirm('Estas seguro que queres eliminar este grupo?')){
+    if (confirm('Estas seguro que queres eliminar este grupo?')) {
       await deleteGroup(selectedGroupData.id)
-       window.location.reload()
-    }   
+      window.location.reload()
+    }
   }
 
   return (
@@ -179,6 +179,7 @@ function Management() {
                   editableFields={["name", "description", "img"]}
                   onUpdate={handleUpdateGroup} // Actualizar Grupo
                   onDelete={handleDeleteGroup} // Eliminar grupo
+                  
                 />
               </div>
 
@@ -208,6 +209,7 @@ function Management() {
                       onUpdate={handleUpdateRolUser}
                       editableFields={["rol"]}
                       rolOptions={roles}
+                      isUserTable={true}
                     />
                   </>
                 )}
