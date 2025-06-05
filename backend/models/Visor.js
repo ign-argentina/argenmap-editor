@@ -1,8 +1,8 @@
 import BaseModel from "./BaseModel.js";
 
 const INSERT_VISOR = `
-  INSERT INTO visores (name, description, cid, img)
-  VALUES ($1, $2, $3, $4)
+  INSERT INTO visores (uid, gid, cid, name, description, img)
+  VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *`;
 
 const SELECT_ALL_VISORS = `SELECT * FROM visores`;
@@ -10,9 +10,10 @@ const SELECT_ALL_VISORS = `SELECT * FROM visores`;
 const SELECT_VISOR_BY_ID = `SELECT * FROM visores WHERE id = $1`;
 
 class Visor extends BaseModel {
-  static saveVisor = async (cid, name, description, img) => {
+
+  static createVisor = async (uid, groupid, cid, name, description, img) => {
     try {
-      const result = await super.runQuery(INSERT_VISOR, [name, description, cid, img]);
+      const result = await super.runQuery(INSERT_VISOR, [uid, groupid, cid, name, description, img]);
       return result;
     } catch (err) {
       console.log("Error en Visor model (saveVisor):", err);
@@ -20,7 +21,7 @@ class Visor extends BaseModel {
     }
   };
 
-  static getAllVisors = async () => {
+  static getAllVisors = async () => { 
     try {
       const result = await super.runQuery(SELECT_ALL_VISORS);
       return result;

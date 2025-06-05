@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import './SaveVisorModal.css';
+import { useUser } from '../../context/UserContext';
+import { updateVisor, createVisor } from "../../api/configApi.js"
+import Toast from "../Toast/Toast.jsx"
 
-const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [imageData, setImageData] = useState(null);
+const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false }) => {
+
+  const [name, setName] = useState(editorMode ? visor?.name : "");
+  const [description, setDescription] = useState(editorMode ? visor?.description : "");
+  const [imageData, setImageData] = useState(editorMode ? visor?.img : null)
   const [source, setSource] = useState(null);
   const navigate = useNavigate();
 
@@ -63,7 +67,7 @@ const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
       return alert('Formato de imagen inválido');
     }
 
-    onSave({ name, description, img: imageData });
+    saveVisor()
     setName('');
     setDescription('');
     setImageData(null);
@@ -71,16 +75,57 @@ const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
     navigate('/')
   };
 
+  const saveVisor = async () => {
+    {
+      let res;
+      const currentJsonRaw = localStorage.getItem('visorMetadata');
+      const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
+      const configOnly = currentJsonParsed.config;
+
+      if (!currentJsonRaw) {
+        alert('No hay configuración para guardar');
+        return;
+      }
+
+      const GRUPO_ID = 1 // HARCODEAAAADOOO
+
+      if (editorMode && !cloneMode) {
+        res = await updateVisor(visor.id, GRUPO_ID, name, description, configOnly.json, imageData)
+      } else {
+        res = await createVisor(GRUPO_ID, name, description, configOnly.json, imageData)
+      }
+
+      if (res.success) {
+        alert("Cargado con exito")
+        /*  return <Toast
+            message={"Capo"}
+            type={"success"}
+            duration={3000}
+            onClose={() => setToast(null)}
+          /> */
+      } else {
+        alert("Error")
+        /*        return <Toast
+                  message={"Capo lo fundiste"}
+                  type={"error"}
+                  duration={3000}
+                  onClose={() => setToast(null)}
+                /> */
+      }
+    }
+  }
+
+
   if (!isOpen) return null;
 
   return (
     <div className="save-visor-modal-overlay">
       <div className="save-visor-modal">
-        <h3>Guardar nueva plantilla</h3>
-
+        <h3>{editorMode && !cloneMode ? "Guardar Cambios" : "Crear Nuevo Visor"}</h3>
+        <span>{cloneMode ? "Crearás un nuevo visor a partir de las mismas caracteristicas que este" : null}</span>
         <input
           type="text"
-          placeholder="Nombre de la plantilla"
+          placeholder="Nombre del visor"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -91,7 +136,7 @@ const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <div className="image-options">
+        {imageData == null ? <div className="image-options">
           <button onClick={captureIframeImage} disabled={source === 'upload'}>
             Capturar imagen del visor
           </button>
@@ -106,7 +151,7 @@ const SaveVisorModal = ({ isOpen, onClose, onSave }) => {
               style={{ display: 'none' }}
             />
           </label>
-        </div>
+        </div> : <button onClick={() => setImageData(null)}>Limpiar imagen</button>}
 
         {imageData && (
           <img

@@ -1,29 +1,52 @@
 import Config from '../models/Config.js';
 import Visor from "../models/Visor.js";
 import Result from "../utils/Result.js";
+import Group from '../models/Group.js';
+import User from '../models/User.js';
 
 class VisorService {
 
-  saveVisor = async (json, name, description, img) => {
+  createVisor = async (uid, groupid = null, name, description, configJson, img) => {
     try {
-      const configResult = await Config.newConfig(json);
+      let result = []
+      const configResult = await Config.newConfig(configJson);
       if (!configResult) {
         return { success: false, error: 'No se pudo guardar la configuración' };
       }
 
       const cid = configResult.id;
 
-      const visorResult = await Visor.saveVisor(cid, name, description, img);
-      if (!visorResult) {
-        return { success: false, error: 'No se pudo guardar el visor' };
+      if (groupid && (await Group.isAdminForThisGroup(grupoid, uid) || await User.isSuperAdmin(uid))) {
+        result = await Visor.createVisor(uid, groupid, cid, name, description, img);
+      } else {
+        result = await Visor.createVisor(uid, null, cid, name, description, img);
       }
 
-      return { success: true, data: visorResult };
-
+      return result.length > 0 ? Result.success("Visor guardado con éxito") : Result.fail("No se pudo guardar el visor")
     } catch (err) {
       return { success: false, error: err.message };
     }
   };
+
+  /*   updateVisor = async (uid, visorid, name, description, configJson, img) => {
+      try {
+        let result = []
+  
+        if (await Group.isEditorUser(groupid, uid) || await Group.isAdminForThisGroup(groupid, uid) || await User.isSuperAdmin(uid)) {
+          const configResult = await Config.updateConfig(configJson);
+          if (!configResult) {
+            return { success: false, error: 'No se pudo guardar la configuración' };
+          }
+          const cid = configResult.id;
+  
+          result = await Visor.updateVisor(visorid, groupid, name, description, img);
+        }
+        return result.length > 0 ? Result.success("Visor guardado con éxito") : Result.fail("No se pudo guardar el visor")
+      } catch (err) {
+        return { success: false, error: err.message };
+      }
+    } */
+
 
   getAllVisors = async () => {
     try {

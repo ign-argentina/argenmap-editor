@@ -154,7 +154,7 @@ const VisorManager = () => {
                   onClick={() => {
                     if (!selectedVisor) return;
                     handleLoadVisor(selectedVisor);
-                    navigate('/form');
+                    navigate('/form', {state: {visor: selectedVisor, editorMode: true}});
                   }}
                   disabled={!selectedVisor}
                 >

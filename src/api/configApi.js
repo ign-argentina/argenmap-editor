@@ -2,14 +2,24 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:3001';
 
-//VISORS
+// ***** VISORS METHODS ***** 
 export async function getAllVisors() {
   const res = await fetch(`${API_URL}/visores`);
   if (!res.ok) throw new Error('Error al obtener visores');
   return res.json();
 }
 
-export async function saveVisor({ name, description, json, img }) {
+export const createVisor = async ( groupid, name, description, configJson, img) => {
+  const res = await axios.post(`${API_URL}/visores`,
+    {groupid, name, description, configJson, img}, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const updateVisor = async (visorid, name, description, configJson, img) => {
+
+}
+
+/* export async function saveVisor({ name, description, json, img }) {
   const res = await fetch(`${API_URL}/visores`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -18,13 +28,15 @@ export async function saveVisor({ name, description, json, img }) {
   if (!res.ok) throw new Error('Error al guardar visor');
   return res.json();
 }
-
+ */
 
 export async function getVisorById(id) {
   const res = await fetch(`${API_URL}/visores/${id}`);
   if (!res.ok) throw new Error('Error al obtener visor por ID');
   return res.json();
 }
+// ***** END VISORS METHODS ***** 
+
 
 //CONFIGS
 export async function getConfigById(id) {
@@ -58,9 +70,6 @@ export async function updateConfig(id, jsonData) {
   if (!res.ok) throw new Error('Error al actualizar config');
   return res.json();
 }
-
-
-
 
 // ***** GROUPS METHODS ***** 
 export const getGrupos = async () => {
@@ -97,10 +106,10 @@ export const getGroup = async (id) => {
 export const getGroupUserList = async (id) => {
   try {
     const res = await axios.get(`${API_URL}/groups/management/userlist/${id}`, {
-      withCredentials: true,
-    });
-    return res.data
-  } catch (error) { console.log("Error al botener listado de usuarios " + error) }
+        withCredentials: true,
+         });
+  return res.data
+} catch (error) { console.log("Error al obtener listado de usuarios " + error) }
 }
 
 export const addUserToGroup = async (id, gid) => {
@@ -157,7 +166,7 @@ export const getUserList = async () => {
       withCredentials: true,
     });
     return res.data
-  } catch (error) { console.log("Error al botener listado de usuarios " + error) }
+  } catch (error) { console.log("Error al obtener listado de usuarios " + error) }
 }
 // ***** END USER METHODS *****
 
@@ -174,7 +183,6 @@ export const getUserList = async () => {
 //     console.error('Error al guardar config:', error);
 //   }
 // }
-
 
 // import { updateConfig } from './api/configApi';
 
