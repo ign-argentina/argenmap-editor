@@ -42,8 +42,6 @@ class VisorService {
         }
         result = await Visor.updateVisor(configid, name, description, img, visorid)
       }
-
-      console.log(result)
       return result.length > 0 ? Result.success("Visor guardado con éxito") : Result.fail("No se pudo guardar el visor")
     } catch (err) {
       return { success: false, error: err.message };

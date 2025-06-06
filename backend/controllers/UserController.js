@@ -26,7 +26,6 @@ class UserController {
       }
 
       if (password && password.length < 10) {
-        console.log(password)
         return res.status(400).json("La contraseña debe tener al menos 10 caracteres")
       }
       const result = await this.userService.updateUser(name, lastname, password, this.authService.getDataToken(token).uid)
