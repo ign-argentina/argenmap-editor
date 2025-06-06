@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import './SaveVisorModal.css';
 import { useUser } from '../../context/UserContext';
-import { updateVisor, createVisor } from "../../api/configApi.js"
+import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
 import Toast from "../Toast/Toast.jsx"
 
 const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false }) => {
@@ -12,7 +12,25 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [description, setDescription] = useState(editorMode ? visor?.description : "");
   const [imageData, setImageData] = useState(editorMode ? visor?.img : null)
   const [source, setSource] = useState(null);
+
+  const [selectedGroup, setSelectedGroup] = useState([])
+  const [groupList, setGroupList] = useState([])
+
   const navigate = useNavigate();
+
+  const loadGroups = async () => {
+    const groups = await getManageGroups()
+    setGroupList(groups);
+  }
+
+  const handleSelectChange = async (e) => {
+    const groupId = (e.target.value === "no-group" || e.target.value === "") ? null : e.target.value
+    setSelectedGroup(groupId)
+  }
+
+  useEffect(() => {
+    loadGroups()
+  }, []);
 
   const captureIframeImage = async () => {
     const iframe = document.querySelector('iframe');
@@ -87,12 +105,10 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         return;
       }
 
-      const GRUPO_ID = 1 // HARCODEAAAADOOO
-
       if (editorMode && !cloneMode) {
-        res = await updateVisor(visor.id, GRUPO_ID, name, description, configOnly.json, imageData)
+        res = await updateVisor(visor.id, visor.gid, name, description, configOnly.json, imageData)
       } else {
-        res = await createVisor(GRUPO_ID, name, description, configOnly.json, imageData)
+        res = await createVisor(selectedGroup, name, description, configOnly.json, imageData)
       }
 
       if (res.success) {
@@ -122,7 +138,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
     <div className="save-visor-modal-overlay">
       <div className="save-visor-modal">
         <h3>{editorMode && !cloneMode ? "Guardar Cambios" : "Crear Nuevo Visor"}</h3>
-        <span>{cloneMode ? "Crearás un nuevo visor a partir de las mismas caracteristicas que este" : null}</span>
+        <span>{cloneMode ? "Crearás un nuevo visor para el grupo a partir de las mismas caracteristicas que este" : null}</span>
         <input
           type="text"
           placeholder="Nombre del visor"
@@ -160,6 +176,18 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
             style={{ maxWidth: '100%', borderRadius: '8px', marginTop: '10px' }}
           />
         )}
+
+        {!editorMode ? <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
+          <option disabled value="no-group">-- Selecciona un grupo --</option>
+          {groupList?.map((grupo) => (
+            <option key={grupo.id} value={grupo.id}>
+              {grupo.name}
+            </option>
+          ))}
+          <option key={null} value="">
+            Mis Visores
+          </option>
+        </select> : null}
 
         <div className="modal-buttons">
           <button className="save" onClick={handleSubmit}>Guardar</button>
