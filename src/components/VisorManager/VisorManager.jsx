@@ -94,6 +94,13 @@ const VisorManager = () => {
 
   return (
     <div className={`${showPreview ? 'container-display-1' : 'container-display-0'}`}>
+
+      {showPreview && (
+        <div className='side-panel'>
+          <Preview />
+        </div>
+      )}
+
       <div className={`visor-content ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
           <h2>VISOR MANAGER</h2>
@@ -247,12 +254,6 @@ const VisorManager = () => {
 
         </div>
       </div>
-
-      {showPreview && (
-        <div className='side-panel'>
-          <Preview />
-        </div>
-      )}
     </div>
   );
 };
