@@ -13,7 +13,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [imageData, setImageData] = useState(editorMode ? visor?.img : null)
   const [source, setSource] = useState(null);
 
-  const [selectedGroup, setSelectedGroup] = useState([])
+  const [selectedGroup, setSelectedGroup] = useState(editorMode ? visor?.gid : null)
   const [groupList, setGroupList] = useState([])
 
   const navigate = useNavigate();

@@ -35,7 +35,7 @@ class VisorController {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
       const { visorid, visorgid, name, description, configid, configjson, imageData } = req.body
       const { uid } = this.authService.getDataToken(token)
-
+      
       if (!configjson || !name) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
@@ -45,7 +45,7 @@ class VisorController {
       if (!result.success) {
         return res.status(400).json({ error: result.error })
       }
-      
+
       return res.status(200).json(result)
     } catch (error) {
       return res.status(500).json(error)

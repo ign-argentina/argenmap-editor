@@ -16,7 +16,7 @@ class VisorService {
       }
 
       const cid = configResult.id;
-
+  
       if (groupid && (await Group.isAdminForThisGroup(groupid, uid) || await User.isSuperAdmin(uid))) {
         result = await Visor.createVisor(uid, groupid, cid, name, description, img);
       } else {
