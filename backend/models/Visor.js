@@ -7,6 +7,19 @@ const SELECT_ALL_VISORS = `SELECT * FROM visores`;
 
 const SELECT_VISOR_BY_ID = `SELECT * FROM visores WHERE id = $1`;
 
+const SELECT_PUBLIC_VISORS = `
+  SELECT * FROM visores
+  WHERE publico = true AND deleted = false`;
+
+const SELECT_MY_VISORS = `
+  SELECT * FROM visores
+  WHERE uid = $1 AND deleted = false`;
+
+const SELECT_GROUP_VISORS = `
+  SELECT v.* FROM visores v
+  JOIN usuarios_por_grupo upg ON v.gid = upg.grupoId
+  WHERE upg.usuarioId = $1 AND v.deleted = false`;
+
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img) => {
     try {
@@ -52,6 +65,36 @@ class Visor extends BaseModel {
     const data = await super.runQuery(IS_VISOR_OWNER, [id, uid])
     return data[0]?.exists ?? false;
   }
+
+  static getPublicVisors = async () => {
+    try {
+      const result = await super.runQuery(SELECT_PUBLIC_VISORS);
+      return result;
+    } catch (err) {
+      console.log("Error en Visor model (getPublicVisors):", err);
+      return null;
+    }
+  };
+
+  static getMyVisors = async (uid) => {
+    try {
+      const result = await super.runQuery(SELECT_MY_VISORS, [uid]);
+      return result;
+    } catch (err) {
+      console.log("Error en Visor model (getMyVisors):", err);
+      return null;
+    }
+  };
+
+  static getGroupVisors = async (uid) => {
+    try {
+      const result = await super.runQuery(SELECT_GROUP_VISORS, [uid]);
+      return result;
+    } catch (err) {
+      console.log("Error en Visor model (getGroupVisors):", err);
+      return null;
+    }
+  };
 }
 
 export default Visor

@@ -35,7 +35,7 @@ class VisorController {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
       const { visorid, visorgid, name, description, configid, configjson, imageData } = req.body
       const { uid } = this.authService.getDataToken(token)
-      
+
       if (!configjson || !name) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
@@ -84,6 +84,58 @@ class VisorController {
       return res.status(200).json(result.data);
     } catch (err) {
       return res.status(500).json({ error: 'Error al obtener el visor', detail: err.message });
+    }
+  };
+
+  getPublicVisors = async (req, res) => {
+    try {
+      const result = await this.visorService.getPublicVisors();
+
+      if (!result.success) {
+        return res.status(500).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al obtener visores públicos', detail: err.message });
+    }
+  };
+
+  getMyVisors = async (req, res) => {
+    try {
+      const uid = req.user?.id;
+      if (!uid) {
+        return res.status(401).json({ error: 'No autorizado' });
+      }
+
+      const result = await this.visorService.getMyVisors(uid);
+
+      if (!result.success) {
+        return res.status(500).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al obtener visores del usuario', detail: err.message });
+    }
+  };
+
+  getGroupVisors = async (req, res) => {
+    try {
+      const uid = req.user?.id;
+      if (!uid) {
+        return res.status(401).json({ error: 'No autorizado' });
+      }
+
+      const result = await this.visorService.getGroupVisors(uid);
+
+      if (!result.success) {
+        return res.status(500).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al obtener visores de grupo', detail: err.message });
     }
   };
 

@@ -73,9 +73,26 @@ const VisorManager = () => {
         <div className="visor-modal">
           <h2>VISOR MANAGER</h2>
           <div className="visor-modal-container">
+
+            <div className="visor-filter">
+              <label htmlFor="visor-type">Mostrar: </label>
+              <select
+                id="visor-type"
+              // value={tipoSeleccionado}
+              // onChange={(e) => setTipoSeleccionado(e.target.value)}
+              >
+                <option value="publicos">Visores Públicos</option>
+                <option value="mios">Mis Visores</option>
+                {/* {grupos.map(grupo => (
+                    <option key={grupo.id} value={`grupo_${grupo.id}`}>
+                      Visores de {grupo.name}
+                    </option>
+                  ))} */}
+              </select>
+            </div>
+
             <div className='visor-list-container'>
               <div className="visor-list">
-
                 {isLoading && (
                   <div className="loading-message">
                     <span className="spinner" />
@@ -154,7 +171,7 @@ const VisorManager = () => {
                   onClick={() => {
                     if (!selectedVisor) return;
                     handleLoadVisor(selectedVisor);
-                    navigate('/form', {state: {visor: selectedVisor, editorMode: true}});
+                    navigate('/form', { state: { visor: selectedVisor, editorMode: true } });
                   }}
                   disabled={!selectedVisor}
                 >

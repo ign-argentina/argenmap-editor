@@ -16,7 +16,7 @@ class VisorService {
       }
 
       const cid = configResult.id;
-  
+
       if (groupid && (await Group.isAdminForThisGroup(groupid, uid) || await User.isSuperAdmin(uid))) {
         result = await Visor.createVisor(uid, groupid, cid, name, description, img);
       } else {
@@ -86,6 +86,41 @@ class VisorService {
     }
   };
 
+  getPublicVisors = async () => {
+    try {
+      const result = await Visor.getPublicVisors();
+      return result
+        ? { success: true, data: result }
+        : { success: false, error: "No se pudieron obtener los visores públicos" };
+    } catch (err) {
+      console.error("Error en VisorService (getPublicVisors):", err);
+      return { success: false, error: err.message };
+    }
+  };
+
+  getMyVisors = async (uid) => {
+    try {
+      const result = await Visor.getMyVisors(uid);
+      return result
+        ? { success: true, data: result }
+        : { success: false, error: "No se pudieron obtener tus visores" };
+    } catch (err) {
+      console.error("Error en VisorService (getMyVisors):", err);
+      return { success: false, error: err.message };
+    }
+  };
+
+  getGroupVisors = async (uid) => {
+    try {
+      const result = await Visor.getGroupVisors(uid);
+      return result
+        ? { success: true, data: result }
+        : { success: false, error: "No se pudieron obtener los visores del grupo" };
+    } catch (err) {
+      console.error("Error en VisorService (getGroupVisors):", err);
+      return { success: false, error: err.message };
+    }
+  };
 
   deletevisor() {
 
