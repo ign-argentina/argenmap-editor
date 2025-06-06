@@ -143,13 +143,18 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
           placeholder="Nombre del visor"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          maxLength={30}
         />
 
         <textarea
           placeholder="Descripción"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          maxLength={255}
         />
+        <div style={{ textAlign: 'right', fontSize: '0.85em', color: '#666' }}>
+          {description.length}/255
+        </div>
 
         {imageData == null ? <div className="image-options">
           <button onClick={captureIframeImage} disabled={source === 'upload'}>
@@ -179,7 +184,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
 
         {!editorMode ?
           <>
-          <h3>Selecciona un grupo al cual quieras agregar este editor</h3>
+            <h3>Selecciona un grupo al cual quieras agregar este editor</h3>
             <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
               <option disabled value="no-group">-- Selecciona un grupo --</option>
               {groupList?.map((grupo) => (
