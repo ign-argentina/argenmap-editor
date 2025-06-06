@@ -2,7 +2,6 @@ import { useState } from 'react';
 import SaveVisorModal from '../SaveVisorModal/SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../../context/UserContext';
-import { saveVisor } from '../../api/configApi';
 import './FormNavbar.css';
 
 const FormNavbar = ({
@@ -12,12 +11,14 @@ const FormNavbar = ({
   sectionInfo,
   uiControls,
   actions,
+  editorMode,
 }) => {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
   const { handleLanguageChange, selectedLang, isFormShown, setIsFormShown } = uiControls;
   const { handleDownload } = actions;
+  const [cloneMode, setCloneMode] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false);
-
+  
   return (
     <UserProvider> {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
 
@@ -74,41 +75,31 @@ const FormNavbar = ({
           {showSaveModal && (
             <div className="save-visor-modal-overlay">
               <SaveVisorModal
+                editorMode={editorMode}
+                cloneMode={cloneMode}
+                visor={visor}
                 isOpen={showSaveModal}
                 onClose={() => setShowSaveModal(false)}
-                onSave={({ name, description, img }) => {
-                  const currentJsonRaw = localStorage.getItem('visorMetadata');
-                  const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
-                  const configOnly = currentJsonParsed.config;
-
-                  if (!currentJsonRaw) {
-                    alert('No hay configuración para guardar');
-                    return;
-                  }
-
-                  saveVisor({ name, description, json: configOnly.json, img })
-                    .then(() => {
-                      alert('Visor guardado correctamente');
-                      setShowSaveModal(false);
-                    })
-                    .catch((err) => {
-                      console.error('Error al guardar visor:', err);
-                      alert('Error al guardar visor');
-                    });
-                }}
-
               />
             </div>
           )}
 
-          <button className="common" onClick={() => setShowSaveModal(true)}>
-            <i className="fa-solid fa-floppy-disk"></i>
-            Guardar como
-          </button>
+          <button className="common" onClick={() => {
+            setCloneMode(true);
+            setShowSaveModal(true);
+          }}>
+          <i className="fa-solid fa-floppy-disk"></i>
+          {editorMode ? ("Crear a partir de este ") : ("Crear nuevo visor")}
+        </button>
 
-        </div>
+        {editorMode && <button className="common" onClick={() => {setCloneMode(false); setShowSaveModal(true)}}>
+          <i className="fa-solid fa-floppy-disk"></i>
+          Guardar cambios
+        </button>}
+
       </div>
-    </UserProvider>
+    </div>
+    </UserProvider >
   );
 };
 

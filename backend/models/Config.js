@@ -2,7 +2,7 @@ import BaseModel from "./BaseModel.js";
 
 const INSERT_CONFIG = 'INSERT INTO config (json) VALUES ($1) RETURNING id';
 const SELECT_ALL_CONFIGS = 'SELECT * FROM config';
-const UPDATE_CONFIG = "";
+const UPDATE_CONFIG = "UPDATE config SET json = $1 WHERE id = $2 RETURNING id";
 const SELECT_CONFIG_BY_ID = 'SELECT * FROM config WHERE id = $1';
 
 class Config extends BaseModel {

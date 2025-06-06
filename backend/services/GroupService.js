@@ -75,7 +75,7 @@ class GroupService {
       } else if (await Group.isAdminForThisGroup(id, uid)) {
         result = await Group.getGroupUserList(id)
       }
-      return result.length > 0 ? Result.success(result) : Result.fail("Error obteniendo listado de usuarios del grupo: " + id)
+      return result.length > 0 ? Result.success(result) : Result.fail("El grupo no tiene usuarios o no existe: " + id)
     } catch (error) {
       console.log("Error en la capa de servicio: " + error)
     }

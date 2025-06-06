@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./ManagementTable.css";
 import { useUser } from "../context/UserContext";
 
-function ManagementTable({ headers, data, onDelete, onUpdate, editableFields = [], rolOptions = [], isUserTable }) {
+function ManagementTable({ headers, data, onDelete, onUpdate, editableFields = [], rolOptions = [], isUserTable = false}) {
   const [editRowId, setEditRowId] = useState(null);
   const [editedData, setEditedData] = useState({});
   const { user } = useUser();

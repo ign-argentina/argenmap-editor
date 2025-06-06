@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
+import { useLocation } from 'react-router-dom';
 import useLang from '../../hooks/useLang';
 import useFormEngine from '../../hooks/useFormEngine';
 import ColorPickerControl from '../ColorPickerControl/ColorPickerControl';
@@ -33,6 +34,7 @@ function Form() {
   } = useFormEngine(); // Antes era useFormEngine({ config, language, selectedLang }); Use Form Engine no acepta parametros, estan de mas. Y como el hook ya maneja
   // el lenguaje, lo traemos de ahi
 
+  const location = useLocation();
   const [isFormShown, setIsFormShown] = useState(true);
   const [toast, setToast] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
@@ -78,6 +80,8 @@ function Form() {
 
   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : [];
 
+  const { visor, editorMode } = location.state || {}; // Nota => Sacar visor
+
   return (
     <div>
       <div className="editor-container" key={reloadKey}>
@@ -96,6 +100,7 @@ function Form() {
             handleDownload,
           }}
           language={language}
+          editorMode={editorMode}
         />
 
         {isFormShown && selectedSection && (
