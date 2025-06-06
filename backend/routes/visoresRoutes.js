@@ -9,7 +9,7 @@ const visorController = new VisorController();
 
 visoresRoutes.get("/publics", visorController.getPublicVisors);
 visoresRoutes.get("/myvisors", visorController.getMyVisors);
-visoresRoutes.get("/tipo/grupo", visorController.getGroupVisors);
+visoresRoutes.get("/group/:groupid", visorController.getGroupVisors);
 
 visoresRoutes.post("/", PROTECT.REQUIRE_AUTH, visorController.createVisor);
 visoresRoutes.put("/", PROTECT.REQUIRE_AUTH, visorController.updateVisor)

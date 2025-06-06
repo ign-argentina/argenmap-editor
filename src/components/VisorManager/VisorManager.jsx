@@ -5,7 +5,7 @@ import { handleClearStorage } from '../../utils/HandleClearStorage';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
-import { getVisorById, getPublicVisors, getMyVisors, getGrupos } from '../../api/configApi';
+import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
@@ -87,7 +87,7 @@ const VisorManager = () => {
       const vl = await getMyVisors()
       setVisores(vl)
     } else if (e.target.value != ''){
-      const vl = await getPublicVisors()
+      const vl = await getGroupVisors(e.target.value)
       setVisores(vl)
     }
   }
@@ -109,8 +109,8 @@ const VisorManager = () => {
               >
                 <option value="public-visors">Visores Públicos</option>
                 <option value="my-visors">Mis Visores</option>
-                {groupList.map(grupo => (
-                    <option key={grupo.id} value={`grupo_${grupo.id}`}>
+                {groupList?.map(grupo => (
+                    <option key={grupo.id} value={grupo.id}>
                       Visores de {grupo.name}
                     </option>
                   ))}

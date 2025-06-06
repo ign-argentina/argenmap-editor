@@ -15,10 +15,12 @@ const SELECT_MY_VISORS = `
   SELECT * FROM visores
   WHERE uid = $1 AND deleted = false AND gid IS NULL`;
 
-const SELECT_GROUP_VISORS = `
+/* const SELECT_GROUP_VISORS = `
   SELECT v.* FROM visores v
   JOIN usuarios_por_grupo upg ON v.gid = upg.grupoId
-  WHERE upg.usuarioId = $1 AND v.deleted = false`;
+  WHERE upg.usuarioId = $1 AND v.deleted = false`; */
+
+const SELECT_GROUP_VISORS = "select * from visores where gid = $1"
 
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img) => {
@@ -86,9 +88,9 @@ class Visor extends BaseModel {
     }
   };
 
-  static getGroupVisors = async (uid) => {
+  static getGroupVisors = async (groupid) => {
     try {
-      const result = await super.runQuery(SELECT_GROUP_VISORS, [uid]);
+      const result = await super.runQuery(SELECT_GROUP_VISORS, [groupid]);
       return result;
     } catch (err) {
       console.log("Error en Visor model (getGroupVisors):", err);

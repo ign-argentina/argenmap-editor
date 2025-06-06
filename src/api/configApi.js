@@ -50,6 +50,14 @@ export async function getVisorById(id) {
   if (!res.ok) throw new Error('Error al obtener visor por ID');
   return res.json();
 }
+
+export const getGroupVisors = async (groupId) => {
+  const res = await axios.get(`${API_URL}/visores/group/${groupId}`, {
+    withCredentials: true,
+    validateStatus: () => true
+  });
+  return res.data;
+};
 // ***** END VISORS METHODS ***** 
 
 

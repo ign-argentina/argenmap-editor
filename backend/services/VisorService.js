@@ -110,12 +110,14 @@ class VisorService {
     }
   };
 
-  getGroupVisors = async (uid) => {
+  getGroupVisors = async (uid, groupid) => {
     try {
-      const result = await Visor.getGroupVisors(uid);
-      return result
-        ? { success: true, data: result }
-        : { success: false, error: "No se pudieron obtener los visores del grupo" };
+      let result = []   
+      if (Group.isMember(uid)){
+        result = await Visor.getGroupVisors(groupid)
+      }
+      
+      return result.length > 0 ? { success: true, data: result } : { success: false, error: "No se pudieron obtener los visores del grupo" };
     } catch (err) {
       console.error("Error en VisorService (getGroupVisors):", err);
       return { success: false, error: err.message };

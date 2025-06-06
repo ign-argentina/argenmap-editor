@@ -106,10 +106,6 @@ class VisorController {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
       const { uid } = this.authService.getDataToken(token)
 
-/*       if (!uid) {
-        return res.status(401).json({ error: 'No autorizado' });
-      } */
-
       const result = await this.visorService.getMyVisors(uid);
 
       if (!result.success) {
@@ -124,15 +120,14 @@ class VisorController {
 
   getGroupVisors = async (req, res) => {
     try {
-      const uid = req.user?.id;
-      if (!uid) {
-        return res.status(401).json({ error: 'No autorizado' });
-      }
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { uid } = this.authService.getDataToken(token)
+      const { groupid } = req.params;
 
-      const result = await this.visorService.getGroupVisors(uid);
+      const result = await this.visorService.getGroupVisors(uid, groupid);
 
       if (!result.success) {
-        return res.status(500).json({ error: result.error });
+        return res.status(400).json({ error: result.error });
       }
 
       return res.status(200).json(result.data);
