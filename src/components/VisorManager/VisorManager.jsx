@@ -94,7 +94,7 @@ const VisorManager = () => {
 
   return (
     <div className={`${showPreview ? 'container-display-1' : 'container-display-0'}`}>
-      <div className={`visor-conent ${showPreview ? 'flex-0' : 'flex-1'}`}>
+      <div className={`visor-content ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
           <h2>VISOR MANAGER</h2>
 
@@ -103,7 +103,6 @@ const VisorManager = () => {
             <select
               id="visor-type"
               defaultValue={"public-visors"}
-              // value={tipoSeleccionado}
               onChange={handleChange}
             >
               <option value="public-visors">Visores Públicos</option>
@@ -150,7 +149,6 @@ const VisorManager = () => {
                       }
                     }}
                   >
-
                     <img
                       src={visor.img || '/assets/no-image.png'}
                       alt="img"
@@ -159,18 +157,6 @@ const VisorManager = () => {
                     <div className="visor-info">
                       <h3>{visor.name}</h3>
                       <p>{visor.description}</p>
-
-                      <p className="visor-date">
-                        Actualizado: {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric'
-                        })}
-                      </p>
-
-                      <p className="visor-privacy">
-                        {visor.publico ? 'Público' : 'Privado'}
-                      </p>
                     </div>
                   </div>
 
@@ -237,6 +223,28 @@ const VisorManager = () => {
               </div>
             </div>
           </div>
+
+          {selectedVisor && (
+            <div className="visor-description">
+              <div className="visor-info">
+                <h3>{selectedVisor.name}</h3>
+                <div>
+                  <p>{selectedVisor.description}</p>
+                  <p className="visor-date">
+                    Actualizado: {new Date(selectedVisor.lastupdate).toLocaleDateString('es-AR', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
+                    })}
+                  </p>
+                  <p className="visor-privacy">
+                    {selectedVisor.publico ? 'Público' : 'Privado'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
 
