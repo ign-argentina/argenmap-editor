@@ -3,6 +3,7 @@ import Visor from "../models/Visor.js";
 import Result from "../utils/Result.js";
 import Group from '../models/Group.js';
 import User from '../models/User.js';
+import { config } from 'dotenv';
 
 class VisorService {
 
@@ -28,24 +29,26 @@ class VisorService {
     }
   };
 
-  /*   updateVisor = async (uid, visorid, name, description, configJson, img) => {
-      try {
-        let result = []
-  
-        if (await Group.isEditorUser(groupid, uid) || await Group.isAdminForThisGroup(groupid, uid) || await User.isSuperAdmin(uid)) {
-          const configResult = await Config.updateConfig(configJson);
-          if (!configResult) {
-            return { success: false, error: 'No se pudo guardar la configuración' };
-          }
-          const cid = configResult.id;
-  
-          result = await Visor.updateVisor(visorid, groupid, name, description, img);
+  updateVisor = async (uid, visorid, visorgid, name, description, configid, configjson, img) => {
+    try {
+      let result = []
+      const haveAccessToVisor = visorgid && (await Group.isEditorForThisGroup(visorgid, uid) || await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid))
+      const isVisorOwner = !visorgid && await Visor.isOwner(visorid, uid)
+
+      if (haveAccessToVisor || isVisorOwner) {
+        const [configResult] = await Config.updateConfig(configid, configjson);
+        if (!configResult.id) {
+          return { success: false, error: 'No se pudo guardar la configuración' };
         }
-        return result.length > 0 ? Result.success("Visor guardado con éxito") : Result.fail("No se pudo guardar el visor")
-      } catch (err) {
-        return { success: false, error: err.message };
+        result = await Visor.updateVisor(configResult.id, name, description, img, visorid)
       }
-    } */
+
+      console.log(result)
+      return result.length > 0 ? Result.success("Visor guardado con éxito") : Result.fail("No se pudo guardar el visor")
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
 
 
   getAllVisors = async () => {

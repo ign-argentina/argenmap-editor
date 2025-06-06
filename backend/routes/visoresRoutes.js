@@ -7,7 +7,7 @@ const visorController = new VisorController();
 // placesRoutes.get("/:id", placesController.getPlaceById); // Ideal por parámetro y no por query al ser búsqueda simple.
 
 visoresRoutes.post("/", PROTECT.REQUIRE_AUTH, visorController.createVisor);
-visoresRoutes.put("/updateVisor", visorController.updateVisor)
+visoresRoutes.put("/", PROTECT.REQUIRE_AUTH, visorController.updateVisor)
 visoresRoutes.get("/", visorController.getAllVisors);
 visoresRoutes.get("/:id", visorController.getVisorById);
 

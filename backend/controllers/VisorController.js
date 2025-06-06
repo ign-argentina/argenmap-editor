@@ -14,10 +14,11 @@ class VisorController {
       const { uid } = this.authService.getDataToken(token)
 
       if (!configJson || !name) {
-        return res.status(400).json({ error: 'Faltan campos requeridos' });      }
+        return res.status(400).json({ error: 'Faltan campos requeridos' });
+      }
 
       const result = await this.visorService.createVisor(uid, groupid, name, description, configJson, img)
-      
+
       if (!result.success) {
         return res.status(400).json({ error: result.error })
       }
@@ -30,8 +31,22 @@ class VisorController {
   };
 
   updateVisor = async (req, res) => {
-    try { //GRUPO_ID
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { visorid, visorgid, name, description, configid, configjson, imageData } = req.body
+      const { uid } = this.authService.getDataToken(token)
 
+      if (!configjson || !name) {
+        return res.status(400).json({ error: 'Faltan campos requeridos' });
+      }
+
+      const result = await this.visorService.updateVisor(uid, visorid, visorgid, name, description, configid, configjson, imageData)
+
+      if (!result.success) {
+        return res.status(400).json({ error: result.error })
+      }
+      
+      return res.status(200).json(result)
     } catch (error) {
       return res.status(500).json(error)
     }

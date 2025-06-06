@@ -9,14 +9,16 @@ export async function getAllVisors() {
   return res.json();
 }
 
-export const createVisor = async ( groupid, name, description, configJson, img) => {
+export const createVisor = async (groupid, name, description, configJson, img) => {
   const res = await axios.post(`${API_URL}/visores`,
-    {groupid, name, description, configJson, img}, { withCredentials: true, validateStatus: () => true });
+    { groupid, name, description, configJson, img }, { withCredentials: true, validateStatus: () => true });
   return res.data
 }
 
-export const updateVisor = async (visorid, name, description, configJson, img) => {
-
+export const updateVisor = async (visorid, visorgid, name, description, configid, configjson, imageData) => {
+  const res = await axios.put(`${API_URL}/visores`,
+    {visorid, visorgid, name, description, configid, configjson, imageData }, { withCredentials: true, validateStatus: () => true });
+  return res.data
 }
 
 /* export async function saveVisor({ name, description, json, img }) {
@@ -106,10 +108,10 @@ export const getGroup = async (id) => {
 export const getGroupUserList = async (id) => {
   try {
     const res = await axios.get(`${API_URL}/groups/management/userlist/${id}`, {
-        withCredentials: true,
-         });
-  return res.data
-} catch (error) { console.log("Error al obtener listado de usuarios " + error) }
+      withCredentials: true,
+    });
+    return res.data
+  } catch (error) { console.log("Error al obtener listado de usuarios " + error) }
 }
 
 export const addUserToGroup = async (id, gid) => {

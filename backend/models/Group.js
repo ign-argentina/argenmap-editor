@@ -57,6 +57,11 @@ class Group extends BaseModel {
     return data[0]?.exists ?? false;
   };
 
+  static isEditorForThisGroup = async (groupId, userId) => {
+    const data = await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2 AND rolid = 3)', [groupId, userId]);
+    return data[0]?.exists ?? false;
+  }
+
   static userExists = async (groupId, userId) => {
     return await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE usuarioid = $1 AND grupoid = $2); ', [userId, groupId]) // Devuelve true o false si el usuario ya existe en el grupo
   }

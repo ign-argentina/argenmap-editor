@@ -99,14 +99,13 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       const currentJsonRaw = localStorage.getItem('visorMetadata');
       const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
       const configOnly = currentJsonParsed.config;
-
       if (!currentJsonRaw) {
         alert('No hay configuración para guardar');
         return;
       }
 
       if (editorMode && !cloneMode) {
-        res = await updateVisor(visor.id, visor.gid, name, description, configOnly.json, imageData)
+        res = await updateVisor(visor.id, visor.gid, name, description, configOnly.id, configOnly.json, imageData)
       } else {
         res = await createVisor(selectedGroup, name, description, configOnly.json, imageData)
       }
@@ -177,17 +176,22 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
           />
         )}
 
-        {!editorMode ? <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
-          <option disabled value="no-group">-- Selecciona un grupo --</option>
-          {groupList?.map((grupo) => (
-            <option key={grupo.id} value={grupo.id}>
-              {grupo.name}
-            </option>
-          ))}
-          <option key={null} value="">
-            Mis Visores
-          </option>
-        </select> : null}
+
+        {!editorMode ?
+          <>
+          <h3>Selecciona un grupo al cual quieras agregar este editor</h3>
+            <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
+              <option disabled value="no-group">-- Selecciona un grupo --</option>
+              {groupList?.map((grupo) => (
+                <option key={grupo.id} value={grupo.id}>
+                  {grupo.name}
+                </option>
+              ))}
+              <option key={null} value="">
+                Mis Visores
+              </option>
+            </select>
+          </> : null}
 
         <div className="modal-buttons">
           <button className="save" onClick={handleSubmit}>Guardar</button>
