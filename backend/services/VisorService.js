@@ -40,7 +40,7 @@ class VisorService {
         if (!configResult.id) {
           return { success: false, error: 'No se pudo guardar la configuración' };
         }
-        result = await Visor.updateVisor(configResult.id, name, description, img, visorid)
+        result = await Visor.updateVisor(configid, name, description, img, visorid)
       }
 
       console.log(result)
