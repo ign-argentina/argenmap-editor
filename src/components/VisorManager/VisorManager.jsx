@@ -147,7 +147,6 @@ const VisorManager = () => {
                       }
                       try {
                         const visorCompleto = await getVisorById(visor.id);
-                        console.log(visorCompleto)
                         setSelectedVisor(visorCompleto);
                         setShowPreview(true);
                       } catch (error) {
@@ -164,6 +163,13 @@ const VisorManager = () => {
                     <div className="visor-info">
                       <h3>{visor.name}</h3>
                       <p>{visor.description}</p>
+                      <p className="visor-date">
+                        Actualizado: {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </p>
                     </div>
                   </div>
 

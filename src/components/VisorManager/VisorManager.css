@@ -45,6 +45,7 @@
   transition: all 0.2s ease;
   background-color: var(--secondary--color);
   user-select: none;
+  height: 100%;
 }
 
 .visor-item:hover {
@@ -71,11 +72,24 @@
   font-size: 1.1em;
 }
 
+.visor-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+
 .visor-info p {
   margin: 0;
-  font-size: 0.9em;
-  color: var(--text--color);
   text-align: initial;
+  color: var(--text--color);
+  font-size: 0.9em;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .visor-info p.visor-date,
@@ -83,6 +97,7 @@
   font-size: 0.9em;
   color: var(--text--color);
   margin: 2px 0;
+  margin-top: auto;
 }
 
 .visor-modal-actions {
