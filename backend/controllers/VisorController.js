@@ -4,7 +4,7 @@ import AuthService from "../services/AuthService.js";
 class VisorController {
   constructor() {
     this.visorService = new VisorService();
-    this.authService = new AuthService
+    this.authService = new AuthService();
   }
 
   createVisor = async (req, res) => {
@@ -103,10 +103,12 @@ class VisorController {
 
   getMyVisors = async (req, res) => {
     try {
-      const uid = req.user?.id;
-      if (!uid) {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { uid } = this.authService.getDataToken(token)
+
+/*       if (!uid) {
         return res.status(401).json({ error: 'No autorizado' });
-      }
+      } */
 
       const result = await this.visorService.getMyVisors(uid);
 

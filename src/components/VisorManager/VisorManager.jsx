@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleClearStorage } from '../../utils/HandleClearStorage';
-import { fetchVisores } from '../../utils/FetchVisors';
+/* import { fetchVisores } from '../../utils/FetchVisors'; */
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
-import { getVisorById } from '../../api/configApi';
+import { getVisorById, getPublicVisors, getMyVisors, getGrupos } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
@@ -21,6 +21,8 @@ const VisorManager = () => {
   const [hasFetched, setHasFetched] = useState(false);
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
+
+  const [groupList, setGroupList] = useState([]);
 
   const handleDownload = () => {
     if (!selectedVisor?.config?.json) {
@@ -60,12 +62,35 @@ const VisorManager = () => {
     setIsLoading(true);
     setHasFetched(false);
 
-    fetchVisores((data) => {
-      setVisores(data);
-      setIsLoading(false);
-      setHasFetched(true);
-    });
+    uploadStartData()
+    /*     fetchVisores((data) => {
+          setVisores(data);
+          setIsLoading(false);
+          setHasFetched(true);
+        }); */
   }, []);
+
+  const uploadStartData = async () => {
+    const vp = await getPublicVisors()
+    setVisores(vp)
+    setIsLoading(false);
+    setHasFetched(true);
+
+    const gl = await getGrupos()
+    setGroupList(gl)
+  }
+  const handleChange = async (e) => {
+    if (e.target.value === "public-visors") {
+      const vl = await getPublicVisors()
+      setVisores(vl)
+    } else if (e.target.value === "my-visors") {
+      const vl = await getMyVisors()
+      setVisores(vl)
+    } else if (e.target.value != ''){
+      const vl = await getPublicVisors()
+      setVisores(vl)
+    }
+  }
 
   return (
     <div className={`${showPreview ? 'container-display-1' : 'container-display-0'}`}>
@@ -78,16 +103,17 @@ const VisorManager = () => {
               <label htmlFor="visor-type">Mostrar: </label>
               <select
                 id="visor-type"
-              // value={tipoSeleccionado}
-              // onChange={(e) => setTipoSeleccionado(e.target.value)}
+                defaultValue={"public-visors"}
+                // value={tipoSeleccionado}
+                onChange={handleChange}
               >
-                <option value="publicos">Visores Públicos</option>
-                <option value="mios">Mis Visores</option>
-                {/* {grupos.map(grupo => (
+                <option value="public-visors">Visores Públicos</option>
+                <option value="my-visors">Mis Visores</option>
+                {groupList.map(grupo => (
                     <option key={grupo.id} value={`grupo_${grupo.id}`}>
                       Visores de {grupo.name}
                     </option>
-                  ))} */}
+                  ))}
               </select>
             </div>
 

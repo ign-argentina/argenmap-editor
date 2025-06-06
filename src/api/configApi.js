@@ -17,7 +17,7 @@ export const createVisor = async (groupid, name, description, configJson, img) =
 
 export const updateVisor = async (visorid, visorgid, name, description, configid, configjson, imageData) => {
   const res = await axios.put(`${API_URL}/visores`,
-    {visorid, visorgid, name, description, configid, configjson, imageData }, { withCredentials: true, validateStatus: () => true });
+    { visorid, visorgid, name, description, configid, configjson, imageData }, { withCredentials: true, validateStatus: () => true });
   return res.data
 }
 
@@ -31,6 +31,19 @@ export const updateVisor = async (visorid, visorgid, name, description, configid
   return res.json();
 }
  */
+
+
+export const getPublicVisors = async () => {
+  const res = await axios.get(`${API_URL}/visores/publics`,
+    { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const getMyVisors = async () => {
+  const res = await axios.get(`${API_URL}/visores/myvisors`,
+    { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
 
 export async function getVisorById(id) {
   const res = await fetch(`${API_URL}/visores/${id}`);

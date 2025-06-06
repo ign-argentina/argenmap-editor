@@ -13,7 +13,7 @@ const SELECT_PUBLIC_VISORS = `
 
 const SELECT_MY_VISORS = `
   SELECT * FROM visores
-  WHERE uid = $1 AND deleted = false`;
+  WHERE uid = $1 AND deleted = false AND gid IS NULL`;
 
 const SELECT_GROUP_VISORS = `
   SELECT v.* FROM visores v

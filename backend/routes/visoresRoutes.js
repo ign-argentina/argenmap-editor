@@ -7,13 +7,15 @@ const visorController = new VisorController();
 
 // placesRoutes.get("/:id", placesController.getPlaceById); // Ideal por parámetro y no por query al ser búsqueda simple.
 
+visoresRoutes.get("/publics", visorController.getPublicVisors);
+visoresRoutes.get("/myvisors", visorController.getMyVisors);
+visoresRoutes.get("/tipo/grupo", visorController.getGroupVisors);
+
 visoresRoutes.post("/", PROTECT.REQUIRE_AUTH, visorController.createVisor);
 visoresRoutes.put("/", PROTECT.REQUIRE_AUTH, visorController.updateVisor)
 visoresRoutes.get("/", visorController.getAllVisors);
 visoresRoutes.get("/:id", visorController.getVisorById);
 
-visoresRoutes.get("/tipo/publicos", visorController.getPublicVisors);
-visoresRoutes.get("/tipo/mis-visores", visorController.getMyVisors);
-visoresRoutes.get("/tipo/grupo", visorController.getGroupVisors);
+
 
 export default visoresRoutes;
