@@ -86,7 +86,7 @@ const VisorManager = () => {
     } else if (e.target.value === "my-visors") {
       const vl = await getMyVisors()
       setVisores(vl)
-    } else if (e.target.value != ''){
+    } else if (e.target.value != '') {
       const vl = await getGroupVisors(e.target.value)
       setVisores(vl)
     }
@@ -97,26 +97,26 @@ const VisorManager = () => {
       <div className={`visor-conent ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
           <h2>VISOR MANAGER</h2>
+
+          <div className="visor-filter">
+            <label htmlFor="visor-type">Mostrando: </label>
+            <select
+              id="visor-type"
+              defaultValue={"public-visors"}
+              // value={tipoSeleccionado}
+              onChange={handleChange}
+            >
+              <option value="public-visors">Visores Públicos</option>
+              <option value="my-visors">Mis Visores</option>
+              {groupList?.map(grupo => (
+                <option key={grupo.id} value={grupo.id}>
+                  Visores de {grupo.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="visor-modal-container">
-
-            <div className="visor-filter">
-              <label htmlFor="visor-type">Mostrar: </label>
-              <select
-                id="visor-type"
-                defaultValue={"public-visors"}
-                // value={tipoSeleccionado}
-                onChange={handleChange}
-              >
-                <option value="public-visors">Visores Públicos</option>
-                <option value="my-visors">Mis Visores</option>
-                {groupList?.map(grupo => (
-                    <option key={grupo.id} value={grupo.id}>
-                      Visores de {grupo.name}
-                    </option>
-                  ))}
-              </select>
-            </div>
-
             <div className='visor-list-container'>
               <div className="visor-list">
                 {isLoading && (
@@ -141,6 +141,7 @@ const VisorManager = () => {
                       }
                       try {
                         const visorCompleto = await getVisorById(visor.id);
+                        console.log(visorCompleto)
                         setSelectedVisor(visorCompleto);
                         setShowPreview(true);
                       } catch (error) {
@@ -158,6 +159,18 @@ const VisorManager = () => {
                     <div className="visor-info">
                       <h3>{visor.name}</h3>
                       <p>{visor.description}</p>
+
+                      <p className="visor-date">
+                        Actualizado: {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </p>
+
+                      <p className="visor-privacy">
+                        {visor.publico ? 'Público' : 'Privado'}
+                      </p>
                     </div>
                   </div>
 

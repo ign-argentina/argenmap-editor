@@ -80,6 +80,13 @@
   text-align: initial;
 }
 
+.visor-info p.visor-date,
+.visor-info p.visor-privacy {
+  font-size: 0.9em;
+  color: var(--text--color);
+  margin: 2px 0;
+}
+
 .visor-modal-actions {
   display: flex;
   flex-direction: column;
@@ -148,4 +155,11 @@
   justify-content: center;
   align-items: center;
   background-color: var(--primary--color);
+}
+
+.visor-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
 }
