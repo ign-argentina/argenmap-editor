@@ -37,14 +37,11 @@ class VisorService {
 
       if (haveAccessToVisor || isVisorOwner) {
         const [configResult] = await Config.updateConfig(configid, configjson);
-        if (!configResult.id) {
-          return { success: false, error: 'No se pudo guardar la configuración' };
+        if (configResult.id) { // Config update devuelve el id de la cfg. Por lo tanto, si hay id quiere decir que corresponde a la peticion. Una vez validado, actualizamos visor
+          result = await Visor.updateVisor(configid, name, description, img, visorid)
         }
-        result = await Visor.updateVisor(configid, name, description, img, visorid)
       }
-      return result.length > 0
-        ? Result.success("Visor guardado con éxito")
-        : Result.fail("No se pudo guardar el visor")
+      return result.length > 0 ? Result.success("Visor guardado con éxito") : Result.fail("No se pudo guardar el visor")
     } catch (err) {
       return { success: false, error: err.message };
     }
@@ -114,9 +111,7 @@ class VisorService {
   getPublicVisors = async () => {
     try {
       const result = await Visor.getPublicVisors();
-      return result
-        ? { success: true, data: result }
-        : { success: false, error: "No se pudieron obtener los visores públicos" };
+      return result.length >= 0 ? Result.success(result) : Result.fail("No se pudo obtener el listado de visores publicos");
     } catch (err) {
       console.error("Error en VisorService (getPublicVisors):", err);
       return { success: false, error: err.message };
@@ -126,9 +121,7 @@ class VisorService {
   getMyVisors = async (uid) => {
     try {
       const result = await Visor.getMyVisors(uid);
-      return result
-        ? { success: true, data: result }
-        : { success: false, error: "No se pudieron obtener tus visores" };
+      return result.length >= 0 ? Result.success(result) : Result.fail("No se pudo obtener el listado de visores");
     } catch (err) {
       console.error("Error en VisorService (getMyVisors):", err);
       return { success: false, error: err.message };
@@ -138,11 +131,11 @@ class VisorService {
   getGroupVisors = async (uid, groupid) => {
     try {
       let result = []
-      if (Group.isMember(uid)) {
+      if (await Group.isMember(uid) || await User.isSuperAdmin(uid)) {
         result = await Visor.getGroupVisors(groupid)
       }
 
-      return result.length > 0 ? { success: true, data: result } : { success: false, error: "No se pudieron obtener los visores del grupo" };
+      return result.length >= 0 ? Result.success(result) : Result.fail("No se pudieron obtener los visores del grupo");
     } catch (err) {
       console.error("Error en VisorService (getGroupVisors):", err);
       return { success: false, error: err.message };
