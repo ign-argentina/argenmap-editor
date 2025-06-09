@@ -115,7 +115,6 @@ class Group extends BaseModel {
     return await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE usuarioid = $1 AND grupoid = $2); ', [userId, groupId]) // Devuelve true o false si el usuario ya existe en el grupo
   }
 
-
   /**
    * Agrega un usuario a un grupo.
    * @param {number} groupId - ID del grupo.
@@ -159,6 +158,5 @@ class Group extends BaseModel {
     return await super.runQuery('UPDATE grupos SET name = $1, description = $2, img = $3 WHERE id = $4 RETURNING true', [name, description, img, gid])
   }
 }
-
 
 export default Group
