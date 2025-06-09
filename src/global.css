@@ -119,12 +119,12 @@ main,
 }
 
 .global-buttons .delete {
-  background-color: #ff0000;
+  background-color: #bb0000;
   color: var(--text--color);
 }
 
 .global-buttons .delete:hover {
-  background-color: #bb0000;
+  background-color: #ff0000;
   color: var(--text--color);
 }
 

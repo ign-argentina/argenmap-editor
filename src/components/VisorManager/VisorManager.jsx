@@ -10,6 +10,7 @@ import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
 const VisorManager = () => {
   const [visores, setVisores] = useState([]);
@@ -24,6 +25,15 @@ const VisorManager = () => {
   const [toast, setToast] = useState(null);
   const [groupList, setGroupList] = useState([]);
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(() => () => { });
+  const [confirmData, setConfirmData] = useState({ title: "", message: "" });
+
+  const pedirConfirmacion = ({ title, message, onConfirm }) => {
+    setConfirmData({ title, message });
+    setConfirmAction(() => onConfirm);
+    setConfirmVisible(true);
+  };
 
   const showToast = (message, type) => {
     setToast({ message, type });
@@ -54,14 +64,21 @@ const VisorManager = () => {
     navigate('/form');
   };
 
-  const handleDeleteVisor = (visorCompleto) => {
-    let visorid = visorCompleto.id;
-    let visorgid = visorCompleto.gid;
+  const handleDeleteVisor = async (visorCompleto) => {
+    const visorid = visorCompleto.id;
+    const visorgid = visorCompleto.gid;
 
-    showToast('Prueba con exito!', 'success')
-    // deleteVisor(visorid, visorgid)
-    // uploadStartData();
-  }
+    try {
+      await deleteVisor(visorid, visorgid);
+      showToast("Visor eliminado con éxito", "success");
+      uploadStartData();
+      setSelectedVisor(null);
+      setShowPreview(false);
+    } catch (error) {
+      console.error("Error al eliminar el visor:", error);
+      showToast("Error al eliminar el visor", "error");
+    }
+  };
 
   const handleLoadVisor = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
@@ -229,10 +246,17 @@ const VisorManager = () => {
 
                 <button
                   className="delete"
-                  onClick={() => {
-                    if (!selectedVisor) return;
-                    handleDeleteVisor(selectedVisor);
-                  }}
+                  onClick={() =>
+                    pedirConfirmacion({
+                      title: "¿Estás seguro?",
+                      message: "Esto eliminará el visor.",
+                      onConfirm: () => {
+                        if (!selectedVisor) return;
+                        setConfirmVisible(false);
+                        handleDeleteVisor(selectedVisor);
+                      },
+                    })
+                  }
                   disabled={!selectedVisor}
                   title="Borrar Visor">
                   <i className="fa-solid fa-trash-can"></i>
@@ -280,6 +304,17 @@ const VisorManager = () => {
               onClose={() => setToast(null)}
             />
           )}
+
+          <ConfirmDialog
+            isOpen={confirmVisible}
+            title={confirmData.title}
+            message={confirmData.message}
+            onConfirm={() => {
+              confirmAction();
+              setConfirmVisible(false);
+            }}
+            onCancel={() => setConfirmVisible(false)}
+          />
 
         </div>
       </div>
