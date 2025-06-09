@@ -1,19 +1,42 @@
 import Group from "../models/Group.js"
 import User from "../models/User.js"
 import Result from "../utils/Result.js";
+
+/**
+ * Servicio encargado de manejar la lógica relacionada con los grupos y sus usuarios.
+ * Incluye creación, edición, eliminación de grupos y gestión de miembros.
+ */
 class GroupService {
 
+  /**
+ * Elimina un grupo si el usuario tiene permisos (es admin del grupo o super admin).
+ *
+ * @param {number} gid - ID del grupo a eliminar.
+ * @param {number} uid - ID del usuario que hace la solicitud.
+ * @returns {Object} Resultado de la operación.
+ */
   deleteGroup = async (gid, uid) => {
     try {
       let result = []
-      if (await Group.isAdminForThisGroup(gid, uid) || await User.isSuperAdmin(uid)){
-         result = await Group.deleteGroup(gid)
+      if (await Group.isAdminForThisGroup(gid, uid) || await User.isSuperAdmin(uid)) {
+        result = await Group.deleteGroup(gid)
       }
       return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido eliminar al usuario")
     } catch (error) {
       console.log("Error en la capa de servicio " + error)
     }
   }
+
+  /**
+ * Actualiza los datos de un grupo si el usuario es admin del mismo o super admin.
+ *
+ * @param {string} name - Nuevo nombre del grupo.
+ * @param {string} description - Descripción del grupo.
+ * @param {string} img - Imagen del grupo.
+ * @param {number} gid - ID del grupo.
+ * @param {number} uid - ID del usuario que realiza la acción.
+ * @returns {Object} Resultado de la operación.
+ */
   updateGroup = async (name, description, img, gid, uid) => {
     try {
       let result = []
@@ -27,6 +50,14 @@ class GroupService {
       console.log("Error en la capa de servicio " + error)
     }
   }
+
+  /**
+ * Obtiene la lista de grupos visibles para un usuario.
+ *
+ * @param {number} userId - ID del usuario.
+ * @param {boolean} isGroupAdmin - Indica si el usuario es admin de algún grupo.
+ * @returns {Array} Lista de grupos.
+ */
   getGroupList = async (userId, isGroupAdmin) => {
     try {
       let rolId = null;
@@ -44,6 +75,14 @@ class GroupService {
     }
   }
 
+  /**
+ * Devuelve la información de un grupo, validando permisos del usuario.
+ *
+ * @param {number} id - ID del grupo.
+ * @param {number} uid - ID del usuario.
+ * @param {boolean} isSuperAdmin - Si el usuario es super admin.
+ * @returns {Object} Datos del grupo.
+ */
   getGroup = async (id, uid, isSuperAdmin) => {
     try {
       let grupo = []
@@ -58,6 +97,11 @@ class GroupService {
     }
   }
 
+  /**
+ * Método privado. Devuelve todos los grupos sin filtro.
+ *
+ * @returns {Array} Lista completa de grupos.
+ */
   #getAllGroups = async () => {
     try {
       return await Group.getAllGroups()
@@ -66,6 +110,14 @@ class GroupService {
     }
   }
 
+  /**
+ * Devuelve la lista de usuarios de un grupo si el usuario tiene permisos.
+ *
+ * @param {number} id - ID del grupo.
+ * @param {number} uid - ID del usuario.
+ * @param {boolean} isSuperAdmin - Si el usuario es super admin.
+ * @returns {Object} Resultado con la lista de usuarios.
+ */
   getGroupUserList = async (id, uid, isSuperAdmin) => {
     try {
       let result = []
@@ -81,6 +133,14 @@ class GroupService {
     }
   }
 
+  /**
+ * Agrega un usuario a un grupo si el solicitante tiene permisos.
+ *
+ * @param {number} addUserId - ID del usuario a agregar.
+ * @param {number} uid - ID del usuario que realiza la acción.
+ * @param {number} gid - ID del grupo.
+ * @returns {Object} Resultado de la operación.
+ */
   addUserToGroup = async (addUserId, uid, gid) => {
     try {
       let result = []
@@ -101,6 +161,14 @@ class GroupService {
     }
   }
 
+  /**
+ * Elimina un usuario de un grupo si el solicitante es admin del grupo o super admin.
+ *
+ * @param {number} deleteUserId - ID del usuario a eliminar.
+ * @param {number} uid - ID del usuario que realiza la acción.
+ * @param {number} gid - ID del grupo.
+ * @returns {Object} Resultado de la operación.
+ */
   deleteUserFromGroup = async (deleteUserId, uid, gid) => {
     try {
       let result = []
@@ -115,6 +183,15 @@ class GroupService {
     }
   }
 
+  /**
+ * Actualiza el rol de un usuario dentro de un grupo. Validando a su vez si el solicitante tiene permisos para hacerlo
+ *
+ * @param {number} uid - ID del usuario que realiza la acción.
+ * @param {number} userId - ID del usuario a modificar.
+ * @param {number} rolId - Nuevo rol a asignar.
+ * @param {number} gid - ID del grupo.
+ * @returns {Object} Resultado de la operación.
+ */
   updateUserRolFromGroup = async (uid, userId, rolId, gid) => {
     try {
       let result = []
@@ -129,7 +206,5 @@ class GroupService {
       console.log("Error en la capa de servicio " + error)
     }
   }
-
 }
-
 export default GroupService
