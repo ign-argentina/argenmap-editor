@@ -88,11 +88,6 @@ class AuthController {
     }
   }
 
-
-  getDataToken = (req, res) => {
-    // ***** TO DO ******
-  }
-
   #sendAuthCookie(res, token) {
     res.cookie(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
