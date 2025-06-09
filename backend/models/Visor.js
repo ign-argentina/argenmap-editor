@@ -15,6 +15,11 @@ const SELECT_MY_VISORS = `
   SELECT * FROM visores
   WHERE uid = $1 AND deleted = false AND gid IS NULL`;
 
+const DELETE_VISOR = `
+  UPDATE visores
+  SET deleted = TRUE
+  WHERE id = $1;`;
+
 /* const SELECT_GROUP_VISORS = `
   SELECT v.* FROM visores v
   JOIN usuarios_por_grupo upg ON v.gid = upg.grupoId
@@ -42,6 +47,16 @@ class Visor extends BaseModel {
       return null;
     }
   }
+
+  static deleteVisor = async (visorId) => {
+    try {
+      const result = await super.runQuery(DELETE_VISOR, [visorId]);
+      return result;
+    } catch (err) {
+      console.log("Error en Visor model (deleteVisor):", err);
+      return null;
+    }
+  };
 
   static getAllVisors = async () => {
     try {

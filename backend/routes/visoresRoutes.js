@@ -13,6 +13,8 @@ visoresRoutes.get("/group/:groupid", visorController.getGroupVisors);
 
 visoresRoutes.post("/", PROTECT.REQUIRE_AUTH, visorController.createVisor);
 visoresRoutes.put("/", PROTECT.REQUIRE_AUTH, visorController.updateVisor)
+visoresRoutes.delete("/", PROTECT.REQUIRE_AUTH, visorController.deleteVisor);
+
 visoresRoutes.get("/", visorController.getAllVisors);
 visoresRoutes.get("/:id", visorController.getVisorById);
 

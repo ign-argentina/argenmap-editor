@@ -21,6 +21,15 @@ export const updateVisor = async (visorid, visorgid, name, description, configid
   return res.data
 }
 
+export const deleteVisor = async (visorid, visorgid) => {
+  const res = await axios.delete(`${API_URL}/visores`, {
+    data: { visorid, visorgid },
+    withCredentials: true,
+    validateStatus: () => true,
+  });
+  return res.data;
+};
+
 /* export async function saveVisor({ name, description, json, img }) {
   const res = await fetch(`${API_URL}/visores`, {
     method: 'POST',

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleClearStorage } from '../../utils/HandleClearStorage';
-/* import { fetchVisores } from '../../utils/FetchVisors'; */
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
-import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors } from '../../api/configApi';
+import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
@@ -47,6 +46,14 @@ const VisorManager = () => {
     handleFileChange(event, setData, uploadSchema);
     navigate('/form');
   };
+
+  const handleDeleteVisor = (visorCompleto) => {
+    let visorid = visorCompleto.id;
+    let visorgid = visorCompleto.gid;
+    console.log(visorid, visorgid)
+    deleteVisor(visorid, visorgid)
+    navigate('/visores');
+  }
 
   const handleLoadVisor = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
@@ -219,7 +226,11 @@ const VisorManager = () => {
 
                 <button
                   className="delete"
-                  // onClick={}
+                  onClick={() => {
+                    if (!selectedVisor) return;
+                    handleDeleteVisor(selectedVisor);
+                  }}
+                  disabled={!selectedVisor}
                   title="Borrar Visor">
                   <i className="fa-solid fa-trash-can"></i>
                   Borrar Visor
