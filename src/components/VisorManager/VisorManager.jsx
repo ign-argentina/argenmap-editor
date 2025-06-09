@@ -4,6 +4,7 @@ import { handleClearStorage } from '../../utils/HandleClearStorage';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
+import Toast from '../Toast/Toast';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
@@ -20,8 +21,14 @@ const VisorManager = () => {
   const [hasFetched, setHasFetched] = useState(false);
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
-
+  const [toast, setToast] = useState(null);
   const [groupList, setGroupList] = useState([]);
+
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleDownload = () => {
     if (!selectedVisor?.config?.json) {
@@ -50,9 +57,10 @@ const VisorManager = () => {
   const handleDeleteVisor = (visorCompleto) => {
     let visorid = visorCompleto.id;
     let visorgid = visorCompleto.gid;
-    console.log(visorid, visorgid)
-    deleteVisor(visorid, visorgid)
-    navigate('/visores');
+
+    showToast('Prueba con exito!', 'success')
+    // deleteVisor(visorid, visorgid)
+    // uploadStartData();
   }
 
   const handleLoadVisor = (visorCompleto) => {
@@ -68,13 +76,7 @@ const VisorManager = () => {
   useEffect(() => {
     setIsLoading(true);
     setHasFetched(false);
-
-    uploadStartData()
-    /*     fetchVisores((data) => {
-          setVisores(data);
-          setIsLoading(false);
-          setHasFetched(true);
-        }); */
+    uploadStartData();
   }, []);
 
   const uploadStartData = async () => {
@@ -86,6 +88,7 @@ const VisorManager = () => {
     const gl = await getGrupos()
     setGroupList(gl)
   }
+
   const handleChange = async (e) => {
     if (e.target.value === "public-visors") {
       const vl = await getPublicVisors()
@@ -267,6 +270,15 @@ const VisorManager = () => {
                 </div>
               </div>
             </div>
+          )}
+
+          {toast && (
+            <Toast
+              message={toast.message}
+              type={toast.type}
+              duration={3000}
+              onClose={() => setToast(null)}
+            />
           )}
 
         </div>

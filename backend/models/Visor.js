@@ -18,14 +18,17 @@ const SELECT_MY_VISORS = `
 const DELETE_VISOR = `
   UPDATE visores
   SET deleted = TRUE
-  WHERE id = $1;`;
+  WHERE id = $1 
+  RETURNING 1`;
+
+const SELECT_GROUP_VISORS = `
+  SELECT * FROM visores 
+  WHERE gid = $1 AND deleted = false`;
 
 /* const SELECT_GROUP_VISORS = `
   SELECT v.* FROM visores v
   JOIN usuarios_por_grupo upg ON v.gid = upg.grupoId
   WHERE upg.usuarioId = $1 AND v.deleted = false`; */
-
-const SELECT_GROUP_VISORS = "select * from visores where gid = $1"
 
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img) => {
