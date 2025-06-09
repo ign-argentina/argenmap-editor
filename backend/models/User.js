@@ -137,7 +137,6 @@ class User extends BaseModel {
       return user.superadmin
     } catch (error) {
       console.log("USER MODEL: ", error)
-          return false  // <-- importante
     }
   }
 
