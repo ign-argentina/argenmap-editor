@@ -8,15 +8,15 @@ const visorController = new VisorController();
 // placesRoutes.get("/:id", placesController.getPlaceById); // Ideal por parámetro y no por query al ser búsqueda simple.
 
 visoresRoutes.get("/publics", visorController.getPublicVisors);
-visoresRoutes.get("/myvisors", visorController.getMyVisors);
-visoresRoutes.get("/group/:groupid", visorController.getGroupVisors);
+visoresRoutes.get("/myvisors", PROTECT.REQUIRE_AUTH, visorController.getMyVisors);
+visoresRoutes.get("/group/:groupid", PROTECT.REQUIRE_AUTH, visorController.getGroupVisors);
 
 visoresRoutes.post("/", PROTECT.REQUIRE_AUTH, visorController.createVisor);
 visoresRoutes.put("/", PROTECT.REQUIRE_AUTH, visorController.updateVisor)
-visoresRoutes.delete("/", PROTECT.REQUIRE_AUTH, visorController.deleteVisor);
+visoresRoutes.delete("/", PROTECT.REQUIRE_GROUP_ADMIN, visorController.deleteVisor);
 
-visoresRoutes.get("/", visorController.getAllVisors);
-visoresRoutes.get("/:id", visorController.getVisorById);
+visoresRoutes.get("/", visorController.getAllVisors); // Deprecado?
+visoresRoutes.get("/:id", PROTECT.REQUIRE_AUTH, visorController.getVisorById);
 
 
 
