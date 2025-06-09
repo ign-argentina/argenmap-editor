@@ -2,12 +2,23 @@ import AuthService from "../services/AuthService.js"
 
 const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME
 const MIN_PASSWORD_LENGTH = 10
-
+/**
+ * Controlador para manejar la autenticación de usuarios.
+ * Contiene métodos para login, registro, logout y validación de sesión.
+ */
 class AuthController {
   constructor() {
     this.authService = new AuthService()
   }
 
+  /**
+ * Inicia sesión con email y contraseña.
+ * Si las credenciales son correctas, devuelve el usuario y guarda una cookie de autenticación.
+ *
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Object} Usuario autenticado o error.
+ */
   login = async (req, res) => {
     try {
       const { email, password } = req.body
@@ -27,6 +38,15 @@ class AuthController {
     }
   }
 
+  /**
+ * Registra un nuevo usuario.
+ * Verifica que los datos estén completos, que el mail no esté duplicado, que la contraseña cumpla con la longitud de carácteres mínimos,
+ * y que el registro público esté habilitado.
+ *
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Object} Usuario registrado o error.
+ */
   register = async (req, res) => {
     try {
       const { email, name, lastname, password } = req.body
@@ -63,6 +83,14 @@ class AuthController {
     }
   }
 
+  /**
+ * Cierra la sesión del usuario.
+ * Elimina la cookie de autenticación.
+ *
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Object} Confirmación de logout.
+ */
   logout = async (req, res) => {
     res.clearCookie(AUTH_COOKIE_NAME, {
       httpOnly: true,
@@ -72,6 +100,14 @@ class AuthController {
     return res.status(200).json()
   }
 
+  /**
+ * Verifica si el usuario está autenticado.
+ * Valida el token guardado en las cookies.
+ *
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Object} Resultado de la validación.
+ */
   checkAuth = async (req, res) => {
     try {
       const token = req.cookies[AUTH_COOKIE_NAME]
@@ -88,6 +124,13 @@ class AuthController {
     }
   }
 
+  /**
+ * Método privado para enviar la cookie de autenticación.
+ * Inyecta una cookie https estricta en el objeto res.
+ * 
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @param {string} token - Token JWT a guardar en la cookie.
+ */
   #sendAuthCookie(res, token) {
     res.cookie(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
