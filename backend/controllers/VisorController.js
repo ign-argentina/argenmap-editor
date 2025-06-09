@@ -4,7 +4,7 @@ import AuthService from "../services/AuthService.js";
 class VisorController {
   constructor() {
     this.visorService = new VisorService();
-    this.authService = new AuthService
+    this.authService = new AuthService();
   }
 
   createVisor = async (req, res) => {
@@ -35,7 +35,7 @@ class VisorController {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
       const { visorid, visorgid, name, description, configid, configjson, imageData } = req.body
       const { uid } = this.authService.getDataToken(token)
-      
+
       if (!configjson || !name) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
@@ -52,11 +52,29 @@ class VisorController {
     }
   }
 
+  deleteVisor = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME];
+      const { uid } = this.authService.getDataToken(token);
 
-  // getAllVisors() {
+      const { visorid, visorgid } = req.body;
 
-  //   return ["v1", "v2", "v3"]
-  // }
+      if (!visorid) {
+        return res.status(400).json({ error: 'Falta el ID del visor' });
+      }
+
+      const result = await this.visorService.deleteVisor(uid, visorid, visorgid);
+
+      if (!result.success) {
+        return res.status(403).json({ error: result.error });
+      }
+
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error("Error en VisorController (deleteVisor):", err);
+      return res.status(500).json({ error: 'Error al eliminar el visor', detail: err.message });
+    }
+  };
 
   getAllVisors = async (req, res) => {
     try {
@@ -84,6 +102,55 @@ class VisorController {
       return res.status(200).json(result.data);
     } catch (err) {
       return res.status(500).json({ error: 'Error al obtener el visor', detail: err.message });
+    }
+  };
+
+  getPublicVisors = async (req, res) => {
+    try {
+      const result = await this.visorService.getPublicVisors();
+
+      if (!result.success) {
+        return res.status(500).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al obtener visores públicos', detail: err.message });
+    }
+  };
+
+  getMyVisors = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { uid } = this.authService.getDataToken(token)
+
+      const result = await this.visorService.getMyVisors(uid);
+
+      if (!result.success) {
+        return res.status(500).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al obtener visores del usuario', detail: err.message });
+    }
+  };
+
+  getGroupVisors = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { uid } = this.authService.getDataToken(token)
+      const { groupid } = req.params;
+
+      const result = await this.visorService.getGroupVisors(uid, groupid);
+
+      if (!result.success) {
+        return res.status(400).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (err) {
+      return res.status(500).json({ error: 'Error al obtener visores de grupo', detail: err.message });
     }
   };
 

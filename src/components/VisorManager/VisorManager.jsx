@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleClearStorage } from '../../utils/HandleClearStorage';
-import { fetchVisores } from '../../utils/FetchVisors';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
-import { getVisorById } from '../../api/configApi';
+import Toast from '../Toast/Toast';
+import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
 const VisorManager = () => {
   const [visores, setVisores] = useState([]);
@@ -21,6 +22,23 @@ const VisorManager = () => {
   const [hasFetched, setHasFetched] = useState(false);
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
+  const [toast, setToast] = useState(null);
+  const [groupList, setGroupList] = useState([]);
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(() => () => { });
+  const [confirmData, setConfirmData] = useState({ title: "", message: "" });
+
+  const pedirConfirmacion = ({ title, message, onConfirm }) => {
+    setConfirmData({ title, message });
+    setConfirmAction(() => onConfirm);
+    setConfirmVisible(true);
+  };
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleDownload = () => {
     if (!selectedVisor?.config?.json) {
@@ -46,6 +64,22 @@ const VisorManager = () => {
     navigate('/form');
   };
 
+  const handleDeleteVisor = async (visorCompleto) => {
+    const visorid = visorCompleto.id;
+    const visorgid = visorCompleto.gid;
+
+    try {
+      await deleteVisor(visorid, visorgid);
+      showToast("Visor eliminado con éxito", "success");
+      uploadStartData();
+      setSelectedVisor(null);
+      setShowPreview(false);
+    } catch (error) {
+      console.error("Error al eliminar el visor:", error);
+      showToast("Error al eliminar el visor", "error");
+    }
+  };
+
   const handleLoadVisor = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
       ? JSON.parse(visorCompleto.config.json)
@@ -59,23 +93,65 @@ const VisorManager = () => {
   useEffect(() => {
     setIsLoading(true);
     setHasFetched(false);
-
-    fetchVisores((data) => {
-      setVisores(data);
-      setIsLoading(false);
-      setHasFetched(true);
-    });
+    uploadStartData();
   }, []);
+
+  const uploadStartData = async () => {
+    const vp = await getPublicVisors()
+    setVisores(vp)
+    setIsLoading(false);
+    setHasFetched(true);
+
+    const gl = await getGrupos()
+    setGroupList(gl)
+  }
+
+  const handleChange = async (e) => {
+    if (e.target.value === "public-visors") {
+      const vl = await getPublicVisors()
+      setVisores(vl)
+    } else if (e.target.value === "my-visors") {
+      const vl = await getMyVisors()
+      setVisores(vl)
+    } else if (e.target.value != '') {
+      const vl = await getGroupVisors(e.target.value)
+      setVisores(vl)
+    }
+  }
 
   return (
     <div className={`${showPreview ? 'container-display-1' : 'container-display-0'}`}>
-      <div className={`visor-conent ${showPreview ? 'flex-0' : 'flex-1'}`}>
+
+      {showPreview && (
+        <div className='side-panel'>
+          <Preview />
+        </div>
+      )}
+
+      <div className={`visor-content ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
           <h2>VISOR MANAGER</h2>
+
+          <div className="visor-filter">
+            <label htmlFor="visor-type">Mostrando: </label>
+            <select
+              id="visor-type"
+              defaultValue={"public-visors"}
+              onChange={handleChange}
+            >
+              <option value="public-visors">Visores Públicos</option>
+              <option value="my-visors">Mis Visores</option>
+              {groupList?.map(grupo => (
+                <option key={grupo.id} value={grupo.id}>
+                  Visores de {grupo.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="visor-modal-container">
             <div className='visor-list-container'>
               <div className="visor-list">
-
                 {isLoading && (
                   <div className="loading-message">
                     <span className="spinner" />
@@ -106,7 +182,6 @@ const VisorManager = () => {
                       }
                     }}
                   >
-
                     <img
                       src={visor.img || '/assets/no-image.png'}
                       alt="img"
@@ -115,6 +190,13 @@ const VisorManager = () => {
                     <div className="visor-info">
                       <h3>{visor.name}</h3>
                       <p>{visor.description}</p>
+                      <p className="visor-date">
+                        Actualizado: {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </p>
                     </div>
                   </div>
 
@@ -154,7 +236,7 @@ const VisorManager = () => {
                   onClick={() => {
                     if (!selectedVisor) return;
                     handleLoadVisor(selectedVisor);
-                    navigate('/form', {state: {visor: selectedVisor, editorMode: true}});
+                    navigate('/form', { state: { visor: selectedVisor, editorMode: true } });
                   }}
                   disabled={!selectedVisor}
                 >
@@ -164,7 +246,18 @@ const VisorManager = () => {
 
                 <button
                   className="delete"
-                  // onClick={}
+                  onClick={() =>
+                    pedirConfirmacion({
+                      title: "¿Estás seguro?",
+                      message: "Esto eliminará el visor.",
+                      onConfirm: () => {
+                        if (!selectedVisor) return;
+                        setConfirmVisible(false);
+                        handleDeleteVisor(selectedVisor);
+                      },
+                    })
+                  }
+                  disabled={!selectedVisor}
                   title="Borrar Visor">
                   <i className="fa-solid fa-trash-can"></i>
                   Borrar Visor
@@ -181,14 +274,50 @@ const VisorManager = () => {
               </div>
             </div>
           </div>
+
+          {selectedVisor && (
+            <div className="visor-description">
+              <div className="visor-info">
+                <h3>{selectedVisor.name}</h3>
+                <div>
+                  <p>{selectedVisor.description}</p>
+                  <p className="visor-date">
+                    Actualizado: {new Date(selectedVisor.lastupdate).toLocaleDateString('es-AR', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
+                    })}
+                  </p>
+                  <p className="visor-privacy">
+                    {selectedVisor.publico ? 'Público' : 'Privado'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {toast && (
+            <Toast
+              message={toast.message}
+              type={toast.type}
+              duration={3000}
+              onClose={() => setToast(null)}
+            />
+          )}
+
+          <ConfirmDialog
+            isOpen={confirmVisible}
+            title={confirmData.title}
+            message={confirmData.message}
+            onConfirm={() => {
+              confirmAction();
+              setConfirmVisible(false);
+            }}
+            onCancel={() => setConfirmVisible(false)}
+          />
+
         </div>
       </div>
-
-      {showPreview && (
-        <div className='side-panel'>
-          <Preview />
-        </div>
-      )}
     </div>
   );
 };

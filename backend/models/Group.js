@@ -157,6 +157,11 @@ class Group extends BaseModel {
   static updateGroup = async (name, description, img, gid) => {
     return await super.runQuery('UPDATE grupos SET name = $1, description = $2, img = $3 WHERE id = $4 RETURNING true', [name, description, img, gid])
   }
+
+  static isMember = async (uid, groupid) => {
+    const data = await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2)', [groupid, uid]);
+    return data[0]?.exists ?? false;
+  }
 }
 
 export default Group
