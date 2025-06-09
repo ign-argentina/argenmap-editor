@@ -115,7 +115,7 @@ main,
 }
 
 .global-buttons .download:hover {
-  background-color: var(--active--color);
+  background-color: rgb(6, 185, 0);
 }
 
 .global-buttons .delete {
