@@ -1,6 +1,10 @@
 import AuthService from "../services/AuthService.js"
 import GroupService from "../services/GroupService.js"
 
+/**
+ * Controlador encargado de gestionar grupos y sus usuarios.
+ * Incluye creación, edición, eliminación y consulta de grupos, así como gestión de miembros.
+ */
 class GroupController {
   constructor() {
     this.groupService = new GroupService()
@@ -8,9 +12,15 @@ class GroupController {
   }
 
   createGroup = async (req, res) => {
-
+    /**** TO DO ****/
   }
 
+  /**
+ * Actualiza los datos de un grupo específico.
+ *
+ * @param {Object} req - Solicitud HTTP con datos del grupo.
+ * @param {Object} res - Respuesta HTTP con el resultado.
+ */
   updateGroup = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -31,6 +41,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Elimina un grupo si el usuario tiene permisos.
+ *
+ * @param {Object} req - Solicitud HTTP con el ID del grupo.
+ * @param {Object} res - Respuesta HTTP con el resultado.
+ */
   deleteGroup = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -49,6 +65,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Elimina un usuario de un grupo si el usuario actual tiene permisos.
+ *
+ * @param {Object} req - Solicitud con ID de usuario a eliminar y del grupo.
+ * @param {Object} res - Respuesta con el resultado.
+ */
   deleteUserFromGroup = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -67,6 +89,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Obtiene la lista de grupos visibles por el usuario.
+ *
+ * @param {Object} req - Solicitud HTTP con token del usuario.
+ * @param {Object} res - Lista de grupos.
+ */
   getGroupList = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -79,6 +107,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Obtiene lista de grupos gestionados por el usuario.
+ *
+ * @param {Object} req - Solicitud HTTP.
+ * @param {Object} res - Lista de grupos gestionables.
+ */
   getManageGroupList = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -91,6 +125,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Obtiene la información detallada de un grupo.
+ *
+ * @param {Object} req - Solicitud con ID del grupo.
+ * @param {Object} res - Datos del grupo.
+ */
   getGroup = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -104,6 +144,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Devuelve la lista de usuarios de un grupo.
+ *
+ * @param {Object} req - Solicitud con ID del grupo.
+ * @param {Object} res - Lista de usuarios del grupo.
+ */
   getGroupUserList = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -120,6 +166,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Agrega un usuario a un grupo.
+ *
+ * @param {Object} req - Solicitud con ID de usuario e ID del grupo.
+ * @param {Object} res - Resultado de la operación.
+ */
   addUserToGroup = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
@@ -138,6 +190,12 @@ class GroupController {
     }
   }
 
+  /**
+ * Cambia el rol de un usuario dentro de un grupo.
+ *
+ * @param {Object} req - Solicitud con IDs de usuario, rol y grupo.
+ * @param {Object} res - Resultado de la operación.
+ */
   updateUserRolFromGroup = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
