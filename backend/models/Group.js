@@ -35,7 +35,6 @@ const GET_GROUP_USER_LIST = `SELECT
 * Modelo para operaciones directas sobre la base de datos relacionadas a grupos.
 * Incluye funciones para gestionar grupos, miembros y sus roles.
 */
-
 class Group extends BaseModel {
 
   /**
@@ -160,5 +159,6 @@ class Group extends BaseModel {
     return await super.runQuery('UPDATE grupos SET name = $1, description = $2, img = $3 WHERE id = $4 RETURNING true', [name, description, img, gid])
   }
 }
+
 
 export default Group
