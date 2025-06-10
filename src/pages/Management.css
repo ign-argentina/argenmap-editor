@@ -1,5 +1,4 @@
 .management-container {
-  padding: 2rem;
   background: linear-gradient(
     to bottom right,
     rgb(var(--background-start-rgb)),
@@ -23,9 +22,6 @@
   box-shadow: 0 0 10px rgba(36, 44, 79, 0.1);
 }
 
-/* .dashboard-group-select {
-}
- */
 .dashboard-group-select label {
   font-weight: bold;
   padding: 1rem;
@@ -49,8 +45,6 @@
   color: var(--secondary--color);
 }
 
-
-
 .group-tab-menu {
   display: flex;
   justify-content: center;
@@ -72,10 +66,6 @@
   background-color: var(--secondary--color);
   color: white;
 }
-
-
-
-
 
 .modal-overlay {
   position: fixed;
