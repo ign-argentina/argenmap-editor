@@ -204,7 +204,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
           </> : null}
 
 
-        {(selectedGroup != null && selectedGroup != 'no-group') ?
+        {(!editorMode && selectedGroup != null && selectedGroup != 'no-group') ?
           <div className="visibility-option">
             <label>
               ¿Deseas hacer visible este visor?
