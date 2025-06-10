@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js";
 
-const GET_GROUP_LIST = `SELECT g.* FROM grupos g JOIN usuarios_por_grupo ug ON ug.grupoId = g.id WHERE ug.usuarioId = $1 AND ($2::int IS NULL OR ug.rolId = $2); `
-const GET_GROUP_ADMIN_LIST = 'SELECT * FROM grupos' // DEPRECADO no borrar
+const GET_GROUP_LIST = `SELECT g.* FROM grupos g JOIN usuarios_por_grupo ug ON ug.grupoId = g.id WHERE ug.usuarioId = $1 AND ($2::int IS NULL OR ug.rolId = $2) ORDER BY g.id ASC; `
+const GET_GROUP_ADMIN_LIST = 'SELECT * FROM grupos ORDER BY id ASC' 
 
 // Le enviamos 2 parámetros. userId y groupId. Si el userId no llega, es porque la peticion la hizo un superadmin, por lo tanto devuelve directamente.
 // Si llega, es porq es un usuario y corrobora que sea admin del grupo antes de devolverlo
@@ -28,7 +28,8 @@ const GET_GROUP_USER_LIST = `SELECT
                             JOIN usuarios u ON upg.usuarioid = u.id
                             JOIN roles r ON upg.rolid = r.id
                             JOIN grupos g ON upg.grupoid = g.id
-                            WHERE upg.grupoid = $1;`
+                            WHERE upg.grupoid = $1
+                            ORDER BY r.id ASC;`
 
 
 /**
