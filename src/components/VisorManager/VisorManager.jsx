@@ -30,7 +30,7 @@ const VisorManager = () => {
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
 
-  const {user, isAuth} = useUser()
+  const {isAuth} = useUser()
 
   const pedirConfirmacion = ({ title, message, onConfirm }) => {
     setConfirmData({ title, message });
