@@ -91,7 +91,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
 
   const handleSubmit = () => {
     if (!name.trim()) return showToast('El nombre es obligatorio', "error");
-;
+    ;
 
     if (imageData && !imageData.startsWith('data:image/png') && !imageData.startsWith('data:image/jpeg')) {
       return showToast('Formato de imagen inválido', "error");

@@ -10,12 +10,6 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
 
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
-  const [toast, setToast] = useState(null);
-
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
 
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
@@ -97,6 +91,12 @@ function Management() {
   const [showAddUserModal, setShowAddUserModal] = useState(false);
 
   const [roles, setRoles] = useState([])
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleSelectChange = async (e) => {
     const selectedId = e.target.value;
