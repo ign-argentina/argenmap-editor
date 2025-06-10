@@ -11,6 +11,7 @@ import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
+import {useUser} from "../../context/UserContext"
 
 const VisorManager = () => {
   const [visores, setVisores] = useState([]);
@@ -28,6 +29,8 @@ const VisorManager = () => {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
+
+  const {user, isAuth} = useUser()
 
   const pedirConfirmacion = ({ title, message, onConfirm }) => {
     setConfirmData({ title, message });
@@ -140,7 +143,7 @@ const VisorManager = () => {
               onChange={handleChange}
             >
               <option value="public-visors">Visores Públicos</option>
-              <option value="my-visors">Mis Visores</option>
+             {isAuth && <option value="my-visors">Mis Visores</option>}
               {groupList?.map(grupo => (
                 <option key={grupo.id} value={grupo.id}>
                   Visores de {grupo.name}
