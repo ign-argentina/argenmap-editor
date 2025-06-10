@@ -3,7 +3,7 @@ import BaseModel from "./BaseModel.js";
 const INSERT_VISOR = `INSERT INTO visores (uid, gid, cid, name, description, img, publico) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
 const UPDATE_VISOR = `UPDATE visores SET cid = $1, name = $2, description = $3, img = $4 WHERE id = $5 RETURNING name`
 const UPDATE_PUBLIC_STATUS = 'UPDATE visores SET publico = NOT publico WHERE id = $1 RETURNING name'
-const IS_VISOR_OWNER = 'SELECT EXISTS (SELECT 1 FROM visores WHERE uid = $1)'
+const IS_VISOR_OWNER = 'SELECT EXISTS (SELECT 1 FROM visores WHERE uid = $2 and id = $1)'
 const SELECT_ALL_VISORS = `SELECT * FROM visores`;
 
 const SELECT_VISOR_BY_ID = `SELECT * FROM visores WHERE id = $1`;
@@ -82,8 +82,8 @@ class Visor extends BaseModel {
     }
   }
 
-  static isOwner = async (id, uid) => {
-    const data = await super.runQuery(IS_VISOR_OWNER, [id, uid])
+  static isOwner = async (visorId, uid) => {
+    const data = await super.runQuery(IS_VISOR_OWNER, [visorId, uid])
     return data[0]?.exists ?? false;
   }
 
@@ -93,7 +93,6 @@ class Visor extends BaseModel {
       return result;
     } catch (err) {
       console.log("Error en Visor model (getPublicVisors):", err);
-      return null;
     }
   };
 
