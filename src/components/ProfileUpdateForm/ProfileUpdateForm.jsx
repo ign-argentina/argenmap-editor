@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
+import Toast from '../Toast/Toast';
 import axios from "axios";
 import './ProfileUpdateForm.css';
 
@@ -7,6 +8,12 @@ const UpdatePersonalDataForm = () => {
   const { updateUser, user } = useUser();
   const [name, setName] = useState(user.name);
   const [lastname, setLastname] = useState(user.lastname);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,9 +28,11 @@ const UpdatePersonalDataForm = () => {
 
       console.log(result.data)
       updateUser(result.data);
-      alert("Los cambios han sido guardados");
+      showToast("Los cambios han sido guardados", "success");
+
     } else {
-      alert("No se han efectuado cambios o se canceló la modificación.");
+      showToast("No se han efectuado cambios o se canceló la modificación.", "warning");
+
     }
   };
 
@@ -51,6 +60,14 @@ const UpdatePersonalDataForm = () => {
         </label>
         <button type="submit">Guardar cambios</button>
       </form>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={3000}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };
@@ -69,9 +86,10 @@ const ChangePasswordForm = () => {
         password: rePassword
       }, { withCredentials: true });
 
-      alert("Contraseña cambiada con éxito");
+      showToast("Contraseña cambiada con éxito", "success");
+
     } else {
-      alert("Error: las contraseñas no coinciden o son demasiado cortas.");
+      showToast("Error: las contraseñas no coinciden o son demasiado cortas.", "error");
     }
   };
 

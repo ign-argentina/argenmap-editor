@@ -2,22 +2,28 @@ import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
-import './Management.css'
 import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/configApi.js"
+import Toast from '../Toast/Toast';
+import './Management.css'
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
 
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
+  const [toast, setToast] = useState(null);
 
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
     if (res.success) {
-      alert("Usuario agregado al grupo!")
+      showToast("Usuario agregado al grupo!", "success");
       onSuccess()
     } else {
-      alert("No se ha podido agregar el usuario al grupo")
+      showToast("No se ha podido agregar el usuario al grupo", "error");
     }
   };
 
@@ -179,7 +185,7 @@ function Management() {
                   editableFields={["name", "description", "img"]}
                   onUpdate={handleUpdateGroup} // Actualizar Grupo
                   onDelete={handleDeleteGroup} // Eliminar grupo
-                  
+
                 />
               </div>
 
@@ -216,7 +222,7 @@ function Management() {
 
                 {activeTab === "visores" && (
                   <>
-                    <button className="dash-button" onClick={() => alert("Auch")} > Nuevo Visor </button>
+                    <button className="dash-button"> Nuevo Visor </button>
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
                       data={[]}
@@ -235,6 +241,15 @@ function Management() {
             onSuccess={async () => await updateGroupUserList(selectedGroupData.id)}
             groupUserList={selectedGroupUserList} />) : null}
         </section>
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={3000}
+          onClose={() => setToast(null)}
+        />
       )}
     </div>
   );

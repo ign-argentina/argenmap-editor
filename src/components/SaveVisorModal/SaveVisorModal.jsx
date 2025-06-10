@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas';
 import './SaveVisorModal.css';
 import { useUser } from '../../context/UserContext';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
-import Toast from "../Toast/Toast.jsx"
+import Toast from '../Toast/Toast';
 
 const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false }) => {
 
@@ -17,6 +17,12 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
 
+  const [toast, setToast] = useState(null);
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const navigate = useNavigate();
 
   const loadGroups = async () => {
@@ -25,7 +31,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   }
 
   const handleSelectChange = async (e) => {
-    if (e.target.value === "no-group" || e.target.value === ""){
+    if (e.target.value === "no-group" || e.target.value === "") {
       setSelectedGroup(null)
       setIsPublic(false)
     } else {
@@ -44,9 +50,9 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       const image = canvas.toDataURL('image/png');
       setImageData(image);
       setSource('captura');
-      alert('Imagen capturada correctamente');
+      showToast('Imagen capturada correctamente.', "success");
     } catch (err) {
-      alert('No se pudo capturar la imagen del visor');
+      showToast('No se pudo capturar la imagen del visor.', "error");
       console.error(err);
     }
   };
@@ -58,7 +64,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
     // ✅ Validar el tipo de archivo
     const validTypes = ['image/jpeg', 'image/png'];
     if (!validTypes.includes(file.type)) {
-      alert('Solo se permiten imágenes JPG o PNG');
+      showToast('Solo se permiten imágenes JPG o PNG.', "error");
       return;
     }
 
@@ -76,7 +82,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         const resizedImage = canvas.toDataURL(file.type); // Usa el tipo original (jpg o png)
         setImageData(resizedImage);
         setSource('upload');
-        alert('Imagen subida correctamente');
+        showToast('Imagen subida correctamente', "success");
       };
       img.src = event.target.result;
     };
@@ -84,10 +90,11 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   };
 
   const handleSubmit = () => {
-    if (!name.trim()) return alert('El nombre es obligatorio');
+    if (!name.trim()) return showToast('El nombre es obligatorio', "error");
+;
 
     if (imageData && !imageData.startsWith('data:image/png') && !imageData.startsWith('data:image/jpeg')) {
-      return alert('Formato de imagen inválido');
+      return showToast('Formato de imagen inválido', "error");
     }
 
     saveVisor()
@@ -105,7 +112,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
       const configOnly = currentJsonParsed.config;
       if (!currentJsonRaw) {
-        alert('No hay configuración para guardar');
+        showToast('No hay configuración para guardar.', "error");
         return;
       }
 
@@ -116,21 +123,9 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       }
 
       if (res.success) {
-        alert("Cargado con exito")
-        /*  return <Toast
-            message={"Capo"}
-            type={"success"}
-            duration={3000}
-            onClose={() => setToast(null)}
-          /> */
+        showToast("Cargado con exito.", "success");
       } else {
-        alert("Error")
-        /*        return <Toast
-                  message={"Capo lo fundiste"}
-                  type={"error"}
-                  duration={3000}
-                  onClose={() => setToast(null)}
-                /> */
+        showToast("Ha ocurrido un error.", "error");
       }
     }
   }
@@ -226,6 +221,15 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         </div>
 
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={3000}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };
