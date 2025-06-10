@@ -2,25 +2,32 @@ import { useState, useEffect } from 'react';
 import './LoginModal.css';
 import axios from 'axios';
 import { useUser } from '/src/context/UserContext';
+import Toast from '../Toast/Toast';
 
 function LoginModal({ onClose, onLoginSuccess }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, user } = useUser();
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type) => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await login(email, password);
 
     if (result === 200) {
-      onLoginSuccess(); //cerrar modal
-      alert("Bienvenido " + user.name);
+      onLoginSuccess();
+      showToast("Bienvenido " + user.name, "success");
     } else {
-      alert("Error en login: ");
+      showToast("Error en login: ", "error");
     }
   };
-  
+
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') onClose();
@@ -51,6 +58,14 @@ function LoginModal({ onClose, onLoginSuccess }) {
           <button type="submit">Ingresar</button>
         </form>
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={3000}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

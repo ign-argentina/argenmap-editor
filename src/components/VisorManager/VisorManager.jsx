@@ -4,13 +4,13 @@ import { handleClearStorage } from '../../utils/HandleClearStorage';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 import Toast from '../Toast/Toast';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
-import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
 const VisorManager = () => {
   const [visores, setVisores] = useState([]);
@@ -42,7 +42,7 @@ const VisorManager = () => {
 
   const handleDownload = () => {
     if (!selectedVisor?.config?.json) {
-      alert('No hay visor seleccionado con configuración válida');
+      showToast('No hay visor seleccionado con configuración válida.', "error");
       return;
     }
 
@@ -178,7 +178,7 @@ const VisorManager = () => {
                         setShowPreview(true);
                       } catch (error) {
                         console.error('Error al obtener visor completo:', error);
-                        alert('No se pudo cargar el visor');
+                        showToast('No se pudo cargar el visor.', "error");
                       }
                     }}
                   >
