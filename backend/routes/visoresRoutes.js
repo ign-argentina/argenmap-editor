@@ -16,7 +16,7 @@ visoresRoutes.put("/", PROTECT.REQUIRE_AUTH, visorController.updateVisor)
 visoresRoutes.delete("/", PROTECT.REQUIRE_GROUP_ADMIN, visorController.deleteVisor);
 
 visoresRoutes.get("/", visorController.getAllVisors); // Deprecado?
-visoresRoutes.get("/:id", PROTECT.REQUIRE_AUTH, visorController.getVisorById);
+visoresRoutes.get("/:id", visorController.getVisorById);
 
 
 

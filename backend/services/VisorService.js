@@ -7,7 +7,7 @@ import { config } from 'dotenv';
 
 class VisorService {
 
-  createVisor = async (uid, groupid = null, name, description, configJson, img) => {
+  createVisor = async (uid, groupid = null, name, description, configJson, img, isPublic = false) => {
     try {
       let result = []
       const configResult = await Config.newConfig(configJson);
@@ -18,7 +18,7 @@ class VisorService {
       const cid = configResult.id;
 
       if (groupid && (await Group.isAdminForThisGroup(groupid, uid) || await User.isSuperAdmin(uid))) {
-        result = await Visor.createVisor(uid, groupid, cid, name, description, img);
+        result = await Visor.createVisor(uid, groupid, cid, name, description, img, isPublic);
       } else {
         result = await Visor.createVisor(uid, null, cid, name, description, img);
       }
@@ -131,7 +131,7 @@ class VisorService {
   getGroupVisors = async (uid, groupid) => {
     try {
       let result = []
-      if (await Group.isMember(uid) || await User.isSuperAdmin(uid)) {
+      if (await Group.isMember(uid, groupid) || await User.isSuperAdmin(uid)) {
         result = await Visor.getGroupVisors(groupid)
       }
 
@@ -144,6 +144,23 @@ class VisorService {
 
   deletevisor() {
 
+  }
+
+  changeVisorStatus = async (uid, visorid, visorgid = null) => {
+    try {
+      let result = []
+
+      const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid) );
+
+      if (haveAccessToVisor){
+        result = await Visor.changePublicStatus(visorid)
+      }
+
+      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de Servicio")
+      return Result.fail("Error en la capa de servicio")
+    }
   }
 }
 

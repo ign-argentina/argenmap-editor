@@ -10,14 +10,14 @@ class VisorController {
   createVisor = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { groupid, name, description, configJson, img } = req.body
+      const { groupid, name, description, configJson, img, isPublic } = req.body
       const { uid } = this.authService.getDataToken(token)
 
       if (!configJson || !name) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
 
-      const result = await this.visorService.createVisor(uid, groupid, name, description, configJson, img)
+      const result = await this.visorService.createVisor(uid, groupid, name, description, configJson, img, isPublic)
 
       if (!result.success) {
         return res.status(400).json({ error: result.error })
@@ -147,14 +147,33 @@ class VisorController {
       if (!result.success) {
         return res.status(400).json({ error: result.error });
       }
-
       return res.status(200).json(result.data);
     } catch (err) {
       return res.status(500).json({ error: 'Error al obtener visores de grupo', detail: err.message });
     }
   };
 
+  changeVisorStatus = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { visorid, visorgid } = req.body
+      const { uid } = this.authService.getDataToken(token)
 
+      if (!visorid || !visorgid) {
+        return res.status(400).json({ error: 'Faltan campos requeridos' });
+      }
+
+      const result = await this.visorService.changeVisorStatus(uid, visorid, visorgid)
+
+      if (!result.success) {
+        return res.status(400).json({ error: result.error })
+      }
+
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
   /*   deleteVisor() {
       return "visor eliminado"
     } */

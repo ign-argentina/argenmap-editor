@@ -15,6 +15,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
 
   const [selectedGroup, setSelectedGroup] = useState(editorMode ? visor?.gid : null)
   const [groupList, setGroupList] = useState([])
+  const [isPublic, setIsPublic] = useState(false)
 
   const navigate = useNavigate();
 
@@ -24,8 +25,12 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   }
 
   const handleSelectChange = async (e) => {
-    const groupId = (e.target.value === "no-group" || e.target.value === "") ? null : e.target.value
-    setSelectedGroup(groupId)
+    if (e.target.value === "no-group" || e.target.value === ""){
+      setSelectedGroup(null)
+      setIsPublic(false)
+    } else {
+      setSelectedGroup(e.target.value)
+    }
   }
 
   useEffect(() => {
@@ -107,7 +112,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       if (editorMode && !cloneMode) {
         res = await updateVisor(visor.id, visor.gid, name, description, configOnly.id, configOnly.json, imageData)
       } else {
-        res = await createVisor(selectedGroup, name, description, configOnly.json, imageData)
+        res = await createVisor(selectedGroup, name, description, configOnly.json, imageData, isPublic)
       }
 
       if (res.success) {
@@ -198,10 +203,28 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
             </select>
           </> : null}
 
+
+        {(selectedGroup != null && selectedGroup != 'no-group') ?
+          <div className="visibility-option">
+            <label>
+              ¿Deseas hacer visible este visor?
+              <input
+                type="checkbox"
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+              />
+            </label>
+            {isPublic && (
+              <p className="public-warning">
+                <span>Atención: </span>Si haces público este visor, todos podrán verlo.
+              </p>
+            )}
+          </div> : null}
         <div className="modal-buttons">
           <button className="save" onClick={handleSubmit}>Guardar</button>
           <button className="cancel" onClick={onClose}>Cancelar</button>
         </div>
+
       </div>
     </div>
   );

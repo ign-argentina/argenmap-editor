@@ -1,7 +1,8 @@
 import BaseModel from "./BaseModel.js";
 
-const INSERT_VISOR = `INSERT INTO visores (uid, gid, cid, name, description, img) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+const INSERT_VISOR = `INSERT INTO visores (uid, gid, cid, name, description, img, publico) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
 const UPDATE_VISOR = `UPDATE visores SET cid = $1, name = $2, description = $3, img = $4 WHERE id = $5 RETURNING name`
+const UPDATE_PUBLIC_STATUS = 'UPDATE visores SET publico = NOT publico WHERE id = $1 RETURNING name'
 const IS_VISOR_OWNER = 'SELECT EXISTS (SELECT 1 FROM visores WHERE uid = $1)'
 const SELECT_ALL_VISORS = `SELECT * FROM visores`;
 
@@ -31,9 +32,9 @@ const SELECT_GROUP_VISORS = `
   WHERE upg.usuarioId = $1 AND v.deleted = false`; */
 
 class Visor extends BaseModel {
-  static createVisor = async (uid, groupid, cid, name, description, img) => {
+  static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
     try {
-      const result = await super.runQuery(INSERT_VISOR, [uid, groupid, cid, name, description, img]);
+      const result = await super.runQuery(INSERT_VISOR, [uid, groupid, cid, name, description, img, isPublic]);
       return result;
     } catch (err) {
       console.log("Error en Visor model (createVisor):", err);
@@ -115,6 +116,11 @@ class Visor extends BaseModel {
       return null;
     }
   };
+
+  static changePublicStatus = async (id) => {
+    const result = await super.runQuery(UPDATE_PUBLIC_STATUS, [id])
+    return result;
+  }
 }
 
 export default Visor

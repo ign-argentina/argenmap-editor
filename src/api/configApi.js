@@ -9,9 +9,9 @@ export async function getAllVisors() {
   return res.json();
 }
 
-export const createVisor = async (groupid, name, description, configJson, img) => {
+export const createVisor = async (groupid, name, description, configJson, img, isPublic = false) => {
   const res = await axios.post(`${API_URL}/visores`,
-    { groupid, name, description, configJson, img }, { withCredentials: true, validateStatus: () => true });
+    { groupid, name, description, configJson, img, isPublic }, { withCredentials: true, validateStatus: () => true });
   return res.data
 }
 
