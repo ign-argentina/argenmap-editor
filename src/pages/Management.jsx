@@ -4,7 +4,6 @@ import { useToast } from "../context/ToastContext.jsx";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
 import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/configApi.js"
-import Toast from '../components/Toast/Toast';
 import './Management.css'
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
