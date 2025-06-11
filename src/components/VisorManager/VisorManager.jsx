@@ -6,16 +6,20 @@ import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 import Toast from '../Toast/Toast';
-import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor } from '../../api/configApi';
+import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
 import {useUser} from "../../context/UserContext"
 
+const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
+const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
+
 const VisorManager = () => {
   const [visores, setVisores] = useState([]);
   const [selectedVisor, setSelectedVisor] = useState(null);
+  const [access, setAccess] = useState(PUBLIC_VISOR_ACCESS)
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
   const { setData, uploadSchema } = useFormEngine();
@@ -109,15 +113,32 @@ const VisorManager = () => {
     setGroupList(gl)
   }
 
+  const publishVisor = async () => {
+    const res = await changePublicStatus(selectedVisor.id, selectedVisor.gid)
+    if (res.success) {
+      // Tostar bien
+      const visorCompleto = await getVisorById(selectedVisor.id);
+      setSelectedVisor(visorCompleto);
+    } else {
+      // tostar mal
+    }
+  }
+
   const handleChange = async (e) => {
+    setSelectedVisor(null)
+    setShowPreview(false)
     if (e.target.value === "public-visors") {
+      setAccess(PUBLIC_VISOR_ACCESS);
       const vl = await getPublicVisors()
       setVisores(vl)
     } else if (e.target.value === "my-visors") {
+      setAccess(MY_VISOR_ACCESS);
       const vl = await getMyVisors()
       setVisores(vl)
     } else if (e.target.value != '') {
       const vl = await getGroupVisors(e.target.value)
+      const access = await getPermissions(e.target.value)
+      setAccess(access)
       setVisores(vl)
     }
   }
@@ -234,7 +255,7 @@ const VisorManager = () => {
                   Subir Json
                 </label>
 
-                <button
+                {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
                   className="common"
                   onClick={() => {
                     if (!selectedVisor) return;
@@ -245,9 +266,9 @@ const VisorManager = () => {
                 >
                   <i className="fa-solid fa-pen-to-square"></i>
                   Editar Visor
-                </button>
+                </button>}
 
-                <button
+                {(access?.sa || access?.ga) && <button
                   className="delete"
                   onClick={() =>
                     pedirConfirmacion({
@@ -264,7 +285,7 @@ const VisorManager = () => {
                   title="Borrar Visor">
                   <i className="fa-solid fa-trash-can"></i>
                   Borrar Visor
-                </button>
+                </button>}
 
                 <button
                   className="download"
@@ -273,6 +294,14 @@ const VisorManager = () => {
                   <i className="fa-solid fa-download"></i>
                   Descargar
                 </button>
+
+                {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
+                  className="publish"
+                  onClick={publishVisor}
+                  title="Estado de Publicacion">
+                  <i className="fa-solid fa-bullhorn"></i>
+                  {selectedVisor?.publico ? "Despublicar" : "Publicar"}
+                </button>}
 
               </div>
             </div>

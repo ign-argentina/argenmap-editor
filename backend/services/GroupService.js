@@ -206,5 +206,21 @@ class GroupService {
       console.log("Error en la capa de servicio " + error)
     }
   }
+
+  getPermissions = async (uid, groupId) => {
+    try {
+      let isGroupAdmin = false;
+      let isEditor = false;
+      const isSuperAdmin = await User.isSuperAdmin(uid)
+
+      if (!isSuperAdmin) {
+        isGroupAdmin = await Group.isAdminForThisGroup(groupId, uid)
+        isEditor = await Group.isEditorForThisGroup(groupId, uid)
+      }
+      return Result.success({ sa: isSuperAdmin, ga: isGroupAdmin, editor: isEditor })
+    } catch (error) {
+      console.log("GROUPS: Error en la capa de servicio ", error)
+    }
+  }
 }
 export default GroupService
