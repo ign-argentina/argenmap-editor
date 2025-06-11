@@ -33,11 +33,13 @@ function Navbar() {
   const handleLogout = async () => {
     setShowDropdown(false);
     await logout();
+    window.location.reload();
   };
 
   const handleLoginSuccess = () => {
     checkAuth();
     setShowLoginModal(false);
+    window.location.reload();
   };
 
   const handleRegisterSuccess = () => {
