@@ -1,20 +1,15 @@
 import { useState, useEffect } from 'react';
 import './LoginModal.css';
-import axios from 'axios';
 import { useUser } from '/src/context/UserContext';
-import Toast from '../Toast/Toast';
+import { useToast } from '../../context/ToastContext';
 
 function LoginModal({ onClose, onLoginSuccess }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, user } = useUser();
-  const [toast, setToast] = useState(null);
 
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { showToast } = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,14 +53,6 @@ function LoginModal({ onClose, onLoginSuccess }) {
           <button type="submit">Ingresar</button>
         </form>
       </div>
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          duration={3000}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 }

@@ -3,17 +3,13 @@ import { useUser } from "../../context/UserContext";
 import Toast from '../Toast/Toast';
 import axios from "axios";
 import './ProfileUpdateForm.css';
+import { useToast } from "../../context/ToastContext";
 
 const UpdatePersonalDataForm = () => {
   const { updateUser, user } = useUser();
   const [name, setName] = useState(user.name);
   const [lastname, setLastname] = useState(user.lastname);
-  const [toast, setToast] = useState(null);
-
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { showToast } = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +22,6 @@ const UpdatePersonalDataForm = () => {
         lastname
       }, { withCredentials: true });
 
-      console.log(result.data)
       updateUser(result.data);
       showToast("Los cambios han sido guardados", "success");
 
@@ -60,19 +55,12 @@ const UpdatePersonalDataForm = () => {
         </label>
         <button type="submit">Guardar cambios</button>
       </form>
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          duration={3000}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 };
 
 const ChangePasswordForm = () => {
+  const { showToast } = useToast()
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [matchPassword, setMatchPassword] = useState(false);

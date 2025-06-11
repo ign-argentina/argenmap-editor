@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { useToast } from "../context/ToastContext.jsx";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
 import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/configApi.js"
@@ -10,7 +11,7 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
 
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
-
+  const { showToast } = useToast()
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
     if (res.success) {
@@ -91,12 +92,7 @@ function Management() {
   const [showAddUserModal, setShowAddUserModal] = useState(false);
 
   const [roles, setRoles] = useState([])
-  const [toast, setToast] = useState(null);
-
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { showToast } = useToast()
 
   const handleSelectChange = async (e) => {
     const selectedId = e.target.value;
@@ -136,11 +132,13 @@ function Management() {
   const handleDeleteUser = async (uid) => {
     await deleteUserFromGroup(uid, selectedGroupData.id)
     await updateGroupUserList(selectedGroupData.id)
+    showToast("El usuario ha sido removido del grupo", "warning")
   }
 
   const handleUpdateRolUser = async (user) => {
     await updateUserRolFromGroup(user.id, user.rol, selectedGroupData.id)
     await updateGroupUserList(selectedGroupData.id)
+    showToast("El rol del usuario ha sido modificado", "success")
   }
 
   const handleUpdateGroup = async (groupData) => {
@@ -148,6 +146,7 @@ function Management() {
     await updateGroup(name, description, img, selectedGroupData.id)
     const groupInfo = await getGroup(selectedGroupData.id)
     setSelectedGroupData(groupInfo);
+    showToast("Guardado con Exito", "success")
   }
   const handleDeleteGroup = async () => {
     if (confirm('Estas seguro que queres eliminar este grupo?')) {
@@ -241,15 +240,6 @@ function Management() {
             onSuccess={async () => await updateGroupUserList(selectedGroupData.id)}
             groupUserList={selectedGroupUserList} />) : null}
         </section>
-      )}
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          duration={3000}
-          onClose={() => setToast(null)}
-        />
       )}
     </div>
   );

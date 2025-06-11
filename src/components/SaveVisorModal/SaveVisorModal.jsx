@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import './SaveVisorModal.css';
 import { useUser } from '../../context/UserContext';
+import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
-import Toast from '../Toast/Toast';
 
 const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false }) => {
 
@@ -16,12 +16,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [selectedGroup, setSelectedGroup] = useState(editorMode ? visor?.gid : null)
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
-
-  const [toast, setToast] = useState(null);
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { showToast } = useToast()
 
   const navigate = useNavigate();
 
@@ -221,15 +216,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         </div>
 
       </div>
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          duration={3000}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 };
