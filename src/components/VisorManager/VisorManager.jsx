@@ -11,7 +11,7 @@ import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
-import {useToast} from '../../context/ToastContext';
+import { useToast } from '../../context/ToastContext';
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
@@ -199,6 +199,8 @@ const VisorManager = () => {
                       }
                       try {
                         const visorCompleto = await getVisorById(visor.id);
+                        console.log(selectedVisor)
+                        console.log(groupList)
                         setSelectedVisor(visorCompleto);
                         setShowPreview(true);
                       } catch (error) {
@@ -309,9 +311,9 @@ const VisorManager = () => {
 
           {selectedVisor && (
             <div className="visor-description">
-              <div className="visor-info">
-                <h3>{selectedVisor.name}</h3>
-                <div>
+              <div className="visor-info-row">
+                <div className="visor-info-text">
+                  <h3>{selectedVisor.name}</h3>
                   <p>{selectedVisor.description}</p>
                   <p className="visor-date">
                     Actualizado: {new Date(selectedVisor.lastupdate).toLocaleDateString('es-AR', {
@@ -323,7 +325,22 @@ const VisorManager = () => {
                   <p className="visor-privacy">
                     {selectedVisor.publico ? 'Público' : 'Privado'}
                   </p>
+                  {(() => {
+                    const group = groupList.find(g => g.id === selectedVisor.gid);
+                    return group ? <h3>Grupo: {group.name}</h3> : <h3>Grupo: Sin grupo</h3>;
+                  })()}
                 </div>
+                {(() => {
+                  const group = groupList.find(g => g.id === selectedVisor.gid);
+                  const imageSrc = group?.img || '/assets/no-image.png';
+                  return (
+                    <img
+                      src={imageSrc}
+                      alt="Imagen del grupo"
+                      className="group-image-right"
+                    />
+                  );
+                })()}
               </div>
             </div>
           )}

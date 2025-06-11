@@ -192,3 +192,21 @@
   gap: 10px;
   margin-top: 10px;
 }
+
+.visor-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.visor-info-text {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.group-image-right {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
