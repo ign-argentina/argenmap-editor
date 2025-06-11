@@ -102,7 +102,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
     setDescription('');
     setImageData(null);
     setSource(null);
-    navigate('/')
+    navigate('/');
   };
 
   const saveVisor = async () => {
