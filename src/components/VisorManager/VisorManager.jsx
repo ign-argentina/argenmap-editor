@@ -199,8 +199,6 @@ const VisorManager = () => {
                       }
                       try {
                         const visorCompleto = await getVisorById(visor.id);
-                        console.log(selectedVisor)
-                        console.log(groupList)
                         setSelectedVisor(visorCompleto);
                         setShowPreview(true);
                       } catch (error) {
