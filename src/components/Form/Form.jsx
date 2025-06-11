@@ -14,6 +14,7 @@ import { updateVisorConfigJson } from '../../utils/visorStorage';
 import { handleClearStorage } from '../../utils/HandleClearStorage';
 import '/src/global.css';
 import './Form.css';
+import { useToast } from '../../context/ToastContext';
 
 function Form() {
 
@@ -36,10 +37,10 @@ function Form() {
 
   const location = useLocation();
   const [isFormShown, setIsFormShown] = useState(true);
-  const [toast, setToast] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [loadedVisor, setLoadedVisor] = useState(null);
   const clearStorage = () => handleClearStorage(setData, uploadSchema);
+  const { showToast } = useToast()
 
   //useEffect para cargar mostrar los datos del visor cargado
   useEffect(() => {
@@ -80,7 +81,7 @@ function Form() {
 
   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : [];
 
-  const { visor, editorMode } = location.state || {}; // Nota => Sacar visor
+  const { editorMode } = location.state || {};
 
   return (
     <div>
@@ -132,15 +133,6 @@ function Form() {
         <div className='side-panel'>
           <Preview />
         </div>
-
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            duration={3000}
-            onClose={() => setToast(null)}
-          />
-        )}
       </div>
     </div>
   );

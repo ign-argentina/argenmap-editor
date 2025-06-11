@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleClearStorage } from '../../utils/HandleClearStorage';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
-import Toast from '../Toast/Toast';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
-import {useUser} from "../../context/UserContext"
+import { useUser } from "../../context/UserContext"
+import {useToast} from '../../context/ToastContext';
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
 
 const VisorManager = () => {
+
+  // States
   const [visores, setVisores] = useState([]);
   const [selectedVisor, setSelectedVisor] = useState(null);
   const [access, setAccess] = useState(PUBLIC_VISOR_ACCESS)
@@ -27,24 +29,20 @@ const VisorManager = () => {
   const [hasFetched, setHasFetched] = useState(false);
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
-  const [toast, setToast] = useState(null);
   const [groupList, setGroupList] = useState([]);
 
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
 
-  const {isAuth} = useUser()
+  // Hooks, Contexts
+  const { isAuth } = useUser()
+  const { showToast } = useToast();
 
   const pedirConfirmacion = ({ title, message, onConfirm }) => {
     setConfirmData({ title, message });
     setConfirmAction(() => onConfirm);
     setConfirmVisible(true);
-  };
-
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   const handleDownload = () => {
@@ -119,6 +117,9 @@ const VisorManager = () => {
       // Tostar bien
       const visorCompleto = await getVisorById(selectedVisor.id);
       setSelectedVisor(visorCompleto);
+      const action = selectedVisor.publico ? "despublicado" : "publicado"
+      const type = selectedVisor.publico ? "warning" : "success"
+      showToast(`Has ${action} el visor correctamente`, type);
     } else {
       // tostar mal
     }
@@ -164,7 +165,7 @@ const VisorManager = () => {
               onChange={handleChange}
             >
               <option value="public-visors">Visores Públicos</option>
-             {isAuth && <option value="my-visors">Mis Visores</option>}
+              {isAuth && <option value="my-visors">Mis Visores</option>}
               {groupList?.map(grupo => (
                 <option key={grupo.id} value={grupo.id}>
                   Visores de {grupo.name}
@@ -201,7 +202,6 @@ const VisorManager = () => {
                         setSelectedVisor(visorCompleto);
                         setShowPreview(true);
                       } catch (error) {
-                        console.error('Error al obtener visor completo:', error);
                         showToast('No se pudo cargar el visor.', "error");
                       }
                     }}
@@ -326,15 +326,6 @@ const VisorManager = () => {
                 </div>
               </div>
             </div>
-          )}
-
-          {toast && (
-            <Toast
-              message={toast.message}
-              type={toast.type}
-              duration={3000}
-              onClose={() => setToast(null)}
-            />
           )}
 
           <ConfirmDialog
