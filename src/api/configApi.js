@@ -30,6 +30,12 @@ export const deleteVisor = async (visorid, visorgid) => {
   return res.data;
 };
 
+export const changePublicStatus = async (visorid, visorgid) =>{
+  const res = await axios.post(`${API_URL}/visores/publish`,
+    { visorid, visorgid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
 /* export async function saveVisor({ name, description, json, img }) {
   const res = await fetch(`${API_URL}/visores`, {
     method: 'POST',
@@ -187,6 +193,15 @@ export const deleteGroup = async (gid) => {
     validateStatus: () => true,
   });
   return res.data
+}
+
+export const getPermissions = async (id) => {
+  try {
+    const res = await axios.get(`${API_URL}/groups/rol/${id}`, {
+      withCredentials: true,
+    });
+    return res.data.data
+  } catch (error) { console.log("Error al obtener permisos " + error) }
 }
 // ***** END GROUP METHODS *****
 

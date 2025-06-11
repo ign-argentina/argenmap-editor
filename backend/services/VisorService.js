@@ -146,7 +146,7 @@ class VisorService {
 
   }
 
-  changeVisorStatus = async (uid, visorid, visorgid = null) => {
+  changePublicStatus = async (uid, visorid, visorgid = null) => {
     try {
       let result = []
 

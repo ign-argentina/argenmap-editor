@@ -153,7 +153,7 @@ class VisorController {
     }
   };
 
-  changeVisorStatus = async (req, res) => {
+  changePublicStatus = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
       const { visorid, visorgid } = req.body
@@ -163,7 +163,7 @@ class VisorController {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
 
-      const result = await this.visorService.changeVisorStatus(uid, visorid, visorgid)
+      const result = await this.visorService.changePublicStatus(uid, visorid, visorgid)
 
       if (!result.success) {
         return res.status(400).json({ error: result.error })

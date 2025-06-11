@@ -209,6 +209,24 @@ class GroupController {
       return res.status(500).json(error)
     }
   }
+
+  getPermissions = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { uid } = this.authService.getDataToken(token)
+
+      const result = await this.groupService.getPermissions(uid, req.params.id)
+
+      if (!result.success) {
+        return res.status(403).json("Acceso denegado")
+      }
+
+      return res.status(200).json(result)
+    } catch (error) {
+      console.log("Error en el controlador ", error)
+      return res.status(500).json(error)
+    }
+  }
 }
 
 export default GroupController;
