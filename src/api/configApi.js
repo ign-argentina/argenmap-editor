@@ -2,14 +2,41 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:3001';
 
-//VISORS
+// ***** VISORS METHODS ***** 
 export async function getAllVisors() {
   const res = await fetch(`${API_URL}/visores`);
   if (!res.ok) throw new Error('Error al obtener visores');
   return res.json();
 }
 
-export async function saveVisor({ name, description, json, img }) {
+export const createVisor = async (groupid, name, description, configJson, img, isPublic = false) => {
+  const res = await axios.post(`${API_URL}/visores`,
+    { groupid, name, description, configJson, img, isPublic }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const updateVisor = async (visorid, visorgid, name, description, configid, configjson, imageData) => {
+  const res = await axios.put(`${API_URL}/visores`,
+    { visorid, visorgid, name, description, configid, configjson, imageData }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const deleteVisor = async (visorid, visorgid) => {
+  const res = await axios.delete(`${API_URL}/visores`, {
+    data: { visorid, visorgid },
+    withCredentials: true,
+    validateStatus: () => true,
+  });
+  return res.data;
+};
+
+export const changePublicStatus = async (visorid, visorgid) =>{
+  const res = await axios.post(`${API_URL}/visores/publish`,
+    { visorid, visorgid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+/* export async function saveVisor({ name, description, json, img }) {
   const res = await fetch(`${API_URL}/visores`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -18,13 +45,36 @@ export async function saveVisor({ name, description, json, img }) {
   if (!res.ok) throw new Error('Error al guardar visor');
   return res.json();
 }
+ */
 
+
+export const getPublicVisors = async () => {
+  const res = await axios.get(`${API_URL}/visores/publics`,
+    { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const getMyVisors = async () => {
+  const res = await axios.get(`${API_URL}/visores/myvisors`,
+    { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
 
 export async function getVisorById(id) {
   const res = await fetch(`${API_URL}/visores/${id}`);
   if (!res.ok) throw new Error('Error al obtener visor por ID');
   return res.json();
 }
+
+export const getGroupVisors = async (groupId) => {
+  const res = await axios.get(`${API_URL}/visores/group/${groupId}`, {
+    withCredentials: true,
+    validateStatus: () => true
+  });
+  return res.data;
+};
+// ***** END VISORS METHODS ***** 
+
 
 //CONFIGS
 export async function getConfigById(id) {
@@ -59,13 +109,10 @@ export async function updateConfig(id, jsonData) {
   return res.json();
 }
 
-
-
-
 // ***** GROUPS METHODS ***** 
 export const getGrupos = async () => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/`, {
+    const res = await axios.get(`${API_URL}/groups/`, {
       withCredentials: true,
     });
     return res.data
@@ -76,7 +123,7 @@ export const getGrupos = async () => {
 
 export const getManageGroups = async () => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/management`, {
+    const res = await axios.get(`${API_URL}/groups/management`, {
       withCredentials: true,
     });
     return res.data
@@ -87,7 +134,7 @@ export const getManageGroups = async () => {
 
 export const getGroup = async (id) => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/management/${id}`, {
+    const res = await axios.get(`${API_URL}/groups/management/${id}`, {
       withCredentials: true,
     });
     return res.data
@@ -96,17 +143,65 @@ export const getGroup = async (id) => {
 
 export const getGroupUserList = async (id) => {
   try {
-    const res = await axios.get(`http://localhost:3001/groups/management/userlist/${id}`, {
+    const res = await axios.get(`${API_URL}/groups/management/userlist/${id}`, {
       withCredentials: true,
     });
     return res.data
-  } catch (error) { console.log("Error al botener listado de usuarios " + error) }
+  } catch (error) { console.log("Error al obtener listado de usuarios " + error) }
 }
 
 export const addUserToGroup = async (id, gid) => {
-    const res = await axios.post(`http://localhost:3001/groups/management/`,
-      {id, gid}, { withCredentials: true, validateStatus: () => true });
-    return res.data
+  const res = await axios.post(`${API_URL}/groups/management/`,
+    { id, gid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const deleteUserFromGroup = async (deleteUserId, gid) => {
+  const res = await axios.delete(`${API_URL}/groups/management`, {
+    data: { deleteUserId, gid },
+    withCredentials: true,
+    validateStatus: () => true,
+  });
+  return res.data
+}
+
+export const updateUserRolFromGroup = async (userId, rolId, groupId) => {
+  const res = await axios.put(`${API_URL}/groups/management`,
+    { userId, rolId, groupId }, { withCredentials: true, validateStatus: () => true });
+
+  return res.data
+}
+
+export const getRoles = async () => {
+  const res = await axios.get(`${API_URL}/roles/`, {
+    withCredentials: true,
+    validateStatus: () => true,
+  });
+  return res.data
+}
+
+export const updateGroup = async (name, description, img, gid) => {
+  const res = await axios.put(`${API_URL}/groups`,
+    { name, description, img, gid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
+export const deleteGroup = async (gid) => {
+  const res = await axios.delete(`${API_URL}/groups`, {
+    data: { gid },
+    withCredentials: true,
+    validateStatus: () => true,
+  });
+  return res.data
+}
+
+export const getPermissions = async (id) => {
+  try {
+    const res = await axios.get(`${API_URL}/groups/rol/${id}`, {
+      withCredentials: true,
+    });
+    return res.data.data
+  } catch (error) { console.log("Error al obtener permisos " + error) }
 }
 // ***** END GROUP METHODS *****
 
@@ -114,11 +209,11 @@ export const addUserToGroup = async (id, gid) => {
 // ***** USER METHODS *****
 export const getUserList = async () => {
   try {
-    const res = await axios.get(`http://localhost:3001/users`, {
+    const res = await axios.get(`${API_URL}/users`, {
       withCredentials: true,
     });
     return res.data
-  } catch (error) { console.log("Error al botener listado de usuarios " + error) }
+  } catch (error) { console.log("Error al obtener listado de usuarios " + error) }
 }
 // ***** END USER METHODS *****
 
@@ -135,7 +230,6 @@ export const getUserList = async () => {
 //     console.error('Error al guardar config:', error);
 //   }
 // }
-
 
 // import { updateConfig } from './api/configApi';
 

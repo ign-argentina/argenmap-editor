@@ -1,0 +1,93 @@
+.changelog-modal-wrapper {
+  flex: 1 1 400px;
+  max-width: 600px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.changelog-modal {
+  background-color: var(--primary--color);
+  padding: 1rem;
+  border-radius: 8px;
+  position: relative;
+  border: 2px solid var(--secondary--color);
+  width: 30vw;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.changelog-title {
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.changelog-header {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.changelog-version {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: #111827;
+}
+
+.changelog-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.changelog-body {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.changelog-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.changelog-link {
+  display: inline-block;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.changelog-link:hover {
+  text-decoration: underline;
+}
+
+/* Botón de minimizar */
+.changelog-minimize-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: white;
+  cursor: pointer;
+}
+
+.changelog-minimize-button:hover {
+  color: black;
+}
+
+/* Para mantener tamaño sin importar si está minimizado */
+.changelog-modal > *:not(.changelog-minimize-button) {
+  box-sizing: border-box;
+}

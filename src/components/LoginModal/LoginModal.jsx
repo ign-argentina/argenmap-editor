@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './LoginModal.css';
-import axios from 'axios';
 import { useUser } from '/src/context/UserContext';
+import { useToast } from '../../context/ToastContext';
 
 function LoginModal({ onClose, onLoginSuccess }) {
 
@@ -9,18 +9,19 @@ function LoginModal({ onClose, onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const { login, user } = useUser();
 
+  const { showToast } = useToast()
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await login(email, password);
 
     if (result === 200) {
-      onLoginSuccess(); //cerrar modal
-      alert("Bienvenido " + user.name);
+      onLoginSuccess();
     } else {
-      alert("Error en login: ");
+      showToast("Error en login: ", "error");
     }
   };
-  
+
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') onClose();

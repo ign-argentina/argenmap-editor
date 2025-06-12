@@ -5,6 +5,7 @@ import express from "express";
 import cookieParser from "cookie-parser"
 import cors from "cors";
 import routes from './routes/routes.js'
+import Rol from './models/Rol.js';
 
 const app = express();
 
@@ -29,6 +30,10 @@ app.get("/", (_req, res) => {
 
 // Uso de rutas
 app.use(`/`, routes);
+
+// CARGA DE ROLES
+await Rol.init();
+console.log("Roles cargados correctamente");
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`);

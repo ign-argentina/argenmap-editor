@@ -19,11 +19,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  border-radius: 1rem;
+  border-radius: 8px;
   gap: 0.5rem;
   padding: 1rem;
-
   text-decoration: none;
   color: white;
   background-color: var(--secondary--color);
@@ -40,12 +38,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   border: none;
-  border-radius: 1rem;
+  border-radius: 8px;
   gap: 0.5rem;
   padding: 1rem;
-
   cursor: pointer;
   text-decoration: none;
   color: white;
@@ -57,4 +53,51 @@
 .nav-button:hover,
 .nav-button.active {
   color: var(--active--color);
+}
+
+.profile-button{
+    background-color: var(--active--color);
+}
+
+.profile-button:hover{
+ color: var(--primary--color);
+}
+
+.navbar-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.navbar-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background-color: var(--primary--color);
+  color: black;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  overflow: hidden;
+  border: 2px solid var(--secondary--color);
+}
+
+.navbar-dropdown-menu button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--text--color);
+  cursor: pointer;
+  background-color: var(--primary--color);
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.navbar-dropdown-menu button:hover {
+  background-color: var(--secondary--color);
+  color: white;
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './RegisterModal.css';
 import axios from 'axios';
 import { useUser } from '/src/context/UserContext';
+import { useToast } from '../../context/ToastContext';
 
 const API_URL = "http://localhost:3001";
 
@@ -11,6 +12,7 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useUser()
+  const { showToast } = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,14 +27,13 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
       if (res.status === 201) {
         login(email, password)
         onRegisterSuccess();
-        alert("Usuario creado correctamente!");
+        showToast("Usuario creado correctamente!", "success");
       }
     } catch (error) {
       console.error('Error en registro:', error.response?.data || error.message);
+      showToast('Error en registro: ' + error, "error");
     }
   };
-
-
 
   return (
     <div className="register-overlay" onClick={onClose}>

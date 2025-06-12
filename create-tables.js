@@ -5,26 +5,27 @@ async function crearTablas() {
     await pool.query(`
 -- CREAR TABLA USUARIOS
 CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name TEXT NOT NULL,
     lastname TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
     lastOnline TIMESTAMP,
-    active BOOLEAN DEFAULT TRUE
+    active BOOLEAN DEFAULT true,
+    superadmin BOOLEAN default false
 );
 
 -- CREAR TABLA GRUPOS
 CREATE TABLE grupos (
-    id SERIAL PRIMARY KEY,
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
     img TEXT
 );
 
--- INSERTAR GRUPO DEFAULT
-INSERT INTO grupos (id, name, description, img)
-VALUES (0, 'Grupo General', 'Grupo default que pertenecen todos los usuarios.', '');
+-- INSERTAR USUARIO SUPER ADMIN DEFAULT
+INSERT INTO usuarios (id, name, lastname, email, password, active, superadmin)
+VALUES ('Administrador', 'General', 'administracion@editorargenmap.gob.ar', '$2b$10$s9zmxerhaenjrVR7ioxXteGEj.7gLoX5NHfwW/cxBgehX/AKW2ejG', true, true); -- Super.Admin password
 
 -- CREAR TABLA ROLES
 CREATE TABLE roles (
@@ -39,7 +40,7 @@ INSERT INTO roles (name) VALUES
 ('editor'),
 ('lector');
 
--- CREAR TABLA INTERMEDIA USUARIOS_POR_GRUPO
+-- CREAR TABLA INTERMEDIA USUARIOS_POR_GRUPO MUCHOS A MUCHOS 
 CREATE TABLE usuarios_por_grupo (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     usuarioId INT NOT NULL,
@@ -54,13 +55,13 @@ CREATE TABLE usuarios_por_grupo (
 
 -- CREAR TABLA CONFIG
 CREATE TABLE config (
-    id SERIAL PRIMARY KEY,
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     json JSON NOT NULL
 );
 
 -- CREAR TABLA VISORES
 CREATE TABLE visores (
-    id SERIAL PRIMARY KEY,
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     gid INTEGER REFERENCES grupos(id),
     cid INTEGER REFERENCES config(id),
     uid INTEGER REFERENCES usuarios(id),
@@ -98,7 +99,7 @@ CREATE TABLE aplicacion (
 
 -- CREAR TABLA HISTORIAL
 CREATE TABLE historial (
-    id SERIAL PRIMARY KEY,
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     usuario_id INTEGER REFERENCES usuarios(id),
     visor_id INTEGER REFERENCES visores(id),
     accion TEXT NOT NULL,

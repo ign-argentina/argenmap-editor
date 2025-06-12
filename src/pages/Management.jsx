@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { useToast } from "../context/ToastContext.jsx";
 import { useNavigate } from "react-router-dom";
 import ManagementTable from "../components/ManagementTable";
+import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/configApi.js"
 import './Management.css'
-import { getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup } from "../api/configApi.js"
-
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
 
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
-
+  const { showToast } = useToast()
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
     if (res.success) {
-      alert("Usuario agregado al grupo!")
+      showToast("Usuario agregado al grupo!", "success");
       onSuccess()
     } else {
-      alert("No se ha podido agregar el usuario al grupo")
+      showToast("No se ha podido agregar el usuario al grupo", "error");
     }
   };
 
@@ -26,12 +26,13 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
   }
 
   useEffect(() => {
+
     const loadUsers = async () => {
       const list = await getUserList();
       const filteredList = list.filter( // Filtramos la lista de usuarios conrespecto a la de usuarios en el grupo. Obteniendo finalmente un listado de usuarios que no están en el grupo
         (user) =>
           !groupUserList.some(
-            (groupUser) => groupUser.uid === user.id
+            (groupUser) => groupUser.id === user.id
           )
       );
 
@@ -54,7 +55,10 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
         <h2>Agregar usuario al grupo</h2>
 
         <label htmlFor="user-select">Selecciona un usuario:</label>
-        <select id="user-select" className="modal-select" onChange={handleUserChange}>
+        <select defaultValue="DEFAULT" id="user-select" className="modal-select" onChange={handleUserChange}>
+          <option disabled value="DEFAULT">
+            Seleccione un usuario...
+          </option>
           {userList.map((user) => (
             <option key={user.id} value={user.id}>
               {user.email} {/* Nombre: {user.name} {user.lastname}  */}
@@ -86,9 +90,12 @@ function Management() {
   const [activeTab, setActiveTab] = useState("usuarios");
   const [showAddUserModal, setShowAddUserModal] = useState(false);
 
+  const [roles, setRoles] = useState([])
+  const { showToast } = useToast()
+
   const handleSelectChange = async (e) => {
     const selectedId = e.target.value;
-    if (!selectedId) return setSelectedGroupData(null);
+    if (!selectedId) return setSelectedGroupData([]);
 
     try {
       const groupData = await getGroup(selectedId)
@@ -102,14 +109,17 @@ function Management() {
 
   const updateGroupUserList = async (id) => {
     const userList = await getGroupUserList(id)
-    setSelectedGroupUserList(userList)
+    setSelectedGroupUserList(userList ? userList : [])
   }
-  useEffect(() => {
-    const loadGroups = async () => {
-      const groupList = await getManageGroups()
-      setAdminGroup(groupList);
-    }
 
+  const loadGroups = async () => {
+    const groupList = await getManageGroups()
+    const rolList = await getRoles()
+    setRoles(rolList)
+    setAdminGroup(groupList);
+  }
+
+  useEffect(() => {
     if (loadingUser) return; // Esperamos a que termine de cargar el usuario 
     if (!superAdmin && !groupAdmin) {
       navigate('/')
@@ -118,18 +128,43 @@ function Management() {
     }
   }, [loadingUser, superAdmin, groupAdmin, navigate]);
 
+  const handleDeleteUser = async (uid) => {
+    await deleteUserFromGroup(uid, selectedGroupData.id)
+    await updateGroupUserList(selectedGroupData.id)
+    showToast("El usuario ha sido removido del grupo", "warning")
+  }
+
+  const handleUpdateRolUser = async (user) => {
+    await updateUserRolFromGroup(user.id, user.rol, selectedGroupData.id)
+    await updateGroupUserList(selectedGroupData.id)
+    showToast("El rol del usuario ha sido modificado", "success")
+  }
+
+  const handleUpdateGroup = async (groupData) => {
+    const { name, description, img } = groupData
+    await updateGroup(name, description, img, selectedGroupData.id)
+    const groupInfo = await getGroup(selectedGroupData.id)
+    setSelectedGroupData(groupInfo);
+    showToast("Guardado con Exito", "success")
+  }
+  const handleDeleteGroup = async () => {
+    if (confirm('Estas seguro que queres eliminar este grupo?')) {
+      await deleteGroup(selectedGroupData.id)
+      window.location.reload()
+    }
+  }
 
   return (
     <div className="management-container">
       <h1 className="dashboard-title">¡Hola {user?.name}!</h1>
 
-      {groupAdmin && (
+      {(superAdmin || groupAdmin) && (
         <section className="dashboard-section">
           <div className="dashboard-group-select">
             <label htmlFor="group-select">Selecciona el grupo que quieras administrar:</label>
-            <select id="group-select" onChange={handleSelectChange}>
-              <option value="">-- Selecciona un grupo --</option>
-              {adminGroup.map((grupo) => (
+            <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
+              <option disabled value="no-group">-- Selecciona un grupo --</option>
+              {adminGroup?.map((grupo) => (
                 <option key={grupo.id} value={grupo.id}>
                   {grupo.name}
                 </option>
@@ -145,6 +180,10 @@ function Management() {
                 <ManagementTable
                   headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
                   data={[selectedGroupData]}
+                  editableFields={["name", "description", "img"]}
+                  onUpdate={handleUpdateGroup} // Actualizar Grupo
+                  onDelete={handleDeleteGroup} // Eliminar grupo
+
                 />
               </div>
 
@@ -169,17 +208,24 @@ function Management() {
                     <button className="dash-button" onClick={() => setShowAddUserModal(true)} > Agregar Usuario </button>
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
-                      data={selectedGroupUserList?.filter(user => user.rol !== 'visor')}
+                      data={selectedGroupUserList}
+                      onDelete={handleDeleteUser}
+                      onUpdate={handleUpdateRolUser}
+                      editableFields={["rol"]}
+                      rolOptions={roles}
+                      isUserTable={true}
                     />
                   </>
                 )}
 
                 {activeTab === "visores" && (
                   <>
-                    <button className="dash-button" onClick={() => alert("Auch")} > Nuevo Visor </button>
+                    <button className="dash-button"> Nuevo Visor </button>
                     <ManagementTable
                       headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
-                      data={selectedGroupUserList?.filter(user => user.rol === 'visor')}
+                      data={[]}
+                      editableFields={[]}
+                      rolOptions={[]}
                     />
                   </>
                 )}
