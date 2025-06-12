@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useToast } from './ToastContext';
 import axios from 'axios';
 
 const UserContext = createContext(null);
@@ -13,6 +14,7 @@ export const UserProvider = ({ children }) => {
   //Para evitar parpadeos o malas renderizaciones.
   const [loadingUser, setLoadingUser] = useState(true);
 
+  const { showToast } = useToast()
 
   const login = async (email, password) => {
     setLoadingUser(true);
@@ -26,6 +28,7 @@ export const UserProvider = ({ children }) => {
       updateAuth(true, userData.isag, userData.isa)
       updateUser(userData)
       checkAuth();
+      showToast(`Hola ${res.data.name}`, "success");
       return res.status;
     } catch (error) {
       console.error('Error en login:', error.response?.data || error.message);
@@ -38,11 +41,12 @@ export const UserProvider = ({ children }) => {
   const logout = async () => {
     await axios.post("http://localhost:3001/auth/logout", {}, { withCredentials: true });
     removeUser();
+    showToast(`Has cerrado sesión`, "success");
   };
 
   const checkAuth = async () => {
     setLoadingUser(true);
-    
+
     try {
       const res = await axios.get(`http://localhost:3001/auth/check`, {
         withCredentials: true,

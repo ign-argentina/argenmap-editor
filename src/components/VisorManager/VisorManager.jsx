@@ -101,6 +101,10 @@ const VisorManager = () => {
     uploadStartData();
   }, []);
 
+  useEffect(() => {
+    uploadStartData()
+  }, [isAuth]);
+
   const uploadStartData = async () => {
     const vp = await getPublicVisors()
     setVisores(vp)
