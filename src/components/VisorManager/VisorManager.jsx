@@ -111,8 +111,10 @@ const VisorManager = () => {
     setIsLoading(false);
     setHasFetched(true);
 
-    const gl = await getGrupos()
-    setGroupList(gl)
+    if (isAuth) {
+      const gl = await getGrupos()
+      setGroupList(gl)
+    }
   }
 
   const publishVisor = async () => {
