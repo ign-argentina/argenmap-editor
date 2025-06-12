@@ -97,17 +97,17 @@
   flex-direction: column;
 }
 
-.upload-button {
+.upload-image-from-pc {
   background-color: #eee;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
   display: inline-block;
-  color: #333;
+  color: black;
 }
 
-.upload-button.disabled {
+.upload-image-from-pc.disabled {
   opacity: 0.5;
   pointer-events: none;
 }
