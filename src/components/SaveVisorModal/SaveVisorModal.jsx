@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import './SaveVisorModal.css';
@@ -17,7 +17,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
   const { showToast } = useToast()
-  const { isAuth } = useUser()
+  const {checkAuth, isAuth} = useUser()
   const navigate = useNavigate();
 
   const loadGroups = async () => {
@@ -35,6 +35,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   }
 
   useEffect(() => {
+    checkAuth()
     loadGroups()
   }, []);
 
@@ -86,7 +87,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
 
   const handleSubmit = () => {
     if (!name.trim()) return showToast('El nombre es obligatorio', "error");
-    ;
 
     if (imageData && !imageData.startsWith('data:image/png') && !imageData.startsWith('data:image/jpeg')) {
       return showToast('Formato de imagen inválido', "error");
@@ -128,7 +128,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       }
     }
   }
-
 
   if (!isOpen) return null;
 
@@ -181,7 +180,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         )}
 
 
-        {!editorMode && isAuth ?
+        {(!editorMode && isAuth) ?
           <>
             <h3>Selecciona un grupo al cual quieras agregar este editor</h3>
             <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
