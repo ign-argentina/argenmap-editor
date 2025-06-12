@@ -16,8 +16,8 @@ function LoginModal({ onClose, onLoginSuccess }) {
     const result = await login(email, password);
 
     if (result === 200) {
-      onLoginSuccess();
-      showToast("Bienvenido " + user.name, "success");
+      await onLoginSuccess();
+      console.log(user.name)
     } else {
       showToast("Error en login: ", "error");
     }
