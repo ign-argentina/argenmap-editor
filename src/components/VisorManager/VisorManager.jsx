@@ -333,7 +333,7 @@ const VisorManager = () => {
                   })()}
                 </div>
                 {(() => {
-                  const group = groupList.find(g => g.id === selectedVisor.gid);
+                  const group = groupList?.find(g => g.id === selectedVisor.gid);
                   const imageSrc = group?.img || '/assets/no-image.png';
                   return (
                     <img
