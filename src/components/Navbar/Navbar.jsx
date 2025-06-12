@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "/src/context/UserContext";
+import { useToast } from "../../context/ToastContext";
 import LoginModal from "../LoginModal/LoginModal";
 import RegisterModal from "../RegisterModal/RegisterModal";
 import ProfileModal from "../ProfileModal/ProfileModal";
@@ -13,8 +14,10 @@ function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const { isAuth, superAdmin, groupAdmin, logout, loadingUser, checkAuth, user } = useUser();
+
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const { showToast } = useToast()
 
   useEffect(() => {
     checkAuth();
@@ -33,13 +36,11 @@ function Navbar() {
   const handleLogout = async () => {
     setShowDropdown(false);
     await logout();
-    window.location.reload();
   };
 
-  const handleLoginSuccess = () => {
-    checkAuth();
+  const handleLoginSuccess = async () => {
+    await checkAuth();
     setShowLoginModal(false);
-    window.location.reload();
   };
 
   const handleRegisterSuccess = () => {
