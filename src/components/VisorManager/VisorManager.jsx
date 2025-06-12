@@ -328,7 +328,7 @@ const VisorManager = () => {
                     {selectedVisor.publico ? 'Público' : 'Privado'}
                   </p>
                   {(() => {
-                    const group = groupList.find(g => g.id === selectedVisor.gid);
+                    const group = groupList?.find(g => g.id === selectedVisor.gid);
                     return group ? <h3>Grupo: {group.name}</h3> : <h3>Grupo: Sin grupo</h3>;
                   })()}
                 </div>
