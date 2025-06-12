@@ -17,7 +17,6 @@ function LoginModal({ onClose, onLoginSuccess }) {
 
     if (result === 200) {
       onLoginSuccess();
-      showToast("Bienvenido " + user.name, "success");
     } else {
       showToast("Error en login: ", "error");
     }
