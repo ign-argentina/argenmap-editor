@@ -94,7 +94,7 @@ const FormNavbar = ({
             {editorMode ? ("Crear a partir de este ") : ("Crear nuevo visor")}
           </button>
           }
-          {editorMode && <button className="common" onClick={() => { setCloneMode(false); setShowSaveModal(true) }}>
+          {(editorMode && isAuth) && <button className="common" onClick={() => { setCloneMode(false); setShowSaveModal(true) }}>
             <i className="fa-solid fa-floppy-disk"></i>
             Guardar cambios
           </button>}
