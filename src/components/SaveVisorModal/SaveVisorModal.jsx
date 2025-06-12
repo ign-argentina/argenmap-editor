@@ -13,11 +13,11 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [imageData, setImageData] = useState(editorMode ? visor?.img : null)
   const [source, setSource] = useState(null);
 
-  const [selectedGroup, setSelectedGroup] = useState(editorMode ? visor?.gid : null)
+  const [selectedGroup, setSelectedGroup] = useState(editorMode ? visor?.gid : 'no-group')
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
   const { showToast } = useToast()
-  const {isAuth} = useUser()
+  const { isAuth } = useUser()
   const navigate = useNavigate();
 
   const loadGroups = async () => {
@@ -92,12 +92,16 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       return showToast('Formato de imagen inválido', "error");
     }
 
-    saveVisor()
-    setName('');
-    setDescription('');
-    setImageData(null);
-    setSource(null);
-    navigate('/');
+    if (selectedGroup != 'no-group') {
+      saveVisor()
+      setName('');
+      setDescription('');
+      setImageData(null);
+      setSource(null);
+      navigate('/');
+    } else {
+      showToast("El visor debe ser asignado en una ubicación.", "error")
+    }
   };
 
   const saveVisor = async () => {
