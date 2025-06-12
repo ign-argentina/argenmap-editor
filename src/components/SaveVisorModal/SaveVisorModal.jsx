@@ -17,7 +17,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
   const { showToast } = useToast()
-
+  const {isAuth} = useUser()
   const navigate = useNavigate();
 
   const loadGroups = async () => {
@@ -177,7 +177,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         )}
 
 
-        {!editorMode ?
+        {!editorMode && isAuth ?
           <>
             <h3>Selecciona un grupo al cual quieras agregar este editor</h3>
             <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>

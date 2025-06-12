@@ -21,7 +21,7 @@ function Navbar() {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [isAuth]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

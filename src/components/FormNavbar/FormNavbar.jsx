@@ -3,6 +3,7 @@ import SaveVisorModal from '../SaveVisorModal/SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../../context/UserContext';
 import './FormNavbar.css';
+import { useUser } from '../../context/UserContext';
 
 const FormNavbar = ({
   config,
@@ -18,7 +19,7 @@ const FormNavbar = ({
   const { handleDownload } = actions;
   const [cloneMode, setCloneMode] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false);
-  
+  const { isAuth } = useUser()
   return (
     <UserProvider> {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
 
@@ -84,21 +85,21 @@ const FormNavbar = ({
             </div>
           )}
 
-          <button className="common" onClick={() => {
+          {isAuth && <button className="common" onClick={() => {
             setCloneMode(true);
             setShowSaveModal(true);
           }}>
-          <i className="fa-solid fa-floppy-disk"></i>
-          {editorMode ? ("Crear a partir de este ") : ("Crear nuevo visor")}
-        </button>
+            <i className="fa-solid fa-floppy-disk"></i>
+            {editorMode ? ("Crear a partir de este ") : ("Crear nuevo visor")}
+          </button>
+          }
+          {editorMode && <button className="common" onClick={() => { setCloneMode(false); setShowSaveModal(true) }}>
+            <i className="fa-solid fa-floppy-disk"></i>
+            Guardar cambios
+          </button>}
 
-        {editorMode && <button className="common" onClick={() => {setCloneMode(false); setShowSaveModal(true)}}>
-          <i className="fa-solid fa-floppy-disk"></i>
-          Guardar cambios
-        </button>}
-
+        </div>
       </div>
-    </div>
     </UserProvider >
   );
 };
