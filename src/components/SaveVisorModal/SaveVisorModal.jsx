@@ -155,7 +155,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         </div>
 
         {imageData == null ? <div className="image-options">
-          <button onClick={captureIframeImage} /* disabled={source === 'upload'} */>
+          <button onClick={captureIframeImage}>
             Capturar imagen del visor
           </button>
 
