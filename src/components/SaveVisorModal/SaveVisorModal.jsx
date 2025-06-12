@@ -155,21 +155,21 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         </div>
 
         {imageData == null ? <div className="image-options">
-          <button onClick={captureIframeImage} disabled={source === 'upload'}>
+          <button onClick={captureIframeImage} /* disabled={source === 'upload'} */>
             Capturar imagen del visor
           </button>
 
-          <label className={`upload-button ${source === 'captura' ? 'disabled' : ''}`}>
+          <label className={`upload-image-from-pc`}>
             Subir imagen desde PC
             <input
               type="file"
               accept="image/png, image/jpeg"
-              onChange={handleImageUpload}
-              disabled={source === 'captura'}
+              onChange={handleImageUpload}            
               style={{ display: 'none' }}
             />
           </label>
-        </div> : <button onClick={() => setImageData(null)}>Limpiar imagen</button>}
+        </div> : <button onClick={() => setImageData(null)}>Limpiar imagen</button>
+        }
 
         {imageData && (
           <img
@@ -178,7 +178,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
             style={{ maxWidth: '100%', borderRadius: '8px', marginTop: '10px' }}
           />
         )}
-
 
         {(!editorMode && isAuth) ?
           <>
