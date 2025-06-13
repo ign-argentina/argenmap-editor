@@ -27,7 +27,7 @@ class VisorService {
     } catch (err) {
       return { success: false, error: err.message };
     }
-  };
+  }
 
   updateVisor = async (uid, visorid, visorgid, name, description, configid, configjson, img) => {
     try {
@@ -69,7 +69,7 @@ class VisorService {
       console.error("Error en VisorService (deleteVisor):", err);
       return { success: false, error: err.message };
     }
-  };
+  }
 
   getAllVisors = async () => {
     try {
@@ -81,7 +81,7 @@ class VisorService {
       console.log("Error en la capa de servicio (getAllVisors):", error);
       return { success: false, error: error.message };
     }
-  };
+  }
 
   getVisorById = async (id) => {
     try {
@@ -101,7 +101,7 @@ class VisorService {
           ...visor,
           config // embebemos el objeto config dentro del visor
         }
-      };
+      }
     } catch (err) {
       console.error("Error en VisorService (getVisorById):", err);
       return { success: false, error: err.message };
@@ -116,7 +116,7 @@ class VisorService {
       console.error("Error en VisorService (getPublicVisors):", err);
       return { success: false, error: err.message };
     }
-  };
+  }
 
   getMyVisors = async (uid) => {
     try {
@@ -126,7 +126,7 @@ class VisorService {
       console.error("Error en VisorService (getMyVisors):", err);
       return { success: false, error: err.message };
     }
-  };
+  }
 
   getGroupVisors = async (uid, groupid) => {
     try {
@@ -140,10 +140,9 @@ class VisorService {
       console.error("Error en VisorService (getGroupVisors):", err);
       return { success: false, error: err.message };
     }
-  };
+  }
 
   deletevisor() {
-
   }
 
   changePublicStatus = async (uid, visorid, visorgid = null) => {

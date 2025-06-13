@@ -44,7 +44,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       const canvas = await html2canvas(iframe.contentDocument.body);
       const image = canvas.toDataURL('image/png');
       setImageData(image);
-      setSource('captura');
       showToast('Imagen capturada correctamente.', "success");
     } catch (err) {
       showToast('No se pudo capturar la imagen del visor.', "error");
@@ -76,7 +75,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const resizedImage = canvas.toDataURL(file.type); // Usa el tipo original (jpg o png)
         setImageData(resizedImage);
-        setSource('upload');
         showToast('Imagen subida correctamente', "success");
       };
       img.src = event.target.result;
@@ -96,7 +94,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       setName('');
       setDescription('');
       setImageData(null);
-      setSource(null);
       navigate('/');
     } else {
       showToast("El visor debe ser asignado en una ubicación.", "error")
