@@ -11,7 +11,8 @@
 .dashboard-title {
   color: var(--primary--color);
   font-size: 2rem;
-  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+
 }
 
 .dashboard-section {
