@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import LoginModal from "./LoginModal"
 import RegisterModal from "../RegisterModal"
-import axios from 'axios';
 import ProfileModal from "../ProfileModal/ProfileModal";
 import { useUser } from "../../context/UserContext";
 import './LoginSection.css';
+import { userCheckAuth } from "../../api/configApi";
 
 function LoginSection() {
 
@@ -18,9 +18,8 @@ function LoginSection() {
 
 
   const handleLogout = async () => {
-    await axios.post("http://localhost:3001/auth/logout", {}, { withCredentials: true, })
     setUserAuth(false)
-    logout() // Cerramos sesion. Podriamos para el proximo sprint refactorear y persistir mas en memoria estos datos ya que están a mano
+    logout()
   }
 
   const handleLoginSuccess = () => {
@@ -36,20 +35,14 @@ function LoginSection() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/auth/check`, {
-          withCredentials: true,
-        });
+        const res = await userCheckAuth()
         setUserAuth(res.data);
       } catch (error) {
         setUserAuth(false)
       }
     };
-
     checkAuth();
-
-
   }, []);
-
 
   return (
     <>

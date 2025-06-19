@@ -2,6 +2,8 @@ import AuthService from "../services/AuthService.js"
 
 const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME
 const MIN_PASSWORD_LENGTH = 10
+const isProduction = process.env.VITE_MODE === 'prod';
+
 /**
  * Controlador para manejar la autenticación de usuarios.
  * Contiene métodos para login, registro, logout y validación de sesión.
@@ -134,8 +136,8 @@ class AuthController {
   #sendAuthCookie(res, token) {
     res.cookie(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict"
+      secure: isProduction,
+      sameSite: isProduction ? "Strict" : "Lax" // más flexible en uat/dev
     });
   }
 
