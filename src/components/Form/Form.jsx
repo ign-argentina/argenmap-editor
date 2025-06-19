@@ -42,10 +42,14 @@ function Form() {
 
   //useEffect para cargar mostrar los datos del visor cargado
   useEffect(() => {
+    console.log("Cargado")
     const savedVisor = localStorage.getItem('visorMetadata');
+    console.log("savedVisor: ", savedVisor)
     if (savedVisor) {
       setLoadedVisor(JSON.parse(savedVisor));
     }
+    console.log("loadedVisor: ", loadedVisor)
+
   }, []);
 
   const handleLanguageChange = (e) => {
