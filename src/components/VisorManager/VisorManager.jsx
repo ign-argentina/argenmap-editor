@@ -102,19 +102,20 @@ const VisorManager = () => {
   }, []);
 
   useEffect(() => {
+    setGroupList([])
     uploadStartData()
   }, [isAuth]);
 
   const uploadStartData = async () => {
-    const vp = await getPublicVisors()
-    setVisores(vp)
-    setIsLoading(false);
-    setHasFetched(true);
-
     if (isAuth) {
       const gl = await getGrupos()
       setGroupList(gl)
     }
+
+    const vp = await getPublicVisors()
+    setVisores(vp)
+    setIsLoading(false);
+    setHasFetched(true);
   }
 
   const publishVisor = async () => {
