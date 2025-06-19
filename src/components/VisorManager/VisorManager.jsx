@@ -102,7 +102,12 @@ const VisorManager = () => {
   }, []);
 
   useEffect(() => {
-    setGroupList([])
+    if (!isAuth) {
+      setGroupList([])
+      setAccess(PUBLIC_VISOR_ACCESS)
+      setIsLoading(true);
+      setHasFetched(false);
+    }
     uploadStartData()
   }, [isAuth]);
 

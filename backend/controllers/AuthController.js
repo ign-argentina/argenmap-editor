@@ -97,7 +97,8 @@ class AuthController {
     res.clearCookie(AUTH_COOKIE_NAME, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "Strict" : "Lax" // Más permisivo en local/UAT
+      /*       sameSite: isProduction ? "Strict" : "Lax" // Más permisivo en local/UAT */
+      sameSite: "Strict" // Más permisivo en local/UAT
     });
     return res.status(200).json()
   }
@@ -135,9 +136,10 @@ class AuthController {
  */
   #sendAuthCookie(res, token) {
     res.cookie(AUTH_COOKIE_NAME, token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "Strict" : "Lax" // Más permisivo en local/UAT
+      /*       sameSite: isProduction ? "Strict" : "Lax" // Más permisivo en local/UAT */
+      sameSite: "Strict" // Más permisivo en local/UAT
     });
   }
 

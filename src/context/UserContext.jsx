@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from './ToastContext';
-import axios from 'axios';
 import { userLogout, userLogin, userCheckAuth } from '../api/configApi';
 
 const UserContext = createContext(null);
@@ -31,12 +30,12 @@ export const UserProvider = ({ children }) => {
       console.error('Error en login:', error.response?.data || error.message);
       removeUser()
     } finally {
-      setLoadingUser(false);
+      setLoadingUser(false)
     }
   };
 
   const logout = async () => {
-    userLogout()
+    await userLogout()
     removeUser();
     showToast(`Has cerrado sesión`, "success");
   };
