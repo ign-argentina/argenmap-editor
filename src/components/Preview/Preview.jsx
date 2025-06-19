@@ -3,11 +3,12 @@ import React from 'react';
 const Preview = () => {
   return (
     <iframe
-      src="argenmap/index.html"
+      /*    src="/argenmap/index.html" */
+      src="https://mapa.ign.gob.ar"
       title="Argenmap Visor"
       width="100%"
       height="100%"
-      style={{ border: 'insert' }}
+      style={{ border: 'none' }}
     ></iframe>
   );
 };
