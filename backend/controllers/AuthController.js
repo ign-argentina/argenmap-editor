@@ -96,8 +96,8 @@ class AuthController {
   logout = async (req, res) => {
     res.clearCookie(AUTH_COOKIE_NAME, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
+      secure: isProduction,
+      sameSite: isProduction ? "Strict" : "Lax" // Más permisivo en local/UAT
     });
     return res.status(200).json()
   }
@@ -135,9 +135,9 @@ class AuthController {
  */
   #sendAuthCookie(res, token) {
     res.cookie(AUTH_COOKIE_NAME, token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: isProduction,
-      sameSite: isProduction ? "Strict" : "Lax" // más flexible en uat/dev
+      sameSite: isProduction ? "Strict" : "Lax" // Más permisivo en local/UAT
     });
   }
 
