@@ -184,7 +184,9 @@ const VisorManager = () => {
                 </option>
               ))}
             </select>
-            <label htmlFor="visor-type">Tu rol dentro del grupo es: </label>
+            <label htmlFor="visor-type">
+              Tu rol dentro del grupo es: { access?.ga ? "Administrador" : access?.editor ? "Editor" : access?.myvisors ? "Dueño" : "Lector"}
+            </label>
           </div>
 
           <div className="visor-modal-container">
