@@ -167,7 +167,7 @@ const VisorManager = () => {
 
       <div className={`visor-content ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
-          <h2>VISOR MANAGER</h2>
+          <h2>ADMINISTRADOR DE VISORES</h2>
 
           <div className="visor-filter">
             <label htmlFor="visor-type">Mostrando: </label>
@@ -184,6 +184,7 @@ const VisorManager = () => {
                 </option>
               ))}
             </select>
+            <label htmlFor="visor-type">Tu rol dentro del grupo es: </label>
           </div>
 
           <div className="visor-modal-container">
