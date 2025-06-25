@@ -187,7 +187,7 @@ const VisorManager = () => {
             {access !== PUBLIC_VISOR_ACCESS && (
               <label htmlFor="visor-type">
                 Tu rol dentro del grupo es: {
-                  access?.ga ? "Administrador" :
+                  (access?.ga || access?.sa) ? "Administrador" :
                     access?.editor ? "Editor" :
                       access?.myvisors ? "Dueño" :
                         "Lector"
