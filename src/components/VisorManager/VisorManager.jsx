@@ -167,7 +167,7 @@ const VisorManager = () => {
 
       <div className={`visor-content ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
-          <h2>ADMINISTRADOR DE VISORES</h2>
+          <h2>GESTOR DE VISORES</h2>
 
           <div className="visor-filter">
             <label htmlFor="visor-type">Mostrando: </label>
