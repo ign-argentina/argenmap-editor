@@ -56,7 +56,7 @@ const VisorManager = () => {
       : selectedVisor.config.json;
 
     const { downloadJson } = HandleDownload({ data: configJson, parsedDefaultData });
-    downloadJson();
+    downloadJson(selectedVisor.name);
   };
 
   const handleNewVisor = () => {
@@ -258,7 +258,7 @@ const VisorManager = () => {
                     handleNewVisor();
                   }}>
                   <i className="fa-solid fa-plus"></i>
-                  Nuevo Visor
+                  Crear
                 </button>
 
                 <label className="common">
@@ -274,7 +274,7 @@ const VisorManager = () => {
                   <span className="icon">
                     <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
                   </span>
-                  Subir Json
+                  Subir
                 </label>
 
                 {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
@@ -287,7 +287,7 @@ const VisorManager = () => {
                   disabled={!selectedVisor}
                 >
                   <i className="fa-solid fa-pen-to-square"></i>
-                  Editar Visor
+                  Editar
                 </button>}
 
                 {(access?.sa || access?.ga) && <button
@@ -306,7 +306,7 @@ const VisorManager = () => {
                   disabled={!selectedVisor}
                   title="Borrar Visor">
                   <i className="fa-solid fa-trash-can"></i>
-                  Borrar Visor
+                  Borrar
                 </button>}
 
                 <button

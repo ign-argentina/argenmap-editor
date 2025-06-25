@@ -16,14 +16,15 @@ const HandleDownload = ({ data, parsedDefaultData }) => {
     return result;
   };
 
-  const downloadJson = () => {
+  const downloadJson = (fileName) => {
+    const date = new Date().toLocaleString();
     const completeData = ensureFieldsExist(data, parsedDefaultData);
     const fileData = JSON.stringify(completeData, null, 2);
     const blob = new Blob([fileData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'config.json');
+    link.setAttribute('download', `${fileName} - ${date}.json`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link); // Clear link element
