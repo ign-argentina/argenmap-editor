@@ -17,7 +17,11 @@ Es una aplicación web desarrollada para crear y gestionar visores hechos con Ar
 
 ## **Características Principales**  
 - **Gestiona visores:** Permite crear, subir, editar, descargar, borrar y publicar visores de mapas.
-- **Edición interactiva:** Presenta un formulario interactivo que permite modificar visores en tiempo real. 
+  <img src="assets/gestor-screenshot.png" alt="Vista previa de la app" width="600">
+
+- **Edición interactiva:** Presenta un formulario interactivo que permite modificar visores en tiempo real.
+  <img src="assets/form-screenshot.png" alt="Vista previa de la app" width="600">
+
 - **Usuarios y grupos de trabajo:** Gestiona usuarios y grupos de manera robusta con un sistema de permisos.
    
 ## **Tecnologías Utilizadas**  
