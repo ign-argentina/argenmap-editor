@@ -25,4 +25,4 @@ Es una aplicación web desarrollada para crear y gestionar visores hechos con Ar
 - **Usuarios y grupos de trabajo:** Gestiona usuarios y grupos de manera robusta con un sistema de permisos.
    
 ## **Tecnologías Utilizadas**  
-- Vite.js, React, HTML, CSS, JSONForms, ajv.
+- Node.js, Vite.js, Express, PostgreSQL, React, React Router, HTML, CSS, JSONForms, ajv.
