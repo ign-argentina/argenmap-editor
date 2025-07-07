@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
-import Toast from '../Toast/Toast';
 import axios from "axios";
 import './ProfileUpdateForm.css';
 import { useToast } from "../../context/ToastContext";
+import { updateUserData, updateUserPassword } from "../../api/configApi";
 
 const UpdatePersonalDataForm = () => {
   const { updateUser, user } = useUser();
@@ -17,11 +17,7 @@ const UpdatePersonalDataForm = () => {
     const hasChanges = user.name !== name || user.lastname !== lastname;
 
     if (userConfirm && hasChanges) {
-      const result = await axios.post("http://localhost:3001/users/update", {
-        name,
-        lastname
-      }, { withCredentials: true });
-
+      const result = await updateUserData(name, lastname)
       updateUser(result.data);
       showToast("Los cambios han sido guardados", "success");
 
@@ -70,10 +66,7 @@ const ChangePasswordForm = () => {
     const userConfirm = confirm(`¿Desea cambiar su contraseña?`);
 
     if (userConfirm && password.length >= 10 && matchPassword) {
-      await axios.post("http://localhost:3001/users/update", {
-        password: rePassword
-      }, { withCredentials: true });
-
+      await updateUserPassword(rePassword)
       showToast("Contraseña cambiada con éxito", "success");
 
     } else {

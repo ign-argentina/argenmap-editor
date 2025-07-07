@@ -1,6 +1,32 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:3001';
+const mode = import.meta.env.VITE_MODE;
+
+const config = {
+  dev: {
+    IP: import.meta.env.VITE_DEV_IP,
+    API_PORT: import.meta.env.VITE_DEV_API_PORT
+  },
+  uat: {
+    IP: import.meta.env.VITE_UAT_IP,
+    API_PORT: import.meta.env.VITE_UAT_API_PORT
+  },
+  prod: {
+    IP: import.meta.env.VITE_PROD_IP,
+    API_PORT: import.meta.env.VITE_PROD_API_PORT
+  },
+};
+
+let currentConfig
+
+if (config[mode]) {
+  currentConfig = config[mode]
+} else {
+  currentConfig = config['dev']
+}
+
+// SEGUIR
+const API_URL = `http://${currentConfig.IP}:${currentConfig.API_PORT}`;
 
 // ***** VISORS METHODS ***** 
 export async function getAllVisors() {
@@ -30,23 +56,11 @@ export const deleteVisor = async (visorid, visorgid) => {
   return res.data;
 };
 
-export const changePublicStatus = async (visorid, visorgid) =>{
+export const changePublicStatus = async (visorid, visorgid) => {
   const res = await axios.post(`${API_URL}/visores/publish`,
     { visorid, visorgid }, { withCredentials: true, validateStatus: () => true });
   return res.data
 }
-
-/* export async function saveVisor({ name, description, json, img }) {
-  const res = await fetch(`${API_URL}/visores`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, description, json, img }),
-  });
-  if (!res.ok) throw new Error('Error al guardar visor');
-  return res.json();
-}
- */
-
 
 export const getPublicVisors = async () => {
   const res = await axios.get(`${API_URL}/visores/publics`,
@@ -205,8 +219,51 @@ export const getPermissions = async (id) => {
 }
 // ***** END GROUP METHODS *****
 
-
 // ***** USER METHODS *****
+export const userLogin = async (email, password) => {
+  try {
+    const res = await axios.post(`${API_URL}/auth/login`, {
+      email,
+      password
+    }, { withCredentials: true });
+
+    return res
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const registerUser = async (name, lastname, email, password) => {
+  try {
+    const res = await axios.post(`${API_URL}/auth/register`, {
+      name,
+      lastname,
+      email,
+      password
+    }, { withCredentials: true });
+    return res
+  } catch (error) {
+
+  }
+}
+export const userLogout = async () => {
+  try {
+    await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true, })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userCheckAuth = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/auth/check`, {
+      withCredentials: true,    
+    });
+    return res
+  } catch (error) {
+  }
+}
+
 export const getUserList = async () => {
   try {
     const res = await axios.get(`${API_URL}/users`, {
@@ -215,43 +272,23 @@ export const getUserList = async () => {
     return res.data
   } catch (error) { console.log("Error al obtener listado de usuarios " + error) }
 }
+
+export const updateUserData = async (name, lastname) => {
+  try {
+    const res = await axios.post(`${API_URL}/users/update`, {
+      name,
+      lastname
+    }, { withCredentials: true });
+    return res
+  } catch (error) {
+
+  }
+}
+
+export const updateUserPassword = async (rePassword) => {
+  await axios.post(`${API_URL}/users/update`, {
+    password: rePassword
+  }, { withCredentials: true });
+}
+
 // ***** END USER METHODS *****
-
-
-//Usar estas funciones en tu app
-// import { createConfig } from './api/configApi';
-
-// // Cuando quieras guardar
-// async function guardarNuevoConfig(formularioJson) {
-//   try {
-//     const configGuardado = await createConfig(formularioJson);
-//     console.log('Config guardado:', configGuardado);
-//   } catch (error) {
-//     console.error('Error al guardar config:', error);
-//   }
-// }
-
-// import { updateConfig } from './api/configApi';
-
-// // id es el ID del config que querés actualizar
-// async function actualizarConfigExistente(id, formularioJson) {
-//   try {
-//     const configActualizado = await updateConfig(id, formularioJson);
-//     console.log('Config actualizado:', configActualizado);
-//   } catch (error) {
-//     console.error('Error al actualizar config:', error);
-//   }
-// }
-
-
-// import { getConfigs } from './api/configApi';
-
-// async function cargarConfigsDisponibles() {
-//   try {
-//     const configs = await getConfigs();
-//     console.log('Configs disponibles:', configs);
-//     // Mostralos en un select, por ejemplo
-//   } catch (error) {
-//     console.error('Error al cargar configs:', error);
-//   }
-// }

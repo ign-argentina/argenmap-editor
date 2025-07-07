@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import './RegisterModal.css';
-import axios from 'axios';
+import { registerUser } from '../../api/configApi';
 import { useUser } from '/src/context/UserContext';
 import { useToast } from '../../context/ToastContext';
-
-const API_URL = "http://localhost:3001";
 
 function RegisterModal({ onClose, onRegisterSuccess }) {
   const [name, setName] = useState('');
@@ -17,12 +15,7 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/auth/register`, {
-        name,
-        lastname,
-        email,
-        password
-      }, { withCredentials: true });
+      const res = await registerUser(name, lastname, email, password);
 
       if (res.status === 201) {
         login(email, password)

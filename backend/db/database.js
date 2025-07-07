@@ -1,15 +1,14 @@
 
 import pkg from 'pg';
-import dotenv from 'dotenv'
-dotenv.config()
+import currentConfig from '../config.js'
 
-const {Pool} = pkg;
+const { Pool } = pkg;
 const db = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT, 
-  database: process.env.DB_NAME, 
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
+  host: currentConfig.DB_HOST,
+  port: currentConfig.DB_PORT,
+  database: currentConfig.DB_NAME,
+  user: currentConfig.DB_USER,
+  password: currentConfig.DB_PASS,
   max: 10,
   connectionTimeoutMillis: 0,
   idleTimeoutMillis: 0
