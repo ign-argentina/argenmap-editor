@@ -133,7 +133,7 @@ const VisorManager = () => {
       const type = selectedVisor.publico ? "warning" : "success"
       showToast(`Has ${action} el visor correctamente`, type);
     } else {
-      // tostar mal
+         showToast(`Ha ocurrido un error`, "error");
     }
   }
 
