@@ -3,11 +3,11 @@ import GenerateSchema from '../utils/GenerateSchema';
 import FilterEmptySections from '../utils/FilterEmptySections';
 import TranslateSchema from '../utils/TranslateSchema';
 import MergeDataWithDefaults from '../utils/MergeDataWithDefaults';
-import useConfig from './useConfig';
 import useLang from './useLang';
 
+import defaultConfig from '../config/config.json' // Kharta cuando corresponda
+
 const useFormEngine = () => {
-  const { config, loading: configLoading, error: configError } = useConfig();
   const { language, loading: langLoading, error: langError } = useLang();
 
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
@@ -43,7 +43,7 @@ const useFormEngine = () => {
 
   // Inicialización de datos desde config o localStorage
   useEffect(() => {
-    if (!config || !language) return;
+    if (!language) return;
 
     let storedData = null;
     try {
@@ -72,15 +72,16 @@ const useFormEngine = () => {
     }
 
     const mergedData = MergeDataWithDefaults(parsedStoredData, parsedDefaultData);
-    const finalData = storedData ? mergedData : config;
+    const finalData = storedData ? mergedData : defaultConfig;
 
     if (!storedData) {
-      localStorage.setItem('formDataDefault', JSON.stringify(config));
+      localStorage.setItem('formDataDefault', JSON.stringify(defaultConfig));
     }
 
     setData(finalData);
+    console.log(finalData)
     uploadSchema(finalData);
-  }, [config]);
+  }, [language]);
 
 
   // Se ejecuta cada vez que cambia el idioma retraduciendo el formulario.
@@ -107,9 +108,7 @@ const useFormEngine = () => {
     uploadSchema,
     selectedLang,
     setSelectedLang: handleLanguageChange,
-    configLoading,
     langLoading,
-    configError,
     langError
   };
 };
