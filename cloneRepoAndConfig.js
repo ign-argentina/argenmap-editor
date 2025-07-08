@@ -10,8 +10,11 @@ const repoUrl = 'https://github.com/ign-argentina/argenmap.git';
 const publicDir = path.join(__dirname, 'public');
 const configDir = path.join(publicDir, 'config');   // File public/config
 const assetsDir = path.join(__dirname, 'assets');   // File assets proyect root
+
+// 🚫 Antes: const repoDir = path.join(publicDir, repoName);
+// ✅ Ahora: clonar Argenmap dentro de visor-server/public/argenmap
 const repoName = path.basename(repoUrl, '.git');    // Gets the name of the repository
-const repoDir = path.join(publicDir, repoName);     // The destination directory will be public/repoName
+const repoDir = path.join(__dirname, 'visor-server', 'public', repoName);  // visor-server/public/argenmap
 
 // Files you want to move
 const filesToCopy = ['config.json', 'language.json'];
