@@ -8,7 +8,6 @@ const HomeRedirect = () => {
     const skipWelcome = localStorage.getItem('skipWelcome') === 'true';
     navigate(skipWelcome ? '/visores' : '/info', { replace: true });
   }, [navigate]);
-
   return null;
 };
 
