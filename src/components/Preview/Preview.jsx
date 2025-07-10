@@ -1,7 +1,7 @@
-import React from 'react';
+import currentVisor from "../../api/visorApi";
 
 const Preview = ({ visorId = "123", tipo = "argenmap" }) => {
-  const url = `http://localhost:4000/visor/${tipo}?id=${visorId}`;
+  const url = `http://${currentVisor.IP}:${currentVisor.API_PORT}/visor/${tipo}?id=${visorId}`;
   return (
     <iframe
       src={url}
