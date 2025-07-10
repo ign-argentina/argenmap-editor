@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import useFormEngine from '../hooks/useFormEngine';
 import FormEngineContext from './FormEngineContext';
-import useLang from '../hooks/useLang';
+import language from '../static/language.json'
 
 const FormEngineProvider = ({ children }) => {
-  const { language } = useLang();
+
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
 
