@@ -16,7 +16,7 @@ const useFormEngine = () => {
   const [selectedSection, setSelectedSection] = useState(null);
 
   const uploadSchema = (newData = data) => {
-    if (!newData) return;
+    if (!newData || !language) return;
 
     const generatedSchema = GenerateSchema({ data: newData });
     const filteredSchema = FilterEmptySections(generatedSchema);
@@ -29,7 +29,13 @@ const useFormEngine = () => {
     setSchema(translatedSchema);
 
     const sectionKeys = Object.keys(translatedSchema.properties || {});
-    setSelectedSection(sectionKeys.length > 0 ? sectionKeys[0] : null);
+
+    setSelectedSection((prev) => {
+      if (!prev || !sectionKeys.includes(prev)) {
+        return sectionKeys[0] || null;
+      }
+      return prev;
+    });
 
     return translatedSchema;
   };
@@ -70,7 +76,7 @@ const useFormEngine = () => {
 
     setData(finalData);
     uploadSchema(finalData);
-  }, []); 
+  }, []);
 
   useEffect(() => {
     if (data) {
