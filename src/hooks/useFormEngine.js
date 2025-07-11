@@ -3,13 +3,11 @@ import GenerateSchema from '../utils/GenerateSchema';
 import FilterEmptySections from '../utils/FilterEmptySections';
 import TranslateSchema from '../utils/TranslateSchema';
 import MergeDataWithDefaults from '../utils/MergeDataWithDefaults';
-import useConfig from './useConfig';
-import useLang from './useLang';
+
+import defaultConfig from '../static/config.json'; // Kharta cuando corresponda
+import language from '../static/language.json';
 
 const useFormEngine = () => {
-  const { config, loading: configLoading, error: configError } = useConfig();
-  const { language, loading: langLoading, error: langError } = useLang();
-
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
 
@@ -17,7 +15,6 @@ const useFormEngine = () => {
   const [schema, setSchema] = useState({});
   const [selectedSection, setSelectedSection] = useState(null);
 
-  // Esta función genera y traduce el schema
   const uploadSchema = (newData = data) => {
     if (!newData || !language) return;
 
@@ -32,19 +29,18 @@ const useFormEngine = () => {
     setSchema(translatedSchema);
 
     const sectionKeys = Object.keys(translatedSchema.properties || {});
-    if (sectionKeys.length > 0) {
-      setSelectedSection(sectionKeys[0]);
-    } else {
-      setSelectedSection(null);
-    }
+
+    setSelectedSection((prev) => {
+      if (!prev || !sectionKeys.includes(prev)) {
+        return sectionKeys[0] || null;
+      }
+      return prev;
+    });
 
     return translatedSchema;
   };
 
-  // Inicialización de datos desde config o localStorage
   useEffect(() => {
-    if (!config || !language) return;
-
     let storedData = null;
     try {
       const storedJSON = localStorage.getItem('visorMetadata');
@@ -72,31 +68,28 @@ const useFormEngine = () => {
     }
 
     const mergedData = MergeDataWithDefaults(parsedStoredData, parsedDefaultData);
-    const finalData = storedData ? mergedData : config;
+    const finalData = storedData ? mergedData : defaultConfig;
 
     if (!storedData) {
-      localStorage.setItem('formDataDefault', JSON.stringify(config));
+      localStorage.setItem('formDataDefault', JSON.stringify(defaultConfig));
     }
 
     setData(finalData);
     uploadSchema(finalData);
-  }, [config]);
+  }, []);
 
-
-  // Se ejecuta cada vez que cambia el idioma retraduciendo el formulario.
   useEffect(() => {
-    if (language && data) {
+    if (data) {
       uploadSchema(data);
     }
   }, [selectedLang]);
 
-
-  // Cambio de idioma persistente
   const handleLanguageChange = (newLang) => {
     setSelectedLang(newLang);
     localStorage.setItem('selectedLang', newLang);
-    uploadSchema(data); // Se actualiza el schema traducido al nuevo idioma
+    uploadSchema(data);
   };
+
 
   return {
     data,
@@ -107,10 +100,6 @@ const useFormEngine = () => {
     uploadSchema,
     selectedLang,
     setSelectedLang: handleLanguageChange,
-    configLoading,
-    langLoading,
-    configError,
-    langError
   };
 };
 

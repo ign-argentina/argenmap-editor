@@ -3,7 +3,6 @@ import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import { useLocation } from 'react-router-dom';
-import useLang from '../../hooks/useLang';
 import useFormEngine from '../../hooks/useFormEngine';
 import ColorPickerControl from '../ColorPickerControl/ColorPickerControl';
 import Preview from '../Preview/Preview';
@@ -16,10 +15,6 @@ import './Form.css';
 import { useToast } from '../../context/ToastContext';
 
 function Form() {
-  const { language } = useLang();
-  /*   Esto ya lo estamos manejando en el hook. Asi que está de mas
-    const savedLanguage = localStorage.getItem('selectedLang') || 'es';
-    const [selectedLang, setSelectedLang] = useState(savedLanguage); */
   const {
     data,
     setData,
@@ -40,13 +35,19 @@ function Form() {
   const clearStorage = () => handleClearStorage(setData, uploadSchema);
   const { showToast } = useToast()
 
-  //useEffect para cargar mostrar los datos del visor cargado
   useEffect(() => {
     const savedVisor = localStorage.getItem('visorMetadata');
     if (savedVisor) {
       setLoadedVisor(JSON.parse(savedVisor));
     }
+
   }, []);
+
+  useEffect(() => {
+    if (selectedLang && data) {
+      uploadSchema(data);
+    }
+  }, [selectedLang, data]);
 
   const handleLanguageChange = (e) => {
     const selectedLanguage = e.target.value;
@@ -98,7 +99,6 @@ function Form() {
           actions={{
             handleDownload,
           }}
-          language={language}
           editorMode={editorMode}
         />
 
@@ -135,5 +135,4 @@ function Form() {
     </div>
   );
 }
-
 export default Form;

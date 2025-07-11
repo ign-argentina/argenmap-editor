@@ -11,7 +11,8 @@
 .dashboard-title {
   color: var(--primary--color);
   font-size: 2rem;
-  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+
 }
 
 .dashboard-section {
@@ -38,7 +39,6 @@
 .group-data-table{
   text-align: center;
   padding-bottom: 4rem;
-/*   padding: 1rem; */
 }
 .group-data-table h2 {
   padding: 1rem;

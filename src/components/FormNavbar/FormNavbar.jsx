@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SaveVisorModal from '../SaveVisorModal/SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { UserProvider } from '../../context/UserContext';
 import './FormNavbar.css';
 import { useUser } from '../../context/UserContext';
+import language from '../../static/language.json'
 
 const FormNavbar = ({
   config,
   visor,
-  language,
   sectionInfo,
   uiControls,
   actions,
@@ -31,7 +31,6 @@ const FormNavbar = ({
             {visor?.config?.json.configVersion && ` (v${visor.config.json.configVersion})`}
           </label>
         </div>
-
 
         <div className="button-container">
           <div className="select-container">

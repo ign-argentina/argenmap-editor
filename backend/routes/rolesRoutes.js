@@ -12,4 +12,4 @@ rolesRoutes.get("/", async (req, res) => {
   }
 });
 
-export default rolesRoutes;
+export default rolesRoutes

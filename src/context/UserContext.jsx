@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from './ToastContext';
-import axios from 'axios';
+import { userLogout, userLogin, userCheckAuth } from '../api/configApi';
 
 const UserContext = createContext(null);
 
@@ -19,11 +19,7 @@ export const UserProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoadingUser(true);
     try {
-      const res = await axios.post("http://localhost:3001/auth/login", {
-        email,
-        password
-      }, { withCredentials: true });
-
+      const res = await userLogin(email, password)
       const userData = res.data;
       updateAuth(true, userData.isag, userData.isa)
       updateUser(userData)
@@ -34,12 +30,12 @@ export const UserProvider = ({ children }) => {
       console.error('Error en login:', error.response?.data || error.message);
       removeUser()
     } finally {
-      setLoadingUser(false);
+      setLoadingUser(false)
     }
   };
 
   const logout = async () => {
-    await axios.post("http://localhost:3001/auth/logout", {}, { withCredentials: true });
+    await userLogout()
     removeUser();
     showToast(`Has cerrado sesión`, "success");
   };
@@ -48,9 +44,7 @@ export const UserProvider = ({ children }) => {
     setLoadingUser(true);
 
     try {
-      const res = await axios.get(`http://localhost:3001/auth/check`, {
-        withCredentials: true,
-      });
+      const res = await userCheckAuth()
       const authFlags = res.data;
       updateAuth(true, authFlags.isag, authFlags.isa)
     } catch (error) {

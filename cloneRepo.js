@@ -8,47 +8,26 @@ const __dirname = path.dirname(__filename);
 
 const repoUrl = 'https://github.com/ign-argentina/argenmap.git';
 const publicDir = path.join(__dirname, 'public');
-const configDir = path.join(publicDir, 'config');   // File public/config
-const assetsDir = path.join(__dirname, 'assets');   // File assets proyect root
-const repoName = path.basename(repoUrl, '.git');    // Gets the name of the repository
-const repoDir = path.join(publicDir, repoName);     // The destination directory will be public/repoName
 
-// Files you want to move
-const filesToCopy = ['config.json', 'language.json'];
+// Gets the name of the repository from URL
+const repoName = path.basename(repoUrl, '.git');
+
+// Destination: visor-server/public/argenmap
+const repoDir = path.join(__dirname, 'visor-server', 'public', repoName);
 
 // Check if the public folder exists, if not, create it
 if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir);
-    console.log('Carpeta public creada.');
-}
-
-// Check if the config folder inside public exists, if not, create it
-if (!fs.existsSync(configDir)) {
-    fs.mkdirSync(configDir);
-    console.log('Carpeta config creada dentro de public.');
+  fs.mkdirSync(publicDir);
+  console.log('Created public folder.');
 }
 
 // Check if the repository has already been cloned
 if (!fs.existsSync(repoDir)) {
-    console.log(`Clonando el repositorio en ${repoDir}...`);
-    simpleGit().clone(repoUrl, repoDir)
-        .then(() => console.log('Repositorio clonado exitosamente.'))
-        .catch(err => console.error('Error al clonar el repositorio:', err));
+  console.log(`Cloning repository into ${repoDir}...`);
+  simpleGit()
+    .clone(repoUrl, repoDir)
+    .then(() => console.log('Repository cloned successfully.'))
+    .catch(err => console.error('Error cloning repository:', err));
 } else {
-    console.log('El repositorio ya ha sido clonado!');
+  console.log('Repository already cloned.');
 }
-
-// Copy the files from the assets folder to the public/config folder
-filesToCopy.forEach(file => {
-    const sourcePath = path.join(assetsDir, file);  // Source path in assets
-    const destPath = path.join(configDir, file);    // Destination path in public/config
-
-    if (fs.existsSync(destPath)) {
-        console.log(`Archivo ${file} ya existe en ${configDir}, no se copiará nuevamente.`);
-    } else if (fs.existsSync(sourcePath)) {
-        fs.copyFileSync(sourcePath, destPath);
-        console.log(`Archivo ${file} copiado a ${configDir}.`);
-    } else {
-        console.warn(`Archivo ${file} no encontrado en la carpeta assets.`);
-    }
-});

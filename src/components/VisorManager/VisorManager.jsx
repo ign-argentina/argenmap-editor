@@ -56,7 +56,7 @@ const VisorManager = () => {
       : selectedVisor.config.json;
 
     const { downloadJson } = HandleDownload({ data: configJson, parsedDefaultData });
-    downloadJson();
+    downloadJson(selectedVisor.name);
   };
 
   const handleNewVisor = () => {
@@ -102,19 +102,25 @@ const VisorManager = () => {
   }, []);
 
   useEffect(() => {
+    if (!isAuth) {
+      setGroupList([])
+      setAccess(PUBLIC_VISOR_ACCESS)
+      setIsLoading(true);
+      setHasFetched(false);
+    }
     uploadStartData()
   }, [isAuth]);
 
   const uploadStartData = async () => {
-    const vp = await getPublicVisors()
-    setVisores(vp)
-    setIsLoading(false);
-    setHasFetched(true);
-
     if (isAuth) {
       const gl = await getGrupos()
       setGroupList(gl)
     }
+
+    const vp = await getPublicVisors()
+    setVisores(vp)
+    setIsLoading(false);
+    setHasFetched(true);
   }
 
   const publishVisor = async () => {
@@ -127,7 +133,7 @@ const VisorManager = () => {
       const type = selectedVisor.publico ? "warning" : "success"
       showToast(`Has ${action} el visor correctamente`, type);
     } else {
-      // tostar mal
+         showToast(`Ha ocurrido un error`, "error");
     }
   }
 
@@ -161,7 +167,7 @@ const VisorManager = () => {
 
       <div className={`visor-content ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
-          <h2>VISOR MANAGER</h2>
+          <h2>GESTOR DE VISORES</h2>
 
           <div className="visor-filter">
             <label htmlFor="visor-type">Mostrando: </label>
@@ -178,6 +184,16 @@ const VisorManager = () => {
                 </option>
               ))}
             </select>
+            {access !== PUBLIC_VISOR_ACCESS && (
+              <label htmlFor="visor-type">
+                Tu rol dentro del grupo es: {
+                  (access?.ga || access?.sa) ? "Administrador" :
+                    access?.editor ? "Editor" :
+                      access?.myvisors ? "Dueño" :
+                        "Lector"
+                }
+              </label>
+            )}
           </div>
 
           <div className="visor-modal-container">
@@ -242,7 +258,7 @@ const VisorManager = () => {
                     handleNewVisor();
                   }}>
                   <i className="fa-solid fa-plus"></i>
-                  Nuevo Visor
+                  Crear
                 </button>
 
                 <label className="common">
@@ -258,7 +274,7 @@ const VisorManager = () => {
                   <span className="icon">
                     <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
                   </span>
-                  Subir Json
+                  Subir
                 </label>
 
                 {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
@@ -271,7 +287,7 @@ const VisorManager = () => {
                   disabled={!selectedVisor}
                 >
                   <i className="fa-solid fa-pen-to-square"></i>
-                  Editar Visor
+                  Editar
                 </button>}
 
                 {(access?.sa || access?.ga) && <button
@@ -290,7 +306,7 @@ const VisorManager = () => {
                   disabled={!selectedVisor}
                   title="Borrar Visor">
                   <i className="fa-solid fa-trash-can"></i>
-                  Borrar Visor
+                  Borrar
                 </button>}
 
                 <button
