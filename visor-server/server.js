@@ -26,5 +26,5 @@ app.get('/visor/:visor', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`🔭 Visor server corriendo en http://localhost:${port}/visor/argenmap`);
+  console.log(`Visor server corriendo en puerto: ${port}`);
 });
