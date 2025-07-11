@@ -16,7 +16,7 @@ const HandleDownload = ({ data, parsedDefaultData }) => {
     return result;
   };
 
-  const downloadJson = (fileName) => {
+  const downloadJson = (fileName = "Visor generado mediante Editor Argenmap") => {
     const date = new Date().toLocaleString();
     const completeData = ensureFieldsExist(data, parsedDefaultData);
     const fileData = JSON.stringify(completeData, null, 2);
