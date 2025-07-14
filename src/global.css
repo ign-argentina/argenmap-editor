@@ -109,6 +109,11 @@ main,
   background-color: var(--active--color);
 }
 
+.global-buttons .share {
+  background-color: rgb(1, 191, 169);
+  color: var(--text--color);
+}
+
 .global-buttons .download {
   background-color: rgb(5, 142, 0);
   color: var(--text--color);

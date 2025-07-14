@@ -133,7 +133,7 @@ const VisorManager = () => {
       const type = selectedVisor.publico ? "warning" : "success"
       showToast(`Has ${action} el visor correctamente`, type);
     } else {
-         showToast(`Ha ocurrido un error`, "error");
+      showToast(`Ha ocurrido un error`, "error");
     }
   }
 
@@ -315,6 +315,14 @@ const VisorManager = () => {
                   title="Descargar JSON">
                   <i className="fa-solid fa-download"></i>
                   Descargar
+                </button>
+
+                <button
+                  className="share"
+                  // onClick={handleDownload}
+                  title="Compartir Visor">
+                  <i className="fa-solid fa-share"></i>
+                  Compartir
                 </button>
 
                 {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
