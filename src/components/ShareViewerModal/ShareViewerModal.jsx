@@ -1,35 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './ShareViewerModal.css';
 import { useUser } from '../../context/UserContext';
 import { createShareLink } from '../../api/configApi.js';
 import currentVisor from '../../api/visorApi.js';
 
-
 const ShareViewerModal = ({ isOpen, onClose, visor }) => {
   const { isAuth } = useUser();
   const [shareUrl, setShareUrl] = useState('');
   const [iframeCode, setIframeCode] = useState('');
+  const linkRef = useRef(null);
+  const iframeRef = useRef(null);
 
   useEffect(() => {
     const fetchUrl = async () => {
       if (visor && isOpen) {
-        const vid = visor.id;
-        const vgid = visor.gid;
         try {
+          const { id: vid, gid: vgid } = visor;
           const response = await createShareLink(vid, vgid);
           if (response.success && response.data) {
-            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${response.data}`;
+            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/kharta?view=${response.data}`;
+
             setShareUrl(fullUrl);
             setIframeCode(
               `<iframe src="${fullUrl}" width="100%" height="500" style="border:0;" allowfullscreen></iframe>`
             );
           } else {
-            console.error("Respuesta inesperada al generar el enlace:", response);
+            console.error('Respuesta inesperada:', response);
             setShareUrl('');
             setIframeCode('');
           }
         } catch (error) {
-          console.error("Error al generar el enlace:", error);
+          console.error('Error al generar el enlace:', error);
           setShareUrl('');
           setIframeCode('');
         }
@@ -38,10 +39,14 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
     fetchUrl();
   }, [visor, isOpen]);
 
+  const handleCopy = (ref) => {
+    if (!ref?.current) return;
+    const el = ref.current;
+    const text = 'value' in el ? el.value : el.textContent;
 
-  const handleCopy = (text) => {
-    if (!text) return;
-    navigator.clipboard.writeText(text);
+    if (text) {
+      navigator.clipboard.writeText(text.trim());
+    }
   };
 
   if (!isOpen || !visor) return null;
@@ -52,10 +57,12 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
         <h2 className="share-viewer-title">Compartir {visor.name}</h2>
 
         <div className="share-viewer-link-container">
-          <div className="share-viewer-link">{shareUrl || 'Generando enlace...'}</div>
+          <div className="share-viewer-link" ref={linkRef}>
+            {shareUrl || 'Generando enlace...'}
+          </div>
           <button
             className="share-viewer-copy-button"
-            onClick={() => handleCopy(shareUrl)}
+            onClick={() => handleCopy(linkRef)}
             disabled={!shareUrl}
           >
             Copiar
@@ -71,10 +78,11 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
                 value={iframeCode}
                 className="share-viewer-iframe-code"
                 rows={3}
+                ref={iframeRef}
               />
               <button
                 className="share-viewer-copy-button"
-                onClick={() => handleCopy(iframeCode)}
+                onClick={() => handleCopy(iframeRef)}
               >
                 Copiar
               </button>
