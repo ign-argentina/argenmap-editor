@@ -1,17 +1,22 @@
-import './ShareViewerModal.css';
+import './ShareViewerModal';
 import { useUser } from '../../context/UserContext';
-import { createShareLink } from '../../api/configApi';
+import { createShareLink } from '../../api/configApi.js';
 
 const ShareViewerModal = ({ isOpen, onClose, visor }) => {
   const { checkAuth, isAuth } = useUser();
 
   if (!isOpen || !visor) return null;
 
-  console.log(visor)
-  const visorUrl =  createShareLink();
+  const getVieweUrl = async () => {
+    console.log(visor)
+    const vid = visor.id;
+    const vgid = visualViewport.gid;
+    const viewerUrl = await createShareLink(vid, vgid);
+    return viewerUrl;
+  }
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(visorUrl);
+    navigator.clipboard.writeText(viewerUrl);
     alert("Enlace copiado al portapapeles");
   };
 
@@ -21,7 +26,7 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
         <h2 className="share-title">Compartir “{visor.name}”</h2>
 
         <div className="share-link-container">
-          <div className="share-link">{visorUrl}</div>
+          <div className="share-link">{getVieweUrl()}</div>
           <button className="copy-button" onClick={handleCopy}>Copiar</button>
         </div>
 
