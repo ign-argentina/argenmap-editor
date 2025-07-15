@@ -15,7 +15,7 @@ app.use(cors());
 // Argenmap estatico
 app.use('/argenmap', express.static(path.join(__dirname, 'public/argenmap')))
 
-// Servir archivos estáticos para kharta (Si no rompe, analizar importaciones por lado de kharta de otra manera vite.config.js quizas)
+// Servir archivos estáticos para kharta (Si no, rompe. Analizar importaciones por lado de kharta de otra manera vite.config.js quizas)
 app.use('/kharta/assets', express.static(path.join(__dirname, 'public/kharta/assets')));
 
 // Endpoint que sirve Kharta e inyecta configuracion
