@@ -18,7 +18,7 @@ visoresRoutes.delete("/", PROTECT.REQUIRE_AUTH, visorController.deleteVisor);
 
 visoresRoutes.get("/", visorController.getAllVisors); // Deprecado?
 visoresRoutes.get("/:id", visorController.getVisorById);
-
+visoresRoutes.post("/share", PROTECT.REQUIRE_AUTH, visorController.createShareLink);
 
 
 export default visoresRoutes;

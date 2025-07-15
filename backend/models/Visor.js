@@ -26,6 +26,7 @@ const SELECT_GROUP_VISORS = `
   SELECT * FROM visores 
   WHERE gid = $1 AND deleted = false`;
 
+const GET_SHARE_TOKEN = `SELECT sharetoken FROM visores WHERE id = $1`
 /* const SELECT_GROUP_VISORS = `
   SELECT v.* FROM visores v
   JOIN usuarios_por_grupo upg ON v.gid = upg.grupoId
@@ -119,6 +120,11 @@ class Visor extends BaseModel {
   static changePublicStatus = async (id) => {
     const result = await super.runQuery(UPDATE_PUBLIC_STATUS, [id])
     return result;
+  }
+
+  static getShareToken = async (id) => {
+    const result = await super.runQuery(GET_SHARE_TOKEN, [id])
+    return result
   }
 }
 

@@ -257,7 +257,7 @@ export const userLogout = async () => {
 export const userCheckAuth = async () => {
   try {
     const res = await axios.get(`${API_URL}/auth/check`, {
-      withCredentials: true,    
+      withCredentials: true,
     });
     return res
   } catch (error) {
