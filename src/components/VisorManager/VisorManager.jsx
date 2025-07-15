@@ -4,7 +4,8 @@ import { handleClearStorage } from '../../utils/HandleClearStorage';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
-import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
+import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
 import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
@@ -30,6 +31,8 @@ const VisorManager = () => {
   const defaultData = localStorage.getItem('formDataDefault');
   const parsedDefaultData = JSON.parse(defaultData);
   const [groupList, setGroupList] = useState([]);
+  const [showShareViewerModal, setShowShareViewerModal] = useState(false);
+
 
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState(() => () => { });
@@ -319,8 +322,9 @@ const VisorManager = () => {
 
                 <button
                   className="share"
-                  // onClick={handleDownload}
-                  title="Compartir Visor">
+                  onClick={() => {
+                    setShowShareViewerModal(true);
+                  }} title="Compartir Visor">
                   <i className="fa-solid fa-share"></i>
                   Compartir
                 </button>
@@ -383,6 +387,18 @@ const VisorManager = () => {
             }}
             onCancel={() => setConfirmVisible(false)}
           />
+
+          {showShareViewerModal && (
+            <div className="save-visor-modal-overlay">
+              <ShareViewerModal
+                // editorMode={editorMode}
+                // cloneMode={cloneMode}
+                visor={selectedVisor}
+                isOpen={showShareViewerModal}
+                onClose={() => setShowShareViewerModal(false)}
+              />
+            </div>
+          )}
 
         </div>
       </div>

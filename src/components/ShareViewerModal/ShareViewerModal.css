@@ -1,0 +1,146 @@
+.share-modal-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.share-modal-container {
+  position: relative;
+  z-index: 60;
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.share-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.share-modal-header h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.icon-close {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.share-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.share-field label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.share-value {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.share-input-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.share-input,
+.share-textarea {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  background-color: #f9f9f9;
+}
+
+.share-textarea {
+  resize: none;
+}
+
+.share-copy-btn {
+  padding: 0 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  transition: background-color 0.2s ease;
+}
+
+.share-copy-btn:hover {
+  background-color: #1e40af;
+}
+
+.share-modal-footer {
+  margin-top: 24px;
+  text-align: right;
+}
+
+.share-close-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  background-color: #e4e4e4;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.share-close-btn:hover {
+  background-color: #d4d4d4;
+}
+
+.share-link-container {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.share-link {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.copy-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: #1e40af;
+}
