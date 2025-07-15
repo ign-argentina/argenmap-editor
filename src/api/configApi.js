@@ -89,7 +89,8 @@ export const getGroupVisors = async (groupId) => {
 };
 
 export const createShareLink = async (vid, vgid) => {
-  const result = await axios.post(`${API_URL}/visores/share`, { visorid: vid, visorgid: vgid }, { withCredentials: true, validateStatus: () => true });
+  const result = await axios.post(`${API_URL}/visores/share`,
+  { visorid: vid, visorgid: vgid }, { withCredentials: true, validateStatus: () => true });
   return result.data
 }
 // ***** END VISORS METHODS ***** 

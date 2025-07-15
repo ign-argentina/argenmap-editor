@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import './ShareViewerModal.css';
 import { useUser } from '../../context/UserContext';
 import { createShareLink } from '../../api/configApi.js';
+import currentVisor from '../../api/visorApi.js';
+
 
 const ShareViewerModal = ({ isOpen, onClose, visor }) => {
   const { isAuth } = useUser();
@@ -14,9 +16,18 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
         const vid = visor.id;
         const vgid = visor.gid;
         try {
-          const viewerUrl = await createShareLink(vid, vgid);
-          setShareUrl(viewerUrl);
-          setIframeCode(`<iframe src="${viewerUrl}" width="100%" height="500" style="border:0;" allowfullscreen></iframe>`);
+          const response = await createShareLink(vid, vgid);
+          if (response.success && response.data) {
+            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${response.data}`;
+            setShareUrl(fullUrl);
+            setIframeCode(
+              `<iframe src="${fullUrl}" width="100%" height="500" style="border:0;" allowfullscreen></iframe>`
+            );
+          } else {
+            console.error("Respuesta inesperada al generar el enlace:", response);
+            setShareUrl('');
+            setIframeCode('');
+          }
         } catch (error) {
           console.error("Error al generar el enlace:", error);
           setShareUrl('');
@@ -27,10 +38,10 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
     fetchUrl();
   }, [visor, isOpen]);
 
+
   const handleCopy = (text) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
-    alert("Copiado al portapapeles");
   };
 
   if (!isOpen || !visor) return null;
