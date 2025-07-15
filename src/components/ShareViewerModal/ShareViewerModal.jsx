@@ -1,5 +1,6 @@
 import './ShareViewerModal.css';
 import { useUser } from '../../context/UserContext';
+import { createShareLink } from '../../api/configApi';
 
 const ShareViewerModal = ({ isOpen, onClose, visor }) => {
   const { checkAuth, isAuth } = useUser();
@@ -7,7 +8,7 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
   if (!isOpen || !visor) return null;
 
   console.log(visor)
-  const visorUrl = `${window.location.origin}/visor/${visor.cid}`;
+  const visorUrl =  createShareLink();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(visorUrl);
