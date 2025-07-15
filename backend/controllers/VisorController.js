@@ -181,6 +181,7 @@ class VisorController {
       const { visorid, visorgid } = req.body
       const { uid } = this.authService.getDataToken(token)
 
+
       if (!visorid) {
         return res.status(400).json({ error: 'Falta el ID del visor' });
       }
