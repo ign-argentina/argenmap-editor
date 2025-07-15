@@ -320,14 +320,14 @@ const VisorManager = () => {
                   Descargar
                 </button>
 
-                <button
+                {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
                   className="share"
                   onClick={() => {
                     setShowShareViewerModal(true);
                   }} title="Compartir Visor">
                   <i className="fa-solid fa-share"></i>
                   Compartir
-                </button>
+                </button>}
 
                 {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
                   className="publish"
