@@ -20,6 +20,8 @@ app.use('/kharta/assets', express.static(path.join(__dirname, 'public/kharta/ass
 
 // Endpoint que sirve Kharta e inyecta configuracion
 app.get('/kharta', (req, res) => {
+  const { view } = req.query;
+  console.log(view)
   const indexPath = path.join(__dirname, 'public/kharta/index.html');
 
   if (!fs.existsSync(indexPath)) {
