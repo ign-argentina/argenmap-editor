@@ -200,7 +200,7 @@ class VisorController {
     }
   };
 
-  getConfigByShareToken = async (req, res) => {
+  getConfigByShareToken = async (req, res) => { // ASEGURAR CON HEADERS PROVENIENTES DEL VISOR SERVER PARA QUE EL ACCESO SEA SOLO DESDE AHI.
     try {
       const { shareToken } = req.query;
 
