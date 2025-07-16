@@ -199,6 +199,23 @@ class VisorController {
       return res.status(500).json({ error: 'Error al eliminar el visor', detail: err.message });
     }
   };
+
+  getConfigByShareToken = async (req, res) => {
+    try {
+      const { shareToken } = req.query;
+
+      const result = shareToken ? await this.visorService.getConfigByShareToken(shareToken) : null
+
+      if (!result.success) {
+        return res.status(403).json({ error: result.error });
+      }
+
+      return res.status(200).json(result.data);
+    } catch (error) {
+      console.log("Error en la capa de controladores (getConfigByShareToken)", error)
+      return res.status(500).json({ error: 'Error al buscar el visor', detail: error.message });
+    }
+  }
 }
 
 export default VisorController;

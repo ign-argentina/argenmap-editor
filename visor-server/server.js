@@ -19,9 +19,26 @@ app.use('/argenmap', express.static(path.join(__dirname, 'public/argenmap')))
 app.use('/kharta/assets', express.static(path.join(__dirname, 'public/kharta/assets')));
 
 // Endpoint que sirve Kharta e inyecta configuracion
-app.get('/kharta', (req, res) => {
+app.get('/kharta', async (req, res) => {
   const { view } = req.query;
   console.log(view)
+
+
+  /////////////////////////////
+  // TEST MEJORAR PROXIMAMENTE
+  /////////////////////////////
+  let configInyectada = null;
+
+  try {
+    const response = await fetch(`http://localhost:3001/visores/share?shareToken=${view}`);
+    configInyectada = await response.json(); // Devuelve campo .error si no se pudo
+  } catch (error) {
+    console.error('Error al hacer fetch:', error);
+  }
+  /////////////////////////////
+  // FIN TEST MEJORAR PROXIMAMENTE
+  /////////////////////////////
+
   const indexPath = path.join(__dirname, 'public/kharta/index.html');
 
   if (!fs.existsSync(indexPath)) {
@@ -31,12 +48,12 @@ app.get('/kharta', (req, res) => {
   let html = fs.readFileSync(indexPath, 'utf-8')
 
   // Agarramos config de ejemplo desde la carpeta statics para inyectarla. Posteriormente debería realizar una búsqueda en DB de la configuración
-  const configPath = path.join(__dirname, 'statics/map-config.json'); // "Servida desde el editor"
-  const configInyectada = JSON.parse(fs.readFileSync(configPath, 'utf-8')); // Parseamos
+  const defaultConfigPath = path.join(__dirname, 'statics/map-config.json'); // "Servida desde el editor"
+  configInyectada = configInyectada.error ? JSON.parse(fs.readFileSync(defaultConfigPath, 'utf-8')) : configInyectada; // Si hay campo .error cargamos default, si no, cargamos la q corresponde
   const scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`; // Inyectamos para posteriormente leer en el front
   html = html.replace('</head>', `${scriptTag}</head>`);
 
-  // Ajustamos rutas absolutas a rutas relativas para kharta (Si no rompe)
+  // Ajustamos rutas absolutas a rutas relativas para kharta (Si no, rompe)
   html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
 
   res.send(html);

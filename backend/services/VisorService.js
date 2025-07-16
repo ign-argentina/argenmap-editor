@@ -3,6 +3,8 @@ import Visor from "../models/Visor.js";
 import Result from "../utils/Result.js";
 import Group from '../models/Group.js';
 import User from '../models/User.js';
+import { validate } from 'uuid';
+
 import { config } from 'dotenv';
 
 class VisorService {
@@ -146,7 +148,7 @@ class VisorService {
     try {
 
       const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
-      
+
       const isVisorOwner = !visorgid && await Visor.isOwner(visorId, uid);
 
       if (!haveAccessToVisor && !isVisorOwner) {
@@ -177,6 +179,26 @@ class VisorService {
       return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
     } catch (error) {
       console.log("VISORES: Error en la capa de Servicio")
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  getConfigByShareToken = async (shareToken) => {
+    try {
+      let config = null
+      if (validate(shareToken)) {
+
+
+
+        const visor = await Visor.getConfigIdByShareToken(shareToken)
+
+        if (visor) {
+          config = await Config.getConfigById(visor);
+        }
+      }
+      return config ? Result.success(config.json) : Result.fail("No se ha podido recuperar la configuracion del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio [getConfigByShareToken]")
       return Result.fail("Error en la capa de servicio")
     }
   }

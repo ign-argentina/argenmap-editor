@@ -27,10 +27,8 @@ const SELECT_GROUP_VISORS = `
   WHERE gid = $1 AND deleted = false`;
 
 const GET_SHARE_TOKEN = `SELECT sharetoken FROM visores WHERE id = $1`
-/* const SELECT_GROUP_VISORS = `
-  SELECT v.* FROM visores v
-  JOIN usuarios_por_grupo upg ON v.gid = upg.grupoId
-  WHERE upg.usuarioId = $1 AND v.deleted = false`; */
+
+const GET_BY_SHARE_TOKEN = `SELECT cid FROM visores WHERE sharetoken = $1`
 
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
@@ -126,6 +124,16 @@ class Visor extends BaseModel {
     const result = await super.runQuery(GET_SHARE_TOKEN, [id])
     return result
   }
+
+  static getConfigIdByShareToken = async (shareToken) => {
+    try {
+      const result = await super.runQuery(GET_BY_SHARE_TOKEN, [shareToken]);
+      return result?.[0].cid || null;
+    } catch (err) {
+      console.error("Error en Visor.getConfigIdByShareToken:", err);
+      throw err; // O podés devolver null
+    }
+  };
 }
 
 export default Visor
