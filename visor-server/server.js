@@ -28,7 +28,7 @@ app.get('/kharta', (req, res) => {
     return res.status(404).send('Visor kharta no encontrado');
   }
 
-  let html = fs.readFileSync(indexPath, 'utf-8');
+  let html = fs.readFileSync(indexPath, 'utf-8')
 
   // Agarramos config de ejemplo desde la carpeta statics para inyectarla. Posteriormente debería realizar una búsqueda en DB de la configuración
   const configPath = path.join(__dirname, 'statics/map-config.json'); // "Servida desde el editor"
