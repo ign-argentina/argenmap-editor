@@ -357,22 +357,13 @@ const VisorManager = () => {
                   <p className="visor-privacy">
                     {selectedVisor.publico ? 'Público' : 'Privado'}
                   </p>
-                  {(() => {
-                    const group = groupList?.find(g => g.id === selectedVisor.gid);
-                    return group ? <h3>Grupo: {group.name}</h3> : <h3>Grupo: Sin grupo</h3>;
-                  })()}
+                  <h3>Grupo: {selectedVisor.gname || 'Grupo: Sin grupo'}</h3>
                 </div>
-                {(() => {
-                  const group = groupList?.find(g => g.id === selectedVisor.gid);
-                  const imageSrc = group?.img || '/assets/no-image.png';
-                  return (
-                    <img
-                      src={imageSrc}
-                      alt="Imagen del grupo"
-                      className="group-image-right"
-                    />
-                  );
-                })()}
+                <img
+                  src={selectedVisor?.gimg || '/assets/no-image.png'}
+                  alt="Imagen del grupo"
+                  className="group-image-right"
+                />
               </div>
             </div>
           )}
