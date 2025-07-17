@@ -9,7 +9,6 @@ import Preview from '../Preview/Preview';
 import FormNavbar from '../FormNavbar/FormNavbar';
 import HandleDownload from '../../utils/HandleDownload';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
-import { handleClearStorage } from '../../utils/HandleClearStorage';
 import '/src/global.css';
 import './Form.css';
 import { useToast } from '../../context/ToastContext';
@@ -32,7 +31,6 @@ function Form() {
   const [isFormShown, setIsFormShown] = useState(true);
   const [reloadKey, setReloadKey] = useState(0);
   const [loadedVisor, setLoadedVisor] = useState(null);
-  const clearStorage = () => handleClearStorage(setData, uploadSchema);
   const { showToast } = useToast()
 
   useEffect(() => {
@@ -94,7 +92,6 @@ function Form() {
             selectedLang,
             isFormShown,
             setIsFormShown,
-            // handleClearStorage
           }}
           actions={{
             handleDownload,

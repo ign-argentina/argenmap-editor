@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleClearStorage, handleSetConfig } from '../../utils/HandleClearStorage';
+import { newViewer, setViewer } from '../../utils/HandleClearStorage';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
@@ -62,13 +62,6 @@ const VisorManager = () => {
     downloadJson(selectedVisor.name);
   };
 
-  const handleNewVisor = () => {
-    handleClearStorage(setData, uploadSchema);
-    navigate('/form');
-  };
-
-
-
   const handleDeleteVisor = async (visorCompleto) => {
     const visorid = visorCompleto.id;
     const visorgid = visorCompleto.gid;
@@ -85,24 +78,28 @@ const VisorManager = () => {
     }
   };
 
-  const handleLoadVisor = (visorCompleto) => {
+  const handleNewViewer = () => {
+    newViewer(setData, uploadSchema);
+    navigate('/form');
+  };
+
+  const handleLoadViewer = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
       ? JSON.parse(visorCompleto.config.json)
       : visorCompleto.config.json;
 
-    handleSetConfig(configJson, setData, uploadSchema);
-        console.log(configJson)
-
+    setViewer(configJson, setData, uploadSchema);
+    console.log(configJson)
   };
 
-  const handleFileUpload = (event) => {
+  const handleUploadViewer = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const jsonData = JSON.parse(e.target.result);
         console.log(jsonData)
-        handleSetConfig(jsonData, setData, uploadSchema);
+        setViewer(jsonData, setData, uploadSchema);
       };
       reader.readAsText(file);
     }
@@ -269,7 +266,7 @@ const VisorManager = () => {
                 <button
                   className="common"
                   onClick={() => {
-                    handleNewVisor();
+                    handleNewViewer();
                   }}>
                   <i className="fa-solid fa-plus"></i>
                   Crear
@@ -280,7 +277,7 @@ const VisorManager = () => {
                     type="file"
                     accept=".json"
                     onChange={(e) => {
-                      handleFileUpload(e);
+                      handleUploadViewer(e);
                     }}
                     style={{ display: "none" }}
                     title="Subir JSON"
@@ -295,7 +292,7 @@ const VisorManager = () => {
                   className="common"
                   onClick={() => {
                     if (!selectedVisor) return;
-                    handleLoadVisor(selectedVisor);
+                    handleLoadViewer(selectedVisor);
                     navigate('/form', { state: { visor: selectedVisor, editorMode: true } });
                   }}
                   disabled={!selectedVisor}
