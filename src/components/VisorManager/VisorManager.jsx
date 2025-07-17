@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleClearStorage } from '../../utils/HandleClearStorage';
+import { handleClearStorage, handleSetConfig } from '../../utils/HandleClearStorage';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import HandleDownload from '../../utils/HandleDownload';
 import { handleFileChange } from '../../utils/HandleJsonUpload';
@@ -67,10 +67,7 @@ const VisorManager = () => {
     navigate('/form');
   };
 
-  const handleFileUpload = (event) => {
-    handleFileChange(event, setData, uploadSchema);
-    navigate('/form');
-  };
+
 
   const handleDeleteVisor = async (visorCompleto) => {
     const visorid = visorCompleto.id;
@@ -93,9 +90,23 @@ const VisorManager = () => {
       ? JSON.parse(visorCompleto.config.json)
       : visorCompleto.config.json;
 
-    visorCompleto.config.json = configJson;
-    localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
-    updateVisorConfigJson(configJson);
+    handleSetConfig(configJson, setData, uploadSchema);
+        console.log(configJson)
+
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const jsonData = JSON.parse(e.target.result);
+        console.log(jsonData)
+        handleSetConfig(jsonData, setData, uploadSchema);
+      };
+      reader.readAsText(file);
+    }
+    navigate('/form');
   };
 
   useEffect(() => {
