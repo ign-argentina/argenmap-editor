@@ -88,8 +88,6 @@ function Form() {
     uploadSchema(workingConfig)
   }, [workingConfig]);
 
-
-
   const [isFormShown, setIsFormShown] = useState(true);
   const [reloadKey, setReloadKey] = useState(0);
   const [loadedVisor, setLoadedVisor] = useState(null);
@@ -139,8 +137,6 @@ function Form() {
   };
 
   /*   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : []; */
-
-
 
   return (
     <div>
