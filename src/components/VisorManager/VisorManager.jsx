@@ -7,7 +7,6 @@ import { handleFileChange } from '../../utils/HandleJsonUpload';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
-import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
@@ -25,7 +24,6 @@ const VisorManager = () => {
   const [access, setAccess] = useState(PUBLIC_VISOR_ACCESS)
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
-  const { setData, uploadSchema } = useFormEngine();
   const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
   const defaultData = localStorage.getItem('formDataDefault');
@@ -78,10 +76,10 @@ const VisorManager = () => {
     }
   };
 
-  const handleNewViewer = () => {
-    newViewer(setData, uploadSchema);
-    navigate('/form');
-  };
+  /*   const handleNewViewer = () => {
+      newViewer(setData, uploadSchema);
+      
+    }; */
 
   const handleLoadViewer = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
@@ -266,7 +264,7 @@ const VisorManager = () => {
                 <button
                   className="common"
                   onClick={() => {
-                    handleNewViewer();
+                    navigate('/form');
                   }}>
                   <i className="fa-solid fa-plus"></i>
                   Crear
@@ -292,8 +290,8 @@ const VisorManager = () => {
                   className="common"
                   onClick={() => {
                     if (!selectedVisor) return;
-                    handleLoadViewer(selectedVisor);
-                    navigate('/form', { state: { visor: selectedVisor, editorMode: true } });
+        /*             handleLoadViewer(selectedVisor); */
+                    navigate('/form', { state: { viewer: selectedVisor, editorMode: true } });
                   }}
                   disabled={!selectedVisor}
                 >
