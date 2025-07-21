@@ -12,6 +12,8 @@ import './VisorManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
+import defaultConfig from '../../static/config.json';
+
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
@@ -26,8 +28,7 @@ const VisorManager = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
-  const defaultData = localStorage.getItem('formDataDefault');
-  const parsedDefaultData = JSON.parse(defaultData);
+  const parsedDefaultData = defaultConfig;
   const [groupList, setGroupList] = useState([]);
   const [showShareViewerModal, setShowShareViewerModal] = useState(false);
 
