@@ -97,11 +97,12 @@ const VisorManager = () => {
       reader.onload = (e) => {
         const jsonData = JSON.parse(e.target.result);
         console.log(jsonData)
-        setViewer(jsonData, setData, uploadSchema);
+        /*         setViewer(jsonData, setData, uploadSchema); */
+        navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
       };
       reader.readAsText(file);
     }
-    navigate('/form');
+    /*     navigate('/form'); */
   };
 
   useEffect(() => {
@@ -290,7 +291,7 @@ const VisorManager = () => {
                   className="common"
                   onClick={() => {
                     if (!selectedVisor) return;
-        /*             handleLoadViewer(selectedVisor); */
+                    /*             handleLoadViewer(selectedVisor); */
                     navigate('/form', { state: { viewer: selectedVisor, editorMode: true } });
                   }}
                   disabled={!selectedVisor}

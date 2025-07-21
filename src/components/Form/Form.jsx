@@ -3,47 +3,29 @@ import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
 import { useLocation } from 'react-router-dom';
-/* import useFormEngine from '../../hooks/useFormEngine'; */
 import ColorPickerControl from '../ColorPickerControl/ColorPickerControl';
 import Preview from '../Preview/Preview';
 import FormNavbar from '../FormNavbar/FormNavbar';
-import HandleDownload from '../../utils/HandleDownload';
 import { updateVisorConfigJson } from '../../utils/visorStorage';
 import '/src/global.css';
 import './Form.css';
 import { useToast } from '../../context/ToastContext';
-/* import { setViewer } from '../../utils/HandleClearStorage'; */
 import defaultConfig from '../../static/config.json';
 import language from '../../static/language.json';
 import GenerateSchema from '../../utils/GenerateSchema';
 import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
-// import MergeDataWithDefaults from '../utils/MergeDataWithDefaults';
 
 function Form() {
-  /*   const {
-      data,
-      setData,
-      schema,
-      selectedSection,
-      setSelectedSection,
-      ajv,
-      uploadSchema,
-      selectedLang,
-      setSelectedLang
-    } = useFormEngine(); // Antes era useFormEngine({ config, language, selectedLang }); Use Form Engine no acepta parametros, estan de mas. Y como el hook ya maneja
-    // el lenguaje, lo traemos de ahi */
-
-  /*   const [defaultViewer, setDefaultViewer] = useState() */
-
   const location = useLocation();
-  const { viewer, editorMode } = location.state || {};
-  const [baseConfig, setBaseConfig] = useState()
-  const [workingConfig, setWorkingConfig] = useState()
+  const { viewer, editorMode, externalUpload = false } = location.state || {};
+  const [baseConfig, setBaseConfig] = useState();
+  const [workingConfig, setWorkingConfig] = useState();
   const [schema, setSchema] = useState({});
 
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
+  const [selectedSection, setSelectedSection] = useState(null);
 
   const uploadSchema = (config) => {
     if (!config || !language) return;
@@ -57,137 +39,110 @@ function Form() {
     });
 
     setSchema(translatedSchema);
-    console.log(translatedSchema)
-    // const sectionKeys = Object.keys(translatedSchema.properties || {});
 
-    // setSelectedSection((prev) => {
-    //   if (!prev || !sectionKeys.includes(prev)) {
-    //     return sectionKeys[0] || null;
-    //   }
-    //   return prev;
-    // });
+    const sectionKeys = Object.keys(translatedSchema.properties || {});
 
-    // return translatedSchema;
+    setSelectedSection((prev) => {
+      if (!prev || !sectionKeys.includes(prev)) {
+        return sectionKeys[0] || null;
+      }
+      return prev;
+    });
   };
 
   useEffect(() => {
-    if (viewer) {
-   
-      console.log("Llego viewer!! Traeme la config")
-      console.log(viewer.config.json)
-      setBaseConfig(viewer.config.json)
-      setWorkingConfig(viewer.config.json)
+    if (viewer || externalUpload) {
+      setBaseConfig(externalUpload ? externalUpload : viewer.config.json);
+      setWorkingConfig(externalUpload ? externalUpload : viewer.config.json);
     } else {
-      console.log("No llego nada, cargamos la default")
-      setBaseConfig(defaultConfig)
-      setWorkingConfig(defaultConfig)
+      setBaseConfig(defaultConfig);
+      setWorkingConfig(defaultConfig);
     }
   }, []);
-  
+
   useEffect(() => {
-    uploadSchema(workingConfig)
+    uploadSchema(workingConfig);
   }, [workingConfig]);
 
-  const [isFormShown, setIsFormShown] = useState(true);
-  const [reloadKey, setReloadKey] = useState(0);
-  const [loadedVisor, setLoadedVisor] = useState(null);
-  const { showToast } = useToast()
+  const { showToast } = useToast();
 
-  useEffect(() => {
-    const savedVisor = localStorage.getItem('visorMetadata');
-    if (savedVisor) {
-      setLoadedVisor(JSON.parse(savedVisor));
-    }
-
-  }, []);
-
-  /*   useEffect(() => {
-      if (selectedLang && data) {
-        uploadSchema(data);
-      }
-    }, [selectedLang, data]);
-  
-    const handleLanguageChange = (e) => {
-      const selectedLanguage = e.target.value;
-      setSelectedLang(selectedLanguage);
-      localStorage.setItem('selectedLang', selectedLanguage);
-  
-    }; */
+  const handleLanguageChange = (e) => {
+    const selectedLanguage = e.target.value;
+    setSelectedLang(selectedLanguage);
+    localStorage.setItem('selectedLang', selectedLanguage);
+  };
 
   const handleSectionChange = (section) => {
     setSelectedSection(section);
   };
 
-  /*   const colorPickerTester = rankWith(
-      3,
-      and(uiTypeIs('Control'), schemaMatches((schema) => schema.format === 'color'))
-    );
-   */
-  /*   const customRenderers = [
-      ...materialRenderers,
-      { tester: colorPickerTester, renderer: ColorPickerControl }
-    ];
-   */
-  /*   const defaultData = localStorage.getItem('formDataDefault');
-    const parsedDefaultData = JSON.parse(defaultData);
-    const { downloadJson } = HandleDownload({ data, parsedDefaultData }); */
+  const colorPickerTester = rankWith(
+    3,
+    and(uiTypeIs('Control'), schemaMatches((schema) => schema.format === 'color'))
+  );
 
-  const handleDownload = () => {
-    downloadJson();
+  const customRenderers = [
+    ...materialRenderers,
+    { tester: colorPickerTester, renderer: ColorPickerControl }
+  ];
+
+
+
+  const handleJsonFormsChange = (updatedData) => {
+    // Hubo cambios? Actualizo, si no no
+    if (JSON.stringify(workingConfig) !== JSON.stringify(updatedData)) {
+      setWorkingConfig((prevConfig) => ({
+        ...prevConfig,
+        [selectedSection]: updatedData,
+      }));
+
+      updateVisorConfigJson({
+        ...workingConfig,
+        [selectedSection]: updatedData,
+      });
+    }
   };
-
-  /*   const sectionKeys = schema?.properties ? Object.keys(schema.properties) : []; */
+  
+  // Para evitar re-render infinito, uso currentData
+  const currentData = workingConfig?.[selectedSection] || {};
 
   return (
     <div>
-      <div className="editor-container" key={reloadKey}>
-        {/*   <FormNavbar
-          config={defaultViewer}
-          visor={loadedVisor}
-          sectionInfo={{ sectionKeys, selectedSection, handleSectionChange }}
+      <div className="editor-container">
+        <FormNavbar
+          config={baseConfig}
+          viewer={viewer}
+          sectionInfo={{ sectionKeys: Object.keys(schema?.properties || {}), selectedSection, handleSectionChange }}
           uiControls={{
             handleLanguageChange,
             selectedLang,
-            isFormShown,
-            setIsFormShown,
+            isFormShown: true,
+            setIsFormShown: () => { },
           }}
-          actions={{
-            handleDownload,
-          }}
+          actions={{}}
           editorMode={editorMode}
-        /> */}
+        />
 
-        {/*         {isFormShown && selectedSection && (
+        {selectedSection && (
           <div className="form-container">
             <div className="custom-form-group">
               <JsonForms
-                schema={schema.properties[selectedSection]}
-                data={data[selectedSection]}
+                schema={schema.properties?.[selectedSection]}
+                data={currentData}
                 renderers={customRenderers}
                 cells={materialCells}
-                ajv={ajv}
-                onChange={({ data: updatedData }) => {
-                  setData(prevData => {
-                    const newData = {
-                      ...prevData,
-                      [selectedSection]: updatedData
-                    };
-
-                    updateVisorConfigJson(newData);
-                    return newData;
-                  });
-                }}
-
+                onChange={({ data: updatedData }) => handleJsonFormsChange(updatedData)} // Usamos la nueva función de manejo
               />
             </div>
           </div>
         )}
- */}
-        <div className='side-panel'>
+
+        <div className="side-panel">
           <Preview />
         </div>
       </div>
     </div>
   );
 }
+
 export default Form;

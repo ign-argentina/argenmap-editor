@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import SaveVisorModal from '../SaveVisorModal/SaveVisorModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { UserProvider } from '../../context/UserContext';
 import './FormNavbar.css';
 import { useUser } from '../../context/UserContext';
 import language from '../../static/language.json'
 
 const FormNavbar = ({
   config,
-  visor,
+  viewer,
   sectionInfo,
   uiControls,
   actions,
@@ -22,13 +21,11 @@ const FormNavbar = ({
   const { isAuth } = useUser()
 
   return (
-    <UserProvider> {/* ANALIZAR EN UN FUTURO, LLEVAR EL CONTEXTO DE MANERA GLOBAL Y MODULARIZADA  */}
-
       <div className='editor-navbar'>
         <div className="configVersion-info">
           <label>
-            {visor?.name ? `${visor.name}` : "Usando Visor Estándar"}
-            {visor?.config?.json.configVersion && ` (v${visor.config.json.configVersion})`}
+            {viewer?.name ? `${visor.name}` : "Nuevo Visor"}
+            {config?.configVersion && ` (v${config.configVersion})`}
           </label>
         </div>
 
@@ -78,7 +75,7 @@ const FormNavbar = ({
               <SaveVisorModal
                 editorMode={editorMode}
                 cloneMode={cloneMode}
-                visor={visor}
+                visor={viewer}
                 isOpen={showSaveModal}
                 onClose={() => setShowSaveModal(false)}
               />
@@ -100,7 +97,6 @@ const FormNavbar = ({
 
         </div>
       </div>
-    </UserProvider >
   );
 };
 
