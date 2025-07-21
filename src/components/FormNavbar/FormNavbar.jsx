@@ -24,7 +24,7 @@ const FormNavbar = ({
       <div className='editor-navbar'>
         <div className="configVersion-info">
           <label>
-            {viewer?.name ? `${visor.name}` : "Nuevo Visor"}
+            {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
             {config?.configVersion && ` (v${config.configVersion})`}
           </label>
         </div>
