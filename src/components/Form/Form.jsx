@@ -15,11 +15,12 @@ import language from '../../static/language.json';
 import GenerateSchema from '../../utils/GenerateSchema';
 import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
+import HandleDownload from '../../utils/HandleDownload';
 
 function Form() {
   const location = useLocation();
   const { viewer, editorMode, externalUpload = false } = location.state || {};
-  const [baseConfig, setBaseConfig] = useState();
+  const [config, setConfig] = useState();
   const [workingConfig, setWorkingConfig] = useState();
   const [schema, setSchema] = useState({});
 
@@ -52,10 +53,10 @@ function Form() {
 
   useEffect(() => {
     if (viewer || externalUpload) {
-      setBaseConfig(externalUpload ? externalUpload : viewer.config.json);
+      setConfig(externalUpload ? externalUpload : viewer.config.json);
       setWorkingConfig(externalUpload ? externalUpload : viewer.config.json);
     } else {
-      setBaseConfig(defaultConfig);
+      setConfig(defaultConfig);
       setWorkingConfig(defaultConfig);
     }
   }, []);
@@ -86,10 +87,15 @@ function Form() {
     { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
+  const { downloadJson } = HandleDownload({ config, defaultConfig });
 
+  const handleDownload = () => {
+    downloadJson();
+  };
 
   const handleJsonFormsChange = (updatedData) => {
     // Hubo cambios? Actualizo, si no no
+    console.log(updatedData)
     if (JSON.stringify(workingConfig) !== JSON.stringify(updatedData)) {
       setWorkingConfig((prevConfig) => ({
         ...prevConfig,
@@ -110,7 +116,7 @@ function Form() {
     <div>
       <div className="editor-container">
         <FormNavbar
-          config={baseConfig}
+          config={config}
           viewer={viewer}
           sectionInfo={{ sectionKeys: Object.keys(schema?.properties || {}), selectedSection, handleSectionChange }}
           uiControls={{
@@ -119,7 +125,7 @@ function Form() {
             isFormShown: true,
             setIsFormShown: () => { },
           }}
-          actions={{}}
+          actions={{handleDownload}}
           editorMode={editorMode}
         />
 
