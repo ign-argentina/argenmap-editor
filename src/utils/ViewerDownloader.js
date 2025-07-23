@@ -16,11 +16,24 @@ const BASE_FILE_NAME = "Visor"
  */
 export const downloadViewer = (viewer, baseViewer = null, name = null) => {
   if (baseViewer){
-    viewer = ensureFieldsExist(viewer, baseViewer)
-    viewer = orderObjectByReference(viewer, baseViewer);
+    viewer = mergeViewer(viewer, baseViewer)
   }
   const date = formatDateForFilename(new Date());
   download(viewer, name ? name : BASE_FILE_NAME, date)
+}
+
+/**
+ * Fusiona un objeto `viewer` con una estructura base (`baseViewer`),
+ * asegurando que:
+ * - Todas las claves definidas en `baseViewer` existan (rellenando valores vacíos si es necesario).
+ * - El orden de las propiedades coincida con la estructura original (`baseViewer`).
+ *
+ * @param {Object} viewer - Objeto incompleto o desestructurado.
+ * @param {Object|null} baseViewer - Objeto de referencia que define la estructura completa esperada.
+ * @returns {Object} - Objeto resultante con claves restauradas y ordenadas.
+ */
+export const mergeViewer = (viewer, baseViewer) => {
+  return orderObjectByReference(ensureFieldsExist(viewer, baseViewer), baseViewer)
 }
 
 /**
