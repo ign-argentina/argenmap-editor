@@ -1,18 +1,15 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleClearStorage } from '../../utils/HandleClearStorage';
-import { updateVisorConfigJson } from '../../utils/visorStorage';
-import HandleDownload from '../../utils/HandleDownload';
-import { handleFileChange } from '../../utils/HandleJsonUpload';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
-import useFormEngine from '../../hooks/useFormEngine';
 import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
+import { downloadViewer } from '../../utils/ViewerDownloader';
+
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
@@ -25,11 +22,8 @@ const VisorManager = () => {
   const [access, setAccess] = useState(PUBLIC_VISOR_ACCESS)
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
-  const { setData, uploadSchema } = useFormEngine();
   const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
-  const defaultData = localStorage.getItem('formDataDefault');
-  const parsedDefaultData = JSON.parse(defaultData);
   const [groupList, setGroupList] = useState([]);
   const [showShareViewerModal, setShowShareViewerModal] = useState(false);
 
@@ -58,18 +52,7 @@ const VisorManager = () => {
       ? JSON.parse(selectedVisor.config.json)
       : selectedVisor.config.json;
 
-    const { downloadJson } = HandleDownload({ data: configJson, parsedDefaultData });
-    downloadJson(selectedVisor.name);
-  };
-
-  const handleNewVisor = () => {
-    handleClearStorage(setData, uploadSchema);
-    navigate('/form');
-  };
-
-  const handleFileUpload = (event) => {
-    handleFileChange(event, setData, uploadSchema);
-    navigate('/form');
+    downloadViewer(configJson, null, selectedVisor.name) // Config, baseConfig nula, nombre
   };
 
   const handleDeleteVisor = async (visorCompleto) => {
@@ -88,14 +71,32 @@ const VisorManager = () => {
     }
   };
 
-  const handleLoadVisor = (visorCompleto) => {
+  /*   const handleNewViewer = () => {
+      newViewer(setData, uploadSchema);
+      
+    }; */
+
+/*   const handleLoadViewer = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
       ? JSON.parse(visorCompleto.config.json)
       : visorCompleto.config.json;
 
-    visorCompleto.config.json = configJson;
-    localStorage.setItem('visorMetadata', JSON.stringify(visorCompleto));
-    updateVisorConfigJson(configJson);
+    setViewer(configJson, setData, uploadSchema);
+    console.log(configJson)
+  }; */
+
+  const handleUploadViewer = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const jsonData = JSON.parse(e.target.result);
+        console.log(jsonData)
+        navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
+      };
+      reader.readAsText(file);
+    }
+    /*     navigate('/form'); */
   };
 
   useEffect(() => {
@@ -258,7 +259,7 @@ const VisorManager = () => {
                 <button
                   className="common"
                   onClick={() => {
-                    handleNewVisor();
+                    navigate('/form');
                   }}>
                   <i className="fa-solid fa-plus"></i>
                   Crear
@@ -269,7 +270,7 @@ const VisorManager = () => {
                     type="file"
                     accept=".json"
                     onChange={(e) => {
-                      handleFileUpload(e);
+                      handleUploadViewer(e);
                     }}
                     style={{ display: "none" }}
                     title="Subir JSON"
@@ -284,8 +285,8 @@ const VisorManager = () => {
                   className="common"
                   onClick={() => {
                     if (!selectedVisor) return;
-                    handleLoadVisor(selectedVisor);
-                    navigate('/form', { state: { visor: selectedVisor, editorMode: true } });
+                    /*             handleLoadViewer(selectedVisor); */
+                    navigate('/form', { state: { viewer: selectedVisor, editorMode: true } });
                   }}
                   disabled={!selectedVisor}
                 >
