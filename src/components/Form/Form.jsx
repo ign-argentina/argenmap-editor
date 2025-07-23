@@ -14,7 +14,7 @@ import language from '../../static/language.json';
 import GenerateSchema from '../../utils/GenerateSchema';
 import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
-import { downloadViewer } from '../../utils/ViewerDownloader';
+import { downloadViewer, mergeViewer } from '../../utils/ViewerDownloader';
 
 function Form() {
   const location = useLocation();
@@ -27,7 +27,7 @@ function Form() {
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
   const [selectedSection, setSelectedSection] = useState(null);
-  
+
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false); // No te vayas!
 
   const uploadSchema = (config) => {
@@ -117,6 +117,10 @@ function Form() {
     downloadViewer(workingConfig, config)
   };
 
+  const getWorkingConfig = () => {
+    return mergeViewer(workingConfig, config)
+  }
+  
   const handleJsonFormsChange = (updatedData) => {
     setHasUnsavedChanges(true);
     const hasChanged = JSON.stringify(workingConfig[selectedSection]) !== JSON.stringify(updatedData);
@@ -139,9 +143,9 @@ function Form() {
             handleLanguageChange,
             selectedLang,
             isFormShown: true,
-            setIsFormShown: () => { },
+            setIsFormShown: () => { }
           }}
-          actions={{ handleDownload }}
+          actions={{ handleDownload, getWorkingConfig }}
           editorMode={editorMode}
         />
         {selectedSection && (
