@@ -62,9 +62,10 @@ const VisorManager = () => {
     try {
       await deleteVisor(visorid, visorgid);
       showToast("Visor eliminado con éxito", "success");
-      uploadStartData();
       setSelectedVisor(null);
       setShowPreview(false);
+      const vl = await getGroupVisors(visorgid)
+      setVisores(vl)
     } catch (error) {
       console.error("Error al eliminar el visor:", error);
       showToast("Error al eliminar el visor", "error");
@@ -76,14 +77,14 @@ const VisorManager = () => {
       
     }; */
 
-/*   const handleLoadViewer = (visorCompleto) => {
-    const configJson = typeof visorCompleto.config.json === 'string'
-      ? JSON.parse(visorCompleto.config.json)
-      : visorCompleto.config.json;
-
-    setViewer(configJson, setData, uploadSchema);
-    console.log(configJson)
-  }; */
+  /*   const handleLoadViewer = (visorCompleto) => {
+      const configJson = typeof visorCompleto.config.json === 'string'
+        ? JSON.parse(visorCompleto.config.json)
+        : visorCompleto.config.json;
+  
+      setViewer(configJson, setData, uploadSchema);
+      console.log(configJson)
+    }; */
 
   const handleUploadViewer = (event) => {
     const file = event.target.files[0];
