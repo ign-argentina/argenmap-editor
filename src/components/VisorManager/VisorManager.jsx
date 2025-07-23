@@ -1,9 +1,5 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { newViewer, setViewer } from '../../utils/HandleClearStorage';
-import { updateVisorConfigJson } from '../../utils/visorStorage';
-import HandleDownload from '../../utils/HandleDownload';
-import { handleFileChange } from '../../utils/HandleJsonUpload';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
@@ -12,7 +8,7 @@ import './VisorManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
-import defaultConfig from '../../static/config.json';
+import { downloadViewer } from '../../utils/ViewerDownloader';
 
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
@@ -28,7 +24,6 @@ const VisorManager = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
-  const parsedDefaultData = defaultConfig;
   const [groupList, setGroupList] = useState([]);
   const [showShareViewerModal, setShowShareViewerModal] = useState(false);
 
@@ -57,8 +52,7 @@ const VisorManager = () => {
       ? JSON.parse(selectedVisor.config.json)
       : selectedVisor.config.json;
 
-    const { downloadJson } = HandleDownload({ data: configJson, parsedDefaultData });
-    downloadJson(selectedVisor.name);
+    downloadViewer(configJson, null, selectedVisor.name) // Config, baseConfig nula, nombre
   };
 
   const handleDeleteVisor = async (visorCompleto) => {
@@ -82,14 +76,14 @@ const VisorManager = () => {
       
     }; */
 
-  const handleLoadViewer = (visorCompleto) => {
+/*   const handleLoadViewer = (visorCompleto) => {
     const configJson = typeof visorCompleto.config.json === 'string'
       ? JSON.parse(visorCompleto.config.json)
       : visorCompleto.config.json;
 
     setViewer(configJson, setData, uploadSchema);
     console.log(configJson)
-  };
+  }; */
 
   const handleUploadViewer = (event) => {
     const file = event.target.files[0];
@@ -98,7 +92,6 @@ const VisorManager = () => {
       reader.onload = (e) => {
         const jsonData = JSON.parse(e.target.result);
         console.log(jsonData)
-        /*         setViewer(jsonData, setData, uploadSchema); */
         navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
       };
       reader.readAsText(file);

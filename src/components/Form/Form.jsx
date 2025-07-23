@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 import ColorPickerControl from '../ColorPickerControl/ColorPickerControl';
 import Preview from '../Preview/Preview';
 import FormNavbar from '../FormNavbar/FormNavbar';
-import { updateVisorConfigJson } from '../../utils/visorStorage';
 import '/src/global.css';
 import './Form.css';
 import { useToast } from '../../context/ToastContext';
@@ -15,18 +14,21 @@ import language from '../../static/language.json';
 import GenerateSchema from '../../utils/GenerateSchema';
 import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
-import HandleDownload from '../../utils/HandleDownload';
+import { downloadViewer } from '../../utils/ViewerDownloader';
 
 function Form() {
   const location = useLocation();
   const { viewer, editorMode, externalUpload = false } = location.state || {};
   const [config, setConfig] = useState();
-  const [workingConfig, setWorkingConfig] = useState();
+  const [workingConfig, setWorkingConfig] = useState(null);
   const [schema, setSchema] = useState({});
+  const [schemaLoaded, setSchemaLoaded] = useState(false)
 
   const savedLanguage = localStorage.getItem('selectedLang') || 'es';
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
   const [selectedSection, setSelectedSection] = useState(null);
+  
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false); // No te vayas!
 
   const uploadSchema = (config) => {
     if (!config || !language) return;
@@ -54,16 +56,39 @@ function Form() {
   useEffect(() => {
     if (viewer || externalUpload) {
       setConfig(externalUpload ? externalUpload : viewer.config.json);
-      setWorkingConfig(externalUpload ? externalUpload : viewer.config.json);
+
+      if (workingConfig) {
+        setWorkingConfig(workingConfig)
+      } else {
+        setWorkingConfig(externalUpload ? externalUpload : viewer.config.json);
+      }
+
     } else {
       setConfig(defaultConfig);
       setWorkingConfig(defaultConfig);
     }
+    setSchemaLoaded(true)
   }, []);
 
   useEffect(() => {
     uploadSchema(workingConfig);
-  }, [workingConfig]);
+  }, [schemaLoaded]);
+
+  // No te vayas! Se pueden borrar los cambios!! (OPTIMIZAR)
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (hasUnsavedChanges) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
+  // Fin no te vayas (OPTIMIZAR)
 
   const { showToast } = useToast();
 
@@ -87,30 +112,21 @@ function Form() {
     { tester: colorPickerTester, renderer: ColorPickerControl }
   ];
 
-  const { downloadJson } = HandleDownload({ config, defaultConfig });
-
   const handleDownload = () => {
-    downloadJson();
+    console.log("Eu tenho que descargar")
+    downloadViewer(workingConfig, config)
   };
 
   const handleJsonFormsChange = (updatedData) => {
-    // Hubo cambios? Actualizo, si no no
-    console.log(updatedData)
-    if (JSON.stringify(workingConfig) !== JSON.stringify(updatedData)) {
+    setHasUnsavedChanges(true);
+    const hasChanged = JSON.stringify(workingConfig[selectedSection]) !== JSON.stringify(updatedData);
+    if (hasChanged) {
       setWorkingConfig((prevConfig) => ({
         ...prevConfig,
         [selectedSection]: updatedData,
       }));
-
-      updateVisorConfigJson({
-        ...workingConfig,
-        [selectedSection]: updatedData,
-      });
     }
   };
-  
-  // Para evitar re-render infinito, uso currentData
-  const currentData = workingConfig?.[selectedSection] || {};
 
   return (
     <div>
@@ -125,16 +141,15 @@ function Form() {
             isFormShown: true,
             setIsFormShown: () => { },
           }}
-          actions={{handleDownload}}
+          actions={{ handleDownload }}
           editorMode={editorMode}
         />
-
         {selectedSection && (
           <div className="form-container">
             <div className="custom-form-group">
               <JsonForms
                 schema={schema.properties?.[selectedSection]}
-                data={currentData}
+                data={workingConfig?.[selectedSection]}
                 renderers={customRenderers}
                 cells={materialCells}
                 onChange={({ data: updatedData }) => handleJsonFormsChange(updatedData)} // Usamos la nueva función de manejo
