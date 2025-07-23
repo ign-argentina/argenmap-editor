@@ -6,7 +6,7 @@ import { useUser } from '../../context/UserContext';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
 
-const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig = null }) => {
+const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig}) => {
 
   const [name, setName] = useState(editorMode ? visor?.name : "");
   const [description, setDescription] = useState(editorMode ? visor?.description : "");
