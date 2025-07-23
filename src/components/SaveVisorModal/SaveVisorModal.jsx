@@ -94,7 +94,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       setName('');
       setDescription('');
       setImageData(null);
-      /*      navigate('/'); */
+      navigate('/');
     } else {
       showToast("El visor debe ser asignado en una ubicación.", "error")
     }
@@ -118,7 +118,6 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
     } else {
       showToast("Ha ocurrido un error.", "error");
     }
-    navigate('/');
   }
 
   if (!isOpen) return null;
