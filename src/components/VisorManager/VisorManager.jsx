@@ -104,7 +104,6 @@ const VisorManager = () => {
       try {
         let vl, access;
         if (lastPicked === "public-visors") {
-
           vl = await getPublicVisors();
           access = PUBLIC_VISOR_ACCESS;
         } else if (lastPicked === "my-visors") {
@@ -114,6 +113,7 @@ const VisorManager = () => {
           vl = await getGroupVisors(lastPicked);
           access = await getPermissions(lastPicked);
         }
+        setCurrentFilter(lastPicked)
         setVisores(vl);
         setAccess(access);
       } catch (error) {
