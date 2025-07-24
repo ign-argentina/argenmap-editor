@@ -14,7 +14,7 @@ import language from '../../static/language.json';
 import GenerateSchema from '../../utils/GenerateSchema';
 import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
-import { downloadViewer, mergeViewer } from '../../utils/ViewerDownloader';
+import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
 
 function Form() {
   const location = useLocation();

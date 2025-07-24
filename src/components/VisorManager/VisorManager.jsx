@@ -8,7 +8,7 @@ import './VisorManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
-import { downloadViewer } from '../../utils/ViewerDownloader';
+import { downloadViewer } from '../../utils/ViewerHandler';
 
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
