@@ -20,7 +20,9 @@ const FormNavbar = ({
   const [showSaveModal, setShowSaveModal] = useState(false);
   const { isAuth } = useUser()
   
+
   return (
+    
     <div className='editor-navbar'>
       <div className="configVersion-info">
         <label>
