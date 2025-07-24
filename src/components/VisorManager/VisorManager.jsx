@@ -8,7 +8,7 @@ import './VisorManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
-import { downloadViewer } from '../../utils/ViewerDownloader';
+import { downloadViewer } from '../../utils/ViewerHandler';
 
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
@@ -80,7 +80,6 @@ const VisorManager = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const jsonData = JSON.parse(e.target.result);
-        console.log(jsonData)
         navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
       };
       reader.readAsText(file);
@@ -95,9 +94,7 @@ const VisorManager = () => {
 
       const lastPicked = sessionStorage.getItem("lastGroupPicked") || "public-visors";
 
-
       if (isAuth) {
-        console.log("Pero por aca tambvien")
         const gl = await getGrupos();
         setGroupList(gl);
       } else {
@@ -106,9 +103,7 @@ const VisorManager = () => {
 
       try {
         let vl, access;
-        console.log(lastPicked)
         if (lastPicked === "public-visors") {
-
           vl = await getPublicVisors();
           access = PUBLIC_VISOR_ACCESS;
         } else if (lastPicked === "my-visors") {
@@ -118,8 +113,7 @@ const VisorManager = () => {
           vl = await getGroupVisors(lastPicked);
           access = await getPermissions(lastPicked);
         }
-
-        console.log(vl)
+        setCurrentFilter(lastPicked)
         setVisores(vl);
         setAccess(access);
       } catch (error) {
@@ -137,18 +131,6 @@ const VisorManager = () => {
 
     loadInitialData();
   }, [isAuth, isAuthLoaded]);
-
-  /*   const uploadStartData = async () => {
-      if (isAuth) {
-        const gl = await getGrupos()
-        setGroupList(gl)
-      }
-  
-      const vp = await getPublicVisors()
-      setVisores(vp)
-      setIsLoading(false);
-      setHasFetched(true);
-    } */
 
   const publishVisor = async () => {
     const res = await changePublicStatus(selectedVisor.id, selectedVisor.gid)

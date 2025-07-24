@@ -13,7 +13,7 @@ function Navbar() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const { isAuth, superAdmin, groupAdmin, logout, loadingUser, checkAuth, user } = useUser();
+  const { isAuth, superAdmin, groupAdmin, logout, checkAuth, user, isAuthLoading } = useUser();
 
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function Navbar() {
     setShowRegisterModal(false);
   };
 
-  if (loadingUser) return null;
+  if (isAuthLoading) return null
 
   return (
     <header>
