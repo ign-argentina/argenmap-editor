@@ -80,7 +80,6 @@ const VisorManager = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const jsonData = JSON.parse(e.target.result);
-        console.log(jsonData)
         navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
       };
       reader.readAsText(file);
@@ -95,9 +94,7 @@ const VisorManager = () => {
 
       const lastPicked = sessionStorage.getItem("lastGroupPicked") || "public-visors";
 
-
       if (isAuth) {
-        console.log("Pero por aca tambvien")
         const gl = await getGrupos();
         setGroupList(gl);
       } else {
@@ -106,7 +103,6 @@ const VisorManager = () => {
 
       try {
         let vl, access;
-        console.log(lastPicked)
         if (lastPicked === "public-visors") {
 
           vl = await getPublicVisors();
@@ -118,8 +114,6 @@ const VisorManager = () => {
           vl = await getGroupVisors(lastPicked);
           access = await getPermissions(lastPicked);
         }
-
-        console.log(vl)
         setVisores(vl);
         setAccess(access);
       } catch (error) {
