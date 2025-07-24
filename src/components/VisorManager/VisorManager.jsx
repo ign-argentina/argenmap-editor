@@ -138,18 +138,6 @@ const VisorManager = () => {
     loadInitialData();
   }, [isAuth, isAuthLoaded]);
 
-  /*   const uploadStartData = async () => {
-      if (isAuth) {
-        const gl = await getGrupos()
-        setGroupList(gl)
-      }
-  
-      const vp = await getPublicVisors()
-      setVisores(vp)
-      setIsLoading(false);
-      setHasFetched(true);
-    } */
-
   const publishVisor = async () => {
     const res = await changePublicStatus(selectedVisor.id, selectedVisor.gid)
     if (res.success) {
