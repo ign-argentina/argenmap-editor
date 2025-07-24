@@ -32,8 +32,10 @@ const VisorManager = () => {
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
 
+  const [currentFilter, setCurrentFilter] = useState();
+
   // Hooks, Contexts
-  const { isAuth } = useUser()
+  const { isAuth, isAuthLoaded } = useUser();
   const { showToast } = useToast();
 
   const pedirConfirmacion = ({ title, message, onConfirm }) => {
@@ -62,28 +64,15 @@ const VisorManager = () => {
     try {
       await deleteVisor(visorid, visorgid);
       showToast("Visor eliminado con éxito", "success");
-      uploadStartData();
       setSelectedVisor(null);
       setShowPreview(false);
+      const vl = await getGroupVisors(visorgid)
+      setVisores(vl)
     } catch (error) {
       console.error("Error al eliminar el visor:", error);
       showToast("Error al eliminar el visor", "error");
     }
   };
-
-  /*   const handleNewViewer = () => {
-      newViewer(setData, uploadSchema);
-      
-    }; */
-
-/*   const handleLoadViewer = (visorCompleto) => {
-    const configJson = typeof visorCompleto.config.json === 'string'
-      ? JSON.parse(visorCompleto.config.json)
-      : visorCompleto.config.json;
-
-    setViewer(configJson, setData, uploadSchema);
-    console.log(configJson)
-  }; */
 
   const handleUploadViewer = (event) => {
     const file = event.target.files[0];
@@ -96,36 +85,70 @@ const VisorManager = () => {
       };
       reader.readAsText(file);
     }
-    /*     navigate('/form'); */
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    setHasFetched(false);
-    uploadStartData();
-  }, []);
-
-  useEffect(() => {
-    if (!isAuth) {
-      setGroupList([])
-      setAccess(PUBLIC_VISOR_ACCESS)
+    if (!isAuthLoaded) return;
+    const loadInitialData = async () => {
       setIsLoading(true);
       setHasFetched(false);
-    }
-    uploadStartData()
-  }, [isAuth]);
 
-  const uploadStartData = async () => {
-    if (isAuth) {
-      const gl = await getGrupos()
-      setGroupList(gl)
-    }
+      const lastPicked = sessionStorage.getItem("lastGroupPicked") || "public-visors";
 
-    const vp = await getPublicVisors()
-    setVisores(vp)
-    setIsLoading(false);
-    setHasFetched(true);
-  }
+
+      if (isAuth) {
+        console.log("Pero por aca tambvien")
+        const gl = await getGrupos();
+        setGroupList(gl);
+      } else {
+        setGroupList([]);
+      }
+
+      try {
+        let vl, access;
+        console.log(lastPicked)
+        if (lastPicked === "public-visors") {
+
+          vl = await getPublicVisors();
+          access = PUBLIC_VISOR_ACCESS;
+        } else if (lastPicked === "my-visors") {
+          vl = await getMyVisors();
+          access = MY_VISOR_ACCESS;
+        } else if (isAuth) {
+          vl = await getGroupVisors(lastPicked);
+          access = await getPermissions(lastPicked);
+        }
+
+        console.log(vl)
+        setVisores(vl);
+        setAccess(access);
+      } catch (error) {
+        console.error("Error cargando visores del grupo:", error);
+        showToast("Error al cargar visores del grupo guardado", "error");
+        // fallback a visores públicos
+        const vl = await getPublicVisors();
+        setVisores(vl);
+        setAccess(PUBLIC_VISOR_ACCESS);
+      }
+
+      setIsLoading(false);
+      setHasFetched(true);
+    };
+
+    loadInitialData();
+  }, [isAuth, isAuthLoaded]);
+
+  /*   const uploadStartData = async () => {
+      if (isAuth) {
+        const gl = await getGrupos()
+        setGroupList(gl)
+      }
+  
+      const vp = await getPublicVisors()
+      setVisores(vp)
+      setIsLoading(false);
+      setHasFetched(true);
+    } */
 
   const publishVisor = async () => {
     const res = await changePublicStatus(selectedVisor.id, selectedVisor.gid)
@@ -145,14 +168,20 @@ const VisorManager = () => {
     setSelectedVisor(null)
     setShowPreview(false)
     if (e.target.value === "public-visors") {
+      sessionStorage.setItem("lastGroupPicked", e.target.value)
+      setCurrentFilter(e.target.value)
       setAccess(PUBLIC_VISOR_ACCESS);
       const vl = await getPublicVisors()
       setVisores(vl)
     } else if (e.target.value === "my-visors") {
+      sessionStorage.setItem("lastGroupPicked", e.target.value)
+      setCurrentFilter(e.target.value)
       setAccess(MY_VISOR_ACCESS);
       const vl = await getMyVisors()
       setVisores(vl)
     } else if (e.target.value != '') {
+      sessionStorage.setItem("lastGroupPicked", e.target.value)
+      setCurrentFilter(e.target.value)
       const vl = await getGroupVisors(e.target.value)
       const access = await getPermissions(e.target.value)
       setAccess(access)
@@ -177,7 +206,7 @@ const VisorManager = () => {
             <label htmlFor="visor-type">Mostrando: </label>
             <select
               id="visor-type"
-              defaultValue={"public-visors"}
+              value={currentFilter}
               onChange={handleChange}
             >
               <option value="public-visors">Visores Públicos</option>
@@ -209,11 +238,11 @@ const VisorManager = () => {
                     <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
                   </div>
                 )}
-                {!isLoading && hasFetched && visores.length === 0 && (
+                {!isLoading && hasFetched && visores?.length === 0 && (
                   <p className="no-visors-message">No hay visores disponibles.</p>
                 )}
 
-                {!isLoading && visores.length > 0 && visores.map((visor) => (
+                {!isLoading && visores?.length > 0 && visores?.map((visor) => (
                   <div
                     key={visor.id}
                     className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}

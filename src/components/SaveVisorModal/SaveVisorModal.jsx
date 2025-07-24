@@ -6,7 +6,7 @@ import { useUser } from '../../context/UserContext';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
 
-const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig}) => {
+const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig }) => {
 
   const [name, setName] = useState(editorMode ? visor?.name : "");
   const [description, setDescription] = useState(editorMode ? visor?.description : "");
@@ -94,9 +94,10 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       setName('');
       setDescription('');
       setImageData(null);
+      sessionStorage.setItem("lastGroupPicked", `${selectedGroup}`);
       navigate('/');
     } else {
-      showToast("El visor debe ser asignado en una ubicación.", "error")
+      showToast("El visor debe ser asignado en un grupo.", "error")
     }
   };
 
