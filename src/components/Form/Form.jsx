@@ -113,7 +113,6 @@ function Form() {
   ];
 
   const handleDownload = () => {
-    console.log("Eu tenho que descargar")
     downloadViewer(workingConfig, config)
   };
 
