@@ -99,6 +99,8 @@ const VisorManager = () => {
         setGroupList(gl);
       } else {
         setGroupList([]);
+        setShowPreview(false)
+        setSelectedVisor(null)
       }
 
       try {
