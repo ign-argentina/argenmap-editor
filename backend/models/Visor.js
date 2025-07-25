@@ -7,13 +7,15 @@ const IS_VISOR_OWNER = 'SELECT EXISTS (SELECT 1 FROM visores WHERE uid = $2 and 
 const SELECT_ALL_VISORS = `SELECT * FROM visores`;
 
 const SELECT_VISOR_BY_ID = `
-  SELECT 
-    v.*, 
-    g.name AS gName, 
-    g.img AS gImg
-  FROM visores v
-  JOIN grupos g ON v.gid = g.id
-  WHERE v.id = $1`;
+SELECT 
+  v.*, 
+  g.name AS gName, 
+  g.img AS gImg
+FROM visores v
+LEFT JOIN grupos g ON v.gid = g.id
+WHERE v.id = $1
+  AND v.deleted = false
+`;
 
 const SELECT_PUBLIC_VISORS = `
   SELECT * FROM visores
