@@ -142,6 +142,11 @@ main,
   color: var(--text--color);
 }
 
+.global-buttons .common.active {
+  background-color: var(--active--color);
+  color: white;
+  font-weight: bold;
+}
 
 /* JSON FOMR styles */
 
