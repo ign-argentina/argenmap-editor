@@ -74,6 +74,13 @@ function Form() {
     uploadSchema(workingConfig);
   }, [schemaLoaded]);
 
+  // Translates schema on change
+  useEffect(() => {
+    if (schemaLoaded && workingConfig) {
+      uploadSchema(mergeViewer(workingConfig, config));
+    }
+  }, [selectedLang]);
+
   // No te vayas! Se pueden borrar los cambios!! (OPTIMIZAR)
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -119,7 +126,7 @@ function Form() {
   const getWorkingConfig = () => {
     return mergeViewer(workingConfig, config)
   }
-  
+
   const handleJsonFormsChange = (updatedData) => {
     setHasUnsavedChanges(true);
     const hasChanged = JSON.stringify(workingConfig[selectedSection]) !== JSON.stringify(updatedData);
