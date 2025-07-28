@@ -12,3 +12,10 @@
   color: white;
   margin-right: 20px;
 }
+
+.release-version {
+  font-size: 1rem;
+  font-weight: normal; 
+  margin: 0;
+  color: white;
+}
