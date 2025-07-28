@@ -283,6 +283,12 @@ const VisorManager = () => {
                             title="Público"
                           ></i>
                         )}
+                        {visor.publico == false && (
+                          <i
+                            className="fas fa-lock viewer-private-icon"
+                            title="Privado"
+                          ></i>
+                        )}
                       </p>
                     </div>
                   </div>

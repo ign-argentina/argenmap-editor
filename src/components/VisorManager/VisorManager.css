@@ -278,3 +278,10 @@
   font-size: 0.9em;
   vertical-align: right;
 }
+
+.viewer-private-icon {
+  color: #737373;
+  margin-left: 8px;
+  font-size: 0.9em;
+  vertical-align: right;
+}
