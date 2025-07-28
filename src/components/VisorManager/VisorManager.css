@@ -45,7 +45,7 @@
 .visor-item {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--active--color);
+  border: 1px solid var(--secondary--color);
   cursor: pointer;
   transition: all 0.2s ease;
   background-color: #FFF;
@@ -59,7 +59,7 @@
 }
 
 .visor-item.selected {
-  border-color: #007bff;
+  border-color: var(--active--color);
   color: black;
   background-color: var(--active--color);
 }
