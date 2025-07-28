@@ -259,15 +259,22 @@
   background-color: var(--active--color);
 }
 
-.visor-role {
+.viewer-role {
   font-size: 0.9rem;
   font-style: italic;
   margin-top: 0.5rem;
 }
 
-.visor-filter-divider {
+.viewer-filter-divider {
   width: 100%;
   height: 1px;
   background-color: var(--secondary--color);
   margin-top: 0.5rem;
+}
+
+.viewer-public-icon {
+  color: #4caf50;
+  margin-left: 8px;
+  font-size: 0.9em;
+  vertical-align: right;
 }

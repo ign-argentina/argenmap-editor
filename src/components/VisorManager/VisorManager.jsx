@@ -215,11 +215,11 @@ const VisorManager = () => {
               ))}
             </div>
 
-            <div className="visor-filter-divider" />
+            <div className="viewer-filter-divider" />
 
 
             {access !== PUBLIC_VISOR_ACCESS && (
-              <div className="visor-role">
+              <div className="viewer-role">
                 Tu rol dentro del grupo es: {
                   (access?.ga || access?.sa) ? "Administrador" :
                     access?.editor ? "Editor" :
@@ -257,6 +257,7 @@ const VisorManager = () => {
                         const visorCompleto = await getVisorById(visor.id);
                         setSelectedVisor(visorCompleto);
                         setShowPreview(true);
+                        console.log(visorCompleto)
                       } catch (error) {
                         showToast('No se pudo cargar el visor.', "error");
                       }
@@ -276,6 +277,12 @@ const VisorManager = () => {
                           month: 'short',
                           year: 'numeric'
                         })}
+                        {visor.publico == true && (
+                          <i
+                            className="fas fa-globe-americas viewer-public-icon"
+                            title="Público"
+                          ></i>
+                        )}
                       </p>
                     </div>
                   </div>
