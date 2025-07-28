@@ -231,7 +231,7 @@ const VisorManager = () => {
           </div>
 
           <div className="visor-modal-container">
-            <div className='visor-list-container'>
+            <div className={`visor-list-container ${showPreview ? 'preview-open' : 'preview-closed'}`}>
               <div className="visor-list">
                 {isLoading && (
                   <div className="loading-message">
