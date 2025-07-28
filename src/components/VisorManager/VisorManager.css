@@ -164,11 +164,16 @@
 
 .container-display-0 {
   display: contents;
+  opacity: 0;
+  height: 0;
+  transition: opacity 0.3s ease, height 0.3s ease;
 }
 
 .container-display-1 {
   display: flex;
-  height: 84vh;
+  height: 83vh;
+  opacity: 1;
+  transition: opacity 0.3s ease, height 0.3s ease;
 }
 
 .flex-0 {
