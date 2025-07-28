@@ -186,30 +186,47 @@ const VisorManager = () => {
         <div className="visor-modal">
           <h2>GESTOR DE VISORES</h2>
 
-          <div className="visor-filter">
-            <label htmlFor="visor-type">Mostrando: </label>
-            <select
-              id="visor-type"
-              value={currentFilter}
-              onChange={handleChange}
-            >
-              <option value="public-visors">Visores Públicos</option>
-              {isAuth && <option value="my-visors">Mis Visores</option>}
+          <div className="visor-filter-navbar">
+            <div className="visor-filter-buttons">
+              <button
+                className={currentFilter === "public-visors" ? "active" : ""}
+                onClick={() => handleChange({ target: { value: "public-visors" } })}
+              >
+                PÚBLICOS
+              </button>
+
+              {isAuth && (
+                <button
+                  className={currentFilter === "my-visors" ? "active" : ""}
+                  onClick={() => handleChange({ target: { value: "my-visors" } })}
+                >
+                  PROPIOS
+                </button>
+              )}
+
               {groupList?.map(grupo => (
-                <option key={grupo.id} value={grupo.id}>
-                  Visores de {grupo.name}
-                </option>
+                <button
+                  key={grupo.id}
+                  className={currentFilter === grupo.id ? "active" : ""}
+                  onClick={() => handleChange({ target: { value: grupo.id } })}
+                >
+                  {grupo.name}
+                </button>
               ))}
-            </select>
+            </div>
+
+            <div className="visor-filter-divider" />
+
+
             {access !== PUBLIC_VISOR_ACCESS && (
-              <label htmlFor="visor-type">
+              <div className="visor-role">
                 Tu rol dentro del grupo es: {
                   (access?.ga || access?.sa) ? "Administrador" :
                     access?.editor ? "Editor" :
                       access?.myvisors ? "Dueño" :
                         "Lector"
                 }
-              </label>
+              </div>
             )}
           </div>
 

@@ -205,3 +205,56 @@
   border-radius: 8px;
   object-fit: cover;
 }
+
+.visor-filter-navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.visor-filter-label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.visor-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.visor-filter-buttons button {
+  background-color: var(--primary--color);
+  color: var(--text--color);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 5vh;
+  margin-bottom: -16px;
+}
+
+.visor-filter-buttons button.active {
+  background-color: var(--active--color, #1e90ff);
+  font-weight: bold;
+}
+
+.visor-filter-buttons button:hover {
+  background-color: var(--active--color);
+}
+
+.visor-role {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.visor-filter-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--secondary--color);
+  margin-top: 0.5rem;
+}
