@@ -22,7 +22,7 @@
   padding: 16px;
   border: 2px solid #ccc;
   border-radius: 12px;
-  background-color: #fdfdfd;
+  background-color: #d9d9d9;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   height: 63vh;
   overflow: auto;
@@ -37,12 +37,12 @@
 .visor-item {
   display: flex;
   flex-direction: column;
-  border: 1px solid #f2b90d;
+  border: 1px solid var(--active--color);
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: var(--secondary--color);
+  background-color: #FFF;
   user-select: none;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,.3);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .3);
 }
 
 .visor-item:hover {
@@ -62,23 +62,22 @@
   height: 18vh;
 }
 
-.visor-info h3 {
-  margin: 0;
-  font-size: 1.1em;
-}
-
 .visor-info {
   display: flex;
   flex-direction: column;
   flex: 1;
   padding: 10px;
+  color: black;
 }
 
+.visor-info h3 {
+  margin: 0;
+  font-size: 1.1em;
+}
 
 .visor-info p {
   margin: 0;
   text-align: initial;
-  color: var(--text--color);
   font-size: 0.9em;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -93,6 +92,7 @@
   color: var(--text--color);
   margin: 2px 0;
   margin-top: auto;
+  color: #575757;
 }
 
 .visor-modal-actions {

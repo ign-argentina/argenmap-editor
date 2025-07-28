@@ -254,7 +254,7 @@ const VisorManager = () => {
                       <h3>{visor.name}</h3>
                       <p>{visor.description}</p>
                       <p className="visor-date">
-                        Actualizado: {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                        {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
                           day: 'numeric',
                           month: 'short',
                           year: 'numeric'
@@ -362,7 +362,7 @@ const VisorManager = () => {
                   <h3>{selectedVisor.name}</h3>
                   <p>{selectedVisor.description}</p>
                   <p className="visor-date">
-                    Actualizado: {new Date(selectedVisor.lastupdate).toLocaleDateString('es-AR', {
+                    {new Date(selectedVisor.lastupdate).toLocaleDateString('es-AR', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric'
