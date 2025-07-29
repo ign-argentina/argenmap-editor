@@ -182,7 +182,7 @@ const VisorManager = () => {
     <div className='container-display-0'>
       <div className= "viewer-content flex-1">
 
-        <div className="visor-modal">
+        <div className="viewer-modal">
           <h2>GESTOR DE VISORES</h2>
 
           <div className="viewer-filter-navbar">
@@ -373,7 +373,7 @@ const VisorManager = () => {
           />
 
           {showShareViewerModal && (
-            <div className="save-visor-modal-overlay">
+            <div className="save-viewer-modal-overlay">
               <ShareViewerModal
                 // editorMode={editorMode}
                 // cloneMode={cloneMode}

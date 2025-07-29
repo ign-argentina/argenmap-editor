@@ -73,7 +73,7 @@ const FormNavbar = ({
         </button>
 
         {showSaveModal && (
-          <div className="save-visor-modal-overlay">
+          <div className="save-viewer-modal-overlay">
             <SaveVisorModal
               editorMode={editorMode}
               cloneMode={cloneMode}
