@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
-import Preview from '../Preview/Preview';
 import './VisorManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
@@ -20,19 +19,28 @@ const VisorManager = () => {
   const [visores, setVisores] = useState([]);
   const [selectedVisor, setSelectedVisor] = useState(null);
   const [access, setAccess] = useState(PUBLIC_VISOR_ACCESS)
-  const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
   const [groupList, setGroupList] = useState([]);
   const [showShareViewerModal, setShowShareViewerModal] = useState(false);
-
-
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
-
   const [currentFilter, setCurrentFilter] = useState();
+  const [contextMenuVisorId, setContextMenuVisorId] = useState(null);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const [showContextMenu, setShowContextMenu] = useState(null);
+
+  const closeContextMenu = () => {
+    setContextMenuVisorId(null);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => closeContextMenu();
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
+  }, []);
 
   // Hooks, Contexts
   const { isAuth, isAuthLoaded } = useUser();
@@ -65,7 +73,6 @@ const VisorManager = () => {
       await deleteVisor(visorid, visorgid);
       showToast("Visor eliminado con éxito", "success");
       setSelectedVisor(null);
-      setShowPreview(false);
       const vl = await getGroupVisors(visorgid)
       setVisores(vl)
     } catch (error) {
@@ -99,8 +106,7 @@ const VisorManager = () => {
         setGroupList(gl);
       } else {
         setGroupList([]);
-        setShowPreview(false)
-        setSelectedVisor(null)
+        setSelectedVisor(null);
       }
 
       try {
@@ -149,8 +155,7 @@ const VisorManager = () => {
   }
 
   const handleChange = async (e) => {
-    setSelectedVisor(null)
-    setShowPreview(false)
+    setSelectedVisor(null);
     if (e.target.value === "public-visors") {
       sessionStorage.setItem("lastGroupPicked", e.target.value)
       setCurrentFilter(e.target.value)
@@ -174,15 +179,9 @@ const VisorManager = () => {
   }
 
   return (
-    <div className={`${showPreview ? 'container-display-1' : 'container-display-0'}`}>
+    <div className='container-display-0'>
+      <div className= "visor-content flex-1">
 
-      {showPreview && (
-        <div className='side-panel'>
-          <Preview />
-        </div>
-      )}
-
-      <div className={`visor-content ${showPreview ? 'flex-0' : 'flex-1'}`}>
         <div className="visor-modal">
           <h2>GESTOR DE VISORES</h2>
 
@@ -230,8 +229,8 @@ const VisorManager = () => {
             )}
           </div>
 
-          <div className="visor-modal-container">
-            <div className={`visor-list-container ${showPreview ? 'preview-open' : 'preview-closed'}`}>
+          <div className="viewer-modal-container">
+            <div className={`viewer-list-container ${showContextMenu ? 'viewer-description-open' : 'viewer-description-closed'}`}>
               <div className="visor-list">
                 {isLoading && (
                   <div className="loading-message">
@@ -250,19 +249,35 @@ const VisorManager = () => {
                     onClick={async () => {
                       if (selectedVisor?.id === visor.id) {
                         setSelectedVisor(null);
-                        setShowPreview(false);
+                        setShowContextMenu(false);
                         return;
                       }
                       try {
                         const visorCompleto = await getVisorById(visor.id);
                         setSelectedVisor(visorCompleto);
-                        setShowPreview(true);
-                        console.log(visorCompleto)
+                        setShowContextMenu(true);
                       } catch (error) {
                         showToast('No se pudo cargar el visor.', "error");
                       }
                     }}
                   >
+                    <div
+                      className="visor-context-button"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setContextMenuVisorId(visor.id);
+                        setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                        try {
+                          const visorCompleto = await getVisorById(visor.id);
+                          setSelectedVisor(visorCompleto);
+                        } catch (error) {
+                          showToast('No se pudo cargar el visor.', "error");
+                        }
+                      }}
+                    >
+                      <i className="fas fa-ellipsis-v"></i>
+                    </div>
+
                     <img
                       src={visor.img || '/assets/no-image.png'}
                       alt="img"
@@ -277,22 +292,14 @@ const VisorManager = () => {
                           month: 'short',
                           year: 'numeric'
                         })}
-                        {visor.publico == true && (
-                          <i
-                            className="fas fa-globe-americas viewer-public-icon"
-                            title="Público"
-                          ></i>
-                        )}
-                        {visor.publico == false && (
-                          <i
-                            className="fas fa-lock viewer-private-icon"
-                            title="Privado"
-                          ></i>
+                        {visor.publico ? (
+                          <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
+                        ) : (
+                          <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
                         )}
                       </p>
                     </div>
                   </div>
-
                 ))}
 
               </div>
@@ -323,69 +330,11 @@ const VisorManager = () => {
                   </span>
                   Subir
                 </label>
-
-                {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
-                  className="common"
-                  onClick={() => {
-                    if (!selectedVisor) return;
-                    /*             handleLoadViewer(selectedVisor); */
-                    navigate('/form', { state: { viewer: selectedVisor, editorMode: true } });
-                  }}
-                  disabled={!selectedVisor}
-                >
-                  <i className="fa-solid fa-pen-to-square"></i>
-                  Editar
-                </button>}
-
-                {(access?.sa || access?.ga) && <button
-                  className="delete"
-                  onClick={() =>
-                    pedirConfirmacion({
-                      title: "¿Estás seguro?",
-                      message: "Esto eliminará el visor.",
-                      onConfirm: () => {
-                        if (!selectedVisor) return;
-                        setConfirmVisible(false);
-                        handleDeleteVisor(selectedVisor);
-                      },
-                    })
-                  }
-                  disabled={!selectedVisor}
-                  title="Borrar Visor">
-                  <i className="fa-solid fa-trash-can"></i>
-                  Borrar
-                </button>}
-
-                <button
-                  className="download"
-                  onClick={handleDownload}
-                  title="Descargar JSON">
-                  <i className="fa-solid fa-download"></i>
-                  Descargar
-                </button>
-
-                {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
-                  className="share"
-                  onClick={() => {
-                    setShowShareViewerModal(true);
-                  }} title="Compartir Visor">
-                  <i className="fa-solid fa-share"></i>
-                  Compartir
-                </button>}
-
-                {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
-                  className="publish"
-                  onClick={publishVisor}
-                  title="Estado de Publicacion">
-                  <i className="fa-solid fa-bullhorn"></i>
-                  {selectedVisor?.publico ? "Despublicar" : "Publicar"}
-                </button>}
-
               </div>
             </div>
           </div>
 
-          {selectedVisor && (
+          {showContextMenu && (
             <div className="visor-description">
               <div className="visor-info-row">
                 <div className="visor-info-text">
@@ -437,6 +386,72 @@ const VisorManager = () => {
 
         </div>
       </div>
+
+      {contextMenuVisorId && (
+        <div
+          className="visor-context-menu"
+          style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="global-buttons">
+            {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
+              className="common"
+              onClick={() => {
+                if (!selectedVisor) return;
+                navigate('/form', { state: { viewer: selectedVisor, editorMode: true } });
+              }}
+              disabled={!selectedVisor}
+            >
+              <i className="fa-solid fa-pen-to-square"></i>
+              Editar
+            </button>}
+
+            {(access?.sa || access?.ga) && <button
+              className="delete"
+              onClick={() =>
+                pedirConfirmacion({
+                  title: "¿Estás seguro?",
+                  message: "Esto eliminará el visor.",
+                  onConfirm: () => {
+                    if (!selectedVisor) return;
+                    setConfirmVisible(false);
+                    handleDeleteVisor(selectedVisor);
+                  },
+                })
+              }
+              disabled={!selectedVisor}
+              title="Borrar Visor">
+              <i className="fa-solid fa-trash-can"></i>
+              Borrar
+            </button>}
+
+            <button
+              className="download"
+              onClick={handleDownload}
+              title="Descargar JSON">
+              <i className="fa-solid fa-download"></i>
+              Descargar
+            </button>
+
+            {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
+              className="share"
+              onClick={() => {
+                setShowShareViewerModal(true);
+              }} title="Compartir Visor">
+              <i className="fa-solid fa-share"></i>
+              Compartir
+            </button>}
+
+            {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
+              className="publish"
+              onClick={publishVisor}
+              title="Estado de Publicacion">
+              <i className="fa-solid fa-bullhorn"></i>
+              {selectedVisor?.publico ? "Despublicar" : "Publicar"}
+            </button>}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
