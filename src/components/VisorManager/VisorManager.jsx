@@ -180,13 +180,13 @@ const VisorManager = () => {
 
   return (
     <div className='container-display-0'>
-      <div className= "visor-content flex-1">
+      <div className= "viewer-content flex-1">
 
         <div className="visor-modal">
           <h2>GESTOR DE VISORES</h2>
 
-          <div className="visor-filter-navbar">
-            <div className="visor-filter-buttons">
+          <div className="viewer-filter-navbar">
+            <div className="viewer-filter-buttons">
               <button
                 className={currentFilter === "public-visors" ? "active" : ""}
                 onClick={() => handleChange({ target: { value: "public-visors" } })}
@@ -231,7 +231,7 @@ const VisorManager = () => {
 
           <div className="viewer-modal-container">
             <div className={`viewer-list-container ${showContextMenu ? 'viewer-description-open' : 'viewer-description-closed'}`}>
-              <div className="visor-list">
+              <div className="viewer-list">
                 {isLoading && (
                   <div className="loading-message">
                     <span className="spinner" />
@@ -239,13 +239,13 @@ const VisorManager = () => {
                   </div>
                 )}
                 {!isLoading && hasFetched && visores?.length === 0 && (
-                  <p className="no-visors-message">No hay visores disponibles.</p>
+                  <p className="no-viewers-message">No hay visores disponibles.</p>
                 )}
 
                 {!isLoading && visores?.length > 0 && visores?.map((visor) => (
                   <div
                     key={visor.id}
-                    className={`visor-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
+                    className={`viewer-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
                     onClick={async () => {
                       if (selectedVisor?.id === visor.id) {
                         setSelectedVisor(null);
@@ -262,7 +262,7 @@ const VisorManager = () => {
                     }}
                   >
                     <div
-                      className="visor-context-button"
+                      className="viewer-context-button"
                       onClick={async (e) => {
                         e.stopPropagation();
                         setContextMenuVisorId(visor.id);
@@ -281,12 +281,12 @@ const VisorManager = () => {
                     <img
                       src={visor.img || '/assets/no-image.png'}
                       alt="img"
-                      className="visor-image"
+                      className="viewer-image"
                     />
-                    <div className="visor-info">
+                    <div className="viewer-info">
                       <h3>{visor.name}</h3>
                       <p>{visor.description}</p>
-                      <p className="visor-date">
+                      <p className="viewer-date">
                         {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
                           day: 'numeric',
                           month: 'short',
@@ -304,7 +304,7 @@ const VisorManager = () => {
 
               </div>
             </div>
-            <div className="visor-modal-actions">
+            <div className="viewer-modal-actions">
               <div className="global-buttons">
                 <button
                   className="common"
@@ -335,19 +335,19 @@ const VisorManager = () => {
           </div>
 
           {showContextMenu && (
-            <div className="visor-description">
-              <div className="visor-info-row">
-                <div className="visor-info-text">
+            <div className="viewer-description">
+              <div className="viewer-info-row">
+                <div className="viewer-info-text">
                   <h3>{selectedVisor.name}</h3>
                   <p>{selectedVisor.description}</p>
-                  <p className="visor-date">
+                  <p className="viewer-date">
                     {new Date(selectedVisor.lastupdate).toLocaleDateString('es-AR', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric'
                     })}
                   </p>
-                  <p className="visor-privacy">
+                  <p className="viewer-privacy">
                     {selectedVisor.publico ? 'Público' : 'Privado'}
                   </p>
                   <h3>Grupo: {selectedVisor.gname || 'Grupo: Sin grupo'}</h3>
@@ -389,7 +389,7 @@ const VisorManager = () => {
 
       {contextMenuVisorId && (
         <div
-          className="visor-context-menu"
+          className="viewer-context-menu"
           style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
           onClick={(e) => e.stopPropagation()}
         >

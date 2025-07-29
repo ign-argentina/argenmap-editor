@@ -36,13 +36,13 @@
   height: 47vh;
 }
 
-.visor-list {
+.viewer-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(203px, 1fr));
   gap: 12px;
 }
 
-.visor-item {
+.viewer-item {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--secondary--color);
@@ -53,24 +53,23 @@
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .3);
 }
 
-.visor-item:hover {
+.viewer-item:hover {
   background-color: var(--active--color);
   color: black;
 }
 
-.visor-item.selected {
+.viewer-item.selected {
   border-color: var(--active--color);
   color: black;
   background-color: var(--active--color);
 }
 
-.visor-image {
-  /* width: 100%; */
+.viewer-image {
   object-fit: cover;
   height: 18vh;
 }
 
-.visor-info {
+.viewer-info {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -78,12 +77,12 @@
   color: black;
 }
 
-.visor-info h3 {
+.viewer-info h3 {
   margin: 0;
   font-size: 1.1em;
 }
 
-.visor-info p {
+.viewer-info p {
   margin: 0;
   text-align: initial;
   font-size: 0.9em;
@@ -94,8 +93,8 @@
   text-overflow: ellipsis;
 }
 
-.visor-info p.visor-date,
-.visor-info p.visor-privacy {
+.viewer-info p.viewer-date,
+.viewer-info p.viewer-privacy {
   font-size: 0.9em;
   color: var(--text--color);
   margin: 2px 0;
@@ -103,7 +102,7 @@
   color: #575757;
 }
 
-.visor-modal-actions {
+.viewer-modal-actions {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -111,7 +110,7 @@
   flex-shrink: 0;
 }
 
-.visor-description {
+.viewer-description {
   background-color: var(--primary--color);
   border-radius: 12px;
   max-height: 19vh;
@@ -153,7 +152,7 @@
   }
 }
 
-.no-visors-message {
+.no-viewers-message {
   text-align: center;
   color: #666;
   font-size: 1.1rem;
@@ -183,7 +182,7 @@
   flex: 1;
 }
 
-.visor-content {
+.viewer-content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,20 +191,20 @@
   padding-right: 20px;
 }
 
-.visor-filter {
+.viewer-filter {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 10px;
 }
 
-.visor-info-row {
+.viewer-info-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
 
-.visor-info-text {
+.viewer-info-text {
   flex: 1;
   padding-right: 20px;
 }
@@ -217,7 +216,7 @@
   object-fit: cover;
 }
 
-.visor-filter-navbar {
+.viewer-filter-navbar {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -225,19 +224,19 @@
   margin-bottom: 1rem;
 }
 
-.visor-filter-label {
+.viewer-filter-label {
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
-.visor-filter-buttons {
+.viewer-filter-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   justify-content: center;
 }
 
-.visor-filter-buttons button {
+.viewer-filter-buttons button {
   background-color: var(--primary--color);
   color: var(--text--color);
   border: none;
@@ -248,12 +247,12 @@
   margin-bottom: -16px;
 }
 
-.visor-filter-buttons button.active {
+.viewer-filter-buttons button.active {
   background-color: var(--active--color, #1e90ff);
   font-weight: bold;
 }
 
-.visor-filter-buttons button:hover {
+.viewer-filter-buttons button:hover {
   background-color: var(--active--color);
 }
 
@@ -284,8 +283,7 @@
   vertical-align: right;
 }
 
-
-.visor-context-button {
+.viewer-context-button {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -298,17 +296,17 @@
   transition: background 0.2s ease;
 }
 
-.visor-context-button:hover {
+.viewer-context-button:hover {
   background: rgba(0, 0, 0, 0.1);
 }
 
-.visor-item {
+.viewer-item {
   position: relative;
   overflow: hidden;
 }
 
-/* Menú contextual */
-.visor-context-menu {
+/* CONTEXT MENU */
+.viewer-context-menu {
   position: fixed;
   background: white;
   border: 1px solid #ccc;
@@ -319,7 +317,7 @@
   width: 160px;
 }
 
-.visor-context-menu button {
+.viewer-context-menu button {
   width: 100%;
   padding: 8px 12px;
   border: none;
@@ -330,10 +328,10 @@
   color: #333;
 }
 
-.visor-context-menu button:hover {
+.viewer-context-menu button:hover {
   background-color: #f0f0f0;
 }
 
-.visor-context-menu i {
+.viewer-context-menu i {
   margin-right: 8px;
 }
