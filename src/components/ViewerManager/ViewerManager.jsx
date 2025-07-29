@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
-import './VisorManager.css';
+import './ViewerManager.css';
 import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
@@ -13,7 +13,7 @@ import { downloadViewer } from '../../utils/ViewerHandler';
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
 
-const VisorManager = () => {
+const ViewerManager = () => {
 
   // States
   const [viewers, setViewers] = useState([]);
@@ -456,4 +456,4 @@ const VisorManager = () => {
   );
 };
 
-export default VisorManager;
+export default ViewerManager;
