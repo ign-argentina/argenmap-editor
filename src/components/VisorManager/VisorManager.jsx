@@ -16,8 +16,8 @@ const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
 const VisorManager = () => {
 
   // States
-  const [visores, setVisores] = useState([]);
-  const [selectedVisor, setSelectedVisor] = useState(null);
+  const [viewers, setViewers] = useState([]);
+  const [selectedViewer, setSelectedViewer] = useState(null);
   const [access, setAccess] = useState(PUBLIC_VISOR_ACCESS)
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -53,16 +53,16 @@ const VisorManager = () => {
   };
 
   const handleDownload = () => {
-    if (!selectedVisor?.config?.json) {
+    if (!selectedViewer?.config?.json) {
       showToast('No hay visor seleccionado con configuración válida.', "error");
       return;
     }
 
-    const configJson = typeof selectedVisor.config.json === 'string'
-      ? JSON.parse(selectedVisor.config.json)
-      : selectedVisor.config.json;
+    const configJson = typeof selectedViewer.config.json === 'string'
+      ? JSON.parse(selectedViewer.config.json)
+      : selectedViewer.config.json;
 
-    downloadViewer(configJson, null, selectedVisor.name) // Config, baseConfig nula, nombre
+    downloadViewer(configJson, null, selectedViewer.name) // Config, baseConfig nula, nombre
   };
 
   const handleDeleteVisor = async (visorCompleto) => {
@@ -72,9 +72,9 @@ const VisorManager = () => {
     try {
       await deleteVisor(visorid, visorgid);
       showToast("Visor eliminado con éxito", "success");
-      setSelectedVisor(null);
+      setSelectedViewer(null);
       const vl = await getGroupVisors(visorgid)
-      setVisores(vl)
+      setViewers(vl)
     } catch (error) {
       console.error("Error al eliminar el visor:", error);
       showToast("Error al eliminar el visor", "error");
@@ -106,7 +106,7 @@ const VisorManager = () => {
         setGroupList(gl);
       } else {
         setGroupList([]);
-        setSelectedVisor(null);
+        setSelectedViewer(null);
       }
 
       try {
@@ -122,14 +122,14 @@ const VisorManager = () => {
           access = await getPermissions(lastPicked);
         }
         setCurrentFilter(lastPicked)
-        setVisores(vl);
+        setViewers(vl);
         setAccess(access);
       } catch (error) {
         console.error("Error cargando visores del grupo:", error);
         showToast("Error al cargar visores del grupo guardado", "error");
-        // fallback a visores públicos
+        // fallback a viewers públicos
         const vl = await getPublicVisors();
-        setVisores(vl);
+        setViewers(vl);
         setAccess(PUBLIC_VISOR_ACCESS);
       }
 
@@ -141,13 +141,13 @@ const VisorManager = () => {
   }, [isAuth, isAuthLoaded]);
 
   const publishVisor = async () => {
-    const res = await changePublicStatus(selectedVisor.id, selectedVisor.gid)
+    const res = await changePublicStatus(selectedViewer.id, selectedViewer.gid)
     if (res.success) {
       // Tostar bien
-      const visorCompleto = await getVisorById(selectedVisor.id);
-      setSelectedVisor(visorCompleto);
-      const action = selectedVisor.publico ? "despublicado" : "publicado"
-      const type = selectedVisor.publico ? "warning" : "success"
+      const visorCompleto = await getVisorById(selectedViewer.id);
+      setSelectedViewer(visorCompleto);
+      const action = selectedViewer.publico ? "despublicado" : "publicado"
+      const type = selectedViewer.publico ? "warning" : "success"
       showToast(`Has ${action} el visor correctamente`, type);
     } else {
       showToast(`Ha ocurrido un error`, "error");
@@ -155,32 +155,32 @@ const VisorManager = () => {
   }
 
   const handleChange = async (e) => {
-    setSelectedVisor(null);
+    setSelectedViewer(null);
     if (e.target.value === "public-visors") {
       sessionStorage.setItem("lastGroupPicked", e.target.value)
       setCurrentFilter(e.target.value)
       setAccess(PUBLIC_VISOR_ACCESS);
       const vl = await getPublicVisors()
-      setVisores(vl)
+      setViewers(vl)
     } else if (e.target.value === "my-visors") {
       sessionStorage.setItem("lastGroupPicked", e.target.value)
       setCurrentFilter(e.target.value)
       setAccess(MY_VISOR_ACCESS);
       const vl = await getMyVisors()
-      setVisores(vl)
+      setViewers(vl)
     } else if (e.target.value != '') {
       sessionStorage.setItem("lastGroupPicked", e.target.value)
       setCurrentFilter(e.target.value)
       const vl = await getGroupVisors(e.target.value)
       const access = await getPermissions(e.target.value)
       setAccess(access)
-      setVisores(vl)
+      setViewers(vl)
     }
   }
 
   return (
     <div className='container-display-0'>
-      <div className= "viewer-content flex-1">
+      <div className="viewer-content flex-1">
 
         <div className="viewer-modal">
           <h2>GESTOR DE VISORES</h2>
@@ -238,23 +238,23 @@ const VisorManager = () => {
                     <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
                   </div>
                 )}
-                {!isLoading && hasFetched && visores?.length === 0 && (
+                {!isLoading && hasFetched && viewers?.length === 0 && (
                   <p className="no-viewers-message">No hay visores disponibles.</p>
                 )}
 
-                {!isLoading && visores?.length > 0 && visores?.map((visor) => (
+                {!isLoading && viewers?.length > 0 && viewers?.map((visor) => (
                   <div
                     key={visor.id}
-                    className={`viewer-item ${selectedVisor?.id === visor.id ? 'selected' : ''}`}
+                    className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
                     onClick={async () => {
-                      if (selectedVisor?.id === visor.id) {
-                        setSelectedVisor(null);
+                      if (selectedViewer?.id === visor.id) {
+                        setSelectedViewer(null);
                         setShowContextMenu(false);
                         return;
                       }
                       try {
                         const visorCompleto = await getVisorById(visor.id);
-                        setSelectedVisor(visorCompleto);
+                        setSelectedViewer(visorCompleto);
                         setShowContextMenu(true);
                       } catch (error) {
                         showToast('No se pudo cargar el visor.', "error");
@@ -269,7 +269,7 @@ const VisorManager = () => {
                         setContextMenuPosition({ x: e.clientX, y: e.clientY });
                         try {
                           const visorCompleto = await getVisorById(visor.id);
-                          setSelectedVisor(visorCompleto);
+                          setSelectedViewer(visorCompleto);
                         } catch (error) {
                           showToast('No se pudo cargar el visor.', "error");
                         }
@@ -338,22 +338,22 @@ const VisorManager = () => {
             <div className="viewer-description">
               <div className="viewer-info-row">
                 <div className="viewer-info-text">
-                  <h3>{selectedVisor.name}</h3>
-                  <p>{selectedVisor.description}</p>
+                  <h3>{selectedViewer.name}</h3>
+                  <p>{selectedViewer.description}</p>
                   <p className="viewer-date">
-                    {new Date(selectedVisor.lastupdate).toLocaleDateString('es-AR', {
+                    {new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric'
                     })}
                   </p>
                   <p className="viewer-privacy">
-                    {selectedVisor.publico ? 'Público' : 'Privado'}
+                    {selectedViewer.publico ? 'Público' : 'Privado'}
                   </p>
-                  <h3>Grupo: {selectedVisor.gname || 'Grupo: Sin grupo'}</h3>
+                  <h3>Grupo: {selectedViewer.gname || 'Grupo: Sin grupo'}</h3>
                 </div>
                 <img
-                  src={selectedVisor?.gimg || '/assets/no-image.png'}
+                  src={selectedViewer?.gimg || '/assets/no-image.png'}
                   alt="Imagen del grupo"
                   className="group-image-right"
                 />
@@ -377,7 +377,7 @@ const VisorManager = () => {
               <ShareViewerModal
                 // editorMode={editorMode}
                 // cloneMode={cloneMode}
-                visor={selectedVisor}
+                visor={selectedViewer}
                 isOpen={showShareViewerModal}
                 onClose={() => setShowShareViewerModal(false)}
               />
@@ -397,10 +397,10 @@ const VisorManager = () => {
             {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
               className="common"
               onClick={() => {
-                if (!selectedVisor) return;
-                navigate('/form', { state: { viewer: selectedVisor, editorMode: true } });
+                if (!selectedViewer) return;
+                navigate('/form', { state: { viewer: selectedViewer, editorMode: true } });
               }}
-              disabled={!selectedVisor}
+              disabled={!selectedViewer}
             >
               <i className="fa-solid fa-pen-to-square"></i>
               Editar
@@ -413,13 +413,13 @@ const VisorManager = () => {
                   title: "¿Estás seguro?",
                   message: "Esto eliminará el visor.",
                   onConfirm: () => {
-                    if (!selectedVisor) return;
+                    if (!selectedViewer) return;
                     setConfirmVisible(false);
-                    handleDeleteVisor(selectedVisor);
+                    handleDeleteVisor(selectedViewer);
                   },
                 })
               }
-              disabled={!selectedVisor}
+              disabled={!selectedViewer}
               title="Borrar Visor">
               <i className="fa-solid fa-trash-can"></i>
               Borrar
@@ -433,7 +433,7 @@ const VisorManager = () => {
               Descargar
             </button>
 
-            {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
+            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
               className="share"
               onClick={() => {
                 setShowShareViewerModal(true);
@@ -442,12 +442,12 @@ const VisorManager = () => {
               Compartir
             </button>}
 
-            {((access?.sa || access?.ga) && !access?.myvisors && selectedVisor) && <button
+            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
               className="publish"
               onClick={publishVisor}
               title="Estado de Publicacion">
               <i className="fa-solid fa-bullhorn"></i>
-              {selectedVisor?.publico ? "Despublicar" : "Publicar"}
+              {selectedViewer?.publico ? "Despublicar" : "Publicar"}
             </button>}
           </div>
         </div>
