@@ -1,12 +1,13 @@
 .visor-modal {
   background-color: var(--primary--color);
   border-radius: 12px;
-  width: 60vw;
-  max-height: 84vh;
+  width: 100%;
+  max-height: 83vh;
   padding: 20px;
   position: relative;
   color: var(--text--color);
   border: 2px solid var(--secondary--color);
+  height: 83vh;
 }
 
 .visor-modal-container {
@@ -21,31 +22,35 @@
   padding: 16px;
   border: 2px solid #ccc;
   border-radius: 12px;
-  background-color: #fdfdfd;
+  background-color: #d9d9d9;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  height: 50vh;
   overflow: auto;
+  transition: height 0.3s ease;
+}
+
+.visor-list-container.preview-closed {
+  height: 63vh;
+}
+
+.visor-list-container.preview-open {
+  height: 42vh;
 }
 
 .visor-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(203px, 1fr));
   gap: 12px;
 }
 
 .visor-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid var(--secondary--color);
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: var(--secondary--color);
+  background-color: #FFF;
   user-select: none;
-  height: 100%;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .3);
 }
 
 .visor-item:hover {
@@ -54,17 +59,23 @@
 }
 
 .visor-item.selected {
-  border-color: #007bff;
+  border-color: var(--active--color);
   color: black;
   background-color: var(--active--color);
 }
 
 .visor-image {
-  width: 100%;
-  height: 100px;
+  /* width: 100%; */
   object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 8px;
+  height: 18vh;
+}
+
+.visor-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px;
+  color: black;
 }
 
 .visor-info h3 {
@@ -72,18 +83,9 @@
   font-size: 1.1em;
 }
 
-.visor-info {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-}
-
-
 .visor-info p {
   margin: 0;
   text-align: initial;
-  color: var(--text--color);
   font-size: 0.9em;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -98,6 +100,7 @@
   color: var(--text--color);
   margin: 2px 0;
   margin-top: auto;
+  color: #575757;
 }
 
 .visor-modal-actions {
@@ -161,11 +164,16 @@
 
 .container-display-0 {
   display: contents;
+  opacity: 0;
+  height: 0;
+  transition: opacity 0.3s ease, height 0.3s ease;
 }
 
 .container-display-1 {
   display: flex;
-  height: 84vh;
+  height: 83vh;
+  opacity: 1;
+  transition: opacity 0.3s ease, height 0.3s ease;
 }
 
 .flex-0 {
@@ -209,4 +217,71 @@
   height: auto;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.visor-filter-navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.visor-filter-label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.visor-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.visor-filter-buttons button {
+  background-color: var(--primary--color);
+  color: var(--text--color);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 5vh;
+  margin-bottom: -16px;
+}
+
+.visor-filter-buttons button.active {
+  background-color: var(--active--color, #1e90ff);
+  font-weight: bold;
+}
+
+.visor-filter-buttons button:hover {
+  background-color: var(--active--color);
+}
+
+.viewer-role {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.viewer-filter-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--secondary--color);
+  margin-top: 0.5rem;
+}
+
+.viewer-public-icon {
+  color: #4caf50;
+  margin-left: 8px;
+  font-size: 0.9em;
+  vertical-align: right;
+}
+
+.viewer-private-icon {
+  color: #737373;
+  margin-left: 8px;
+  font-size: 0.9em;
+  vertical-align: right;
 }

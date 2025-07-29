@@ -2,16 +2,16 @@
   "configVersion": "1.0",
   "app": {
     "logo": {
-      "alt": "Viewer logo image",
-      "title": "Logo image"
+      "alt": "",
+      "title": ""
     },
-    "windowTitle": "Argenmap",
+    "windowTitle": "",
     "language": "en",
-    "website": "https://github.com/ign-argentina/argenmap",
-    "favicon": "src/styles/images/favicon.ico",
+    "website": "",
+    "favicon": "",
     "about": {
-      "title": "TitiloDelAbout",
-      "content": "ContenidoDelAbout"
+      "title": "",
+      "content": ""
     },
     "sectionIcon": "fa-solid fa-home",
     "map": {
@@ -60,20 +60,20 @@
       "iconBar": "#4f4f4f"
     },
     "logo": {
-      "title": "Argenmap viewer",
-      "src": "src/styles/images/argenmap-banner-white.webp",
+      "title": "",
+      "src": "",
       "height": "",
       "width": "",
       "style": "background-size: 160px;",
-      "srcLogoMini": "src/styles/images/argenmap-banner-white.webp",
+      "srcLogoMini": "",
       "miniHeight": "",
       "miniWidth": "",
       "ministyle": "filter: drop-shadow(1px 1px 1px #103847); width: 128px;",
-      "link": "https://github.com/ign-argentina/argenmap"
+      "link": ""
     },
     "title": {
-      "content": "Lorem Ipsum",
-      "title": "Lorem Ipsum",
+      "content": "",
+      "title": "",
       "link": "#"
     },
     "welcomeScreen": {

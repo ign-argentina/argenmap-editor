@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+/* import { useState, useEffect } from 'react';
 import GenerateSchema from '../utils/GenerateSchema';
 import FilterEmptySections from '../utils/FilterEmptySections';
 import TranslateSchema from '../utils/TranslateSchema';
@@ -12,33 +12,33 @@ const useFormEngine = () => {
   const [selectedLang, setSelectedLang] = useState(savedLanguage);
 
   const [data, setData] = useState({});
-  const [schema, setSchema] = useState({});
+  // const [schema, setSchema] = useState({});
   const [selectedSection, setSelectedSection] = useState(null);
 
-  const uploadSchema = (newData = data) => {
-    if (!newData || !language) return;
+  // const uploadSchema = (newData = data) => {
+  //   if (!newData || !language) return;
 
-    const generatedSchema = GenerateSchema({ data: newData });
-    const filteredSchema = FilterEmptySections(generatedSchema);
-    const translatedSchema = TranslateSchema({
-      schema: filteredSchema,
-      translations: language[selectedLang] || language['default'],
-      defaultTranslations: language['default'] || {},
-    });
+  //   const generatedSchema = GenerateSchema({ data: newData });
+  //   const filteredSchema = FilterEmptySections(generatedSchema);
+  //   const translatedSchema = TranslateSchema({
+  //     schema: filteredSchema,
+  //     translations: language[selectedLang] || language['default'],
+  //     defaultTranslations: language['default'] || {},
+  //   });
 
-    setSchema(translatedSchema);
+  //   setSchema(translatedSchema);
 
-    const sectionKeys = Object.keys(translatedSchema.properties || {});
+  //   const sectionKeys = Object.keys(translatedSchema.properties || {});
 
-    setSelectedSection((prev) => {
-      if (!prev || !sectionKeys.includes(prev)) {
-        return sectionKeys[0] || null;
-      }
-      return prev;
-    });
+  //   setSelectedSection((prev) => {
+  //     if (!prev || !sectionKeys.includes(prev)) {
+  //       return sectionKeys[0] || null;
+  //     }
+  //     return prev;
+  //   });
 
-    return translatedSchema;
-  };
+  //   return translatedSchema;
+  // };
 
   useEffect(() => {
     let storedData = null;
@@ -103,4 +103,4 @@ const useFormEngine = () => {
   };
 };
 
-export default useFormEngine;
+export default useFormEngine; */
