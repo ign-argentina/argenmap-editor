@@ -33,7 +33,7 @@ export const downloadViewer = (viewer, baseViewer = null, name = null) => {
  * @returns {Object} - Objeto resultante con claves restauradas y ordenadas.
  */
 export const mergeViewer = (viewer, baseViewer) => {
-  return orderObjectByReference(ensureFieldsExist(viewer, baseViewer), baseViewer)
+  return orderObjectByReference(deepMergeWithDefaults(viewer, baseViewer), baseViewer)
 }
 
 /**
@@ -71,8 +71,32 @@ const ensureFieldsExist = (obj, reference) => {
  */
 const orderObjectByReference = (obj, reference) => {
   if (typeof obj !== 'object' || obj === null) return obj;
-  if (Array.isArray(obj)) return obj.map(item => orderObjectByReference(item, reference));
 
+  if (Array.isArray(reference)) {
+    // Si obj no es array, retorna el array base (reference)
+    if (!Array.isArray(obj)) return reference;
+
+    // Para cada elemento en reference, mergear con obj correspondiente o crear default
+    const maxLength = Math.max(obj.length, reference.length);
+    const result = [];
+
+    for (let i = 0; i < maxLength; i++) {
+      if (i < obj.length && i < reference.length) {
+        // Ordenar recursivamente el elemento i
+        result[i] = orderObjectByReference(obj[i], reference[i]);
+      } else if (i < reference.length) {
+        // Agregar el elemento base faltante
+        result[i] = reference[i];
+      } else if (i < obj.length) {
+        // Si obj tiene más elementos que referencia, agregarlos tal cual
+        result[i] = obj[i];
+      }
+    }
+
+    return result;
+  }
+
+  // Si es objeto normal
   const ordered = {};
   for (const key of Object.keys(reference)) {
     if (key in obj) {
@@ -83,6 +107,7 @@ const orderObjectByReference = (obj, reference) => {
   }
   return ordered;
 };
+
 
 /**
  * Genera una cadena de fecha y hora en formato seguro para nombre de archivo.
@@ -120,3 +145,49 @@ const download = (file, fileName, date = "") => {
   link.click();
   document.body.removeChild(link);
 };
+
+const deepMergeWithDefaults = (target, base) => {
+  // Si base es array
+  if (Array.isArray(base)) {
+    if (!Array.isArray(target)) {
+      // Si target no es array, devuelve el base completo
+      return base;
+    }
+    // Merge índice a índice
+    const maxLength = Math.max(target.length, base.length);
+    const result = [];
+    for (let i = 0; i < maxLength; i++) {
+      // Si base[i] no existe, usamos target[i] o undefined
+      // Si target[i] no existe, usamos base[i]
+      if (i in target && i in base) {
+        result[i] = deepMergeWithDefaults(target[i], base[i]);
+      } else if (i in target) {
+        result[i] = target[i];
+      } else if (i in base) {
+        result[i] = base[i];
+      }
+    }
+    return result;
+  }
+
+  // Si base es objeto
+  if (typeof base === 'object' && base !== null) {
+    if (typeof target !== 'object' || target === null) {
+      // Si target no es objeto, devuelve base (con defaults)
+      return base;
+    }
+    const result = { ...target };
+    for (const key of Object.keys(base)) {
+      if (key in target) {
+        result[key] = deepMergeWithDefaults(target[key], base[key]);
+      } else {
+        // Clave no existe en target, asignar valor base (default)
+        result[key] = base[key];
+      }
+    }
+    return result;
+  }
+
+  // Para valores primitivos, devuelve target si definido, sino base
+  return target !== undefined && target !== null ? target : base;
+}

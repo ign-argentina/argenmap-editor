@@ -10,7 +10,10 @@ const port = 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
 
 // Argenmap estatico
 app.use('/argenmap', express.static(path.join(__dirname, 'public/argenmap')))
@@ -24,9 +27,9 @@ app.get('/kharta', async (req, res) => {
   console.log(view)
 
 
-  /////////////////////////////
-  // TEST MEJORAR PROXIMAMENTE
-  /////////////////////////////
+  ///////////////////////////////
+  // TEST MEJORAR PROXIMAMENTE //
+  ///////////////////////////////
   let configInyectada = null;
 
   try {
@@ -35,9 +38,10 @@ app.get('/kharta', async (req, res) => {
   } catch (error) {
     console.error('Error al hacer fetch:', error);
   }
-  /////////////////////////////
-  // FIN TEST MEJORAR PROXIMAMENTE
-  /////////////////////////////
+
+  ///////////////////////////////////
+  // FIN TEST MEJORAR PROXIMAMENTE //
+  ///////////////////////////////////
 
   const indexPath = path.join(__dirname, 'public/kharta/index.html');
 
@@ -58,6 +62,29 @@ app.get('/kharta', async (req, res) => {
 
   res.send(html);
 });
+
+
+app.post('/kharta', async (req, res) => {
+  const defaultConfigPath = path.join(__dirname, 'statics/map-config.json');
+
+  const config = req.body.config; // 👈 Parseo correcto
+  console.log("Config ", config)
+  const indexPath = path.join(__dirname, 'public/kharta/index.html');
+  let html = fs.readFileSync(indexPath, 'utf-8');
+
+
+  const configInyectada = JSON.parse(config) || JSON.parse(fs.readFileSync(defaultConfigPath, 'utf-8'));
+
+  const scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`;
+
+  /*   console.log("Objeto completo:", JSON.stringify(configInyectada, null, 2)); */
+
+  html = html.replace('</head>', `${scriptTag}</head>`);
+  html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
+
+  res.send(html);
+});
+
 
 app.listen(port, () => {
   console.log(`Visor server corriendo en puerto: ${port}`);
