@@ -1,4 +1,4 @@
-.save-visor-modal {
+.save-viewer-modal {
   background: var(--primary--color);
   color: var(--text--color);
   padding: 24px;
@@ -10,14 +10,14 @@
   gap: 16px;
 }
 
-.save-visor-modal h3 {
+.save-viewer-modal h3 {
   margin: 0;
   font-size: 20px;
   text-align: center;
 }
 
-.save-visor-modal input,
-.save-visor-modal textarea {
+.save-viewer-modal input,
+.save-viewer-modal textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -27,11 +27,11 @@
   box-sizing: border-box;
 }
 
-.save-visor-modal textarea {
+.save-viewer-modal textarea {
   height: 80px;
 }
 
-.save-visor-modal-overlay {
+.save-viewer-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -78,7 +78,7 @@
   background-color: var(--active--color);
 }
 
-.save-visor-modal-overlay {
+.save-viewer-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
-import './SaveVisorModal.css';
-import { useUser } from '../../context/UserContext';
+import './SaveViewerModal.css';
+import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
 
-const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig }) => {
+const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig }) => {
 
   const [name, setName] = useState(editorMode ? visor?.name : "");
   const [description, setDescription] = useState(editorMode ? visor?.description : "");
@@ -124,8 +124,8 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   if (!isOpen) return null;
 
   return (
-    <div className="save-visor-modal-overlay">
-      <div className="save-visor-modal">
+    <div className="save-viewer-modal-overlay">
+      <div className="save-viewer-modal">
         <h3>{editorMode && !cloneMode ? "Guardar Cambios" : "Crear Nuevo Visor"}</h3>
         <span>{cloneMode ? "Crearás un nuevo visor para el grupo a partir de las mismas caracteristicas que este" : null}</span>
         <input
@@ -214,4 +214,4 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   );
 };
 
-export default SaveVisorModal;
+export default SaveViewerModal;

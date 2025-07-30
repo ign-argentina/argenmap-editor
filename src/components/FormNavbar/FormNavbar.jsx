@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SaveVisorModal from '../SaveVisorModal/SaveVisorModal';
+import SaveViewerModal from '../SaveViewerModal/SaveViewerModal';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './FormNavbar.css';
 import { useUser } from '../../context/UserContext';
@@ -73,8 +73,8 @@ const FormNavbar = ({
         </button>
 
         {showSaveModal && (
-          <div className="save-visor-modal-overlay">
-            <SaveVisorModal
+          <div className="save-viewer-modal-overlay">
+            <SaveViewerModal
               editorMode={editorMode}
               cloneMode={cloneMode}
               visor={viewer}
