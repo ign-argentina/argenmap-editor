@@ -15,7 +15,7 @@ import GenerateSchema from '../../utils/GenerateSchema';
 import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
 import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
-import { khartaSchema } from '../../static/khartaSchema';
+import { khartaSchema } from '../../static/formSchemas/khartaSchema';
 
 
 function Form() {
