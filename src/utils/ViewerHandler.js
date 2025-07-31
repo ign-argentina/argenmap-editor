@@ -33,7 +33,8 @@ export const downloadViewer = (viewer, baseViewer = null, name = null) => {
  * @returns {Object} - Objeto resultante con claves restauradas y ordenadas.
  */
 export const mergeViewer = (viewer, baseViewer) => {
-  return orderObjectByReference(deepMergeWithDefaults(viewer, baseViewer), baseViewer)
+    return deepMergeWithDefaults(viewer, baseViewer)
+/*   return orderObjectByReference(deepMergeWithDefaults(viewer, baseViewer), baseViewer) */
 }
 
 /**
@@ -146,48 +147,55 @@ const download = (file, fileName, date = "") => {
   document.body.removeChild(link);
 };
 
-const deepMergeWithDefaults = (target, base) => {
-  // Si base es array
-  if (Array.isArray(base)) {
-    if (!Array.isArray(target)) {
-      // Si target no es array, devuelve el base completo
-      return base;
+function getEmptyValue(defaultVal) {
+  if (Array.isArray(defaultVal)) return [];
+  if (typeof defaultVal === 'object' && defaultVal !== null) {
+    const emptyObj = {};
+    for (const key in defaultVal) {
+      emptyObj[key] = getEmptyValue(defaultVal[key]);
     }
-    // Merge índice a índice
-    const maxLength = Math.max(target.length, base.length);
-    const result = [];
-    for (let i = 0; i < maxLength; i++) {
-      // Si base[i] no existe, usamos target[i] o undefined
-      // Si target[i] no existe, usamos base[i]
-      if (i in target && i in base) {
-        result[i] = deepMergeWithDefaults(target[i], base[i]);
-      } else if (i in target) {
-        result[i] = target[i];
-      } else if (i in base) {
-        result[i] = base[i];
-      }
-    }
-    return result;
+    return emptyObj;
+  }
+  if (typeof defaultVal === 'string') return '';
+  if (typeof defaultVal === 'number') return 0;
+  if (typeof defaultVal === 'boolean') return false;
+  return null;
+}
+
+function deepMergeWithDefaults (userConfig, defaultConfig) {
+  // Si default es array:
+  if (Array.isArray(defaultConfig)) {
+    // Si usuario NO envía array, devolver array vacío
+    if (!Array.isArray(userConfig)) return [];
+    // Usuario envía array, devolverlo tal cual
+    return userConfig;
   }
 
-  // Si base es objeto
-  if (typeof base === 'object' && base !== null) {
-    if (typeof target !== 'object' || target === null) {
-      // Si target no es objeto, devuelve base (con defaults)
-      return base;
-    }
-    const result = { ...target };
-    for (const key of Object.keys(base)) {
-      if (key in target) {
-        result[key] = deepMergeWithDefaults(target[key], base[key]);
+  // Si default es objeto:
+  if (typeof defaultConfig === 'object' && defaultConfig !== null) {
+    const result = {};
+    const keys = new Set([
+      ...Object.keys(defaultConfig),
+      ...Object.keys(userConfig || {})
+    ]);
+    for (const key of keys) {
+      const defVal = defaultConfig[key];
+      const usrVal = userConfig ? userConfig[key] : undefined;
+
+      if (usrVal === undefined) {
+        result[key] = getEmptyValue(defVal);
       } else {
-        // Clave no existe en target, asignar valor base (default)
-        result[key] = base[key];
+        result[key] = deepMergeWithDefaults (usrVal, defVal);
       }
     }
     return result;
   }
 
-  // Para valores primitivos, devuelve target si definido, sino base
-  return target !== undefined && target !== null ? target : base;
+  // Para valores primitivos
+  return userConfig !== undefined ? userConfig : getEmptyValue(defaultConfig);
+}
+
+const ordenar = (actual, base) => {
+
+  
 }

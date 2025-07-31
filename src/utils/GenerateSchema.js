@@ -1,47 +1,23 @@
-const GenerateSchema = (data) => {
-  const detectType = (value) => {
-    if (Array.isArray(value)) return 'array';
-    if (typeof value === 'object' && value !== null) return 'object';
-    if (typeof value === 'string' && /^#[0-9A-F]{6}$/i.test(value)) return 'color';
-    return typeof value;
-  };
-
+const GenerateSchema = ({ data }) => {
   const createSchema = (obj) => {
-    const type = detectType(obj);
-
-    if (type === 'array') {
-      return {
-        type: 'array',
-        items: obj.length > 0 ? createSchema(obj[0]) : {}
-      };
-    }
-
-    if (type === 'object') {
-      const schema = {
-        type: 'object',
-        properties: {}
-      };
-
-      for (const key in obj) {
-        if (obj[key] !== undefined) {
+    if (Array.isArray(obj)) {
+      return { type: 'array', items: createSchema(obj[0]) };
+    } else if (typeof obj === 'object' && obj !== null) {
+      const schema = { type: 'object', properties: {} };
+      Object.keys(obj).forEach((key) => {
+        if (key !== 'sectionIcon') {
           schema.properties[key] = createSchema(obj[key]);
         }
-      }
-
+      });
       return schema;
-    }
-
-    if (type === 'color') {
+    } else if (typeof obj === 'string' && /^#[0-9A-F]{6}$/i.test(obj)) {
       return { type: 'string', format: 'color' };
+    } else {
+      return { type: typeof obj };
     }
-
-    return { type };
   };
 
-  return {
-    type: 'object',
-    properties: createSchema(data).properties
-  };
+  return createSchema(data);
 };
 
 export default GenerateSchema;

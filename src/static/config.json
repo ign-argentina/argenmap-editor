@@ -1,5 +1,6 @@
 {
   "mapConfig": {
+    "sectionIcon": "fa-solid fa-map",
     "center": {
       "latitude": -40,
       "longitude": -59

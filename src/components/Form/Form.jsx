@@ -38,20 +38,26 @@ function Form() {
   const uploadSchema = (config) => {
     if (/* !config || */ !language) return;
 
-    /*     const generatedSchema = GenerateSchema({ data: config }); */
-    /*     const filteredSchema = FilterEmptySections(khartaSchema); */
-    const translatedSchema = TranslateSchema({
-      schema: khartaSchema,
-      translations: language[selectedLang] || language['default'],
-      defaultTranslations: language['default'] || {},
-    });
+    let translatedSchema
 
-
+    if (config) {
+          const generatedSchema = GenerateSchema({ data: config });
+          const filteredSchema = FilterEmptySections(generatedSchema);
+      translatedSchema = TranslateSchema({
+        schema: filteredSchema,
+        translations: language[selectedLang] || language['default'],
+        defaultTranslations: language['default'] || {},
+      });
+    } else {
+      translatedSchema = TranslateSchema({
+        schema: khartaSchema,
+        translations: language[selectedLang] || language['default'],
+        defaultTranslations: language['default'] || {},
+      });
+    }
 
     setSchema(translatedSchema);
-
     const sectionKeys = Object.keys(translatedSchema.properties || {});
-    console.log('DATA FINAL ->', JSON.stringify(workingConfig, null, 2));
     setSelectedSection((prev) => {
       if (!prev || !sectionKeys.includes(prev)) {
         return sectionKeys[0] || null;
@@ -79,7 +85,7 @@ function Form() {
 
   useEffect(() => {
     /* uploadSchema(workingConfig); */
-    uploadSchema();
+    uploadSchema(externalUpload);
   }, [schemaLoaded]);
 
   // Translates schema on change
@@ -128,11 +134,13 @@ function Form() {
   ];
 
   const handleDownload = () => {
+    console.log(workingConfig.basemap)
+    console.log(config.basemap)
     downloadViewer(workingConfig, config)
   };
 
   const getWorkingConfig = () => {
-    return mergedConfig
+    return mergeViewer(workingConfig, config)
   }
 
   const handleJsonFormsChange = async (updatedData) => {

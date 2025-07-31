@@ -1,6 +1,7 @@
 export const khartaSchema = {
   type: "object",
   properties: {
+    title: { type: "string" },
     mapConfig: {
       type: "object",
       properties: {
@@ -37,7 +38,6 @@ export const khartaSchema = {
       required: ["description", "image", "title"],
       additionalProperties: false
     },
-    title: { type: "string" },
     website: { type: "string" },
     logo: {
       type: "object",
