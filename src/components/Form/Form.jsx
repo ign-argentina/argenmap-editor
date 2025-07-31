@@ -42,9 +42,9 @@ function Form() {
 
     if (config) {
       const generatedSchema = GenerateSchema({ data: config });
-      const filteredSchema = FilterEmptySections(generatedSchema);
+    //  const filteredSchema = FilterEmptySections(generatedSchema);
       translatedSchema = TranslateSchema({
-        schema: filteredSchema,
+        schema: generatedSchema,
         translations: language[selectedLang] || language['default'],
         defaultTranslations: language['default'] || {},
       });
@@ -138,9 +138,7 @@ function Form() {
   ];
 
   const handleDownload = () => {
-    console.log(workingConfig.basemap)
-    console.log(config.basemap)
-    downloadViewer(workingConfig, config)
+    downloadViewer(workingConfig, config, viewer?.name)
   };
 
   const getWorkingConfig = () => {
