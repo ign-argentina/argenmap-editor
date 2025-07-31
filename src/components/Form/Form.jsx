@@ -41,8 +41,8 @@ function Form() {
     let translatedSchema
 
     if (config) {
-          const generatedSchema = GenerateSchema({ data: config });
-          const filteredSchema = FilterEmptySections(generatedSchema);
+      const generatedSchema = GenerateSchema({ data: config });
+      const filteredSchema = FilterEmptySections(generatedSchema);
       translatedSchema = TranslateSchema({
         schema: filteredSchema,
         translations: language[selectedLang] || language['default'],
@@ -91,7 +91,11 @@ function Form() {
   // Translates schema on change
   useEffect(() => {
     if (schemaLoaded && workingConfig) {
-      uploadSchema(khartaSchema);
+      if (externalUpload) {
+        uploadSchema(externalUpload);
+      } else {
+        uploadSchema();
+      }
     }
   }, [selectedLang]);
 
