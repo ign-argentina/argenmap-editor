@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
 import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
@@ -15,6 +15,8 @@ import GenerateSchema from '../../utils/GenerateSchema';
 import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
 import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
+import { khartaSchema } from '../../static/formSchemas/khartaSchema';
+
 
 function Form() {
   const location = useLocation();
@@ -30,21 +32,32 @@ function Form() {
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false); // No te vayas!
 
-  const uploadSchema = (config) => {
-    if (!config || !language) return;
+  // Memoizamos para que mergedConfig solo cambie si cambia workingConfig o config
+  const mergedConfig = useMemo(() => mergeViewer(workingConfig, config), [workingConfig, config]);
 
-    const generatedSchema = GenerateSchema({ data: config });
-    const filteredSchema = FilterEmptySections(generatedSchema);
-    const translatedSchema = TranslateSchema({
-      schema: filteredSchema,
-      translations: language[selectedLang] || language['default'],
-      defaultTranslations: language['default'] || {},
-    });
+  const uploadSchema = (config) => {
+    if (/* !config || */ !language) return;
+
+    let translatedSchema
+
+    if (config) {
+      const generatedSchema = GenerateSchema({ data: config });
+    //  const filteredSchema = FilterEmptySections(generatedSchema);
+      translatedSchema = TranslateSchema({
+        schema: generatedSchema,
+        translations: language[selectedLang] || language['default'],
+        defaultTranslations: language['default'] || {},
+      });
+    } else {
+      translatedSchema = TranslateSchema({
+        schema: khartaSchema,
+        translations: language[selectedLang] || language['default'],
+        defaultTranslations: language['default'] || {},
+      });
+    }
 
     setSchema(translatedSchema);
-
     const sectionKeys = Object.keys(translatedSchema.properties || {});
-
     setSelectedSection((prev) => {
       if (!prev || !sectionKeys.includes(prev)) {
         return sectionKeys[0] || null;
@@ -71,13 +84,18 @@ function Form() {
   }, []);
 
   useEffect(() => {
-    uploadSchema(workingConfig);
+    /* uploadSchema(workingConfig); */
+    uploadSchema(externalUpload);
   }, [schemaLoaded]);
 
   // Translates schema on change
   useEffect(() => {
     if (schemaLoaded && workingConfig) {
-      uploadSchema(mergeViewer(workingConfig, config));
+      if (externalUpload) {
+        uploadSchema(externalUpload);
+      } else {
+        uploadSchema();
+      }
     }
   }, [selectedLang]);
 
@@ -120,14 +138,14 @@ function Form() {
   ];
 
   const handleDownload = () => {
-    downloadViewer(workingConfig, config)
+    downloadViewer(workingConfig, config, viewer?.name)
   };
 
   const getWorkingConfig = () => {
     return mergeViewer(workingConfig, config)
   }
 
-  const handleJsonFormsChange = (updatedData) => {
+  const handleJsonFormsChange = async (updatedData) => {
     setHasUnsavedChanges(true);
     const hasChanged = JSON.stringify(workingConfig[selectedSection]) !== JSON.stringify(updatedData);
     if (hasChanged) {
@@ -135,6 +153,21 @@ function Form() {
         ...prevConfig,
         [selectedSection]: updatedData,
       }));
+
+      /* 
+            // Podriamos leer una flag para ver que tipo previsualizar.
+            const visores = ['argenmap', 'kharta'];
+            const url = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${visores[1]}`;
+      
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(getWorkingConfig()),
+            });
+      
+      
+            const html = await response.text();
+            setPreviewHtml(html); */
     }
   };
 
@@ -169,7 +202,7 @@ function Form() {
         )}
 
         <div className="side-panel">
-          <Preview />
+          <Preview config={workingConfig} />
         </div>
       </div>
     </div>

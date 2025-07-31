@@ -1,24 +1,38 @@
-import currentVisor from "../../api/visorApi";
+import { useEffect, useRef } from 'react';
 
-const Preview = ({ visorId = "123", tipo = "argenmap" }) => {
+function Preview({ config }) {
+  const iframeName = 'previewIframe';
+  const formRef = useRef(null);
 
-  // Podriamos leer una flag para ver que tipo previsualizar.
-  const visores = ['argenmap', 'kharta'];
-  const randomIndex = Math.floor(Math.random() * visores.length);
+  useEffect(() => {
+    if (config && formRef.current) {
+      formRef.current.submit();
+    }
+  }, [config]);
 
-//  const url = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${tipo}?id=${visorId}`; VERSION ORIGINAL
-
-// random para testear
-   const url = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${visores[randomIndex]}`;
   return (
-    <iframe
-      src={url}
-      title={`Visor ${tipo}`}
-      width="100%"
-      height="100%"
-      style={{ border: 'none' }}
-    />
+    <>
+      <form
+        ref={formRef}
+        method="POST"
+        action="http://localhost:4000/kharta"
+        target={iframeName}
+        style={{ display: 'none' }}
+      >
+        <input
+          type="hidden"
+          name="config"
+          value={JSON.stringify(config)}
+          readOnly
+        />
+      </form>
+      <iframe
+        name={iframeName}
+        title="Preview"
+        style={{ width: '100%', height: '100%', border: 'none' }}
+      />
+    </>
   );
-};
+}
 
 export default Preview;
