@@ -210,7 +210,7 @@ const ViewerManager = () => {
                   className={currentFilter === grupo.id ? "active" : ""}
                   onClick={() => handleChange({ target: { value: grupo.id } })}
                 >
-                  {grupo.name}
+                  {grupo.name.toUpperCase()}
                 </button>
               ))}
             </div>
