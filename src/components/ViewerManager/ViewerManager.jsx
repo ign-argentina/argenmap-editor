@@ -156,6 +156,7 @@ const ViewerManager = () => {
 
   const handleChange = async (e) => {
     setSelectedViewer(null);
+    setShowContextMenu(false);
     if (e.target.value === "public-visors") {
       sessionStorage.setItem("lastGroupPicked", e.target.value)
       setCurrentFilter(e.target.value)
