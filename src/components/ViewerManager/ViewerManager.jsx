@@ -30,7 +30,7 @@ const ViewerManager = () => {
   const [currentFilter, setCurrentFilter] = useState();
   const [contextMenuVisorId, setContextMenuVisorId] = useState(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
-  const [showContextMenu, setShowContextMenu] = useState(null);
+  const [showDescriptionModal, setShowDescriptionModal] = useState(null);
 
   const closeContextMenu = () => {
     setContextMenuVisorId(null);
@@ -156,7 +156,7 @@ const ViewerManager = () => {
 
   const handleChange = async (e) => {
     setSelectedViewer(null);
-    setShowContextMenu(false);
+    setShowDescriptionModal(false);
     if (e.target.value === "public-visors") {
       sessionStorage.setItem("lastGroupPicked", e.target.value)
       setCurrentFilter(e.target.value)
@@ -231,7 +231,7 @@ const ViewerManager = () => {
           </div>
 
           <div className="viewer-modal-container">
-            <div className={`viewer-list-container ${showContextMenu ? 'viewer-description-open' : 'viewer-description-closed'}`}>
+            <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
               <div className="viewer-list">
                 {isLoading && (
                   <div className="loading-message">
@@ -250,13 +250,13 @@ const ViewerManager = () => {
                     onClick={async () => {
                       if (selectedViewer?.id === visor.id) {
                         setSelectedViewer(null);
-                        setShowContextMenu(false);
+                        setShowDescriptionModal(false);
                         return;
                       }
                       try {
                         const visorCompleto = await getVisorById(visor.id);
                         setSelectedViewer(visorCompleto);
-                        setShowContextMenu(true);
+                        setShowDescriptionModal(true);
                       } catch (error) {
                         showToast('No se pudo cargar el visor.', "error");
                       }
@@ -335,7 +335,7 @@ const ViewerManager = () => {
             </div>
           </div>
 
-          {showContextMenu && (
+          {showDescriptionModal && (
             <div className="viewer-description">
               <div className="viewer-info-row">
                 <div className="viewer-info-text">
