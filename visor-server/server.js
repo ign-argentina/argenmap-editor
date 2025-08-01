@@ -24,8 +24,6 @@ app.use('/kharta/assets', express.static(path.join(__dirname, 'public/kharta/ass
 // Endpoint que sirve Kharta e inyecta configuracion
 app.get('/kharta', async (req, res) => {
   const { view } = req.query;
-  console.log(view)
-
 
   ///////////////////////////////
   // TEST MEJORAR PROXIMAMENTE //
@@ -68,7 +66,6 @@ app.post('/kharta', async (req, res) => {
   const defaultConfigPath = path.join(__dirname, 'statics/map-config.json');
 
   const config = req.body.config; // 👈 Parseo correcto
-  console.log("Config ", config)
   const indexPath = path.join(__dirname, 'public/kharta/index.html');
   let html = fs.readFileSync(indexPath, 'utf-8');
 
