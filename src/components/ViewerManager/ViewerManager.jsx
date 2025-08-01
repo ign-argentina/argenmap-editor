@@ -308,7 +308,7 @@ const ViewerManager = () => {
             <div className="viewer-modal-actions">
               <div className="global-buttons">
                 <button
-                  className="common"
+                  className="btn-common"
                   onClick={() => {
                     navigate('/form');
                   }}>
@@ -316,7 +316,7 @@ const ViewerManager = () => {
                   Crear
                 </button>
 
-                <label className="common">
+                <label className="btn-common">
                   <input
                     type="file"
                     accept=".json"
@@ -394,9 +394,8 @@ const ViewerManager = () => {
           style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="global-buttons">
+          <div>
             {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
-              className="common"
               onClick={() => {
                 if (!selectedViewer) return;
                 navigate('/form', { state: { viewer: selectedViewer, editorMode: true } });
@@ -407,8 +406,32 @@ const ViewerManager = () => {
               Editar
             </button>}
 
+            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
+              onClick={publishVisor}
+              title="Estado de Publicacion">
+              <i className="fa-solid fa-bullhorn"></i>
+              {selectedViewer?.publico ? "Despublicar" : "Publicar"}
+            </button>}
+
+            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
+              onClick={() => {
+                setShowShareViewerModal(true);
+                closeContextMenu();
+              }} title="Compartir Visor">
+              <i className="fa-solid fa-share"></i>
+              Compartir
+            </button>}
+
+            <button
+              className="btn-download"
+              onClick={handleDownload}
+              title="Descargar JSON">
+              <i className="fa-solid fa-download"></i>
+              Descargar
+            </button>
+
             {(access?.sa || access?.ga) && <button
-              className="delete"
+              className="btn-delete"
               onClick={() =>
                 pedirConfirmacion({
                   title: "¿Estás seguro?",
@@ -426,30 +449,6 @@ const ViewerManager = () => {
               Borrar
             </button>}
 
-            <button
-              className="download"
-              onClick={handleDownload}
-              title="Descargar JSON">
-              <i className="fa-solid fa-download"></i>
-              Descargar
-            </button>
-
-            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
-              className="share"
-              onClick={() => {
-                setShowShareViewerModal(true);
-              }} title="Compartir Visor">
-              <i className="fa-solid fa-share"></i>
-              Compartir
-            </button>}
-
-            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
-              className="publish"
-              onClick={publishVisor}
-              title="Estado de Publicacion">
-              <i className="fa-solid fa-bullhorn"></i>
-              {selectedViewer?.publico ? "Despublicar" : "Publicar"}
-            </button>}
           </div>
         </div>
       )}
