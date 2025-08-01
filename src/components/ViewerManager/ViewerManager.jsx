@@ -232,6 +232,7 @@ const ViewerManager = () => {
 
           <div className="viewer-modal-container">
             <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
+                <div className="background-overlay" />
               <div className="viewer-list">
                 {isLoading && (
                   <div className="loading-message">
