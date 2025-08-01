@@ -1,6 +1,6 @@
 {
   "default": {
-    "mapConfig": "Config del mapa",
+    "mapConfig": "Mapa Config",
     "sectionIcon": "Icono de Sección",
     "center": "Centro",
     "latitude": "Latitud",
@@ -34,7 +34,7 @@
     "short_abstract": "Resumen"
   },
   "es": {
-    "mapConfig": "Config del mapa",
+    "mapConfig": "Mapa Config",
     "sectionIcon": "Icono de Sección",
     "center": "Centro",
     "latitude": "Latitud",

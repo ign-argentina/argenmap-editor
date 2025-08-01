@@ -1,7 +1,7 @@
 import React from 'react';
 
 const TranslateSchema = ({ schema, translations, defaultTranslations }) => {
-  const applyTranslations = (schema, translations, parentKey = '') => {
+  const applyTranslations = (schema, translations, parentKey = '', defaultTranslations = {}) => {
     if (!schema || typeof schema !== 'object') return schema;
 
     const capitalizeWords = (str) => {
@@ -15,27 +15,31 @@ const TranslateSchema = ({ schema, translations, defaultTranslations }) => {
 
     const translatedSchema = { ...schema };
 
+    const lookupKey = parentKey.split('.').pop();
+
     if (schema.type === 'object' && schema.properties) {
       translatedSchema.title =
-        translations[parentKey] || 
-        defaultTranslations[parentKey] || 
-        schema.title || 
-        capitalizeWords(parentKey);
+        translations[lookupKey] ||
+        defaultTranslations[lookupKey] ||
+        schema.title ||
+        capitalizeWords(lookupKey);
 
       translatedSchema.properties = Object.entries(schema.properties).reduce((acc, [key, value]) => {
-        acc[key] = applyTranslations(value, translations, key, defaultTranslations);
+        const newPath = parentKey ? `${parentKey}.${key}` : key;
+        acc[key] = applyTranslations(value, translations, newPath, defaultTranslations);
         return acc;
       }, {});
-    } else if (schema.type === 'string') {
+    } else if (schema.type === 'string' || schema.type === 'number') {
       translatedSchema.title =
-        translations[parentKey] ||
-        defaultTranslations[parentKey] ||
+        translations[lookupKey] ||
+        defaultTranslations[lookupKey] ||
         schema.title ||
-        capitalizeWords(parentKey);
+        capitalizeWords(lookupKey);
     }
-    
+
     return translatedSchema;
   };
+
 
   return applyTranslations(schema, translations, '', defaultTranslations);
 };
