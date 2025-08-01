@@ -265,14 +265,18 @@ const ViewerManager = () => {
                     <div
                       className="viewer-context-button"
                       onClick={async (e) => {
-                        e.stopPropagation();
-                        setContextMenuVisorId(visor.id);
-                        setContextMenuPosition({ x: e.clientX, y: e.clientY });
-                        try {
-                          const visorCompleto = await getVisorById(visor.id);
-                          setSelectedViewer(visorCompleto);
-                        } catch (error) {
-                          showToast('No se pudo cargar el visor.', "error");
+                        if (contextMenuVisorId === visor.id) {
+                          closeContextMenu();
+                        } else {
+                          e.stopPropagation();
+                          setContextMenuVisorId(visor.id);
+                          setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                          try {
+                            const visorCompleto = await getVisorById(visor.id);
+                            setSelectedViewer(visorCompleto);
+                          } catch (error) {
+                            showToast('No se pudo cargar el visor.', "error");
+                          }
                         }
                       }}
                     >
