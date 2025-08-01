@@ -29,6 +29,15 @@ const TranslateSchema = ({ schema, translations, defaultTranslations }) => {
         acc[key] = applyTranslations(value, translations, newPath, defaultTranslations);
         return acc;
       }, {});
+    } else if (schema.type === 'array' && schema.items) {
+      translatedSchema.title =
+        translations[lookupKey] ||
+        defaultTranslations[lookupKey] ||
+        schema.title ||
+        capitalizeWords(lookupKey);
+
+      translatedSchema.items = applyTranslations(schema.items, translations, parentKey + '[]', defaultTranslations);
+
     } else if (schema.type === 'string' || schema.type === 'number') {
       translatedSchema.title =
         translations[lookupKey] ||
