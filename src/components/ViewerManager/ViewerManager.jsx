@@ -14,7 +14,6 @@ const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
 
 const ViewerManager = () => {
-
   // States
   const [viewers, setViewers] = useState([]);
   const [selectedViewer, setSelectedViewer] = useState(null);
@@ -27,10 +26,13 @@ const ViewerManager = () => {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
-  const [currentFilter, setCurrentFilter] = useState();
   const [contextMenuVisorId, setContextMenuVisorId] = useState(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
   const [showDescriptionModal, setShowDescriptionModal] = useState(null);
+  const [currentFilter, setCurrentFilter] = useState(() => {
+    // Inicializamos el estado al montar el componente, no en cada render. 
+    return sessionStorage.getItem("lastGroupPicked") || "public-visors";
+  });
 
   const closeContextMenu = () => {
     setContextMenuVisorId(null);
@@ -99,8 +101,6 @@ const ViewerManager = () => {
       setIsLoading(true);
       setHasFetched(false);
 
-      const lastPicked = sessionStorage.getItem("lastGroupPicked") || "public-visors";
-
       if (isAuth) {
         const gl = await getGrupos();
         setGroupList(gl);
@@ -111,26 +111,27 @@ const ViewerManager = () => {
 
       try {
         let vl, access;
-        if (lastPicked === "public-visors") {
+        if (currentFilter === "public-visors") {
           vl = await getPublicVisors();
           access = PUBLIC_VISOR_ACCESS;
-        } else if (lastPicked === "my-visors") {
+        } else if (currentFilter === "my-visors") {
           vl = await getMyVisors();
           access = MY_VISOR_ACCESS;
         } else if (isAuth) {
-          vl = await getGroupVisors(lastPicked);
-          access = await getPermissions(lastPicked);
+          vl = await getGroupVisors(currentFilter);
+          access = await getPermissions(currentFilter);
         }
-        setCurrentFilter(lastPicked)
         setViewers(vl);
         setAccess(access);
       } catch (error) {
-        console.error("Error cargando visores del grupo:", error);
-        showToast("Error al cargar visores del grupo guardado", "error");
-        // fallback a viewers públicos
+        console.error("Error loading viewers:", error);
+        showToast("Error loading viewers", "error");
+        // Fallback to public viewers
         const vl = await getPublicVisors();
         setViewers(vl);
         setAccess(PUBLIC_VISOR_ACCESS);
+        setCurrentFilter("public-visors");
+        sessionStorage.setItem("lastGroupPicked", "public-visors");
       }
 
       setIsLoading(false);
@@ -154,310 +155,325 @@ const ViewerManager = () => {
     }
   }
 
-  const handleChange = async (e) => {
+  const handleChange = async (value) => {
     setSelectedViewer(null);
     setShowDescriptionModal(false);
-    if (e.target.value === "public-visors") {
-      sessionStorage.setItem("lastGroupPicked", e.target.value)
-      setCurrentFilter(e.target.value)
+    setCurrentFilter(value);
+    sessionStorage.setItem("lastGroupPicked", value);
+
+    if (value === "public-visors") {
       setAccess(PUBLIC_VISOR_ACCESS);
-      const vl = await getPublicVisors()
-      setViewers(vl)
-    } else if (e.target.value === "my-visors") {
-      sessionStorage.setItem("lastGroupPicked", e.target.value)
-      setCurrentFilter(e.target.value)
+      const vl = await getPublicVisors();
+      setViewers(vl);
+    } else if (value === "my-visors") {
       setAccess(MY_VISOR_ACCESS);
-      const vl = await getMyVisors()
-      setViewers(vl)
-    } else if (e.target.value != '') {
-      sessionStorage.setItem("lastGroupPicked", e.target.value)
-      setCurrentFilter(e.target.value)
-      const vl = await getGroupVisors(e.target.value)
-      const access = await getPermissions(e.target.value)
-      setAccess(access)
-      setViewers(vl)
+      const vl = await getMyVisors();
+      setViewers(vl);
+    } else if (value !== '') {
+      const vl = await getGroupVisors(value);
+      const access = await getPermissions(value);
+      setAccess(access);
+      setViewers(vl);
     }
-  }
+  };
 
   return (
-    <div className='container-display-0'>
-      <div className="viewer-content flex-1">
-
-        <div className="viewer-modal">
-          <h2>GESTOR DE VISORES</h2>
-
-          <div className="viewer-filter-navbar">
-            <div className="viewer-filter-buttons">
-              <button
-                className={currentFilter === "public-visors" ? "active" : ""}
-                onClick={() => handleChange({ target: { value: "public-visors" } })}
-              >
-                PÚBLICOS
-              </button>
-
-              {isAuth && (
-                <button
-                  className={currentFilter === "my-visors" ? "active" : ""}
-                  onClick={() => handleChange({ target: { value: "my-visors" } })}
-                >
-                  PROPIOS
-                </button>
-              )}
-
-              {groupList?.map(grupo => (
-                <button
-                  key={grupo.id}
-                  className={currentFilter === grupo.id ? "active" : ""}
-                  onClick={() => handleChange({ target: { value: grupo.id } })}
-                >
-                  {grupo.name.toUpperCase()}
-                </button>
-              ))}
-            </div>
-
-            <div className="viewer-filter-divider" />
-
-
-            {access !== PUBLIC_VISOR_ACCESS && (
-              <div className="viewer-role">
-                Tu rol dentro del grupo es: {
-                  (access?.ga || access?.sa) ? "Administrador" :
-                    access?.editor ? "Editor" :
-                      access?.myvisors ? "Dueño" :
-                        "Lector"
-                }
-              </div>
-            )}
+    <>
+      {!hasFetched && isLoading && (
+        <div className="loading-message" style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          width: '100%',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span className="spinner" />
+            <span style={{ marginLeft: '10px' }}>El gestor está cargando...</span>
           </div>
+        </div>
+      )}
 
-          <div className="viewer-modal-container">
-            <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
-                <div className="background-overlay" />
-              <div className="viewer-list">
-                {isLoading && (
-                  <div className="loading-message">
-                    <span className="spinner" />
-                    <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
-                  </div>
-                )}
-                {!isLoading && hasFetched && viewers?.length === 0 && (
-                  <p className="no-viewers-message">No hay visores disponibles.</p>
-                )}
+      {hasFetched && (
+        <div className='container-display-0'>
+          <div className="viewer-content flex-1">
+            <div className="viewer-modal">
+              <h2>GESTOR DE VISORES</h2>
 
-                {!isLoading && viewers?.length > 0 && viewers?.map((visor) => (
-                  <div
-                    key={visor.id}
-                    className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
-                    onClick={async () => {
-                      if (selectedViewer?.id === visor.id) {
-                        setSelectedViewer(null);
-                        setShowDescriptionModal(false);
-                        return;
-                      }
-                      try {
-                        const visorCompleto = await getVisorById(visor.id);
-                        setSelectedViewer(visorCompleto);
-                        setShowDescriptionModal(true);
-                      } catch (error) {
-                        showToast('No se pudo cargar el visor.', "error");
-                      }
-                    }}
+              <div className="viewer-filter-navbar">
+                <div className="viewer-filter-buttons">
+                  <button
+                    className={currentFilter === "public-visors" ? "active" : ""}
+                    onClick={() => handleChange("public-visors")}
                   >
-                    <div
-                      className="viewer-context-button"
-                      onClick={async (e) => {
-                        if (contextMenuVisorId === visor.id) {
-                          closeContextMenu();
-                        } else {
-                          e.stopPropagation();
-                          setContextMenuVisorId(visor.id);
-                          setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                    PÚBLICOS
+                  </button>
+
+                  {isAuth && (
+                    <button
+                      className={currentFilter === "my-visors" ? "active" : ""}
+                      onClick={() => handleChange("my-visors")}
+                    >
+                      PROPIOS
+                    </button>
+                  )}
+
+                  {groupList?.map(grupo => (
+                    <button
+                      key={grupo.id}
+                      className={currentFilter == grupo.id ? "active" : ""}
+                      onClick={() => handleChange(grupo.id)}
+                    >
+                      {grupo.name.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="viewer-filter-divider" />
+
+                <div className="viewer-role">
+                  {access !== PUBLIC_VISOR_ACCESS ? (
+                    <>
+                      Tu rol dentro del grupo es:{' '}
+                      {(access?.ga || access?.sa) ? "Administrador" :
+                        access?.editor ? "Editor" :
+                          access?.myvisors ? "Dueño" :
+                            "Lector"}
+                    </>
+                  ) : (
+                    "Listado de visores públicos"
+                  )}
+                </div>
+              </div>
+
+              <div className="viewer-modal-container">
+                <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
+                  <div className="background-overlay" />
+                  <div className="viewer-list">
+                    {viewers?.length === 0 && (
+                      <p className="no-viewers-message">No hay visores disponibles.</p>
+                    )}
+
+                    {!isLoading && viewers?.length > 0 && viewers?.map((visor) => (
+                      <div
+                        key={visor.id}
+                        className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
+                        onClick={async () => {
+                          if (selectedViewer?.id === visor.id) {
+                            setSelectedViewer(null);
+                            setShowDescriptionModal(false);
+                            return;
+                          }
                           try {
                             const visorCompleto = await getVisorById(visor.id);
                             setSelectedViewer(visorCompleto);
+                            setShowDescriptionModal(true);
                           } catch (error) {
                             showToast('No se pudo cargar el visor.', "error");
                           }
-                        }
-                      }}
-                    >
-                      <i className="fas fa-ellipsis-v"></i>
-                    </div>
+                        }}
+                      >
+                        <div
+                          className="viewer-context-button"
+                          onClick={async (e) => {
+                            if (contextMenuVisorId === visor.id) {
+                              closeContextMenu();
+                            } else {
+                              e.stopPropagation();
+                              setContextMenuVisorId(visor.id);
+                              setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                              try {
+                                const visorCompleto = await getVisorById(visor.id);
+                                setSelectedViewer(visorCompleto);
+                              } catch (error) {
+                                showToast('No se pudo cargar el visor.', "error");
+                              }
+                            }
+                          }}
+                        >
+                          <i className="fas fa-ellipsis-v"></i>
+                        </div>
 
-                    <img
-                      src={visor.img || '/assets/no-image.png'}
-                      alt="img"
-                      className="viewer-image"
-                    />
-                    <div className="viewer-info">
-                      <h3>{visor.name}</h3>
-                      <p>{visor.description}</p>
+                        <img
+                          src={visor.img || '/assets/no-image.png'}
+                          alt="img"
+                          className="viewer-image"
+                        />
+                        <div className="viewer-info">
+                          <h3>{visor.name}</h3>
+                          <p>{visor.description}</p>
+                          <p className="viewer-date">
+                            {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                            {visor.publico ? (
+                              <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
+                            ) : (
+                              <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+
+                  </div>
+                </div>
+                <div className="viewer-modal-actions">
+                  <div className="global-buttons">
+                    <button
+                      className="btn-common"
+                      onClick={() => {
+                        navigate('/form');
+                      }}>
+                      <i className="fa-solid fa-plus"></i>
+                      Crear
+                    </button>
+
+                    <label className="btn-common">
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={(e) => {
+                          handleUploadViewer(e);
+                        }}
+                        style={{ display: "none" }}
+                        title="Subir JSON"
+                      />
+                      <span className="icon">
+                        <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
+                      </span>
+                      Subir
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {showDescriptionModal && (
+                <div className="viewer-description">
+                  <div className="viewer-info-row">
+                    <div className="viewer-info-text">
+                      <h3>{selectedViewer.name}</h3>
+                      <p>{selectedViewer.description}</p>
                       <p className="viewer-date">
-                        {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                        {new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
                           day: 'numeric',
                           month: 'short',
                           year: 'numeric'
                         })}
-                        {visor.publico ? (
-                          <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
-                        ) : (
-                          <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
-                        )}
                       </p>
+                      <p className="viewer-privacy">
+                        {selectedViewer.publico ? 'Público' : 'Privado'}
+                      </p>
+                      <h3>Grupo: {selectedViewer.gname || 'Grupo: Sin grupo'}</h3>
                     </div>
+                    <img
+                      src={selectedViewer?.gimg || '/assets/no-image.png'}
+                      alt="Imagen del grupo"
+                      className="group-image-right"
+                    />
                   </div>
-                ))}
+                </div>
+              )}
 
-              </div>
+              <ConfirmDialog
+                isOpen={confirmVisible}
+                title={confirmData.title}
+                message={confirmData.message}
+                onConfirm={() => {
+                  confirmAction();
+                  setConfirmVisible(false);
+                }}
+                onCancel={() => setConfirmVisible(false)}
+              />
+
+              {showShareViewerModal && (
+                <div className="save-viewer-modal-overlay">
+                  <ShareViewerModal
+                    // editorMode={editorMode}
+                    // cloneMode={cloneMode}
+                    visor={selectedViewer}
+                    isOpen={showShareViewerModal}
+                    onClose={() => setShowShareViewerModal(false)}
+                  />
+                </div>
+              )}
+
             </div>
-            <div className="viewer-modal-actions">
-              <div className="global-buttons">
-                <button
-                  className="btn-common"
+          </div>
+
+          {contextMenuVisorId && (
+            <div
+              className="viewer-context-menu"
+              style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div>
+                {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
                   onClick={() => {
-                    navigate('/form');
-                  }}>
-                  <i className="fa-solid fa-plus"></i>
-                  Crear
+                    if (!selectedViewer) return;
+                    navigate('/form', { state: { viewer: selectedViewer, editorMode: true } });
+                  }}
+                  disabled={!selectedViewer}
+                >
+                  <i className="fa-solid fa-pen-to-square"></i>
+                  Editar
+                </button>}
+
+                {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
+                  onClick={publishVisor}
+                  title="Estado de Publicacion">
+                  <i className="fa-solid fa-bullhorn"></i>
+                  {selectedViewer?.publico ? "Despublicar" : "Publicar"}
+                </button>}
+
+                {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
+                  onClick={() => {
+                    setShowShareViewerModal(true);
+                    closeContextMenu();
+                  }} title="Compartir Visor">
+                  <i className="fa-solid fa-share"></i>
+                  Compartir
+                </button>}
+
+                <button
+                  className="btn-download"
+                  onClick={handleDownload}
+                  title="Descargar JSON">
+                  <i className="fa-solid fa-download"></i>
+                  Descargar
                 </button>
 
-                <label className="btn-common">
-                  <input
-                    type="file"
-                    accept=".json"
-                    onChange={(e) => {
-                      handleUploadViewer(e);
-                    }}
-                    style={{ display: "none" }}
-                    title="Subir JSON"
-                  />
-                  <span className="icon">
-                    <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-                  </span>
-                  Subir
-                </label>
-              </div>
-            </div>
-          </div>
+                {(access?.sa || access?.ga) && <button
+                  className="btn-delete"
+                  onClick={() =>
+                    pedirConfirmacion({
+                      title: "¿Estás seguro?",
+                      message: "Esto eliminará el visor.",
+                      onConfirm: () => {
+                        if (!selectedViewer) return;
+                        setConfirmVisible(false);
+                        handleDeleteVisor(selectedViewer);
+                      },
+                    })
+                  }
+                  disabled={!selectedViewer}
+                  title="Borrar Visor">
+                  <i className="fa-solid fa-trash-can"></i>
+                  Borrar
+                </button>}
 
-          {showDescriptionModal && (
-            <div className="viewer-description">
-              <div className="viewer-info-row">
-                <div className="viewer-info-text">
-                  <h3>{selectedViewer.name}</h3>
-                  <p>{selectedViewer.description}</p>
-                  <p className="viewer-date">
-                    {new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric'
-                    })}
-                  </p>
-                  <p className="viewer-privacy">
-                    {selectedViewer.publico ? 'Público' : 'Privado'}
-                  </p>
-                  <h3>Grupo: {selectedViewer.gname || 'Grupo: Sin grupo'}</h3>
-                </div>
-                <img
-                  src={selectedViewer?.gimg || '/assets/no-image.png'}
-                  alt="Imagen del grupo"
-                  className="group-image-right"
-                />
               </div>
             </div>
           )}
-
-          <ConfirmDialog
-            isOpen={confirmVisible}
-            title={confirmData.title}
-            message={confirmData.message}
-            onConfirm={() => {
-              confirmAction();
-              setConfirmVisible(false);
-            }}
-            onCancel={() => setConfirmVisible(false)}
-          />
-
-          {showShareViewerModal && (
-            <div className="save-viewer-modal-overlay">
-              <ShareViewerModal
-                // editorMode={editorMode}
-                // cloneMode={cloneMode}
-                visor={selectedViewer}
-                isOpen={showShareViewerModal}
-                onClose={() => setShowShareViewerModal(false)}
-              />
-            </div>
-          )}
-
-        </div>
-      </div>
-
-      {contextMenuVisorId && (
-        <div
-          className="viewer-context-menu"
-          style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div>
-            {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
-              onClick={() => {
-                if (!selectedViewer) return;
-                navigate('/form', { state: { viewer: selectedViewer, editorMode: true } });
-              }}
-              disabled={!selectedViewer}
-            >
-              <i className="fa-solid fa-pen-to-square"></i>
-              Editar
-            </button>}
-
-            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
-              onClick={publishVisor}
-              title="Estado de Publicacion">
-              <i className="fa-solid fa-bullhorn"></i>
-              {selectedViewer?.publico ? "Despublicar" : "Publicar"}
-            </button>}
-
-            {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
-              onClick={() => {
-                setShowShareViewerModal(true);
-                closeContextMenu();
-              }} title="Compartir Visor">
-              <i className="fa-solid fa-share"></i>
-              Compartir
-            </button>}
-
-            <button
-              className="btn-download"
-              onClick={handleDownload}
-              title="Descargar JSON">
-              <i className="fa-solid fa-download"></i>
-              Descargar
-            </button>
-
-            {(access?.sa || access?.ga) && <button
-              className="btn-delete"
-              onClick={() =>
-                pedirConfirmacion({
-                  title: "¿Estás seguro?",
-                  message: "Esto eliminará el visor.",
-                  onConfirm: () => {
-                    if (!selectedViewer) return;
-                    setConfirmVisible(false);
-                    handleDeleteVisor(selectedViewer);
-                  },
-                })
-              }
-              disabled={!selectedViewer}
-              title="Borrar Visor">
-              <i className="fa-solid fa-trash-can"></i>
-              Borrar
-            </button>}
-
-          </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
