@@ -93,7 +93,7 @@ function Navbar() {
             to="/visores"
             className={({ isActive }) => (isActive ? "active" : undefined)}
           >
-            <i className="fa-solid fa-house"></i> Visores
+            <i className="fa-solid fa-house"></i> Gestor
           </NavLink>
 
           {!isAuth ? (
