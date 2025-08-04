@@ -3,6 +3,8 @@ import Visor from "../models/Visor.js";
 import Result from "../utils/Result.js";
 import Group from '../models/Group.js';
 import User from '../models/User.js';
+import { validate } from 'uuid';
+
 import { config } from 'dotenv';
 
 class VisorService {
@@ -142,22 +144,61 @@ class VisorService {
     }
   }
 
-  deletevisor() {
+  createShareLink = async (uid, visorId, visorgid) => {
+    try {
+
+      const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
+
+      const isVisorOwner = !visorgid && await Visor.isOwner(visorId, uid);
+
+      if (!haveAccessToVisor && !isVisorOwner) {
+        return Result.fail("No tenés permisos para realizar esta accion");
+      }
+
+      const result = await Visor.getShareToken(visorId);
+
+      return result.length > 0
+        ? Result.success(result[0].sharetoken)
+        : Result.fail("No se ha podido generar el link");
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio")
+      return Result.fail("Error en la capa de servicio")
+    }
   }
 
   changePublicStatus = async (uid, visorid, visorgid = null) => {
     try {
       let result = []
 
-      const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid) );
+      const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
 
-      if (haveAccessToVisor){
+      if (haveAccessToVisor) {
         result = await Visor.changePublicStatus(visorid)
       }
 
       return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
     } catch (error) {
       console.log("VISORES: Error en la capa de Servicio")
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  getConfigByShareToken = async (shareToken) => {
+    try {
+      let config = null
+      if (validate(shareToken)) {
+
+
+
+        const visor = await Visor.getConfigIdByShareToken(shareToken)
+
+        if (visor) {
+          config = await Config.getConfigById(visor);
+        }
+      }
+      return config ? Result.success(config.json) : Result.fail("No se ha podido recuperar la configuracion del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio [getConfigByShareToken]")
       return Result.fail("Error en la capa de servicio")
     }
   }

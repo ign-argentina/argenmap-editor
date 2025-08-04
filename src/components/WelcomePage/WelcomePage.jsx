@@ -17,11 +17,10 @@ const WelcomePage = () => {
         <div className="welcome-screen-modal">
           <h2>BIENVENIDO AL EDITOR ARGENMAP</h2>
           <p>
-            Es una aplicación web desarrollada para crear y gestionar visores hechos con Argenmap.
+            Crea, edita y comparte visores basados en Argenmap.
           </p>
-          <p style={{ marginTop: '20px' }}>Para ver los visores, entre aquí:</p>
           <button className="welcome-page-button" onClick={() => navigate('/visores')}>
-            <i className="fa-solid fa-eye"></i> Visor Manager
+            <i className="fa-solid fa-eye"></i> COMENZAR
           </button>
         <div className="checkbox-container">
           <label className="checkbox-label">

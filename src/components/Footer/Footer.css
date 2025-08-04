@@ -12,3 +12,16 @@
   color: white;
   margin-right: 20px;
 }
+
+.release-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.release-version {
+  font-size: 1rem;
+  font-weight: normal; 
+  margin: 0;
+  color: white;
+}

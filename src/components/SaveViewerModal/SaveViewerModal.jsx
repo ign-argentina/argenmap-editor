@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
-import './SaveVisorModal.css';
-import { useUser } from '../../context/UserContext';
+import './SaveViewerModal.css';
+import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
 
-const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false }) => {
+const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig }) => {
 
   const [name, setName] = useState(editorMode ? visor?.name : "");
   const [description, setDescription] = useState(editorMode ? visor?.description : "");
@@ -16,7 +16,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
   const { showToast } = useToast()
-  const {checkAuth, isAuth} = useUser()
+  const { checkAuth, isAuth } = useUser()
   const navigate = useNavigate();
 
   const loadGroups = async () => {
@@ -94,42 +94,38 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
       setName('');
       setDescription('');
       setImageData(null);
+      sessionStorage.setItem("lastGroupPicked", `${selectedGroup}`);
       navigate('/');
     } else {
-      showToast("El visor debe ser asignado en una ubicación.", "error")
+      showToast("El visor debe ser asignado en un grupo.", "error")
     }
   };
 
   const saveVisor = async () => {
-    {
-      let res;
-      const currentJsonRaw = localStorage.getItem('visorMetadata');
-      const currentJsonParsed = currentJsonRaw ? JSON.parse(currentJsonRaw) : {};
-      const configOnly = currentJsonParsed.config;
-      if (!currentJsonRaw) {
-        showToast('No hay configuración para guardar.', "error");
-        return;
-      }
+    const config = getWorkingConfig()
+    if (!config) {
+      showToast('No hay configuración para guardar.', "error");
+      return;
+    }
+    let res;
+    if (editorMode && !cloneMode) {
+      res = await updateVisor(visor.id, visor.gid, name, description, visor.config.id, config, imageData)
+    } else {
+      res = await createVisor(selectedGroup, name, description, config, imageData, isPublic)
+    }
 
-      if (editorMode && !cloneMode) {
-        res = await updateVisor(visor.id, visor.gid, name, description, configOnly.id, configOnly.json, imageData)
-      } else {
-        res = await createVisor(selectedGroup, name, description, configOnly.json, imageData, isPublic)
-      }
-
-      if (res.success) {
-        showToast("Cargado con exito.", "success");
-      } else {
-        showToast("Ha ocurrido un error.", "error");
-      }
+    if (res.success) {
+      showToast("Cargado con exito.", "success");
+    } else {
+      showToast("Ha ocurrido un error.", "error");
     }
   }
 
   if (!isOpen) return null;
 
   return (
-    <div className="save-visor-modal-overlay">
-      <div className="save-visor-modal">
+    <div className="save-viewer-modal-overlay">
+      <div className="save-viewer-modal">
         <h3>{editorMode && !cloneMode ? "Guardar Cambios" : "Crear Nuevo Visor"}</h3>
         <span>{cloneMode ? "Crearás un nuevo visor para el grupo a partir de las mismas caracteristicas que este" : null}</span>
         <input
@@ -160,7 +156,7 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
             <input
               type="file"
               accept="image/png, image/jpeg"
-              onChange={handleImageUpload}            
+              onChange={handleImageUpload}
               style={{ display: 'none' }}
             />
           </label>
@@ -218,4 +214,4 @@ const SaveVisorModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode 
   );
 };
 
-export default SaveVisorModal;
+export default SaveViewerModal;

@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 3px;
   gap: 0.5rem;
   padding: 1rem;
   text-decoration: none;
@@ -35,14 +35,14 @@
 }
 
 .nav-button {
+  border: none;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: none;
-  border-radius: 8px;
+  border-radius: 3px;
   gap: 0.5rem;
   padding: 1rem;
-  cursor: pointer;
   text-decoration: none;
   color: white;
   background-color: var(--secondary--color);
@@ -55,12 +55,12 @@
   color: var(--active--color);
 }
 
-.profile-button{
-    background-color: var(--active--color);
+.profile-button {
+  background-color: var(--active--color);
 }
 
-.profile-button:hover{
- color: var(--primary--color);
+.profile-button:hover {
+  color: var(--primary--color);
 }
 
 .navbar-dropdown {

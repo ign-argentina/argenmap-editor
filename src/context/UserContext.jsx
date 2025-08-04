@@ -5,59 +5,74 @@ import { userLogout, userLogin, userCheckAuth } from '../api/configApi';
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
   const [isAuth, setAuth] = useState(false);
-  const [groupAdmin, setGroupAdmin] = useState(false)
-  const [superAdmin, setSuperAdmin] = useState(false)
+  const [groupAdmin, setGroupAdmin] = useState(false);
+  const [superAdmin, setSuperAdmin] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true); // loading flag
 
-  //Para evitar parpadeos o malas renderizaciones.
-  const [loadingUser, setLoadingUser] = useState(true);
-
-  const { showToast } = useToast()
+  const { showToast } = useToast();
 
   const login = async (email, password) => {
-    setLoadingUser(true);
+    setIsAuthLoading(true);
     try {
-      const res = await userLogin(email, password)
+      const res = await userLogin(email, password);
       const userData = res.data;
-      updateAuth(true, userData.isag, userData.isa)
-      updateUser(userData)
-      checkAuth();
-      showToast(`Hola ${res.data.name}`, "success");
+      updateAuth(true, userData.isag, userData.isa);
+      updateUser(userData);
+      showToast(`Hola ${userData.name}`, "success");
       return res.status;
     } catch (error) {
       console.error('Error en login:', error.response?.data || error.message);
-      removeUser()
+      removeUser();
+      throw error;
     } finally {
-      setLoadingUser(false)
+      setIsAuthLoading(false);
     }
   };
 
   const logout = async () => {
-    await userLogout()
+    try {
+      await userLogout();
+    } catch (err) {
+      console.warn("Error al cerrar sesión en el backend", err);
+    }
     removeUser();
     showToast(`Has cerrado sesión`, "success");
   };
 
   const checkAuth = async () => {
-    setLoadingUser(true);
-
+    setIsAuthLoading(true);
     try {
-      const res = await userCheckAuth()
-      const authFlags = res.data;
-      updateAuth(true, authFlags.isag, authFlags.isa)
+      const res = await userCheckAuth();
+      if (res.data) {
+        const storedUser = localStorage.getItem('user');
+        
+        // Si tenemos una auth valida
+        updateAuth(true, res.data.isag, res.data.isa);
+        
+        // Si no esta guardado en el store o la auth falló, forzamos un relogueo
+        if (!storedUser) {
+          setAuth(false);
+          return;
+        }
+
+        // Mantenemos los datos de usuario todo el tiempo que la auth sea valida
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+      } else {
+        removeUser();
+      }
     } catch (error) {
-      removeUser()
+      // Si ocurre algun error, no removemos el usuario si ya tenemos algo guardado (Por esto fallaba antes)
+      const storedUser = localStorage.getItem('user');
+      if (error.response?.status === 401 || !storedUser) {
+        removeUser();
+      }
     } finally {
-      setLoadingUser(false);
+      setIsAuthLoading(false);
     }
   };
-
-  useEffect(() => {
-    updateUser();
-    checkAuth();
-  }, []);
 
   const updateUser = (userData = null) => {
     if (userData) {
@@ -71,27 +86,58 @@ export const UserProvider = ({ children }) => {
         setUser(null);
       }
     }
-  }
+  };
 
   const removeUser = () => {
     setAuth(false);
     setGroupAdmin(false);
     setSuperAdmin(false);
     localStorage.removeItem('user');
-    setUser(null)
-  }
+    sessionStorage.removeItem("lastGroupPicked") // Por s desloguea desde visormanager
+    setUser(null);
+  };
 
   const updateAuth = (auth, isAdminGroup, isSuperAdmin) => {
-    setAuth(auth)
+    setAuth(auth);
     setGroupAdmin(isAdminGroup);
     setSuperAdmin(isSuperAdmin);
-  }
+  };
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      // Al entrar, primero tratamos de restaurar desde el localstorage
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+      }
+      // Despues validamos con el back
+      await checkAuth();
+    };
+    
+    initializeUser();
+  }, []);
 
   return (
-    <UserContext.Provider value={{ isAuth, login, logout, setGroupAdmin, setSuperAdmin, groupAdmin, superAdmin, loadingUser, checkAuth, user, updateUser }}>
+    <UserContext.Provider
+      value={{
+        user,
+        isAuth,
+        login,
+        logout,
+        groupAdmin,
+        superAdmin,
+        isAuthLoading,
+        isAuthLoaded: !isAuthLoading,
+        checkAuth,
+        updateUser,
+        setGroupAdmin,
+        setSuperAdmin
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
-}
+};
 
-export const useUser = () => useContext(UserContext); // Hook
+export const useUser = () => useContext(UserContext);

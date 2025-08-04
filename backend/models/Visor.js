@@ -6,7 +6,16 @@ const UPDATE_PUBLIC_STATUS = 'UPDATE visores SET publico = NOT publico WHERE id 
 const IS_VISOR_OWNER = 'SELECT EXISTS (SELECT 1 FROM visores WHERE uid = $2 and id = $1)'
 const SELECT_ALL_VISORS = `SELECT * FROM visores`;
 
-const SELECT_VISOR_BY_ID = `SELECT * FROM visores WHERE id = $1`;
+const SELECT_VISOR_BY_ID = `
+SELECT 
+  v.*, 
+  g.name AS gName, 
+  g.img AS gImg
+FROM visores v
+LEFT JOIN grupos g ON v.gid = g.id
+WHERE v.id = $1
+  AND v.deleted = false
+`;
 
 const SELECT_PUBLIC_VISORS = `
   SELECT * FROM visores
@@ -26,10 +35,9 @@ const SELECT_GROUP_VISORS = `
   SELECT * FROM visores 
   WHERE gid = $1 AND deleted = false`;
 
-/* const SELECT_GROUP_VISORS = `
-  SELECT v.* FROM visores v
-  JOIN usuarios_por_grupo upg ON v.gid = upg.grupoId
-  WHERE upg.usuarioId = $1 AND v.deleted = false`; */
+const GET_SHARE_TOKEN = `SELECT sharetoken FROM visores WHERE id = $1`
+
+const GET_BY_SHARE_TOKEN = `SELECT cid FROM visores WHERE sharetoken = $1`
 
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
@@ -120,6 +128,21 @@ class Visor extends BaseModel {
     const result = await super.runQuery(UPDATE_PUBLIC_STATUS, [id])
     return result;
   }
+
+  static getShareToken = async (id) => {
+    const result = await super.runQuery(GET_SHARE_TOKEN, [id])
+    return result
+  }
+
+  static getConfigIdByShareToken = async (shareToken) => {
+    try {
+      const result = await super.runQuery(GET_BY_SHARE_TOKEN, [shareToken]);
+      return result?.[0].cid || null;
+    } catch (err) {
+      console.error("Error en Visor.getConfigIdByShareToken:", err);
+      throw err; // O podés devolver null
+    }
+  };
 }
 
 export default Visor

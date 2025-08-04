@@ -1,6 +1,5 @@
 {
   "mapConfig": {
-    "sectionIcon": "fa-solid fa-map",
     "center": {
       "latitude": -40,
       "longitude": -59
@@ -14,14 +13,14 @@
   "metaTags": {
     "description": "Visor de mapas desarrollado por el Instituto Geográfico Nacional",
     "image": "/src/styles/images/argenmap.png",
-    "title": ""
+    "title": "IGN - Argenmap"
   },
-  "title": "",
+  "title": "IGN - Argenmap",
   "website": "https://www.ign.gob.ar/",
   "logo": {
-    "title": "",
-    "link": "",
-    "src": ""
+    "title": "Instituto Geográfico Nacional",
+    "link": "https://www.ign.gob.ar/",
+    "src": "https://static.ign.gob.ar/img/logo/Logo-MinDef-IGN-Visores.svg"
   },
   "plugins": {},
   "basemap": [
@@ -132,11 +131,25 @@
   ],
   "layers": [
     {
-      "type": "",
-      "peso": 0,
-      "nombre": "",
-      "short_abstract": "",
-      "host": ""
+      "type": "wms",
+      "peso": 20,
+      "nombre": "Servido",
+      "short_abstract": "Infraestructura de Datos Espaciales de la Provincia de Catamarca",
+      "host": "https://nodoide.catamarca.gob.ar/geoserver/fme/wms"
+    },
+    {
+      "type": "wms",
+      "peso": 30,
+      "nombre": "Desde",
+      "short_abstract": "Ministerio de Transporte de la Nación Argentina",
+      "host": "https://sigvial.vialidad.gob.ar/geoserver/dnv/wms"
+    },
+        {
+      "type": "wms",
+      "peso": 30,
+      "nombre": "El editor",
+      "short_abstract": "Ministerio de Transporte de la Nación Argentina",
+      "host": "https://sigvial.vialidad.gob.ar/geoserver/dnv/wms"
     }
   ]
 }

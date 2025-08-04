@@ -12,18 +12,23 @@ function Navbar() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
-  const { isAuth, superAdmin, groupAdmin, logout, loadingUser, checkAuth, user } = useUser();
+  const { isAuth, superAdmin, groupAdmin, logout, checkAuth, user, isAuthLoading } = useUser();
 
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const { showToast } = useToast()
 
   useEffect(() => {
-    checkAuth();
-  }, [isAuth]);
+    const initAuth = async () => {
+      await checkAuth();
+      setIsReady(true);
+    };
+    initAuth();
+  }, []);
 
-  useEffect(() => {
+  useEffect(() => {    
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
@@ -48,7 +53,7 @@ function Navbar() {
     setShowRegisterModal(false);
   };
 
-  if (loadingUser) return null;
+  if (isAuthLoading || !isReady || (isAuth && !user)) return null
 
   return (
     <header>
@@ -88,7 +93,7 @@ function Navbar() {
             to="/visores"
             className={({ isActive }) => (isActive ? "active" : undefined)}
           >
-            <i className="fa-solid fa-house"></i> Visores
+            <i className="fa-solid fa-house"></i> Gestor
           </NavLink>
 
           {!isAuth ? (
