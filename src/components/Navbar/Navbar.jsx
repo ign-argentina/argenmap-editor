@@ -12,6 +12,7 @@ function Navbar() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const { isAuth, superAdmin, groupAdmin, logout, checkAuth, user, isAuthLoading } = useUser();
 
@@ -20,8 +21,12 @@ function Navbar() {
   const { showToast } = useToast()
 
   useEffect(() => {
-    checkAuth();
-  }, [isAuth]);
+    const initAuth = async () => {
+      await checkAuth();
+      setIsReady(true);
+    };
+    initAuth();
+  }, []);
 
   useEffect(() => {    
     const handleClickOutside = (event) => {
@@ -48,7 +53,7 @@ function Navbar() {
     setShowRegisterModal(false);
   };
 
-  if (isAuthLoading) return null
+  if (isAuthLoading || !isReady || (isAuth && !user)) return null
 
   return (
     <header>
