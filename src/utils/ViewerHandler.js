@@ -33,7 +33,8 @@ export const downloadViewer = (viewer, baseViewer = null, name = null) => {
  * @returns {Object} - Objeto resultante con claves restauradas y ordenadas.
  */
 export const mergeViewer = (viewer, baseViewer) => {
-  return orderObjectByReference(ensureFieldsExist(viewer, baseViewer), baseViewer)
+    return deepMergeWithDefaults(viewer, baseViewer)
+/*   return orderObjectByReference(deepMergeWithDefaults(viewer, baseViewer), baseViewer) */
 }
 
 /**
@@ -71,8 +72,32 @@ const ensureFieldsExist = (obj, reference) => {
  */
 const orderObjectByReference = (obj, reference) => {
   if (typeof obj !== 'object' || obj === null) return obj;
-  if (Array.isArray(obj)) return obj.map(item => orderObjectByReference(item, reference));
 
+  if (Array.isArray(reference)) {
+    // Si obj no es array, retorna el array base (reference)
+    if (!Array.isArray(obj)) return reference;
+
+    // Para cada elemento en reference, mergear con obj correspondiente o crear default
+    const maxLength = Math.max(obj.length, reference.length);
+    const result = [];
+
+    for (let i = 0; i < maxLength; i++) {
+      if (i < obj.length && i < reference.length) {
+        // Ordenar recursivamente el elemento i
+        result[i] = orderObjectByReference(obj[i], reference[i]);
+      } else if (i < reference.length) {
+        // Agregar el elemento base faltante
+        result[i] = reference[i];
+      } else if (i < obj.length) {
+        // Si obj tiene más elementos que referencia, agregarlos tal cual
+        result[i] = obj[i];
+      }
+    }
+
+    return result;
+  }
+
+  // Si es objeto normal
   const ordered = {};
   for (const key of Object.keys(reference)) {
     if (key in obj) {
@@ -83,6 +108,7 @@ const orderObjectByReference = (obj, reference) => {
   }
   return ordered;
 };
+
 
 /**
  * Genera una cadena de fecha y hora en formato seguro para nombre de archivo.
@@ -120,3 +146,56 @@ const download = (file, fileName, date = "") => {
   link.click();
   document.body.removeChild(link);
 };
+
+function getEmptyValue(defaultVal) {
+  if (Array.isArray(defaultVal)) return [];
+  if (typeof defaultVal === 'object' && defaultVal !== null) {
+    const emptyObj = {};
+    for (const key in defaultVal) {
+      emptyObj[key] = getEmptyValue(defaultVal[key]);
+    }
+    return emptyObj;
+  }
+  if (typeof defaultVal === 'string') return '';
+  if (typeof defaultVal === 'number') return 0;
+  if (typeof defaultVal === 'boolean') return false;
+  return null;
+}
+
+function deepMergeWithDefaults (userConfig, defaultConfig) {
+  // Si default es array:
+  if (Array.isArray(defaultConfig)) {
+    // Si usuario NO envía array, devolver array vacío
+    if (!Array.isArray(userConfig)) return [];
+    // Usuario envía array, devolverlo tal cual
+    return userConfig;
+  }
+
+  // Si default es objeto:
+  if (typeof defaultConfig === 'object' && defaultConfig !== null) {
+    const result = {};
+    const keys = new Set([
+      ...Object.keys(defaultConfig),
+      ...Object.keys(userConfig || {})
+    ]);
+    for (const key of keys) {
+      const defVal = defaultConfig[key];
+      const usrVal = userConfig ? userConfig[key] : undefined;
+
+      if (usrVal === undefined) {
+        result[key] = getEmptyValue(defVal);
+      } else {
+        result[key] = deepMergeWithDefaults (usrVal, defVal);
+      }
+    }
+    return result;
+  }
+
+  // Para valores primitivos
+  return userConfig !== undefined ? userConfig : getEmptyValue(defaultConfig);
+}
+
+const ordenar = (actual, base) => {
+
+  
+}

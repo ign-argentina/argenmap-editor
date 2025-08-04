@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
-import './ShareViewerModal.css';
 import { useUser } from '../../context/UserContext';
 import { createShareLink } from '../../api/configApi.js';
 import currentVisor from '../../api/visorApi.js';
+import { useToast } from '../../context/ToastContext.jsx';
+import './ShareViewerModal.css';
 
 const ShareViewerModal = ({ isOpen, onClose, visor }) => {
   const { isAuth } = useUser();
@@ -10,6 +11,7 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
   const [iframeCode, setIframeCode] = useState('');
   const linkRef = useRef(null);
   const iframeRef = useRef(null);
+  const { showToast } = useToast()
 
   useEffect(() => {
     const fetchUrl = async () => {
@@ -46,6 +48,7 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
 
     if (text) {
       navigator.clipboard.writeText(text.trim());
+      showToast('Link Copiado!', "info", 1000);
     }
   };
 

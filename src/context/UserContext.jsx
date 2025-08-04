@@ -45,10 +45,30 @@ export const UserProvider = ({ children }) => {
     setIsAuthLoading(true);
     try {
       const res = await userCheckAuth();
-      const authFlags = res.data;
-      updateAuth(true, authFlags.isag, authFlags.isa);
+      if (res.data) {
+        const storedUser = localStorage.getItem('user');
+        
+        // Si tenemos una auth valida
+        updateAuth(true, res.data.isag, res.data.isa);
+        
+        // Si no esta guardado en el store o la auth falló, forzamos un relogueo
+        if (!storedUser) {
+          setAuth(false);
+          return;
+        }
+
+        // Mantenemos los datos de usuario todo el tiempo que la auth sea valida
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+      } else {
+        removeUser();
+      }
     } catch (error) {
-      removeUser();
+      // Si ocurre algun error, no removemos el usuario si ya tenemos algo guardado (Por esto fallaba antes)
+      const storedUser = localStorage.getItem('user');
+      if (error.response?.status === 401 || !storedUser) {
+        removeUser();
+      }
     } finally {
       setIsAuthLoading(false);
     }
@@ -84,8 +104,18 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    updateUser();
-    checkAuth();
+    const initializeUser = async () => {
+      // Al entrar, primero tratamos de restaurar desde el localstorage
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+      }
+      // Despues validamos con el back
+      await checkAuth();
+    };
+    
+    initializeUser();
   }, []);
 
   return (
