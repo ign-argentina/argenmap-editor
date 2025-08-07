@@ -54,7 +54,6 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
       }
 
       const data = await response.json();
-      console.log(data)  
       setImageData(data.img);
       showToast("Imagen capturada correctamente.", "success");
 
