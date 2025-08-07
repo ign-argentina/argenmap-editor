@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 import './SaveViewerModal.css';
 import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
@@ -38,16 +38,48 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
     loadGroups()
   }, []);
 
-  const captureIframeImage = async () => {
-    const iframe = document.querySelector('iframe');
+  // const captureIframeImage = async () => {
+  //   const iframe = document.querySelector('iframe');
+  //   try {
+  //     const canvas = await html2canvas(iframe.contentDocument.body);
+  //     const image = canvas.toDataURL('image/png');
+  //     setImageData(image);
+  //     showToast('Imagen capturada correctamente.', "success");
+  //   } catch (err) {
+  //     showToast('No se pudo capturar la imagen del visor.', "error");
+  //     console.error(err);
+  //   }
+  // };
+
+  const captureViewerImage = async () => {
+    const config = getWorkingConfig();
+
     try {
-      const canvas = await html2canvas(iframe.contentDocument.body);
-      const image = canvas.toDataURL('image/png');
-      setImageData(image);
-      showToast('Imagen capturada correctamente.', "success");
+      const response = await fetch('http://172.20.202.88:4000/kharta/custom', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: { config: config }
+      });
+
+      if (!response.ok) {
+        throw new Error("No se pudo generar la imagen");
+      }
+
+      // const blob = await response.blob();
+
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+        console.log(response)
+        setImageData(response.img);
+        showToast("Imagen capturada correctamente.", "success");
+      // };
+      // reader.readAsDataURL(blob);
+
     } catch (err) {
-      showToast('No se pudo capturar la imagen del visor.', "error");
-      console.error(err);
+      console.error("Error al capturar imagen:", err);
+      showToast("Error al capturar imagen del visor.", "error");
     }
   };
 
@@ -147,7 +179,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
         </div>
 
         {imageData == null ? <div className="image-options">
-          <button onClick={captureIframeImage}>
+          <button onClick={captureViewerImage}>
             Capturar imagen del visor
           </button>
 
