@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+/* app.use(cors({ origin: 'http://localhost:5173' })); // 👈 permitir tu frontend */
 app.use(cors());
 
 
@@ -97,7 +98,7 @@ app.post('/kharta/custom', async (req, res) => {
     let html = await fs.readFile(indexPath, 'utf-8');
 
     const defaultConfig = await fs.readFile(defaultConfigPath, 'utf-8');
-    const configInyectada = config ? JSON.parse(config) : JSON.parse(defaultConfig);
+    const configInyectada = config ? config : JSON.parse(defaultConfig);
     const scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`;
 
     // Inject the configuration and adjust asset paths
@@ -152,7 +153,7 @@ app.post('/kharta/custom', async (req, res) => {
 
     // Set response headers and send image
     const imageBase64 = screenshotBuffer.toString('base64');
-    res.send({ img: imageBase64 });
+    res.status(200).send({ img: imageBase64 });
 
   } catch (error) {
     console.error('Error generating image:', error);

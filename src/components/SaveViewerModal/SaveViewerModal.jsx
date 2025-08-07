@@ -55,25 +55,26 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
     const config = getWorkingConfig();
 
     try {
-      const response = await fetch('http://172.20.202.88:4000/kharta/custom', {
+      const response = await fetch('http://localhost:4000/kharta/custom', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: { config: config }
+        body: JSON.stringify({ config: config })
       });
 
       if (!response.ok) {
         throw new Error("No se pudo generar la imagen");
       }
 
+      const data = await response.json();
       // const blob = await response.blob();
 
       // const reader = new FileReader();
       // reader.onloadend = () => {
-        console.log(response)
-        setImageData(response.img);
-        showToast("Imagen capturada correctamente.", "success");
+      console.log(data)
+      setImageData(data.img);
+      showToast("Imagen capturada correctamente.", "success");
       // };
       // reader.readAsDataURL(blob);
 
