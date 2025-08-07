@@ -91,7 +91,7 @@ app.post('/kharta/custom', async (req, res) => {
   try {
     const defaultConfigPath = path.join(__dirname, 'statics/map-config.json');
     const indexPath = path.join(__dirname, 'public/kharta/index.html');
-    
+
     // Read the configuration from request body or use default
     const config = req.body.config;
     let html = await fs.readFile(indexPath, 'utf-8');
@@ -105,18 +105,19 @@ app.post('/kharta/custom', async (req, res) => {
     html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
 
     // Launch browser for screenshot
-    console.log('Launching browser...');
+    /*     console.log('Launching browser...'); */
     browser = await puppeteer.launch({
       headless: "new",
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     });
-    
+
     const page = await browser.newPage();
-    
-    // Listen for console messages
-    page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-    page.on('error', err => console.log('PAGE ERROR:', err));
-    
+
+    /*     // Listen for console messages
+        page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+        page.on('error', err => console.log('PAGE ERROR:', err));
+         */
+
     // Set viewport
     await page.setViewport({
       width: 1920,
@@ -142,16 +143,16 @@ app.post('/kharta/custom', async (req, res) => {
     }));
 
     // Take the screenshot
-    console.log('Taking screenshot...');
-    const screenshotBuffer = await page.screenshot({ 
+    /*    console.log('Taking screenshot...'); */
+    const screenshotBuffer = await page.screenshot({
       type: 'png',
       fullPage: true,
       encoding: 'binary'
     });
 
     // Set response headers and send image
-    res.setHeader('Content-Type', 'image/png');
-    res.send(screenshotBuffer);
+    const imageBase64 = screenshotBuffer.toString('base64');
+    res.send({ img: imageBase64 });
 
   } catch (error) {
     console.error('Error generating image:', error);
