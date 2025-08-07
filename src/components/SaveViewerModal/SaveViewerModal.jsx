@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import html2canvas from 'html2canvas';
 import './SaveViewerModal.css';
 import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
@@ -38,19 +37,6 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
     loadGroups()
   }, []);
 
-  // const captureIframeImage = async () => {
-  //   const iframe = document.querySelector('iframe');
-  //   try {
-  //     const canvas = await html2canvas(iframe.contentDocument.body);
-  //     const image = canvas.toDataURL('image/png');
-  //     setImageData(image);
-  //     showToast('Imagen capturada correctamente.', "success");
-  //   } catch (err) {
-  //     showToast('No se pudo capturar la imagen del visor.', "error");
-  //     console.error(err);
-  //   }
-  // };
-
   const captureViewerImage = async () => {
     const config = getWorkingConfig();
 
@@ -68,15 +54,9 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
       }
 
       const data = await response.json();
-      // const blob = await response.blob();
-
-      // const reader = new FileReader();
-      // reader.onloadend = () => {
-      console.log(data)
+      console.log(data)  
       setImageData(data.img);
       showToast("Imagen capturada correctamente.", "success");
-      // };
-      // reader.readAsDataURL(blob);
 
     } catch (err) {
       console.error("Error al capturar imagen:", err);

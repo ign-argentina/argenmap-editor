@@ -14,6 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 /* app.use(cors({ origin: 'http://localhost:5173' })); // 👈 permitir tu frontend */
 app.use(cors());
@@ -106,24 +107,17 @@ app.post('/kharta/custom', async (req, res) => {
     html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
 
     // Launch browser for screenshot
-    /*     console.log('Launching browser...'); */
     browser = await puppeteer.launch({
       headless: "new",
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     });
 
     const page = await browser.newPage();
-
-    /*     // Listen for console messages
-        page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-        page.on('error', err => console.log('PAGE ERROR:', err));
-         */
-
     // Set viewport
     await page.setViewport({
       width: 1920,
       height: 1080,
-      deviceScaleFactor: 1,
+      deviceScaleFactor: 0.5,
     });
 
     // Serve the HTML through a temporary route
@@ -144,15 +138,14 @@ app.post('/kharta/custom', async (req, res) => {
     }));
 
     // Take the screenshot
-    /*    console.log('Taking screenshot...'); */
     const screenshotBuffer = await page.screenshot({
-      type: 'png',
-      fullPage: true,
+      type: 'jpeg',
+      fullPage: false,
       encoding: 'binary'
     });
 
     // Set response headers and send image
-    const imageBase64 = screenshotBuffer.toString('base64');
+    const imageBase64 = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
     res.status(200).send({ img: imageBase64 });
 
   } catch (error) {
