@@ -284,6 +284,7 @@ const ViewerManager = () => {
                       >
                         <div
                           className="viewer-context-button"
+                          title="Más opciones"
                           onClick={async (e) => {
                             if (contextMenuVisorId === visor.id) {
                               closeContextMenu();
@@ -334,6 +335,7 @@ const ViewerManager = () => {
                 <div className="global-buttons">
                   <button
                     className="btn-common"
+                    title="Crear nuevo visor"
                     onClick={() => {
                       navigate('/form');
                     }}>
