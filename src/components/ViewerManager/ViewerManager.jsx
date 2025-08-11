@@ -255,79 +255,78 @@ const ViewerManager = () => {
               <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
                 <div className="background-overlay" />
                 <div className="viewer-list">
-                  {isLoading && (
+                  {isLoading ? (
                     <div className="loading-message">
                       <span className="spinner" />
                       <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
                     </div>
-                  )}
-   {/*                {viewers?.length === 0 && (
+                  ) : viewers?.length === 0 ? (
                     <p className="no-viewers-message">No hay visores disponibles.</p>
-                  )} */}
-
-                  {!isLoading && viewers?.length > 0 && viewers?.map((visor) => (
-                    <div
-                      key={visor.id}
-                      className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
-                      onClick={async () => {
-                        if (selectedViewer?.id === visor.id) {
-                          setSelectedViewer(null);
-                          setShowDescriptionModal(false);
-                          return;
-                        }
-                        try {
-                          const visorCompleto = await getVisorById(visor.id);
-                          setSelectedViewer(visorCompleto);
-                          setShowDescriptionModal(true);
-                        } catch (error) {
-                          showToast('No se pudo cargar el visor.', "error");
-                        }
-                      }}
-                    >
+                  ) : (
+                    viewers.map((visor) => (
                       <div
-                        className="viewer-context-button"
-                        onClick={async (e) => {
-                          if (contextMenuVisorId === visor.id) {
-                            closeContextMenu();
-                          } else {
-                            e.stopPropagation();
-                            setContextMenuVisorId(visor.id);
-                            setContextMenuPosition({ x: e.clientX, y: e.clientY });
-                            try {
-                              const visorCompleto = await getVisorById(visor.id);
-                              setSelectedViewer(visorCompleto);
-                            } catch (error) {
-                              showToast('No se pudo cargar el visor.', "error");
-                            }
+                        key={visor.id}
+                        className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
+                        onClick={async () => {
+                          if (selectedViewer?.id === visor.id) {
+                            setSelectedViewer(null);
+                            setShowDescriptionModal(false);
+                            return;
+                          }
+                          try {
+                            const visorCompleto = await getVisorById(visor.id);
+                            setSelectedViewer(visorCompleto);
+                            setShowDescriptionModal(true);
+                          } catch (error) {
+                            showToast('No se pudo cargar el visor.', "error");
                           }
                         }}
                       >
-                        <i className="fas fa-ellipsis-v"></i>
-                      </div>
+                        <div
+                          className="viewer-context-button"
+                          onClick={async (e) => {
+                            if (contextMenuVisorId === visor.id) {
+                              closeContextMenu();
+                            } else {
+                              e.stopPropagation();
+                              setContextMenuVisorId(visor.id);
+                              setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                              try {
+                                const visorCompleto = await getVisorById(visor.id);
+                                setSelectedViewer(visorCompleto);
+                              } catch (error) {
+                                showToast('No se pudo cargar el visor.', "error");
+                              }
+                            }
+                          }}
+                        >
+                          <i className="fas fa-ellipsis-v"></i>
+                        </div>
 
-                      <img
-                        src={visor.img || '/assets/no-image.png'}
-                        alt="img"
-                        className="viewer-image"
-                      />
-                      <div className="viewer-info">
-                        <h3>{visor.name}</h3>
-                        <p>{visor.description}</p>
-                        <p className="viewer-date">
-                          {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                          })}
-                          {visor.publico ? (
-                            <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
-                          ) : (
-                            <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
-                          )}
-                        </p>
+                        <img
+                          src={visor.img || '/assets/no-image.png'}
+                          alt="img"
+                          className="viewer-image"
+                        />
+                        <div className="viewer-info">
+                          <h3>{visor.name}</h3>
+                          <p>{visor.description}</p>
+                          <p className="viewer-date">
+                            {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                            {visor.publico ? (
+                              <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
+                            ) : (
+                              <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
+                            )}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
 
                 </div>
               </div>
