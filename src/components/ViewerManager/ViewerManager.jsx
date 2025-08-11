@@ -260,7 +260,7 @@ const ViewerManager = () => {
                       <span className="spinner" />
                       <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
                     </div>
-                  ) : viewers?.length === 0 ? (
+                  ) : !Array.isArray(viewers) || viewers.length === 0 ? (
                     <p className="no-viewers-message">No hay visores disponibles.</p>
                   ) : (
                     viewers.map((visor) => (
