@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas';
 import './SaveViewerModal.css';
 import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
@@ -11,7 +10,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
   const [name, setName] = useState(editorMode ? visor?.name : "");
   const [description, setDescription] = useState(editorMode ? visor?.description : "");
   const [imageData, setImageData] = useState(editorMode ? visor?.img : null)
-
+  const [isCapturing, setIsCapturing] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(editorMode ? visor?.gid : 'no-group')
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
@@ -38,16 +37,33 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
     loadGroups()
   }, []);
 
-  const captureIframeImage = async () => {
-    const iframe = document.querySelector('iframe');
+  const captureViewerImage = async () => {
+    const config = getWorkingConfig();
+
+    setIsCapturing(true);
+
     try {
-      const canvas = await html2canvas(iframe.contentDocument.body);
-      const image = canvas.toDataURL('image/png');
-      setImageData(image);
-      showToast('Imagen capturada correctamente.', "success");
+      const response = await fetch('http://localhost:4000/kharta/custom', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ config: config })
+      });
+
+      if (!response.ok) {
+        throw new Error("No se pudo generar la imagen");
+      }
+
+      const data = await response.json();
+      setImageData(data.img);
+      showToast("Imagen capturada correctamente.", "success");
+
     } catch (err) {
-      showToast('No se pudo capturar la imagen del visor.', "error");
-      console.error(err);
+      console.error("Error al capturar imagen:", err);
+      showToast("Error al capturar imagen del visor.", "error");
+    } finally {
+      setIsCapturing(false);
     }
   };
 
@@ -55,7 +71,6 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
     const file = e.target.files[0];
     if (!file) return;
 
-    // ✅ Validar el tipo de archivo
     const validTypes = ['image/jpeg', 'image/png'];
     if (!validTypes.includes(file.type)) {
       showToast('Solo se permiten imágenes JPG o PNG.', "error");
@@ -73,7 +88,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
         canvas.height = img.height * scale;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        const resizedImage = canvas.toDataURL(file.type); // Usa el tipo original (jpg o png)
+        const resizedImage = canvas.toDataURL(file.type);
         setImageData(resizedImage);
         showToast('Imagen subida correctamente', "success");
       };
@@ -146,22 +161,34 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
           {description.length}/255
         </div>
 
-        {imageData == null ? <div className="image-options">
-          <button onClick={captureIframeImage}>
-            Capturar imagen del visor
-          </button>
+        {imageData == null ? (
+          <div className="image-options">
+            {!isCapturing && (
+              <button onClick={captureViewerImage}>
+                Capturar imagen del visor
+              </button>
+            )}
 
-          <label className={`upload-image-from-pc`}>
-            Subir imagen desde PC
-            <input
-              type="file"
-              accept="image/png, image/jpeg"
-              onChange={handleImageUpload}
-              style={{ display: 'none' }}
-            />
-          </label>
-        </div> : <button onClick={() => setImageData(null)}>Limpiar imagen</button>
-        }
+            <label className="upload-image-from-pc">
+              Subir imagen desde PC
+              <input
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleImageUpload}
+                style={{ display: 'none' }}
+              />
+            </label>
+          </div>
+        ) : (
+          <button onClick={() => setImageData(null)}>Limpiar imagen</button>
+        )}
+
+        {isCapturing && (
+          <div className="loading-indicator">
+            <div className="spinner" />
+            <span>Generando imagen...</span>
+          </div>
+        )}
 
         {imageData && (
           <img
@@ -205,7 +232,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
             )}
           </div> : null}
         <div className="modal-buttons">
-          <button className="save" onClick={handleSubmit}>Guardar</button>
+          <button className="save" onClick={handleSubmit} disabled={isCapturing}>Guardar</button>
           <button className="cancel" onClick={onClose}>Cancelar</button>
         </div>
 
