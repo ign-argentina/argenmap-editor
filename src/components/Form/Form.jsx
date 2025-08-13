@@ -16,6 +16,7 @@ import FilterEmptySections from '../../utils/FilterEmptySections';
 import TranslateSchema from '../../utils/TranslateSchema';
 import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
 import { khartaSchema } from '../../static/formSchemas/khartaSchema';
+import { argenmapSchema } from '../../static/formSchemas/argenmapSchema';
 
 
 function Form() {
@@ -50,7 +51,7 @@ function Form() {
       });
     } else {
       translatedSchema = TranslateSchema({
-        schema: khartaSchema,
+        schema: argenmapSchema,
         translations: language[selectedLang] || language['default'],
         defaultTranslations: language['default'] || {},
       });

@@ -1,0 +1,129 @@
+.argenmap-form-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+
+.argenmap-form h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.argenmap-form label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.argenmap-form input,
+.argenmap-form select {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.item-block {
+  border: 1px solid #bbb;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  background: white;
+  position: relative;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: #c0392b;
+  font-weight: 700;
+  font-size: 1.3rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.add-btn {
+  background-color: #27ae60;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.add-btn:hover {
+  background-color: #1e8449;
+}
+
+.submit-button {
+  background-color: #2980b9;
+  color: white;
+  padding: 0.7rem 1rem;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 1.1rem;
+}
+
+.submit-button:hover {
+  background-color: #1c5980;
+}
+
+.capa-block {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  background: #f5f8fa;
+  position: relative;
+}
+
+.capa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.zoom-block {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #ccc;
+}
+
+.error-message {
+  color: #c0392b;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.status-message {
+  color: #27ae60;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.iframe-preview {
+  margin-top: 2rem;
+  border-top: 1px dashed #bbb;
+  padding-top: 1rem;
+}
