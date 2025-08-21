@@ -320,7 +320,7 @@ const ViewerManager = () => {
                       setShowUploadViewerModal(true);
                     }}>
                     <i className="fa-solid fa-upload"></i>
-                    Subir Nuevo
+                    Subir
                   </button>
 
                 </div>
