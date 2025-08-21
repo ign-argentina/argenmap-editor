@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
+import UploadViewerModal from '../UploadViewerModal/UploadViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
 import './ViewerManager.css';
 import '../Preview/Preview.css';
@@ -23,6 +24,7 @@ const ViewerManager = () => {
   const [hasFetched, setHasFetched] = useState(false);
   const [groupList, setGroupList] = useState([]);
   const [showShareViewerModal, setShowShareViewerModal] = useState(false);
+  const [showUploadViewerModal, setShowUploadViewerModal] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
@@ -80,18 +82,6 @@ const ViewerManager = () => {
     } catch (error) {
       console.error("Error al eliminar el visor:", error);
       showToast("Error al eliminar el visor", "error");
-    }
-  };
-
-  const handleUploadViewer = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const jsonData = JSON.parse(e.target.result);
-        navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
-      };
-      reader.readAsText(file);
     }
   };
 
@@ -179,26 +169,6 @@ const ViewerManager = () => {
 
   return (
     <>
-      {/*       {!hasFetched && isLoading && (
-        <div className="loading-message" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          width: '100%',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          backgroundColor: 'rgba(255, 255, 255, 0.9)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span className="spinner" />
-            <span style={{ marginLeft: '10px' }}>El gestor está cargando...</span>
-          </div>
-        </div>
-      )} */}
-
-      {/*  {hasFetched && ( */}
       <div className='container-display-0'>
         <div className="viewer-content flex-1">
           <div className="viewer-modal">
@@ -343,21 +313,16 @@ const ViewerManager = () => {
                     Crear
                   </button>
 
-                  <label className="btn-common">
-                    <input
-                      type="file"
-                      accept=".json"
-                      onChange={(e) => {
-                        handleUploadViewer(e);
-                      }}
-                      style={{ display: "none" }}
-                      title="Subir JSON"
-                    />
-                    <span className="icon">
-                      <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-                    </span>
-                    Subir
-                  </label>
+                  <button
+                    className="btn-common"
+                    title="Subir visor"
+                    onClick={() => {
+                      setShowUploadViewerModal(true);
+                    }}>
+                    <i className="fa-solid fa-upload"></i>
+                    Subir Nuevo
+                  </button>
+
                 </div>
               </div>
             </div>
@@ -408,6 +373,15 @@ const ViewerManager = () => {
                   visor={selectedViewer}
                   isOpen={showShareViewerModal}
                   onClose={() => setShowShareViewerModal(false)}
+                />
+              </div>
+            )}
+
+            {showUploadViewerModal && (
+              <div className="save-viewer-modal-overlay">
+                <UploadViewerModal
+                  isOpen={showUploadViewerModal}
+                  onClose={() => setShowUploadViewerModal(false)}
                 />
               </div>
             )}
