@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { useToast } from '../../context/ToastContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import './UploadViewerModal.css';
@@ -78,7 +78,6 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     <div className="upload-viewer-modal-overlay">
       <div className="upload-viewer-modal">
         <h2 className="upload-viewer-title">Subir Visor</h2>
-
         <h2 className="share-viewer-title">Seleccione un tipo de visor </h2>
         <div className="upload-viewer-options">
           <label
