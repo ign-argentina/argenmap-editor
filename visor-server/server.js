@@ -41,9 +41,8 @@ app.use('/kharta/assets', express.static(path.join(__dirname, 'public/kharta/ass
 
 app.post('/argenmap/custom', (req, res) => {
   try {
-    const a = req.body
-
-    console.log(a)
+    const { data, preferences } = req.body;
+    /*     console.log("data: ", a.data) */
     // DEFAULT
     const CONFIGS = [
       {
@@ -69,23 +68,22 @@ app.post('/argenmap/custom', (req, res) => {
     let html = readFileSync(webPath, 'utf-8');
 
 
-    let data = {};
-    let preferences = {};
-
     const randomInt = Math.floor(Math.random() * 4);
 
+    let dataJson = null
+    let preferencesJson = null
     if (existsSync(webPath)) {
-      data = JSON.parse(readFileSync(CONFIGS[randomInt].data, 'utf-8'));
+      dataJson = data ? JSON.parse(data) : JSON.parse(readFileSync(CONFIGS[randomInt].data, 'utf-8'));
+      preferencesJson = preferences != "null" ? JSON.parse(preferences) : JSON.parse(readFileSync(CONFIGS[randomInt].preferences, 'utf-8'));
     }
-    if (existsSync(webPath)) {
-      preferences = JSON.parse(readFileSync(CONFIGS[randomInt].preferences, 'utf-8'));
-    }
+
+
 
     // 3) Inyectar datos de ejecución
     const injectScript = `
       <script>
-        window.appData = ${JSON.stringify(data)};
-        window.appPreferences = ${JSON.stringify(preferences)};
+        window.appData = ${JSON.stringify(dataJson)};
+        window.appPreferences = ${JSON.stringify(preferencesJson)};
       </script>
     `;
     html = html.replace('</head>', `${injectScript}\n</head>`);
