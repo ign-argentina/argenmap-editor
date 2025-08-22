@@ -98,3 +98,25 @@
   font-weight: 600;
   color: #333;
 }
+
+.upload-separator {
+  width: 2px;
+  background-color: #ccc;
+  margin: 0 10px;
+}
+
+.upload-hover-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text--color);
+  text-align: center;
+  margin-top: 15px;
+  min-height: 24px;
+}
+
+.upload-hover-area {
+  height: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
