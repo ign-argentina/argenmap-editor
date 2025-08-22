@@ -77,8 +77,15 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
   return (
     <div className="upload-viewer-modal-overlay">
       <div className="upload-viewer-modal">
-        <h2 className="upload-viewer-title">Subir Visor</h2>
-        <h2 className="share-viewer-title">Seleccione un tipo de visor </h2>
+        <h2 className="create-viewer-title">
+          <i className="fa-solid fa-upload upload-title-icon"></i>
+          Subir visor
+        </h2>
+
+        <h2 className="create-viewer-subtitle">
+          Seleccione un tipo de visor
+        </h2>
+
         <div className="upload-viewer-options">
           <label
             className="upload-option"

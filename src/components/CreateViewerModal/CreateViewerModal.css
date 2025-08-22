@@ -20,27 +20,36 @@
 }
 
 .create-viewer-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text--color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
 }
 
-.create-viewer-copy-button {
-  padding: 8px 12px;
-  font-size: 14px;
-  background-color: var(--secondary--color);
-  color: white;
-  border: none;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
+.create-viewer-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 10px auto 0 auto;
+  border-radius: 2px;
 }
 
-.create-viewer-copy-button:hover {
-  background-color: #1e40af;
+.create-title-icon {
+  font-size: 28px;
+  color: var(--text--color);
 }
 
-.create-viewer-iframe-section {
-  margin-top: 20px;
+.create-viewer-subtitle {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 25px;
+  color: var(--text--color);
 }
 
 .create-viewer-footer {

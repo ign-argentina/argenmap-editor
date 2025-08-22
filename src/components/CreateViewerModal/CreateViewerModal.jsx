@@ -11,14 +11,20 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
   return (
     <div className="create-viewer-modal-overlay">
       <div className="create-viewer-modal">
-        <h2 className="create-viewer-title">Crear nuevo visor</h2>
-        <h2 className="share-viewer-title">Seleccione un tipo de visor para su proyecto</h2>
-        <div className="create-viewer-options">
+        <h2 className="create-viewer-title">
+          <i className="fa-solid fa-solid fa-plus create-title-icon"></i>
+          Crear nuevo visor
+        </h2>
 
+        <h2 className="create-viewer-subtitle">
+          Seleccione un tipo de visor para su proyecto
+        </h2>
+
+        <div className="create-viewer-options">
           <button
             onMouseEnter={() => setHoverText("Argenmap: Visor tradicional")}
             onMouseLeave={() => setHoverText("")}
-            className="upload-option"
+            className="create-option"
             title="Crear nuevo visor"
             onClick={() => {
               // setShowCreateViewerModal(true);
@@ -33,7 +39,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
           <button
             onMouseEnter={() => setHoverText("Kharta: Visor moderno [En Desarrollo]")}
             onMouseLeave={() => setHoverText("")}
-            className="upload-option"
+            className="create-option"
             title="Subir visor"
             onClick={() => {
               navigate('/form');
