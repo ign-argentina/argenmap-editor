@@ -25,7 +25,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
             onMouseEnter={() => setHoverText("Argenmap: Visor tradicional")}
             onMouseLeave={() => setHoverText("")}
             className="create-option"
-            title="Crear nuevo visor"
+            title="Crear visor Argenmap"
             onClick={() => {
               // setShowCreateViewerModal(true);
             }}
@@ -40,7 +40,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
             onMouseEnter={() => setHoverText("Kharta: Visor moderno [En Desarrollo]")}
             onMouseLeave={() => setHoverText("")}
             className="create-option"
-            title="Subir visor"
+            title="Crear visor Kharta"
             onClick={() => {
               navigate('/form');
             }}
