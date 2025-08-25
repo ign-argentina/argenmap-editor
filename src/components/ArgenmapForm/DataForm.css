@@ -27,8 +27,9 @@
 
 .controls {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* Separate text and buttons */
+  align-items: center; /* Ensure proper vertical alignment */
+  gap: 1rem; /* Add spacing between elements */
   margin: 1rem 0 1.5rem 0;
 }
 
@@ -41,33 +42,41 @@
   font-weight: 600;
 }
 
+.info-text {
+  font-size: 0.9rem;
+  color: #586070;
+  margin-left: auto; /* Align text to the right */
+}
+
 .accordion-item {
   border: 1px solid #e6e9ee;
-  border-radius: 10px;
+  border-radius: 10px; /* Rounded corners */
   margin-bottom: 16px;
-  background: #f8fafc;
+  background: #0b74d1; /* Blue background */
+  color: #fff; /* Ensure text is visible on blue background */
   overflow: hidden;
   transition: box-shadow 0.2s ease;
+  padding: 0.9rem 1.2rem; /* Maintain current size */
+  height: auto; /* Dynamically adjust height */
+  width: 100%; /* Ensure full width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  box-sizing: border-box; /* Include padding and borders in width/height */
 }
 
 .accordion-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .accordion-header {
-  background: linear-gradient(90deg, #0b74d1, #026aa7);
-  color: #fff;
-  padding: 0.9rem 1.2rem;
+  background: none; /* Remove inner background to unify with accordion-item */
+  color: inherit; /* Inherit text color from accordion-item */
+  padding: 0; /* Remove extra padding */
   cursor: pointer;
   user-select: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: background 0.2s ease;
-}
-
-.accordion-header:hover {
-  background: linear-gradient(90deg, #0a6ac0, #025b92);
 }
 
 .accordion-title {
@@ -126,11 +135,13 @@
   background: linear-gradient(135deg, #28a745, #1e7e34);
   color: #fff;
   border: none;
-  padding: 0.7rem 1.2rem;
+  padding: 0.5rem 1rem; /* Reduced size slightly */
   border-radius: 10px;
   cursor: pointer;
   font-weight: 700;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  margin-right: auto; /* Align button to the left */
+  display: block; /* Ensure alignment works */
 }
 
 .button-primary:hover {
@@ -201,6 +212,21 @@
   color: #735b00;
   border: 1px solid #ffe7b5;
   text-align: center;
+}
+
+.highlight-badge {
+  background: none;
+  color: var(--primary--color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center; /* Centering the text */
+  background: linear-gradient(90deg, var(--primary--color), var(--secondary--color)); /* Restored color transition */
+  background-clip: text; /* Added standard property for compatibility */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block; /* Ensures centering works properly */
+  margin: 0 auto; /* Centers the block element */
 }
 
 @media (max-width: 720px) {

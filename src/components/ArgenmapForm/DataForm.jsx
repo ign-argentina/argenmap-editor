@@ -118,10 +118,14 @@ function DataForm({ data, onDataChange }) {
 
   return (
     <div className="dataform-container">
-      <div className="dataform-subtitle">Define los mapas base y capas. Los cambios se aplican en tiempo real.</div>
+      
       <section className="controls">
-        <div className="count-badge">{localData.items[0].capas.length} mapas</div>
+        <div className="highlight-badge">Mapas Base</div>
+      </section>
+
+      <section className="controls">
         <button type="button" className="button-primary" onClick={agregarMapa}>+ Agregar Mapa Base</button>
+        <span className="info-text">Tienes cargado {localData.items[0].capas.length} mapa/s</span>
       </section>
 
       {localData.items[0].capas.length === 0 && <div className="empty-state">No hay mapas base. Agrega uno para comenzar.</div>}
@@ -137,7 +141,6 @@ function DataForm({ data, onDataChange }) {
           >
             <div className="accordion-title">
               <span>{capa.titulo || '(sin título)'}</span>
-              <span className="service-badge">{capa.servicio}</span>
             </div>
             <div>
               <span className="accordion-caret">{openMapas.includes(index) ? '▾' : '▸'}</span>
@@ -176,8 +179,12 @@ function DataForm({ data, onDataChange }) {
       <hr />
 
       <section className="controls">
-        <h3 style={{ margin: 0 }}>Capas</h3>
+        <div className="highlight-badge">Capas</div>
+      </section>
+
+      <section className="controls">
         <button type="button" className="button-primary" onClick={agregarCapa}>+ Agregar Capa</button>
+        <span className="info-text">Tienes cargado {localData.items.slice(1).length} capa/s</span>
       </section>
 
       {localData.items.slice(1).length === 0 && <div className="empty-state">No hay capas definidas. Añade capas para que aparezcan en el listado.</div>}
@@ -185,7 +192,7 @@ function DataForm({ data, onDataChange }) {
       {localData.items.slice(1).map((capa, index) => (
         <div key={index} className="accordion-item">
           <div className="accordion-header" onClick={() => toggleCapa(index)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleCapa(index); }}>
-            <div className="accordion-title"><span>{capa.nombre || '(sin nombre)'}</span><span className="section-badge">{capa.seccion || 'sin sección'}</span></div>
+            <div className="accordion-title"><span>{capa.nombre || '(sin nombre)'}</span><span className="section-badge">{"- " + capa.seccion || 'sin sección'}</span></div>
             <div><span className="accordion-caret">{openCapas.includes(index) ? '▾' : '▸'}</span><button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarCapa(index); }} title="Eliminar Capa">🗑️</button></div>
           </div>
           {openCapas.includes(index) && (
