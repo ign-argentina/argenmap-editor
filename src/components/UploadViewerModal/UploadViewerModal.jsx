@@ -28,6 +28,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
         setKhartaFile({ file, json });
         setKhartaError("");
+        console.log("Tamos listos - Kharta Edition")
         // navigate('/form', { state: { externalUpload: json } });
 
       } catch (err) {
@@ -85,7 +86,22 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     handleFiles(e.target.files);
   };
 
-  const ready = preferencesFile && dataFile;
+  useEffect(() => {
+    if (preferencesFile && dataFile) {
+      // navigate('/form', {
+      //   state: {
+      //     externalUpload: {
+      //       type: "argenmap",
+      //       files: {
+      //         preferences: preferencesFile.json,
+      //         data: dataFile.json
+      //       }
+      //     }
+      //   }
+      // });
+      console.log("Tamos listos")
+    }
+  }, [preferencesFile, dataFile, navigate]);
 
   if (!isOpen) return null;
 
@@ -113,7 +129,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
             }}
             onDragOver={(e) => e.preventDefault()}
             onMouseEnter={() =>
-              setHoverText("Debes seleccionar exactamente 2 archivos JSON para Argenmap")
+              setHoverText("Subir preferences.json y data.json para Argenmap")
             }
             onMouseLeave={() => setHoverText("")}
           >
@@ -161,10 +177,6 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
         </div>
 
-        <div className="upload-hover-area">
-          {hoverText && <p className="upload-hover-text">{hoverText}</p>}
-        </div>
-
         <div className="upload-feedback">
           {preferencesFile && <p>✅ {preferencesFile.file.name} cargado correctamente</p>}
           {dataFile && <p>✅ {dataFile.file.name} cargado correctamente</p>}
@@ -174,6 +186,10 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
         <div className="upload-feedback">
           {khartaFile && <p>✅ {khartaFile.file.name} cargado correctamente</p>}
           {khartaError && <p className="upload-error">{khartaError}</p>}
+        </div>
+
+        <div className="upload-hover-area">
+          {hoverText && <p className="upload-hover-text">{hoverText}</p>}
         </div>
 
         <div className="upload-viewer-footer">
