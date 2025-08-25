@@ -65,7 +65,7 @@ function ArgenmapForm() {
               borderRadius: '4px',
             }}
           >
-            DataForm
+            Mapas y Capas
           </button>
           <button
             onClick={() => setActiveForm('preferences')}
@@ -78,8 +78,9 @@ function ArgenmapForm() {
               borderRadius: '4px',
             }}
           >
-            PreferencesForm
+           Estilos y Preferencias
           </button>
+          
         </div>
 
         {/* Mostrar el formulario seleccionado */}

@@ -1111,7 +1111,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         {openSections.includes(14) && (
           <div className="accordion-content">
             <input
-              placeholder="Contenido del texto"
+              placeholder="Titulo del Mapa"
               value={localPreferences.logoText.content}
               onChange={(e) => {
                 const newPrefs = { ...localPreferences };
@@ -1120,7 +1120,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               }}
             />
             <input
-              placeholder="Título del texto"
+              placeholder="Ver que hace"
               value={localPreferences.logoText.title}
               onChange={(e) => {
                 const newPrefs = { ...localPreferences };
@@ -1129,7 +1129,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               }}
             />
             <input
-              placeholder="Enlace del texto"
+              placeholder="URL"
               value={localPreferences.logoText.link}
               onChange={(e) => {
                 const newPrefs = { ...localPreferences };

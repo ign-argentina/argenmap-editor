@@ -118,12 +118,13 @@ function DataForm({ data, onDataChange }) {
 
   return (
     <div className="dataform-container">
-      <h2>Formulario Geoportal</h2>
+      <div className="dataform-subtitle">Define los mapas base y capas. Los cambios se aplican en tiempo real.</div>
+      <section className="controls">
+        <div className="count-badge">{localData.items[0].capas.length} mapas</div>
+        <button type="button" className="button-primary" onClick={agregarMapa}>+ Agregar Mapa Base</button>
+      </section>
 
-      <h3>Mapas Base</h3>
-      <button type="button" className="button-primary" onClick={agregarMapa}>
-        + Agregar Mapa
-      </button>
+      {localData.items[0].capas.length === 0 && <div className="empty-state">No hay mapas base. Agrega uno para comenzar.</div>}
 
       {localData.items[0].capas.map((capa, index) => (
         <div key={index} className="accordion-item">
@@ -132,88 +133,40 @@ function DataForm({ data, onDataChange }) {
             onClick={() => toggleMapa(index)}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") toggleMapa(index);
-            }}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleMapa(index); }}
           >
-            <span>{capa.titulo || "(sin título)"}</span>
-            <button
-              className="button-delete"
-              onClick={(e) => {
-                e.stopPropagation();
-                eliminarMapa(index);
-              }}
-              title="Eliminar Mapa"
-              type="button"
-            >
-              🗑️
-            </button>
+            <div className="accordion-title">
+              <span>{capa.titulo || '(sin título)'}</span>
+              <span className="service-badge">{capa.servicio}</span>
+            </div>
+            <div>
+              <span className="accordion-caret">{openMapas.includes(index) ? '▾' : '▸'}</span>
+              <button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarMapa(index); }} title="Eliminar Mapa">🗑️</button>
+            </div>
           </div>
           {openMapas.includes(index) && (
             <div className="accordion-content">
-              <input
-                placeholder="Título"
-                value={capa.titulo}
-                onChange={(e) => handleMapaChange(index, "titulo", e.target.value)}
-              />
-              <input
-                placeholder="Nombre"
-                value={capa.nombre}
-                onChange={(e) => handleMapaChange(index, "nombre", e.target.value)}
-              />
-              <input
-                placeholder="Versión"
-                value={capa.version}
-                onChange={(e) => handleMapaChange(index, "version", e.target.value)}
-              />
-              <input
-                placeholder="Attribution"
-                value={capa.attribution}
-                onChange={(e) => handleMapaChange(index, "attribution", e.target.value)}
-              />
-              <input
-                placeholder="Host"
-                value={capa.host}
-                onChange={(e) => handleMapaChange(index, "host", e.target.value)}
-              />
-              <input
-                placeholder="Peso"
-                type="number"
-                value={capa.peso || ""}
-                onChange={(e) =>
-                  handleMapaChange(index, "peso", Number(e.target.value))
-                }
-              />
-              <strong>Zoom:</strong>
+              <div className="form-group"><label>Título</label><input placeholder="Título del mapa" value={capa.titulo} onChange={(e) => handleMapaChange(index, "titulo", e.target.value)} /></div>
+              <div className="form-group"><label>Nombre</label><input placeholder="Identificador interno" value={capa.nombre} onChange={(e) => handleMapaChange(index, "nombre", e.target.value)} /></div>
+
+              <div className="grid-2">
+                <div className="form-group"><label>Versión</label><input placeholder="Versión del servicio" value={capa.version} onChange={(e) => handleMapaChange(index, "version", e.target.value)} /></div>
+                <div className="form-group"><label>Attribution</label><input placeholder="Texto de atribución" value={capa.attribution} onChange={(e) => handleMapaChange(index, "attribution", e.target.value)} /></div>
+              </div>
+
+              <div className="form-group"><label>Host / URL</label><input placeholder="https://example.com/tiles" value={capa.host} onChange={(e) => handleMapaChange(index, "host", e.target.value)} /></div>
+
+              <div className="grid-2">
+                <div className="form-group"><label>Peso</label><input placeholder="Peso (orden)" type="number" value={capa.peso || ""} onChange={(e) => handleMapaChange(index, "peso", Number(e.target.value))} /></div>
+                <div className="form-group"><label>Imagen de leyenda (opcional)</label><input placeholder="URL de la imagen de la leyenda" value={capa.legendImg || ""} onChange={(e) => handleMapaChange(index, "legendImg", e.target.value)} /></div>
+              </div>
+
+              <strong>Zoom</strong>
               <div className="zoom-inputs">
-                <input
-                  type="number"
-                  placeholder="min"
-                  value={capa.zoom.min || ""}
-                  onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="max"
-                  value={capa.zoom.max || ""}
-                  onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="nativeMin"
-                  value={capa.zoom.nativeMin || ""}
-                  onChange={(e) =>
-                    handleMapaZoomChange(index, "nativeMin", e.target.value)
-                  }
-                />
-                <input
-                  type="number"
-                  placeholder="nativeMax"
-                  value={capa.zoom.nativeMax || ""}
-                  onChange={(e) =>
-                    handleMapaZoomChange(index, "nativeMax", e.target.value)
-                  }
-                />
+                <input type="number" placeholder="min" value={capa.zoom.min || ""} onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)} />
+                <input type="number" placeholder="max" value={capa.zoom.max || ""} onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)} />
+                <input type="number" placeholder="nativeMin" value={capa.zoom.nativeMin || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMin", e.target.value)} />
+                <input type="number" placeholder="nativeMax" value={capa.zoom.nativeMax || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMax", e.target.value)} />
               </div>
             </div>
           )}
@@ -221,82 +174,31 @@ function DataForm({ data, onDataChange }) {
       ))}
 
       <hr />
-      <h3>Capas</h3>
-      <button type="button" className="button-primary" onClick={agregarCapa}>
-        + Agregar Capa
-      </button>
+
+      <section className="controls">
+        <h3 style={{ margin: 0 }}>Capas</h3>
+        <button type="button" className="button-primary" onClick={agregarCapa}>+ Agregar Capa</button>
+      </section>
+
+      {localData.items.slice(1).length === 0 && <div className="empty-state">No hay capas definidas. Añade capas para que aparezcan en el listado.</div>}
 
       {localData.items.slice(1).map((capa, index) => (
         <div key={index} className="accordion-item">
-          <div
-            className="accordion-header"
-            onClick={() => toggleCapa(index)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") toggleCapa(index);
-            }}
-          >
-            <span>{capa.nombre || "(sin nombre)"}</span>
-            <button
-              className="button-delete"
-              onClick={(e) => {
-                e.stopPropagation();
-                eliminarCapa(index);
-              }}
-              title="Eliminar Capa"
-              type="button"
-            >
-              🗑️
-            </button>
+          <div className="accordion-header" onClick={() => toggleCapa(index)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleCapa(index); }}>
+            <div className="accordion-title"><span>{capa.nombre || '(sin nombre)'}</span><span className="section-badge">{capa.seccion || 'sin sección'}</span></div>
+            <div><span className="accordion-caret">{openCapas.includes(index) ? '▾' : '▸'}</span><button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarCapa(index); }} title="Eliminar Capa">🗑️</button></div>
           </div>
           {openCapas.includes(index) && (
             <div className="accordion-content">
-              <input
-                placeholder="Nombre"
-                value={capa.nombre}
-                onChange={(e) => {
-                  const newItems = [...localData.items];
-                  newItems[index + 1].nombre = e.target.value;
-                  setLocalData({ ...localData, items: newItems });
-                }}
-              />
-              <input
-                placeholder="Host"
-                value={capa.host}
-                onChange={(e) => {
-                  const newItems = [...localData.items];
-                  newItems[index + 1].host = e.target.value;
-                  setLocalData({ ...localData, items: newItems });
-                }}
-              />
-              <input
-                placeholder="Version"
-                value={capa.version}
-                onChange={(e) => {
-                  const newItems = [...localData.items];
-                  newItems[index + 1].version = e.target.value;
-                  setLocalData({ ...localData, items: newItems });
-                }}
-              />
-              <input
-                placeholder="peso"
-                value={capa.peso}
-                onChange={(e) => {
-                  const newItems = [...localData.items];
-                  newItems[index + 1].peso = e.target.value;
-                  setLocalData({ ...localData, items: newItems });
-                }}
-              />
-              <input
-                placeholder="seccion"
-                value={capa.seccion}
-                onChange={(e) => {
-                  const newItems = [...localData.items];
-                  newItems[index + 1].seccion = e.target.value;
-                  setLocalData({ ...localData, items: newItems });
-                }}
-              />
+              <div className="form-group"><label>Nombre</label><input placeholder="Nombre de la capa" value={capa.nombre} onChange={(e) => { const newItems = [...localData.items]; newItems[index + 1].nombre = e.target.value; setLocalData({ ...localData, items: newItems }); }} /></div>
+              <div className="form-group"><label>Host / URL</label><input placeholder="https://example.com/wms" value={capa.host} onChange={(e) => { const newItems = [...localData.items]; newItems[index + 1].host = e.target.value; setLocalData({ ...localData, items: newItems }); }} /></div>
+
+              <div className="grid-2">
+                <div className="form-group"><label>Versión</label><input placeholder="Versión del servicio" value={capa.version} onChange={(e) => { const newItems = [...localData.items]; newItems[index + 1].version = e.target.value; setLocalData({ ...localData, items: newItems }); }} /></div>
+                <div className="form-group"><label>Peso</label><input placeholder="Orden / Peso" value={capa.peso || ""} onChange={(e) => { const newItems = [...localData.items]; newItems[index + 1].peso = e.target.value; setLocalData({ ...localData, items: newItems }); }} /></div>
+              </div>
+
+              <div className="form-group"><label>Sección</label><input placeholder="Sección donde aparece la capa" value={capa.seccion} onChange={(e) => { const newItems = [...localData.items]; newItems[index + 1].seccion = e.target.value; setLocalData({ ...localData, items: newItems }); }} /></div>
             </div>
           )}
         </div>
