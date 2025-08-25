@@ -63,7 +63,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
       throw new Error("El archivo no es válido para Argenmap");
     } catch (err) {
-      setError(`❌ ${file.name}: ${err.message}`);
+      setError(`${file.name}: ${err.message}`);
     }
   };
 
@@ -180,12 +180,12 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
         <div className="upload-feedback">
           {preferencesFile && <p>✅ {preferencesFile.file.name} cargado correctamente</p>}
           {dataFile && <p>✅ {dataFile.file.name} cargado correctamente</p>}
-          {error && <p className="upload-error">{error}</p>}
+          {error && <p className="upload-error">❌Argenmap: {error}</p>}
         </div>
 
         <div className="upload-feedback">
           {khartaFile && <p>✅ {khartaFile.file.name} cargado correctamente</p>}
-          {khartaError && <p className="upload-error">{khartaError}</p>}
+          {khartaError && <p className="upload-error">❌Kharta: {khartaError}</p>}
         </div>
 
         <div className="upload-hover-area">
