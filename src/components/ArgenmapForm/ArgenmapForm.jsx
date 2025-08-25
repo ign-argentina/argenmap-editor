@@ -1,21 +1,52 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import DataForm from "./DataForm";
 import PreferencesForm from "./PreferencesForm"; // Asegurate que exista este componente
 
 function ArgenmapForm() {
   const [data, setData] = useState(null);
   const [preferences, setPreferences] = useState(null);
+  const [debouncedData, setDebouncedData] = useState(null);
+  const [debouncedPreferences, setDebouncedPreferences] = useState(null);
+
+  // Memoize the callback functions to prevent unnecessary re-renders
+  const handleDataChange = useCallback((newData) => {
+    setData(newData);
+  }, []);
+
+  const handlePreferencesChange = useCallback((newPreferences) => {
+    setPreferences(newPreferences);
+  }, []);
 
   const [activeForm, setActiveForm] = useState('dataform'); // 'dataform' o 'preferences'
 
   const iframeName = 'previewIframe';
   const formRef = useRef(null);
+  const debounceTimer = useRef(null);
 
+  // Debounce mechanism for data and preferences changes
   useEffect(() => {
-    if (data && formRef.current) {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      setDebouncedData(data);
+      setDebouncedPreferences(preferences);
+    }, 1000); // 1 second delay
+
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [data, preferences]);
+
+  // Submit form only when debounced values change
+  useEffect(() => {
+    if (debouncedData && formRef.current) {
       formRef.current.submit();
     }
-  }, [data, preferences]);
+  }, [debouncedData, debouncedPreferences]);
 
   return (
     <div className="argenmap-form-container" style={{ display: 'flex', gap: '1rem' }}>
@@ -52,8 +83,8 @@ function ArgenmapForm() {
         </div>
 
         {/* Mostrar el formulario seleccionado */}
-        {activeForm === 'dataform' && <DataForm data={data} onDataChange={setData} />}
-        {activeForm === 'preferences' && <PreferencesForm preferences = {preferences} onPreferencesChange={setPreferences} />}
+        {activeForm === 'dataform' && <DataForm data={data} onDataChange={handleDataChange} />}
+        {activeForm === 'preferences' && <PreferencesForm preferences={preferences} onPreferencesChange={handlePreferencesChange} />}
       </div>
 
       {/* Preview */}
@@ -77,13 +108,13 @@ function ArgenmapForm() {
         <input
           type="hidden"
           name="data"
-          value={JSON.stringify(data)}
+          value={JSON.stringify(debouncedData)}
           readOnly
         />
         <input
           type="hidden"
           name="preferences"
-          value={JSON.stringify(preferences)}
+          value={JSON.stringify(debouncedPreferences)}
           readOnly
         />
       </form>

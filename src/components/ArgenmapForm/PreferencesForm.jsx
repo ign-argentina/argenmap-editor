@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./DataForm.css";
 
 const defaultPreferences = {
   table: {
@@ -154,822 +155,1259 @@ const defaultPreferences = {
   },
 };
 
-function PreferencesForm({ preferences: externalPreferences, onPreferencesChange }) {
+function PreferencesForm({ preferences, onPreferencesChange }) {
+  const [localPreferences, setLocalPreferences] = useState(() =>
+    preferences || defaultPreferences
+  );
 
-  const [preferences, setPreferences] = useState(defaultPreferences);
-
+  // Update local state when external props change  
   useEffect(() => {
-    if (onPreferencesChange) onPreferencesChange(preferences);
-  }, [preferences, onPreferencesChange]);
+    if (preferences) {
+      setLocalPreferences(preferences);
+    }
+  }, [preferences]);
 
+  // Notify parent of changes
   useEffect(() => {
-  if (externalPreferences) setPreferences(externalPreferences);
-}, [externalPreferences]);
+    if (onPreferencesChange) {
+      onPreferencesChange(localPreferences);
+    }
+  }, [localPreferences, onPreferencesChange]);
 
-  // Cambiar valor en path, soporta profundidad y arrays básicos
-  const handleChange = (path, value) => {
-    setPreferences((prev) => {
-      const updated = JSON.parse(JSON.stringify(prev)); // clonar profundo simple (sin funciones)
-      const keys = path.split(".");
-      let current = updated;
+  // Simple accordion state arrays like DataForm
+  const [openSections, setOpenSections] = useState([]);
 
-      keys.forEach((key, i) => {
-        if (i === keys.length - 1) {
-          current[key] = value;
-        } else {
-          if (!(key in current)) current[key] = {};
-          current = current[key];
-        }
-      });
-      return updated;
-    });
+  const toggleSection = (index) => {
+    setOpenSections((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
   };
 
-  // Manejar array de strings (agregar/quitar) para campos como analytics_ids, excluded_plugins, hillshade.addTo
-  const handleArrayChange = (path, index, value) => {
-    setPreferences((prev) => {
-      const updated = JSON.parse(JSON.stringify(prev));
-      const arr = path.split(".").reduce((obj, key) => obj[key], updated);
-      arr[index] = value;
-      return updated;
-    });
-  };
-
+  // Array management functions
   const handleArrayAdd = (path) => {
-    setPreferences((prev) => {
-      const updated = JSON.parse(JSON.stringify(prev));
-      const arr = path.split(".").reduce((obj, key) => obj[key], updated);
-      arr.push("");
-      return updated;
-    });
+    const newPrefs = { ...localPreferences };
+    const pathArray = path.split('.');
+    let current = newPrefs;
+    
+    for (let i = 0; i < pathArray.length - 1; i++) {
+      current = current[pathArray[i]];
+    }
+    
+    const finalKey = pathArray[pathArray.length - 1];
+    current[finalKey] = [...current[finalKey], ""];
+    setLocalPreferences(newPrefs);
   };
 
   const handleArrayRemove = (path, index) => {
-    setPreferences((prev) => {
-      const updated = JSON.parse(JSON.stringify(prev));
-      const arr = path.split(".").reduce((obj, key) => obj[key], updated);
-      arr.splice(index, 1);
-      return updated;
-    });
-  };
-
-  // Para editar availableProcesses, cambiar nombre y geoprocess básico, styles no editable aquí para simplificar.
-  const handleAvailableProcessChange = (index, key, value) => {
-    setPreferences((prev) => {
-      const updated = JSON.parse(JSON.stringify(prev));
-      updated.geoprocessing.availableProcesses[index][key] = value;
-      return updated;
-    });
+    const newPrefs = { ...localPreferences };
+    const pathArray = path.split('.');
+    let current = newPrefs;
+    
+    for (let i = 0; i < pathArray.length - 1; i++) {
+      current = current[pathArray[i]];
+    }
+    
+    const finalKey = pathArray[pathArray.length - 1];
+    current[finalKey] = current[finalKey].filter((_, i) => i !== index);
+    setLocalPreferences(newPrefs);
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (onPreferencesChange) onPreferencesChange(preferences);
-      }}
-      style={{ maxWidth: 700, margin: "auto", fontFamily: "Arial, sans-serif" }}
-    >
-      <h2>Editar Preferences</h2>
+    <div className="dataform-container">
+      <h2>Formulario de Preferencias</h2>
 
-      {/* Table */}
-      <fieldset>
-        <legend>Table</legend>
-        <label>
-          isActiva:
-          <input
-            type="checkbox"
-            checked={preferences.table.isActiva}
-            onChange={(e) => handleChange("table.isActiva", e.target.checked)}
-          />
-        </label>
-        <br />
-        <label>
-          rowsLimit:
-          <input
-            type="number"
-            min={1}
-            value={preferences.table.rowsLimit}
-            onChange={(e) =>
-              handleChange("table.rowsLimit", parseInt(e.target.value) || 1)
-            }
-          />
-        </label>
-      </fieldset>
+      <h3>Configuraciones Básicas</h3>
+      
+      {/* Table Settings */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(0)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(0);
+          }}
+        >
+          <span>Configuración de Tabla</span>
+        </div>
+        {openSections.includes(0) && (
+          <div className="accordion-content">
+            <label>
+              <input
+                type="checkbox"
+                checked={localPreferences.table.isActiva}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.table.isActiva = e.target.checked;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              Tabla Activa
+            </label>
+            <input
+              type="number"
+              placeholder="Límite de filas"
+              value={localPreferences.table.rowsLimit}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.table.rowsLimit = Number(e.target.value);
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
 
-      <br />
+      {/* Charts Settings */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(1)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(1);
+          }}
+        >
+          <span>Configuración de Gráficos</span>
+        </div>
+        {openSections.includes(1) && (
+          <div className="accordion-content">
+            <label>
+              <input
+                type="checkbox"
+                checked={localPreferences.charts.isActive}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.charts.isActive = e.target.checked;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              Gráficos Activos
+            </label>
+          </div>
+        )}
+      </div>
 
-      {/* Charts */}
-      <fieldset>
-        <legend>Charts</legend>
-        <label>
-          isActive:
-          <input
-            type="checkbox"
-            checked={preferences.charts.isActive}
-            onChange={(e) => handleChange("charts.isActive", e.target.checked)}
-          />
-        </label>
-      </fieldset>
+      {/* Layer Options */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(2)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(2);
+          }}
+        >
+          <span>Opciones de Capas</span>
+        </div>
+        {openSections.includes(2) && (
+          <div className="accordion-content">
+            <label>
+              <input
+                type="checkbox"
+                checked={localPreferences.layer_options.isActive}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.layer_options.isActive = e.target.checked;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              Opciones de Capas Activas
+            </label>
+          </div>
+        )}
+      </div>
 
-      <br />
+      {/* Service Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(3)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(3);
+          }}
+        >
+          <span>Configuración de Servicios</span>
+        </div>
+        {openSections.includes(3) && (
+          <div className="accordion-content">
+            <strong>WMTS:</strong>
+            <input
+              type="number"
+              placeholder="Zoom máximo"
+              value={localPreferences.service.wmts.maxZoom}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.service.wmts.maxZoom = Number(e.target.value);
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
 
-      {/* Layer options */}
-      <fieldset>
-        <legend>Layer Options</legend>
-        <label>
-          isActive:
-          <input
-            type="checkbox"
-            checked={preferences.layer_options.isActive}
-            onChange={(e) =>
-              handleChange("layer_options.isActive", e.target.checked)
-            }
-          />
-        </label>
-      </fieldset>
-
-      <br />
+      {/* General Settings */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(4)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(4);
+          }}
+        >
+          <span>Configuración General</span>
+        </div>
+        {openSections.includes(4) && (
+          <div className="accordion-content">
+            <input
+              placeholder="Título de la aplicación"
+              value={localPreferences.title}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.title = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Sitio web"
+              value={localPreferences.website}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.website = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Favicon"
+              value={localPreferences.favicon}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.favicon = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <label>
+              <input
+                type="checkbox"
+                checked={localPreferences.showSearchBar}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.showSearchBar = e.target.checked;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              Mostrar barra de búsqueda
+            </label>
+          </div>
+        )}
+      </div>
 
       {/* Meta Tags */}
-      <fieldset>
-        <legend>Meta Tags</legend>
-        <label>
-          Title:
-          <input
-            type="text"
-            value={preferences.metaTags.title}
-            onChange={(e) => handleChange("metaTags.title", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Description:
-          <input
-            type="text"
-            value={preferences.metaTags.description}
-            onChange={(e) => handleChange("metaTags.description", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Image:
-          <input
-            type="text"
-            value={preferences.metaTags.image}
-            onChange={(e) => handleChange("metaTags.image", e.target.value)}
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Analytics IDs (array de strings) */}
-      <fieldset>
-        <legend>Analytics IDs</legend>
-        {preferences.analytics_ids.map((id, i) => (
-          <div key={i}>
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(5)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(5);
+          }}
+        >
+          <span>Meta Tags</span>
+        </div>
+        {openSections.includes(5) && (
+          <div className="accordion-content">
             <input
-              type="text"
-              value={id}
-              onChange={(e) => handleArrayChange("analytics_ids", i, e.target.value)}
+              placeholder="Título"
+              value={localPreferences.metaTags.title}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.metaTags.title = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
             />
-            <button type="button" onClick={() => handleArrayRemove("analytics_ids", i)}>
-              ❌
-            </button>
+            <input
+              placeholder="Descripción"
+              value={localPreferences.metaTags.description}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.metaTags.description = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="URL de imagen"
+              value={localPreferences.metaTags.image}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.metaTags.image = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
           </div>
-        ))}
-        <button type="button" onClick={() => handleArrayAdd("analytics_ids")}>
-          Añadir ID
-        </button>
-      </fieldset>
+        )}
+      </div>
 
-      <br />
-
-      {/* Excluded Plugins (array de strings) */}
-      <fieldset>
-        <legend>Excluded Plugins</legend>
-        {preferences.excluded_plugins.map((plugin, i) => (
-          <div key={i}>
+      {/* Searchbar Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(6)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(6);
+          }}
+        >
+          <span>Configuración de Barra de Búsqueda</span>
+        </div>
+        {openSections.includes(6) && (
+          <div className="accordion-content">
+            <label>
+              <input
+                type="checkbox"
+                checked={localPreferences.searchbar.isActive}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.searchbar.isActive = e.target.checked;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              Barra de búsqueda activa
+            </label>
             <input
-              type="text"
-              value={plugin}
-              onChange={(e) =>
-                handleArrayChange("excluded_plugins", i, e.target.value)
-              }
+              placeholder="Posición superior (ej: 5px)"
+              value={localPreferences.searchbar.top}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.searchbar.top = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
             />
+            <input
+              placeholder="Posición izquierda (ej: 40%)"
+              value={localPreferences.searchbar.left}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.searchbar.left = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              type="color"
+              value={localPreferences.searchbar.color_focus}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.searchbar.color_focus = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+              title="Color de foco"
+            />
+            <input
+              placeholder="Color de fondo (ej: rgba(255,255,255,0.7))"
+              value={localPreferences.searchbar.background_color}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.searchbar.background_color = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Placeholder"
+              value={localPreferences.searchbar.strings.placeholder}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.searchbar.strings.placeholder = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Geocoder Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(7)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(7);
+          }}
+        >
+          <span>Configuración de Geocodificador</span>
+        </div>
+        {openSections.includes(7) && (
+          <div className="accordion-content">
+            <input
+              placeholder="URL del geocodificador"
+              value={localPreferences.geocoder.url}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geocoder.url = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Endpoint de búsqueda"
+              value={localPreferences.geocoder.search}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geocoder.search = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="URL por ID"
+              value={localPreferences.geocoder.url_by_id}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geocoder.url_by_id = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Parámetro de consulta"
+              value={localPreferences.geocoder.query}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geocoder.query = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Idioma"
+              value={localPreferences.geocoder.lang}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geocoder.lang = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              type="number"
+              placeholder="Límite de resultados"
+              value={localPreferences.geocoder.limit}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geocoder.limit = Number(e.target.value);
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Clave API"
+              value={localPreferences.geocoder.key}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geocoder.key = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Referencias Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(8)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(8);
+          }}
+        >
+          <span>Configuración de Referencias</span>
+        </div>
+        {openSections.includes(8) && (
+          <div className="accordion-content">
+            <label>
+              <input
+                type="checkbox"
+                checked={localPreferences.referencias.show}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.referencias.show = e.target.checked;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              Mostrar referencias
+            </label>
+            <input
+              placeholder="Icono"
+              value={localPreferences.referencias.icon}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.referencias.icon = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Ancho"
+              value={localPreferences.referencias.width}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.referencias.width = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Alto"
+              value={localPreferences.referencias.height}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.referencias.height = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Analytics IDs */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(9)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(9);
+          }}
+        >
+          <span>Analytics IDs ({localPreferences.analytics_ids.length})</span>
+        </div>
+        {openSections.includes(9) && (
+          <div className="accordion-content">
+            {localPreferences.analytics_ids.map((id, index) => (
+              <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <input
+                  placeholder="Analytics ID"
+                  value={id}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.analytics_ids[index] = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                  style={{ flex: 1 }}
+                />
+                <button
+                  className="button-delete"
+                  onClick={() => handleArrayRemove('analytics_ids', index)}
+                  type="button"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
             <button
               type="button"
-              onClick={() => handleArrayRemove("excluded_plugins", i)}
+              className="button-primary"
+              onClick={() => handleArrayAdd('analytics_ids')}
             >
-              ❌
+              + Agregar Analytics ID
             </button>
           </div>
-        ))}
-        <button type="button" onClick={() => handleArrayAdd("excluded_plugins")}>
-          Añadir Plugin
-        </button>
-      </fieldset>
+        )}
+      </div>
 
-      <br />
-
-      {/* MapConfig */}
-      <fieldset>
-        <legend>Map Config</legend>
-        <label>
-          Center Latitude:
-          <input
-            type="number"
-            step="0.0001"
-            value={preferences.mapConfig.center.latitude}
-            onChange={(e) =>
-              handleChange("mapConfig.center.latitude", parseFloat(e.target.value))
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Center Longitude:
-          <input
-            type="number"
-            step="0.0001"
-            value={preferences.mapConfig.center.longitude}
-            onChange={(e) =>
-              handleChange("mapConfig.center.longitude", parseFloat(e.target.value))
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Zoom Initial:
-          <input
-            type="number"
-            min={preferences.mapConfig.zoom.min}
-            max={preferences.mapConfig.zoom.max}
-            value={preferences.mapConfig.zoom.initial}
-            onChange={(e) =>
-              handleChange("mapConfig.zoom.initial", parseInt(e.target.value) || 1)
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Zoom Min:
-          <input
-            type="number"
-            min={1}
-            value={preferences.mapConfig.zoom.min}
-            onChange={(e) =>
-              handleChange("mapConfig.zoom.min", parseInt(e.target.value) || 1)
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Zoom Max:
-          <input
-            type="number"
-            min={1}
-            value={preferences.mapConfig.zoom.max}
-            onChange={(e) =>
-              handleChange("mapConfig.zoom.max", parseInt(e.target.value) || 1)
-            }
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Service */}
-      <fieldset>
-        <legend>Service</legend>
-        <label>
-          WMTS maxZoom:
-          <input
-            type="number"
-            min={1}
-            value={preferences.service.wmts.maxZoom}
-            onChange={(e) =>
-              handleChange("service.wmts.maxZoom", parseInt(e.target.value) || 1)
-            }
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Show Search Bar */}
-      <fieldset>
-        <legend>Show Search Bar</legend>
-        <label>
-          Mostrar barra de búsqueda:
-          <input
-            type="checkbox"
-            checked={preferences.showSearchBar}
-            onChange={(e) => handleChange("showSearchBar", e.target.checked)}
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Searchbar */}
-      <fieldset>
-        <legend>Searchbar</legend>
-        <label>
-          isActive:
-          <input
-            type="checkbox"
-            checked={preferences.searchbar.isActive}
-            onChange={(e) => handleChange("searchbar.isActive", e.target.checked)}
-          />
-        </label>
-        <br />
-        <label>
-          Top:
-          <input
-            type="text"
-            value={preferences.searchbar.top}
-            onChange={(e) => handleChange("searchbar.top", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Left:
-          <input
-            type="text"
-            value={preferences.searchbar.left}
-            onChange={(e) => handleChange("searchbar.left", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Color focus:
-          <input
-            type="color"
-            value={preferences.searchbar.color_focus}
-            onChange={(e) => handleChange("searchbar.color_focus", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Background color:
-          <input
-            type="color"
-            value={preferences.searchbar.background_color}
-            onChange={(e) =>
-              handleChange("searchbar.background_color", e.target.value)
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Placeholder:
-          <input
-            type="text"
-            value={preferences.searchbar.strings.placeholder}
-            onChange={(e) =>
-              handleChange("searchbar.strings.placeholder", e.target.value)
-            }
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Geocoder */}
-      <fieldset>
-        <legend>Geocoder</legend>
-        <label>
-          URL:
-          <input
-            type="text"
-            value={preferences.geocoder.url}
-            onChange={(e) => handleChange("geocoder.url", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Search:
-          <input
-            type="text"
-            value={preferences.geocoder.search}
-            onChange={(e) => handleChange("geocoder.search", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          URL by ID:
-          <input
-            type="text"
-            value={preferences.geocoder.url_by_id}
-            onChange={(e) => handleChange("geocoder.url_by_id", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Query:
-          <input
-            type="text"
-            value={preferences.geocoder.query}
-            onChange={(e) => handleChange("geocoder.query", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Language:
-          <input
-            type="text"
-            value={preferences.geocoder.lang}
-            onChange={(e) => handleChange("geocoder.lang", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Limit:
-          <input
-            type="number"
-            min={1}
-            value={preferences.geocoder.limit}
-            onChange={(e) =>
-              handleChange("geocoder.limit", parseInt(e.target.value) || 1)
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Key:
-          <input
-            type="text"
-            value={preferences.geocoder.key}
-            onChange={(e) => handleChange("geocoder.key", e.target.value)}
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Referencias */}
-      <fieldset>
-        <legend>Referencias</legend>
-        <label>
-          Show:
-          <input
-            type="checkbox"
-            checked={preferences.referencias.show}
-            onChange={(e) => handleChange("referencias.show", e.target.checked)}
-          />
-        </label>
-        <br />
-        <label>
-          Icon:
-          <input
-            type="text"
-            value={preferences.referencias.icon}
-            onChange={(e) => handleChange("referencias.icon", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Width:
-          <input
-            type="text"
-            value={preferences.referencias.width}
-            onChange={(e) => handleChange("referencias.width", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Height:
-          <input
-            type="text"
-            value={preferences.referencias.height}
-            onChange={(e) => handleChange("referencias.height", e.target.value)}
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Theme */}
-      <fieldset>
-        <legend>Theme</legend>
-        {Object.entries(preferences.theme).map(([key, val]) => (
-          <div key={key}>
-            <label>
-              {key}:
-              {val.startsWith("#") ? (
+      {/* Excluded Plugins */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(10)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(10);
+          }}
+        >
+          <span>Plugins Excluidos ({localPreferences.excluded_plugins.length})</span>
+        </div>
+        {openSections.includes(10) && (
+          <div className="accordion-content">
+            {localPreferences.excluded_plugins.map((plugin, index) => (
+              <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <input
-                  type="color"
-                  value={val}
-                  onChange={(e) => handleChange(`theme.${key}`, e.target.value)}
+                  placeholder="Nombre del plugin"
+                  value={plugin}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.excluded_plugins[index] = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                  style={{ flex: 1 }}
                 />
-              ) : (
-                <input
-                  type="text"
-                  value={val}
-                  onChange={(e) => handleChange(`theme.${key}`, e.target.value)}
-                />
-              )}
-            </label>
-          </div>
-        ))}
-      </fieldset>
-
-      <br />
-
-      {/* Logo */}
-      <fieldset>
-        <legend>Logo</legend>
-        {Object.entries(preferences.logo).map(([key, val]) => (
-          <div key={key}>
-            <label>
-              {key}:
-              <input
-                type="text"
-                value={val}
-                onChange={(e) => handleChange(`logo.${key}`, e.target.value)}
-              />
-            </label>
-          </div>
-        ))}
-      </fieldset>
-
-      <br />
-
-      {/* LogoText */}
-      <fieldset>
-        <legend>LogoText</legend>
-        {Object.entries(preferences.logoText).map(([key, val]) => (
-          <div key={key}>
-            <label>
-              {key}:
-              <input
-                type="text"
-                value={val}
-                onChange={(e) => handleChange(`logoText.${key}`, e.target.value)}
-              />
-            </label>
-          </div>
-        ))}
-      </fieldset>
-
-      <br />
-
-      {/* Title y Website */}
-      <fieldset>
-        <legend>General</legend>
-        <label>
-          Title:
-          <input
-            type="text"
-            value={preferences.title}
-            onChange={(e) => handleChange("title", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Website:
-          <input
-            type="text"
-            value={preferences.website}
-            onChange={(e) => handleChange("website", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Favicon:
-          <input
-            type="text"
-            value={preferences.favicon}
-            onChange={(e) => handleChange("favicon", e.target.value)}
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      {/* Geoprocessing */}
-      <fieldset>
-        <legend>Geoprocessing</legend>
-        <label>
-          isActive:
-          <input
-            type="checkbox"
-            checked={preferences.geoprocessing.isActive}
-            onChange={(e) =>
-              handleChange("geoprocessing.isActive", e.target.checked)
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Button Title:
-          <input
-            type="text"
-            value={preferences.geoprocessing.buttonTitle}
-            onChange={(e) => handleChange("geoprocessing.buttonTitle", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Button Icon:
-          <input
-            type="text"
-            value={preferences.geoprocessing.buttonIcon}
-            onChange={(e) => handleChange("geoprocessing.buttonIcon", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Dialog Title:
-          <input
-            type="text"
-            value={preferences.geoprocessing.dialogTitle}
-            onChange={(e) => handleChange("geoprocessing.dialogTitle", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Strings Bounds:
-          <input
-            type="text"
-            value={preferences.geoprocessing.strings.bounds}
-            onChange={(e) => handleChange("geoprocessing.strings.bounds", e.target.value)}
-          />
-        </label>
-        <br />
-
-        {/* Available processes - lista editable de name y geoprocess */}
-        <fieldset style={{ border: "1px solid #ccc", marginTop: 10 }}>
-          <legend>Available Processes</legend>
-          {preferences.geoprocessing.availableProcesses.map((proc, i) => (
-            <div
-              key={i}
-              style={{
-                padding: 5,
-                borderBottom: "1px solid #ddd",
-                marginBottom: 5,
-              }}
+                <button
+                  className="button-delete"
+                  onClick={() => handleArrayRemove('excluded_plugins', index)}
+                  type="button"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="button-primary"
+              onClick={() => handleArrayAdd('excluded_plugins')}
             >
-              <label>
-                Name:
-                <input
-                  type="text"
-                  value={proc.name}
-                  onChange={(e) =>
-                    handleAvailableProcessChange(i, "name", e.target.value)
-                  }
-                />
-              </label>
-              <br />
-              <label>
-                Geoprocess:
-                <input
-                  type="text"
-                  value={proc.geoprocess}
-                  onChange={(e) =>
-                    handleAvailableProcessChange(i, "geoprocess", e.target.value)
-                  }
-                />
-              </label>
-              {/* Para simplificar no edito styles y baseUrl aquí */}
-            </div>
-          ))}
-        </fieldset>
-      </fieldset>
+              + Agregar Plugin
+            </button>
+          </div>
+        )}
+      </div>
 
-      <br />
-
-      {/* Hillshade */}
-      <fieldset>
-        <legend>Hillshade</legend>
-        <label>
-          Name:
-          <input
-            type="text"
-            value={preferences.hillshade.name}
-            onChange={(e) => handleChange("hillshade.name", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Attribution (HTML):
-          <input
-            type="text"
-            value={preferences.hillshade.attribution}
-            onChange={(e) => handleChange("hillshade.attribution", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          URL:
-          <input
-            type="text"
-            value={preferences.hillshade.url}
-            onChange={(e) => handleChange("hillshade.url", e.target.value)}
-          />
-        </label>
-        <br />
-
-        {/* addTo array */}
-        <label>Agregar a capas:</label>
-        {preferences.hillshade.addTo.map((layer, i) => (
-          <div key={i}>
+      {/* Map Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(11)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(11);
+          }}
+        >
+          <span>Configuración del Mapa</span>
+        </div>
+        {openSections.includes(11) && (
+          <div className="accordion-content">
+            <strong>Centro del Mapa:</strong>
             <input
-              type="text"
-              value={layer}
-              onChange={(e) => handleArrayChange("hillshade.addTo", i, e.target.value)}
+              type="number"
+              placeholder="Latitud"
+              value={localPreferences.mapConfig.center.latitude}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.mapConfig.center.latitude = Number(e.target.value);
+                setLocalPreferences(newPrefs);
+              }}
             />
-            <button type="button" onClick={() => handleArrayRemove("hillshade.addTo", i)}>
-              ❌
+            <input
+              type="number"
+              placeholder="Longitud"
+              value={localPreferences.mapConfig.center.longitude}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.mapConfig.center.longitude = Number(e.target.value);
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <strong>Zoom:</strong>
+            <div className="zoom-inputs">
+              <input
+                type="number"
+                placeholder="Inicial"
+                value={localPreferences.mapConfig.zoom.initial}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.mapConfig.zoom.initial = Number(e.target.value);
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              <input
+                type="number"
+                placeholder="Mínimo"
+                value={localPreferences.mapConfig.zoom.min}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.mapConfig.zoom.min = Number(e.target.value);
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              <input
+                type="number"
+                placeholder="Máximo"
+                value={localPreferences.mapConfig.zoom.max}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.mapConfig.zoom.max = Number(e.target.value);
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Theme Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(12)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(12);
+          }}
+        >
+          <span>Configuración de Tema</span>
+        </div>
+        {openSections.includes(12) && (
+          <div className="accordion-content">
+            <div className="form-field">
+              <label>Color de fondo del cuerpo:</label>
+              <input
+                type="color"
+                value={localPreferences.theme.bodyBackground}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.bodyBackground = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Selecciona el color de fondo principal de la aplicación"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Color de fondo del encabezado:</label>
+              <input
+                type="color"
+                value={localPreferences.theme.headerBackground}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.headerBackground = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Color de fondo de la barra superior"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Color de fondo del menú:</label>
+              <input
+                type="color"
+                value={localPreferences.theme.menuBackground}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.menuBackground = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Color de fondo del panel de capas y menús laterales"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Color de capa activa:</label>
+              <input
+                type="color"
+                value={localPreferences.theme.activeLayer}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.activeLayer = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Color de resaltado para la capa seleccionada"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Color de texto del menú:</label>
+              <input
+                type="color"
+                value={localPreferences.theme.textMenu}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.textMenu = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Color del texto en los menús laterales"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Estilo CSS del texto del menú:</label>
+              <input
+                type="text"
+                placeholder="Ej: font-weight: bold; text-shadow: 1px 1px 1px rgba(0,0,0,0.5);"
+                value={localPreferences.theme.textMenuStyle}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.textMenuStyle = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Estilos CSS adicionales para el texto del menú"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Color de texto de leyenda:</label>
+              <input
+                type="color"
+                value={localPreferences.theme.textLegendMenu}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.textLegendMenu = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Color del texto en las leyendas de capas"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Estilo CSS del texto de leyenda:</label>
+              <input
+                type="text"
+                placeholder="Ej: font-size: 12px; font-style: italic;"
+                value={localPreferences.theme.textLegendMenuStyle}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.textLegendMenuStyle = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Estilos CSS adicionales para el texto de leyendas"
+              />
+            </div>
+            
+            <div className="form-field">
+              <label>Color de barra de iconos:</label>
+              <input
+                type="color"
+                value={localPreferences.theme.iconBar}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.theme.iconBar = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Color de fondo de la barra de herramientas con iconos"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Logo Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(13)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(13);
+          }}
+        >
+          <span>Configuración de Logo</span>
+        </div>
+        {openSections.includes(13) && (
+          <div className="accordion-content">
+            <input
+              placeholder="Título del logo"
+              value={localPreferences.logo.title}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.title = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="URL de la imagen del logo"
+              value={localPreferences.logo.src}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.src = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Alto del logo"
+              value={localPreferences.logo.height}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.height = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Ancho del logo"
+              value={localPreferences.logo.width}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.width = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Estilo del logo"
+              value={localPreferences.logo.style}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.style = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="URL del logo mini"
+              value={localPreferences.logo.srcLogoMini}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.srcLogoMini = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Alto del logo mini"
+              value={localPreferences.logo.miniHeight}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.miniHeight = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Ancho del logo mini"
+              value={localPreferences.logo.miniWidth}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.miniWidth = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Estilo del logo mini"
+              value={localPreferences.logo.ministyle}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.ministyle = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Enlace del logo"
+              value={localPreferences.logo.link}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logo.link = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Logo Text Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(14)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(14);
+          }}
+        >
+          <span>Configuración de Texto del Logo</span>
+        </div>
+        {openSections.includes(14) && (
+          <div className="accordion-content">
+            <input
+              placeholder="Contenido del texto"
+              value={localPreferences.logoText.content}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logoText.content = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Título del texto"
+              value={localPreferences.logoText.title}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logoText.title = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Enlace del texto"
+              value={localPreferences.logoText.link}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.logoText.link = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Geoprocessing Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(15)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(15);
+          }}
+        >
+          <span>Configuración de Geoprocesamiento</span>
+        </div>
+        {openSections.includes(15) && (
+          <div className="accordion-content">
+            <label>
+              <input
+                type="checkbox"
+                checked={localPreferences.geoprocessing.isActive}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geoprocessing.isActive = e.target.checked;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+              Geoprocesamiento activo
+            </label>
+            <input
+              placeholder="Título del botón"
+              value={localPreferences.geoprocessing.buttonTitle}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geoprocessing.buttonTitle = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Icono del botón"
+              value={localPreferences.geoprocessing.buttonIcon}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geoprocessing.buttonIcon = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Título del diálogo"
+              value={localPreferences.geoprocessing.dialogTitle}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geoprocessing.dialogTitle = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Texto de límites"
+              value={localPreferences.geoprocessing.strings.bounds}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.geoprocessing.strings.bounds = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <strong>Procesos Disponibles:</strong>
+            {localPreferences.geoprocessing.availableProcesses.map((process, index) => (
+              <div key={index} style={{ border: '1px solid #ddd', padding: '1rem', margin: '0.5rem 0', borderRadius: '4px' }}>
+                <input
+                  placeholder="Nombre del proceso"
+                  value={process.name}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.geoprocessing.availableProcesses[index].name = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                <input
+                  placeholder="Geoproceso"
+                  value={process.geoprocess}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.geoprocessing.availableProcesses[index].geoprocess = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                <input
+                  placeholder="Base URL"
+                  value={process.baseUrl || ""}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.geoprocessing.availableProcesses[index].baseUrl = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                <input
+                  placeholder="Capa"
+                  value={process.layer || ""}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.geoprocessing.availableProcesses[index].layer = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                <input
+                  placeholder="Prefijo del nombre"
+                  value={process.namePrefix}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.geoprocessing.availableProcesses[index].namePrefix = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Hillshade Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(16)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(16);
+          }}
+        >
+          <span>Configuración de Hillshade</span>
+        </div>
+        {openSections.includes(16) && (
+          <div className="accordion-content">
+            <input
+              placeholder="Nombre"
+              value={localPreferences.hillshade.name}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.hillshade.name = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Atribución"
+              value={localPreferences.hillshade.attribution}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.hillshade.attribution = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="URL"
+              value={localPreferences.hillshade.url}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.hillshade.url = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Icono"
+              value={localPreferences.hillshade.icon}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.hillshade.icon = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Etiqueta del switch"
+              value={localPreferences.hillshade.switchLabel}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.hillshade.switchLabel = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <strong>Agregar a mapas:</strong>
+            {localPreferences.hillshade.addTo.map((mapName, index) => (
+              <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <input
+                  placeholder="Nombre del mapa"
+                  value={mapName}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.hillshade.addTo[index] = e.target.value;
+                    setLocalPreferences(newPrefs);
+                  }}
+                  style={{ flex: 1 }}
+                />
+                <button
+                  className="button-delete"
+                  onClick={() => handleArrayRemove('hillshade.addTo', index)}
+                  type="button"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="button-primary"
+              onClick={() => handleArrayAdd('hillshade.addTo')}
+            >
+              + Agregar Mapa
             </button>
           </div>
-        ))}
-        <button type="button" onClick={() => handleArrayAdd("hillshade.addTo")}>
-          Añadir capa
-        </button>
+        )}
+      </div>
 
-        <br />
-        <label>
-          Icon:
-          <input
-            type="text"
-            value={preferences.hillshade.icon}
-            onChange={(e) => handleChange("hillshade.icon", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Switch Label:
-          <input
-            type="text"
-            value={preferences.hillshade.switchLabel}
-            onChange={(e) => handleChange("hillshade.switchLabel", e.target.value)}
-          />
-        </label>
-      </fieldset>
+      {/* Strings Configuration */}
+      <div className="accordion-item">
+        <div
+          className="accordion-header"
+          onClick={() => toggleSection(17)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleSection(17);
+          }}
+        >
+          <span>Configuración de Textos</span>
+        </div>
+        {openSections.includes(17) && (
+          <div className="accordion-content">
+            <input
+              placeholder="Texto zoom mínimo"
+              value={localPreferences.strings.basemap_min_zoom}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.strings.basemap_min_zoom = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Texto zoom máximo"
+              value={localPreferences.strings.basemap_max_zoom}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.strings.basemap_max_zoom = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Texto del botón de leyenda"
+              value={localPreferences.strings.basemap_legend_button_text}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.strings.basemap_legend_button_text = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+            <input
+              placeholder="Texto eliminar geometría"
+              value={localPreferences.strings.delete_geometry}
+              onChange={(e) => {
+                const newPrefs = { ...localPreferences };
+                newPrefs.strings.delete_geometry = e.target.value;
+                setLocalPreferences(newPrefs);
+              }}
+            />
+          </div>
+        )}
+      </div>
 
-      <br />
-
-      {/* Strings */}
-      <fieldset>
-        <legend>Strings</legend>
-        <label>
-          basemap_min_zoom:
-          <input
-            type="text"
-            value={preferences.strings.basemap_min_zoom}
-            onChange={(e) => handleChange("strings.basemap_min_zoom", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          basemap_max_zoom:
-          <input
-            type="text"
-            value={preferences.strings.basemap_max_zoom}
-            onChange={(e) => handleChange("strings.basemap_max_zoom", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          basemap_legend_button_text:
-          <input
-            type="text"
-            value={preferences.strings.basemap_legend_button_text}
-            onChange={(e) =>
-              handleChange("strings.basemap_legend_button_text", e.target.value)
-            }
-          />
-        </label>
-        <br />
-        <label>
-          delete_geometry:
-          <input
-            type="text"
-            value={preferences.strings.delete_geometry}
-            onChange={(e) => handleChange("strings.delete_geometry", e.target.value)}
-          />
-        </label>
-      </fieldset>
-
-      <br />
-
-      <button
-        type="submit"
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#008dc9",
-          color: "white",
-          border: "none",
-          borderRadius: 5,
-          cursor: "pointer",
-        }}
-      >
-        Guardar preferencias
-      </button>
-    </form>
+      <hr />
+    </div>
   );
 }
 
