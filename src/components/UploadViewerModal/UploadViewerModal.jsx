@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '../../context/ToastContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import './UploadViewerModal.css';
@@ -7,70 +7,85 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { showToast } = useToast()
   const [hoverText, setHoverText] = useState("");
+  const [khartaFile, setKhartaFile] = useState(null);
+  const [khartaError, setKhartaError] = useState("");
+  const [preferencesFile, setPreferencesFile] = useState(null);
+  const [dataFile, setDataFile] = useState(null);
+  const [error, setError] = useState("");
 
-  const handleUploadViewerKharta = (event) => {
+  const handleUploadKhartaFile = (event) => {
     const file = event.target.files[0];
-    if (file) {
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target.result);
+
+        if (!json.configVersion) {
+          throw new Error("El JSON no tiene la propiedad 'configVersion'");
+        }
+
+        setKhartaFile({ file, json });
+        setKhartaError("");
+        // navigate('/form', { state: { externalUpload: json } });
+
+      } catch (err) {
+        setKhartaFile(null);
+        setKhartaError(`❌ ${file.name}: ${err.message}`);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const validateFile = (file, content) => {
+    try {
+      const json = JSON.parse(content);
+
+      // Validar preferences.json
+      if (file.name.toLowerCase().includes("preferences")) {
+        if (!json.mapConfig || !json.table || !json.charts) {
+          throw new Error("Estructura inválida en preferences.json");
+        }
+        setPreferencesFile({ file, json });
+        return;
+      }
+
+      // Validar data.json
+      if (file.name.toLowerCase().includes("data")) {
+        if (!Array.isArray(json.items)) {
+          throw new Error("Estructura inválida en data.json");
+        }
+        setDataFile({ file, json });
+        return;
+      }
+
+      throw new Error("El archivo no es válido para Argenmap");
+    } catch (err) {
+      setError(`❌ ${file.name}: ${err.message}`);
+    }
+  };
+
+  const handleFiles = (files) => {
+    Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const jsonData = JSON.parse(e.target.result);
-
-        // Validar que sea un JSON de Kharta
-        // if (!jsonData.hasOwnProperty("khartaConfig") && !jsonData.hasOwnProperty("version")) {
-        //   showToast("El archivo no es un visor Kharta válido", "error");
-        //   return;
-        // }
-
-        navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
-      };
+      reader.onload = (e) => validateFile(file, e.target.result);
       reader.readAsText(file);
-    }
-  };
-
-  const handleUploadViewerArgenmap = (event) => {
-    const files = event.target.files;
-
-    if (!files || files.length !== 2) {
-      showToast("Debes seleccionar exactamente 2 archivos JSON para Argenmap", "error");
-      return;
-    }
-
-    const readers = [];
-    const jsonResults = [];
-
-    Array.from(files).forEach((file, index) => {
-      const reader = new FileReader();
-      readers.push(
-        new Promise((resolve, reject) => {
-          reader.onload = (e) => {
-            try {
-              const jsonData = JSON.parse(e.target.result);
-              jsonResults[index] = jsonData;
-              resolve();
-            } catch (error) {
-              reject("Error al leer el archivo: " + file.name);
-            }
-          };
-          reader.readAsText(file);
-        })
-      );
     });
-
-    Promise.all(readers)
-      .then(() => {
-        navigate('/form', {
-          state: {
-            externalUpload: {
-              type: "argenmap",
-              files: jsonResults
-            }
-          }
-        });
-      })
-      .catch((error) => {
-        showToast(error, "error");
-      });
   };
+
+  // const handleDrop = (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   handleFiles(e.dataTransfer.files);
+  // };
+
+  const handleInputChange = (e) => {
+    setError("");
+    handleFiles(e.target.files);
+  };
+
+  const ready = preferencesFile && dataFile;
 
   if (!isOpen) return null;
 
@@ -79,50 +94,86 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
       <div className="upload-viewer-modal">
         <h2 className="create-viewer-title">
           <i className="fa-solid fa-upload upload-title-icon"></i>
-          Subir visor
+          Subir nuevo visor
         </h2>
 
         <h2 className="create-viewer-subtitle">
-          Seleccione un tipo de visor
+          Seleccione un tipo de visor para su proyecto
         </h2>
 
         <div className="upload-viewer-options">
-          <label
+
+          <div
             className="upload-option"
-            onMouseEnter={() => setHoverText("Subí tus 2 archivos JSON para el visor Argenmap")}
+            onClick={() => document.getElementById("fileInput").click()}
+            onDrop={(e) => {
+              e.preventDefault();
+              setError("");
+              handleFiles(e.dataTransfer.files);
+            }}
+            onDragOver={(e) => e.preventDefault()}
+            onMouseEnter={() =>
+              setHoverText("Debes seleccionar exactamente 2 archivos JSON para Argenmap")
+            }
             onMouseLeave={() => setHoverText("")}
           >
+            <img src="/assets/logoArgenmap.png" alt="Argenmap" />
+            <span>Argenmap</span>
+
             <input
+              id="fileInput"
               type="file"
               accept=".json"
               multiple
-              onChange={handleUploadViewerArgenmap}
+              onChange={handleInputChange}
               style={{ display: "none" }}
+              onDrop={(e) => e.preventDefault()}
             />
-            <img src="/assets/logoArgenmap.png" alt="Argenmap" />
-            <span>Argenmap</span>
-          </label>
+          </div>
 
           <div className="upload-separator"></div>
 
           <label
             className="upload-option"
-            onMouseEnter={() => setHoverText("Subí un archivo JSON para el visor Kharta")}
+            onClick={() => document.getElementById("fileInputKharta").click()}
+            onDrop={(e) => {
+              e.preventDefault();
+              const files = e.dataTransfer.files;
+              if (files.length === 0) return;
+              handleUploadKhartaFile({ target: { files } });
+            }}
+            onDragOver={(e) => e.preventDefault()}
+            onMouseEnter={() => setHoverText("Subí un archivo JSON válido para Kharta")}
             onMouseLeave={() => setHoverText("")}
           >
-            <input
-              type="file"
-              accept=".json"
-              onChange={handleUploadViewerKharta}
-              style={{ display: "none" }}
-            />
             <img src="/assets/logoArgenmap.png" alt="Kharta" />
             <span>Kharta</span>
+
+            <input
+              id="fileInputKharta"
+              type="file"
+              accept=".json"
+              style={{ display: "none" }}
+              onChange={handleUploadKhartaFile}
+              onDrop={(e) => e.preventDefault()}
+            />
           </label>
+
         </div>
 
         <div className="upload-hover-area">
           {hoverText && <p className="upload-hover-text">{hoverText}</p>}
+        </div>
+
+        <div className="upload-feedback">
+          {preferencesFile && <p>✅ {preferencesFile.file.name} cargado correctamente</p>}
+          {dataFile && <p>✅ {dataFile.file.name} cargado correctamente</p>}
+          {error && <p className="upload-error">{error}</p>}
+        </div>
+
+        <div className="upload-feedback">
+          {khartaFile && <p>✅ {khartaFile.file.name} cargado correctamente</p>}
+          {khartaError && <p className="upload-error">{khartaError}</p>}
         </div>
 
         <div className="upload-viewer-footer">
