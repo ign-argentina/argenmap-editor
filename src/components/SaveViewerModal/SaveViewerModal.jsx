@@ -158,7 +158,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
           maxLength={255}
         />
         <div style={{ textAlign: 'right', fontSize: '0.85em', color: '#666' }}>
-          {description.length}/255
+          {description?.length}/255
         </div>
 
         {imageData == null ? (

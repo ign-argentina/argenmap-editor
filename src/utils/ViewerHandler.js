@@ -1,3 +1,6 @@
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+
 /**
  * Nombre base por defecto para el archivo descargado.
  * @constant
@@ -14,13 +17,35 @@ const BASE_FILE_NAME = "Visor"
  * @param {Object|null} baseViewer - Objeto de referencia que define la estructura y orden. Opcional.
  * @param {string|null} name - Nombre base del archivo. Si no se pasa, se usa `BASE_FILE_NAME`.
  */
-export const downloadViewer = (viewer, baseViewer = null, name = null) => {
-  if (baseViewer){
-    viewer = mergeViewer(viewer, baseViewer)
-  }
+export const downloadViewer = async (viewer, isArgenmap = false, name = null) => {
   const date = formatDateForFilename(new Date());
-  download(viewer, name ? name : BASE_FILE_NAME, date)
-}
+  const filename = `${name || BASE_FILE_NAME}_${isArgenmap ? "ArgenMap" : ""}_${date}`;
+
+  if (isArgenmap) {
+    // Si viewer es un objeto con múltiples recursos (por ejemplo: {data, config, image})
+    const zip = new JSZip();
+
+    // Suponiendo que viewer tiene claves como data, config, image, etc.
+    for (const [key, value] of Object.entries(viewer)) {
+      if (typeof value === 'string' || value instanceof Blob) {
+        // Si es una cadena o blob (ej. JSON string, texto, imagen, etc.)
+        zip.file(`${key}.txt`, value); // o `${key}.json`, `.png`, según corresponda
+      } else {
+        // Si es un objeto, lo serializamos como JSON
+        zip.file(`${key}.json`, JSON.stringify(value, null, 2));
+      }
+    }
+
+    const content = await zip.generateAsync({ type: 'blob' });
+    saveAs(content, `${filename}.zip`);
+  } else {
+    // Comportamiento anterior: descargar archivo suelto
+    download(viewer, filename);
+  }
+};
+
+
+//  const date = formatDateForFilename(new Date());
 
 /**
  * Fusiona un objeto `viewer` con una estructura base (`baseViewer`),
@@ -33,8 +58,8 @@ export const downloadViewer = (viewer, baseViewer = null, name = null) => {
  * @returns {Object} - Objeto resultante con claves restauradas y ordenadas.
  */
 export const mergeViewer = (viewer, baseViewer) => {
-    return deepMergeWithDefaults(viewer, baseViewer)
-/*   return orderObjectByReference(deepMergeWithDefaults(viewer, baseViewer), baseViewer) */
+  return deepMergeWithDefaults(viewer, baseViewer)
+  /*   return orderObjectByReference(deepMergeWithDefaults(viewer, baseViewer), baseViewer) */
 }
 
 /**
@@ -162,7 +187,7 @@ function getEmptyValue(defaultVal) {
   return null;
 }
 
-function deepMergeWithDefaults (userConfig, defaultConfig) {
+function deepMergeWithDefaults(userConfig, defaultConfig) {
   // Si default es array:
   if (Array.isArray(defaultConfig)) {
     // Si usuario NO envía array, devolver array vacío
@@ -185,7 +210,7 @@ function deepMergeWithDefaults (userConfig, defaultConfig) {
       if (usrVal === undefined) {
         result[key] = getEmptyValue(defVal);
       } else {
-        result[key] = deepMergeWithDefaults (usrVal, defVal);
+        result[key] = deepMergeWithDefaults(usrVal, defVal);
       }
     }
     return result;
@@ -197,5 +222,5 @@ function deepMergeWithDefaults (userConfig, defaultConfig) {
 
 const ordenar = (actual, base) => {
 
-  
+
 }
