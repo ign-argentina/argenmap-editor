@@ -28,9 +28,17 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
         setKhartaFile({ file, json });
         setKhartaError("");
-        console.log("Tamos listos - Kharta Edition")
-        // navigate('/form', { state: { externalUpload: json } });
-
+        // NAVIGATE, ENVIA ESTADO AL FORM Y JSON
+        navigate('/form', {
+          state: {
+            externalUpload: {
+              type: "isKharta",
+              files: {
+                config: { json }
+              }
+            }
+          }
+        });
       } catch (err) {
         setKhartaFile(null);
         setKhartaError(`❌ ${file.name}: ${err.message}`);
@@ -86,19 +94,20 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     handleFiles(e.target.files);
   };
 
+  // NAVIGATE, ENVIA ESTADO AL FORM Y JSON
   useEffect(() => {
     if (preferencesFile && dataFile) {
-      // navigate('/form', {
-      //   state: {
-      //     externalUpload: {
-      //       type: "argenmap",
-      //       files: {
-      //         preferences: preferencesFile.json,
-      //         data: dataFile.json
-      //       }
-      //     }
-      //   }
-      // });
+      navigate('/form', {
+        state: {
+          externalUpload: {
+            type: "isArgenmap",
+            files: {
+              preferences: preferencesFile.json,
+              data: dataFile.json
+            }
+          }
+        }
+      });
       console.log("Tamos listos")
     }
   }, [preferencesFile, dataFile, navigate]);
