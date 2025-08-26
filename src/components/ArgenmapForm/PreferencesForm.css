@@ -33,12 +33,13 @@
 
 /* Only keep classes used in PreferencesForm.jsx */
 .preferencesform-container {
-  max-width: 900px;
+  width: 100%;
   margin: 2rem auto;
   padding: 1.5rem;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(23, 38, 59, 0.08);
+  box-sizing: border-box;
 }
 .preferencesform-header {
   text-align: center;
