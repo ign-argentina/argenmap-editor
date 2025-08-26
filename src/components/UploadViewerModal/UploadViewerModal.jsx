@@ -184,7 +184,6 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="upload-feedback">
-          {khartaFile && <p>✅ {khartaFile.file.name} cargado correctamente</p>}
           {khartaError && <p className="upload-error">❌Kharta: {khartaError}</p>}
         </div>
 
