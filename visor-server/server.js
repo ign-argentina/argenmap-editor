@@ -44,24 +44,11 @@ app.post('/argenmap/custom', (req, res) => {
     const { data, preferences } = req.body;
     /*     console.log("data: ", a.data) */
     // DEFAULT
-    const CONFIGS = [
-      {
-        data: path.join(__dirname, 'statics/argenmap/data.json'),
-        preferences: path.join(__dirname, 'statics/argenmap/preferences.json')
-      },
-      {
-        data: path.join(__dirname, 'statics/argenmap/1/data.json'),
-        preferences: path.join(__dirname, 'statics/argenmap/1/preferences.json')
-      },
-      {
-        data: path.join(__dirname, 'statics/argenmap/2/data.json'),
-        preferences: path.join(__dirname, 'statics/argenmap/2/preferences.json')
-      },
-      {
-        data: path.join(__dirname, 'statics/argenmap/3/data.json'),
-        preferences: path.join(__dirname, 'statics/argenmap/3/preferences.json')
-      }
-    ]
+    const DEFAULT_CONFIG =
+    {
+      data: path.join(__dirname, 'statics/argenmap/data.json'),
+      preferences: path.join(__dirname, 'statics/argenmap/preferences.json')
+    }
 
     //
     const webPath = path.join(__dirname, 'public/argenmap/index.html');
@@ -73,11 +60,9 @@ app.post('/argenmap/custom', (req, res) => {
     let dataJson = null
     let preferencesJson = null
     if (existsSync(webPath)) {
-      dataJson = data ? JSON.parse(data) : JSON.parse(readFileSync(CONFIGS[randomInt].data, 'utf-8'));
-      preferencesJson = preferences != "null" ? JSON.parse(preferences) : JSON.parse(readFileSync(CONFIGS[randomInt].preferences, 'utf-8'));
+      dataJson = data != "null" ? JSON.parse(data) : JSON.parse(readFileSync(DEFAULT_CONFIG.data, 'utf-8'));
+      preferencesJson = preferences != "null" ? JSON.parse(preferences) : JSON.parse(readFileSync(DEFAULT_CONFIG.preferences, 'utf-8'));
     }
-
-
 
     // 3) Inyectar datos de ejecución
     const injectScript = `
