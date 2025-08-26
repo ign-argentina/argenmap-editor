@@ -1,9 +1,210 @@
+/* Checkbox simple, pequeño y sin efectos duplicados */
+.form-group input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff;
+  margin: 0 8px 0 0;
+  font: inherit;
+  color: #0b74d1;
+    width: 8px;
+    height: 8px;
+  border: 2px solid #0b74d1;
+  border-radius: 6px;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.form-group input[type="checkbox"]:checked {
+  background: #0b74d1;
+  border-color: #0b74d1;
+}
+.form-group input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+    width: 5.5px;
+    height: 9.5px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: translate(-50%, -60%) rotate(45deg);
+  pointer-events: none;
+}
+/* (Regla eliminada, ya cubierta por otras reglas) */
+.accordion-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.accordion-header {
+  background: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+.accordion-title {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-weight: 600;
+}
+.accordion-caret {
+  font-size: 16px;
+  opacity: 0.9;
+}
+.accordion-content {
+  padding: 1.2rem;
+  border-top: 1px solid #eef2f6;
+  background: #fff;
+  color: #222;
+}
+.form-group {
+  margin-bottom: 1.2rem;
+}
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  color: #243140;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d7dfe9;
+  font-size: 1rem;
+  color: #1f2a37;
+  transition: border-color 0.15s ease;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0b74d1;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.button-primary {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: opacity 0.2s ease;
+  margin-right: auto;
+  display: block;
+}
+.button-primary:hover {
+  opacity: 0.96;
+}
+.button-delete {
+  background: #e34b4b;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.button-delete:hover {
+  background: #c93c3c;
+}
+.zoom-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 1rem;
+  background: #f4f7fb;
+  border: 1px solid #dce3ed;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.zoom-inputs div {
+  display: flex;
+  flex-direction: column;
+}
+.zoom-inputs label {
+  font-size: 0.85rem;
+  color: #586070;
+  margin-bottom: 4px;
+}
+.zoom-inputs input {
+  padding: 0.8rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #1f2a37;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+}
+.zoom-inputs input:focus {
+  outline: none;
+  border-color: #0b74d1;
+}
+.zoom-inputs input:hover {
+  border-color: #0b74d1;
+}
+.empty-state {
+  padding: 1rem;
+  background: #fff8e6;
+  border-radius: 10px;
+  color: #735b00;
+  border: 1px solid #ffe7b5;
+  text-align: center;
+}
+.highlight-badge {
+  background: none;
+  color: var(--primary--color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  background: linear-gradient(90deg, var(--primary--color), var(--secondary--color));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .zoom-inputs {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .controls {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .zoom-inputs input {
+    font-size: 0.95rem;
+  }
+}
 /* PreferencesForm Accordion Styles */
 .preferences-container {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: auto;
-  padding: 1rem;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  max-width: 980px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(23, 38, 59, 0.08);
 }
 
 .preferences-container h2 {
@@ -14,34 +215,38 @@
 
 /* Accordion Section */
 .preference-section {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  background: #f9f9f9;
+  border: 1px solid #e6e9ee;
+  border-radius: 10px; /* Rounded corners */
+  margin-bottom: 16px;
+  background: #f8fafc;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease;
+  padding: 0.9rem 1.2rem; /* Maintain current size */
+  height: auto; /* Dynamically adjust height */
+  width: 100%; /* Ensure full width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  box-sizing: border-box; /* Include padding and borders in width/height */
 }
 
 .preference-section:hover {
-  border-color: #007acc;
-  box-shadow: 0 2px 5px rgba(0, 122, 204, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Accordion Header */
 .preference-header {
-  background: linear-gradient(135deg, #007acc, #005fa3);
-  color: white;
-  padding: 1rem 1.5rem;
+  background: linear-gradient(90deg, #0b74d1, #026aa7);
+  color: #fff;
+  padding: 0.9rem 1.2rem;
   cursor: pointer;
   user-select: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background 0.3s ease;
+  transition: background 0.2s ease;
 }
 
 .preference-header:hover {
-  background: linear-gradient(135deg, #005fa3, #004580);
+  background: linear-gradient(90deg, #0a6ac0, #025b92);
 }
 
 .preference-header h3 {
@@ -62,9 +267,9 @@
 
 /* Accordion Content */
 .preference-content {
-  padding: 1.5rem;
-  border-top: 1px solid #e0e0e0;
-  background: white;
+  padding: 1.2rem;
+  border-top: 1px solid #eef2f6;
+  background: #fff;
   animation: slideDown 0.3s ease;
 }
 
@@ -81,6 +286,83 @@
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
   }
+}
+
+/* Apply consistent input styles to all inputs in the component */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  color: #1f2a37;
+  background: #f9fafb;
+  transition: border-color 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #0b74d1;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #0b74d1;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+input.error,
+select.error,
+textarea.error {
+  border-color: #dc3545;
+}
+
+/* Styles for form-group-input */
+.form-group-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  color: #1f2a37;
+  background: #f9fafb;
+  transition: border-color 0.2s ease;
+}
+
+/* Solo una regla de focus, sin duplicados ni llaves sueltas */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+
+  font-style: italic;
+}
+
+.form-group-input:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.form-group-input.error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
 }
 
 /* Form Groups */
@@ -104,41 +386,23 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease;
   box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
   outline: none;
   border-color: #007acc;
-  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
-}
-
-/* Checkbox Styling */
-.checkbox-label {
-  display: flex !important;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500 !important;
-  cursor: pointer;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: auto !important;
-  margin: 0;
-  transform: scale(1.2);
-}
-
-/* Nested Sections */
-.nested-section {
   background: #f8f9fa;
   border: 1px solid #e9ecef;
   border-radius: 6px;
   padding: 1rem;
   margin-bottom: 1rem;
 }
+/* (Regla eliminada, ya cubierta por la nueva definición de checkbox) */
+
+
+/* (Regla duplicada eliminada) */
+/* Eliminar reglas huérfanas y llaves sueltas */
 
 .nested-section h4 {
   margin: 0 0 1rem 0;
@@ -232,6 +496,25 @@
 
 .submit-button:active {
   transform: translateY(0);
+}
+
+/* Styles for Geoprocessing Available Processes */
+.geoprocessing-process {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 4px;
+}
+
+/* Styles for Hillshade AddTo Maps */
+.hillshade-map {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hillshade-map input {
+  flex: 1;
 }
 
 /* Responsive Design */

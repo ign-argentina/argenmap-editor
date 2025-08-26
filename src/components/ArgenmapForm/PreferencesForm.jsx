@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./DataForm.css";
+import "./PreferencesForm.css";
 
 const defaultPreferences = {
   table: {
@@ -213,10 +213,10 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
   };
 
   return (
-    <div className="dataform-container">
-      <h2>Formulario de Preferencias</h2>
+    <div className="preferencesform-container">
+      <h2 className="preferencesform-header">Formulario de Preferencias</h2>
 
-      <h3>Configuraciones Básicas</h3>
+      <h3 className="preferencesform-subtitle">Configuraciones Básicas</h3>
       
       {/* Table Settings */}
       <div className="accordion-item">
@@ -233,28 +233,33 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(0) && (
           <div className="accordion-content">
-            <label>
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={localPreferences.table.isActiva}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.table.isActiva = e.target.checked;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                Tabla Activa
+              </label>
+            </div>
+            <div className="form-group">
+              <label>Límite de filas</label>
               <input
-                type="checkbox"
-                checked={localPreferences.table.isActiva}
+                type="number"
+                placeholder="Límite de filas"
+                value={localPreferences.table.rowsLimit}
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
-                  newPrefs.table.isActiva = e.target.checked;
+                  newPrefs.table.rowsLimit = Number(e.target.value);
                   setLocalPreferences(newPrefs);
                 }}
               />
-              Tabla Activa
-            </label>
-            <input
-              type="number"
-              placeholder="Límite de filas"
-              value={localPreferences.table.rowsLimit}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.table.rowsLimit = Number(e.target.value);
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            </div>
           </div>
         )}
       </div>
@@ -274,18 +279,20 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(1) && (
           <div className="accordion-content">
-            <label>
-              <input
-                type="checkbox"
-                checked={localPreferences.charts.isActive}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.charts.isActive = e.target.checked;
-                  setLocalPreferences(newPrefs);
-                }}
-              />
-              Gráficos Activos
-            </label>
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={localPreferences.charts.isActive}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.charts.isActive = e.target.checked;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                Gráficos Activos
+              </label>
+            </div>
           </div>
         )}
       </div>
@@ -305,18 +312,20 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(2) && (
           <div className="accordion-content">
-            <label>
-              <input
-                type="checkbox"
-                checked={localPreferences.layer_options.isActive}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.layer_options.isActive = e.target.checked;
-                  setLocalPreferences(newPrefs);
-                }}
-              />
-              Opciones de Capas Activas
-            </label>
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={localPreferences.layer_options.isActive}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.layer_options.isActive = e.target.checked;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                Opciones de Capas Activas
+              </label>
+            </div>
           </div>
         )}
       </div>
@@ -337,16 +346,19 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         {openSections.includes(3) && (
           <div className="accordion-content">
             <strong>WMTS:</strong>
-            <input
-              type="number"
-              placeholder="Zoom máximo"
-              value={localPreferences.service.wmts.maxZoom}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.service.wmts.maxZoom = Number(e.target.value);
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>Zoom máximo</label>
+              <input
+                type="number"
+                placeholder="Zoom máximo"
+                value={localPreferences.service.wmts.maxZoom}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.service.wmts.maxZoom = Number(e.target.value);
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -366,45 +378,56 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(4) && (
           <div className="accordion-content">
-            <input
-              placeholder="Título de la aplicación"
-              value={localPreferences.title}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.title = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Sitio web"
-              value={localPreferences.website}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.website = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Favicon"
-              value={localPreferences.favicon}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.favicon = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <label>
+            <div className="form-group">
+              <label>Título de la aplicación</label>
               <input
-                type="checkbox"
-                checked={localPreferences.showSearchBar}
+                placeholder="Título de la aplicación"
+                value={localPreferences.title}
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
-                  newPrefs.showSearchBar = e.target.checked;
+                  newPrefs.title = e.target.value;
                   setLocalPreferences(newPrefs);
                 }}
               />
-              Mostrar barra de búsqueda
-            </label>
+            </div>
+            <div className="form-group">
+              <label>Sitio web</label>
+              <input
+                placeholder="Sitio web"
+                value={localPreferences.website}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.website = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Favicon</label>
+              <input
+                placeholder="Favicon"
+                value={localPreferences.favicon}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.favicon = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={localPreferences.showSearchBar}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.showSearchBar = e.target.checked;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                Mostrar barra de búsqueda
+              </label>
+            </div>
           </div>
         )}
       </div>
@@ -424,33 +447,42 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(5) && (
           <div className="accordion-content">
-            <input
-              placeholder="Título"
-              value={localPreferences.metaTags.title}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.metaTags.title = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Descripción"
-              value={localPreferences.metaTags.description}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.metaTags.description = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="URL de imagen"
-              value={localPreferences.metaTags.image}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.metaTags.image = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>Título</label>
+              <input
+                placeholder="Título"
+                value={localPreferences.metaTags.title}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.metaTags.title = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Descripción</label>
+              <input
+                placeholder="Descripción"
+                value={localPreferences.metaTags.description}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.metaTags.description = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>URL de imagen</label>
+              <input
+                placeholder="URL de imagen"
+                value={localPreferences.metaTags.image}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.metaTags.image = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -470,64 +502,81 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(6) && (
           <div className="accordion-content">
-            <label>
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={localPreferences.searchbar.isActive}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.searchbar.isActive = e.target.checked;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                Barra de búsqueda activa
+              </label>
+            </div>
+            <div className="form-group">
+              <label>Posición superior (ej: 5px)</label>
               <input
-                type="checkbox"
-                checked={localPreferences.searchbar.isActive}
+                placeholder="Posición superior (ej: 5px)"
+                value={localPreferences.searchbar.top}
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
-                  newPrefs.searchbar.isActive = e.target.checked;
+                  newPrefs.searchbar.top = e.target.value;
                   setLocalPreferences(newPrefs);
                 }}
               />
-              Barra de búsqueda activa
-            </label>
-            <input
-              placeholder="Posición superior (ej: 5px)"
-              value={localPreferences.searchbar.top}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.searchbar.top = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Posición izquierda (ej: 40%)"
-              value={localPreferences.searchbar.left}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.searchbar.left = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              type="color"
-              value={localPreferences.searchbar.color_focus}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.searchbar.color_focus = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-              title="Color de foco"
-            />
-            <input
-              placeholder="Color de fondo (ej: rgba(255,255,255,0.7))"
-              value={localPreferences.searchbar.background_color}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.searchbar.background_color = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Placeholder"
-              value={localPreferences.searchbar.strings.placeholder}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.searchbar.strings.placeholder = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            </div>
+            <div className="form-group">
+              <label>Posición izquierda (ej: 40%)</label>
+              <input
+                placeholder="Posición izquierda (ej: 40%)"
+                value={localPreferences.searchbar.left}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.searchbar.left = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Color de foco</label>
+              <input
+                type="color"
+                value={localPreferences.searchbar.color_focus}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.searchbar.color_focus = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+                title="Color de foco"
+              />
+            </div>
+            <div className="form-group">
+              <label>Color de fondo (ej: rgba(255,255,255,0.7))</label>
+              <input
+                placeholder="Color de fondo (ej: rgba(255,255,255,0.7))"
+                value={localPreferences.searchbar.background_color}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.searchbar.background_color = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Placeholder</label>
+              <input
+                placeholder="Placeholder"
+                value={localPreferences.searchbar.strings.placeholder}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.searchbar.strings.placeholder = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -547,70 +596,91 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(7) && (
           <div className="accordion-content">
-            <input
-              placeholder="URL del geocodificador"
-              value={localPreferences.geocoder.url}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geocoder.url = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Endpoint de búsqueda"
-              value={localPreferences.geocoder.search}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geocoder.search = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="URL por ID"
-              value={localPreferences.geocoder.url_by_id}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geocoder.url_by_id = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Parámetro de consulta"
-              value={localPreferences.geocoder.query}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geocoder.query = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Idioma"
-              value={localPreferences.geocoder.lang}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geocoder.lang = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              type="number"
-              placeholder="Límite de resultados"
-              value={localPreferences.geocoder.limit}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geocoder.limit = Number(e.target.value);
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Clave API"
-              value={localPreferences.geocoder.key}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geocoder.key = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>URL del geocodificador</label>
+              <input
+                placeholder="URL del geocodificador"
+                value={localPreferences.geocoder.url}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geocoder.url = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Endpoint de búsqueda</label>
+              <input
+                placeholder="Endpoint de búsqueda"
+                value={localPreferences.geocoder.search}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geocoder.search = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>URL por ID</label>
+              <input
+                placeholder="URL por ID"
+                value={localPreferences.geocoder.url_by_id}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geocoder.url_by_id = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Parámetro de consulta</label>
+              <input
+                placeholder="Parámetro de consulta"
+                value={localPreferences.geocoder.query}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geocoder.query = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Idioma</label>
+              <input
+                placeholder="Idioma"
+                value={localPreferences.geocoder.lang}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geocoder.lang = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Límite de resultados</label>
+              <input
+                type="number"
+                placeholder="Límite de resultados"
+                value={localPreferences.geocoder.limit}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geocoder.limit = Number(e.target.value);
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Clave API</label>
+              <input
+                placeholder="Clave API"
+                value={localPreferences.geocoder.key}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geocoder.key = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -630,45 +700,56 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(8) && (
           <div className="accordion-content">
-            <label>
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={localPreferences.referencias.show}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.referencias.show = e.target.checked;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                Mostrar referencias
+              </label>
+            </div>
+            <div className="form-group">
+              <label>Icono</label>
               <input
-                type="checkbox"
-                checked={localPreferences.referencias.show}
+                placeholder="Icono"
+                value={localPreferences.referencias.icon}
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
-                  newPrefs.referencias.show = e.target.checked;
+                  newPrefs.referencias.icon = e.target.value;
                   setLocalPreferences(newPrefs);
                 }}
               />
-              Mostrar referencias
-            </label>
-            <input
-              placeholder="Icono"
-              value={localPreferences.referencias.icon}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.referencias.icon = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Ancho"
-              value={localPreferences.referencias.width}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.referencias.width = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Alto"
-              value={localPreferences.referencias.height}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.referencias.height = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            </div>
+            <div className="form-group">
+              <label>Ancho</label>
+              <input
+                placeholder="Ancho"
+                value={localPreferences.referencias.width}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.referencias.width = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Alto</label>
+              <input
+                placeholder="Alto"
+                value={localPreferences.referencias.height}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.referencias.height = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -689,8 +770,9 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         {openSections.includes(9) && (
           <div className="accordion-content">
             {localPreferences.analytics_ids.map((id, index) => (
-              <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div key={index} className="form-group" style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <input
+                  className="array-item"
                   placeholder="Analytics ID"
                   value={id}
                   onChange={(e) => {
@@ -736,8 +818,9 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         {openSections.includes(10) && (
           <div className="accordion-content">
             {localPreferences.excluded_plugins.map((plugin, index) => (
-              <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div key={index} className="form-group" style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <input
+                  className="array-item"
                   placeholder="Nombre del plugin"
                   value={plugin}
                   onChange={(e) => {
@@ -782,27 +865,32 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(11) && (
           <div className="accordion-content">
-            <strong>Centro del Mapa:</strong>
-            <input
-              type="number"
-              placeholder="Latitud"
-              value={localPreferences.mapConfig.center.latitude}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.mapConfig.center.latitude = Number(e.target.value);
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              type="number"
-              placeholder="Longitud"
-              value={localPreferences.mapConfig.center.longitude}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.mapConfig.center.longitude = Number(e.target.value);
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>Centro del Mapa: Latitud</label>
+              <input
+                type="number"
+                placeholder="Latitud"
+                value={localPreferences.mapConfig.center.latitude}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.mapConfig.center.latitude = Number(e.target.value);
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Centro del Mapa: Longitud</label>
+              <input
+                type="number"
+                placeholder="Longitud"
+                value={localPreferences.mapConfig.center.longitude}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.mapConfig.center.longitude = Number(e.target.value);
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
             <strong>Zoom:</strong>
             <div className="zoom-inputs">
               <input
@@ -855,7 +943,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(12) && (
           <div className="accordion-content">
-            <div className="form-field">
+            <div className="form-group">
               <label>Color de fondo del cuerpo:</label>
               <input
                 type="color"
@@ -868,8 +956,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Selecciona el color de fondo principal de la aplicación"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Color de fondo del encabezado:</label>
               <input
                 type="color"
@@ -882,8 +969,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Color de fondo de la barra superior"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Color de fondo del menú:</label>
               <input
                 type="color"
@@ -896,8 +982,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Color de fondo del panel de capas y menús laterales"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Color de capa activa:</label>
               <input
                 type="color"
@@ -910,8 +995,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Color de resaltado para la capa seleccionada"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Color de texto del menú:</label>
               <input
                 type="color"
@@ -924,8 +1008,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Color del texto en los menús laterales"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Estilo CSS del texto del menú:</label>
               <input
                 type="text"
@@ -939,8 +1022,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Estilos CSS adicionales para el texto del menú"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Color de texto de leyenda:</label>
               <input
                 type="color"
@@ -953,8 +1035,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Color del texto en las leyendas de capas"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Estilo CSS del texto de leyenda:</label>
               <input
                 type="text"
@@ -968,8 +1049,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 title="Estilos CSS adicionales para el texto de leyendas"
               />
             </div>
-            
-            <div className="form-field">
+            <div className="form-group">
               <label>Color de barra de iconos:</label>
               <input
                 type="color"
@@ -1001,96 +1081,126 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(13) && (
           <div className="accordion-content">
-            <input
-              placeholder="Título del logo"
-              value={localPreferences.logo.title}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.title = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="URL de la imagen del logo"
-              value={localPreferences.logo.src}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.src = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Alto del logo"
-              value={localPreferences.logo.height}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.height = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Ancho del logo"
-              value={localPreferences.logo.width}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.width = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Estilo del logo"
-              value={localPreferences.logo.style}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.style = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="URL del logo mini"
-              value={localPreferences.logo.srcLogoMini}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.srcLogoMini = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Alto del logo mini"
-              value={localPreferences.logo.miniHeight}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.miniHeight = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Ancho del logo mini"
-              value={localPreferences.logo.miniWidth}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.miniWidth = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Estilo del logo mini"
-              value={localPreferences.logo.ministyle}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.ministyle = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Enlace del logo"
-              value={localPreferences.logo.link}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logo.link = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>Título del logo</label>
+              <input
+                placeholder="Título del logo"
+                value={localPreferences.logo.title}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.title = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>URL de la imagen del logo</label>
+              <input
+                placeholder="URL de la imagen del logo"
+                value={localPreferences.logo.src}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.src = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Alto del logo</label>
+              <input
+                placeholder="Alto del logo"
+                value={localPreferences.logo.height}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.height = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Ancho del logo</label>
+              <input
+                placeholder="Ancho del logo"
+                value={localPreferences.logo.width}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.width = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Estilo del logo</label>
+              <input
+                placeholder="Estilo del logo"
+                value={localPreferences.logo.style}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.style = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>URL del logo mini</label>
+              <input
+                placeholder="URL del logo mini"
+                value={localPreferences.logo.srcLogoMini}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.srcLogoMini = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Alto del logo mini</label>
+              <input
+                placeholder="Alto del logo mini"
+                value={localPreferences.logo.miniHeight}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.miniHeight = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Ancho del logo mini</label>
+              <input
+                placeholder="Ancho del logo mini"
+                value={localPreferences.logo.miniWidth}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.miniWidth = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Estilo del logo mini</label>
+              <input
+                placeholder="Estilo del logo mini"
+                value={localPreferences.logo.ministyle}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.ministyle = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Enlace del logo</label>
+              <input
+                placeholder="Enlace del logo"
+                value={localPreferences.logo.link}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logo.link = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -1110,33 +1220,42 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(14) && (
           <div className="accordion-content">
-            <input
-              placeholder="Titulo del Mapa"
-              value={localPreferences.logoText.content}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logoText.content = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Ver que hace"
-              value={localPreferences.logoText.title}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logoText.title = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="URL"
-              value={localPreferences.logoText.link}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.logoText.link = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>Titulo del Mapa</label>
+              <input
+                placeholder="Titulo del Mapa"
+                value={localPreferences.logoText.content}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logoText.content = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Ver que hace</label>
+              <input
+                placeholder="Ver que hace"
+                value={localPreferences.logoText.title}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logoText.title = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>URL</label>
+              <input
+                placeholder="URL"
+                value={localPreferences.logoText.link}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.logoText.link = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -1156,57 +1275,72 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(15) && (
           <div className="accordion-content">
-            <label>
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={localPreferences.geoprocessing.isActive}
+                  onChange={(e) => {
+                    const newPrefs = { ...localPreferences };
+                    newPrefs.geoprocessing.isActive = e.target.checked;
+                    setLocalPreferences(newPrefs);
+                  }}
+                />
+                Geoprocesamiento activo
+              </label>
+            </div>
+            <div className="form-group">
+              <label>Título del botón</label>
               <input
-                type="checkbox"
-                checked={localPreferences.geoprocessing.isActive}
+                placeholder="Título del botón"
+                value={localPreferences.geoprocessing.buttonTitle}
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
-                  newPrefs.geoprocessing.isActive = e.target.checked;
+                  newPrefs.geoprocessing.buttonTitle = e.target.value;
                   setLocalPreferences(newPrefs);
                 }}
               />
-              Geoprocesamiento activo
-            </label>
-            <input
-              placeholder="Título del botón"
-              value={localPreferences.geoprocessing.buttonTitle}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geoprocessing.buttonTitle = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Icono del botón"
-              value={localPreferences.geoprocessing.buttonIcon}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geoprocessing.buttonIcon = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Título del diálogo"
-              value={localPreferences.geoprocessing.dialogTitle}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geoprocessing.dialogTitle = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Texto de límites"
-              value={localPreferences.geoprocessing.strings.bounds}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.geoprocessing.strings.bounds = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            </div>
+            <div className="form-group">
+              <label>Icono del botón</label>
+              <input
+                placeholder="Icono del botón"
+                value={localPreferences.geoprocessing.buttonIcon}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geoprocessing.buttonIcon = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Título del diálogo</label>
+              <input
+                placeholder="Título del diálogo"
+                value={localPreferences.geoprocessing.dialogTitle}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geoprocessing.dialogTitle = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Texto de límites</label>
+              <input
+                placeholder="Texto de límites"
+                value={localPreferences.geoprocessing.strings.bounds}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.geoprocessing.strings.bounds = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
             <strong>Procesos Disponibles:</strong>
             {localPreferences.geoprocessing.availableProcesses.map((process, index) => (
-              <div key={index} style={{ border: '1px solid #ddd', padding: '1rem', margin: '0.5rem 0', borderRadius: '4px' }}>
+              <div key={index} className="form-group geoprocessing-process">
+                <label>Nombre del proceso</label>
                 <input
                   placeholder="Nombre del proceso"
                   value={process.name}
@@ -1216,6 +1350,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                     setLocalPreferences(newPrefs);
                   }}
                 />
+                <label>Geoproceso</label>
                 <input
                   placeholder="Geoproceso"
                   value={process.geoprocess}
@@ -1225,6 +1360,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                     setLocalPreferences(newPrefs);
                   }}
                 />
+                <label>Base URL</label>
                 <input
                   placeholder="Base URL"
                   value={process.baseUrl || ""}
@@ -1234,6 +1370,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                     setLocalPreferences(newPrefs);
                   }}
                 />
+                <label>Capa</label>
                 <input
                   placeholder="Capa"
                   value={process.layer || ""}
@@ -1243,6 +1380,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                     setLocalPreferences(newPrefs);
                   }}
                 />
+                <label>Prefijo del nombre</label>
                 <input
                   placeholder="Prefijo del nombre"
                   value={process.namePrefix}
@@ -1273,55 +1411,71 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(16) && (
           <div className="accordion-content">
-            <input
-              placeholder="Nombre"
-              value={localPreferences.hillshade.name}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.hillshade.name = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Atribución"
-              value={localPreferences.hillshade.attribution}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.hillshade.attribution = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="URL"
-              value={localPreferences.hillshade.url}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.hillshade.url = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Icono"
-              value={localPreferences.hillshade.icon}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.hillshade.icon = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Etiqueta del switch"
-              value={localPreferences.hillshade.switchLabel}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.hillshade.switchLabel = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>Nombre</label>
+              <input
+                placeholder="Nombre"
+                value={localPreferences.hillshade.name}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.hillshade.name = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Atribución</label>
+              <input
+                placeholder="Atribución"
+                value={localPreferences.hillshade.attribution}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.hillshade.attribution = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>URL</label>
+              <input
+                placeholder="URL"
+                value={localPreferences.hillshade.url}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.hillshade.url = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Icono</label>
+              <input
+                placeholder="Icono"
+                value={localPreferences.hillshade.icon}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.hillshade.icon = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Etiqueta del switch</label>
+              <input
+                placeholder="Etiqueta del switch"
+                value={localPreferences.hillshade.switchLabel}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.hillshade.switchLabel = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
             <strong>Agregar a mapas:</strong>
             {localPreferences.hillshade.addTo.map((mapName, index) => (
-              <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div key={index} className="form-group hillshade-map" style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <input
+                  className="array-item"
                   placeholder="Nombre del mapa"
                   value={mapName}
                   onChange={(e) => {
@@ -1366,42 +1520,54 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         </div>
         {openSections.includes(17) && (
           <div className="accordion-content">
-            <input
-              placeholder="Texto zoom mínimo"
-              value={localPreferences.strings.basemap_min_zoom}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.strings.basemap_min_zoom = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Texto zoom máximo"
-              value={localPreferences.strings.basemap_max_zoom}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.strings.basemap_max_zoom = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Texto del botón de leyenda"
-              value={localPreferences.strings.basemap_legend_button_text}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.strings.basemap_legend_button_text = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
-            <input
-              placeholder="Texto eliminar geometría"
-              value={localPreferences.strings.delete_geometry}
-              onChange={(e) => {
-                const newPrefs = { ...localPreferences };
-                newPrefs.strings.delete_geometry = e.target.value;
-                setLocalPreferences(newPrefs);
-              }}
-            />
+            <div className="form-group">
+              <label>Texto zoom mínimo</label>
+              <input
+                placeholder="Texto zoom mínimo"
+                value={localPreferences.strings.basemap_min_zoom}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.strings.basemap_min_zoom = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Texto zoom máximo</label>
+              <input
+                placeholder="Texto zoom máximo"
+                value={localPreferences.strings.basemap_max_zoom}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.strings.basemap_max_zoom = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Texto del botón de leyenda</label>
+              <input
+                placeholder="Texto del botón de leyenda"
+                value={localPreferences.strings.basemap_legend_button_text}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.strings.basemap_legend_button_text = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <label>Texto eliminar geometría</label>
+              <input
+                placeholder="Texto eliminar geometría"
+                value={localPreferences.strings.delete_geometry}
+                onChange={(e) => {
+                  const newPrefs = { ...localPreferences };
+                  newPrefs.strings.delete_geometry = e.target.value;
+                  setLocalPreferences(newPrefs);
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
