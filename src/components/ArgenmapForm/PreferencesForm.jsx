@@ -214,9 +214,9 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
 
   return (
     <div className="preferencesform-container">
-      <h2 className="preferencesform-header">Formulario de Preferencias</h2>
+      <h2 className="preferencesform-header">Configuraciones Básicas</h2>
 
-      <h3 className="preferencesform-subtitle">Configuraciones Básicas</h3>
+{/*       <h3 className="preferencesform-subtitle">Configuraciones Básicas</h3> */}
       
       {/* Table Settings */}
       <div className="accordion-item">
