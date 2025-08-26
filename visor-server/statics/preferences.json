@@ -59,10 +59,10 @@
     "height":"31px"
   },
   "theme": {
-    "bodyBackground": "#000000", 
-    "headerBackground": "#000000",
-    "menuBackground": "#00000",
-    "activeLayer": "#FFA500",
+    "bodyBackground": "#0db2e0",
+    "headerBackground": "#0db2e0",
+    "menuBackground": "#0db2e0",
+    "activeLayer": "#33b560",
     "textMenu":"white",
     "textMenuStyle":"",
     "textLegendMenu":"#fafafa",
@@ -82,8 +82,8 @@
     "link": "https://github.com/ign-argentina/argenmap"
   },
   "logoText": {
-    "content": "Random 1",
-    "title":"Random 1",
+    "content": "Lorem Ipsum",
+    "title":"Lorem Ipsum",
     "link": "#"
   },
   "title": "Argenmap",
