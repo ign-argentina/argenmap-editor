@@ -21,7 +21,7 @@ import { argenmapSchema } from '../../static/formSchemas/argenmapSchema';
 
 function Form() {
   const location = useLocation();
-  const { viewer, editorMode, externalUpload = false } = location.state || {};
+  const { viewer, editorMode, externalUpload = false } = location.state || {}; // Recibe configuraciones
   const [config, setConfig] = useState();
   const [workingConfig, setWorkingConfig] = useState(null);
   const [schema, setSchema] = useState({});
