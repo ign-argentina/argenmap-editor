@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import DataForm from "./DataForm";
-import PreferencesForm from "./PreferencesForm"; // Asegurate que exista este componente
+import PreferencesForm from "./PreferencesForm";
+import './ArgenmapForm.css';
 
 function ArgenmapForm() {
   const [data, setData] = useState(null);
@@ -49,38 +50,23 @@ function ArgenmapForm() {
   }, [debouncedData, debouncedPreferences]);
 
   return (
-    <div className="argenmap-form-container" style={{ display: 'flex', gap: '1rem' }}>
+    <div className="argenmap-form-container">
       {/* Contenedor con navbar y formularios */}
-      <div style={{ flex: '0 0 33%', borderRight: '1px solid #ccc', paddingRight: '1rem', overflowY: 'auto', maxHeight: '80vh' }}>
+      <div className="argenmap-form-sidebar">
         {/* Navbar */}
-        <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+        <div className="argenmap-form-navbar">
           <button
+            className={`tab-btn${activeForm === 'dataform' ? ' active' : ''}`}
             onClick={() => setActiveForm('dataform')}
-            style={{
-              padding: '0.5rem 1rem',
-              cursor: 'pointer',
-              backgroundColor: activeForm === 'dataform' ? '#007acc' : '#f0f0f0',
-              color: activeForm === 'dataform' ? 'white' : '#333',
-              border: 'none',
-              borderRadius: '4px',
-            }}
           >
             Mapas y Capas
           </button>
           <button
+            className={`tab-btn${activeForm === 'preferences' ? ' active' : ''}`}
             onClick={() => setActiveForm('preferences')}
-            style={{
-              padding: '0.5rem 1rem',
-              cursor: 'pointer',
-              backgroundColor: activeForm === 'preferences' ? '#007acc' : '#f0f0f0',
-              color: activeForm === 'preferences' ? 'white' : '#333',
-              border: 'none',
-              borderRadius: '4px',
-            }}
           >
            Estilos y Preferencias
           </button>
-          
         </div>
 
         {/* Mostrar el formulario seleccionado */}
@@ -89,12 +75,11 @@ function ArgenmapForm() {
       </div>
 
       {/* Preview */}
-      <div style={{ flex: '0 0 66%', display: 'flex', flexDirection: 'column' }}>
+      <div className="argenmap-form-preview">
         <iframe
           name={iframeName}
           title="Preview"
           className="iframe-preview"
-          style={{ flex: 1, border: '1px solid #ccc', borderRadius: '6px', minHeight: '600px' }}
         />
       </div>
 
@@ -104,7 +89,7 @@ function ArgenmapForm() {
         method="POST"
         action="http://localhost:4000/argenmap/custom"
         target={iframeName}
-        style={{ display: 'none' }}
+        className="hidden-form"
       >
         <input
           type="hidden"

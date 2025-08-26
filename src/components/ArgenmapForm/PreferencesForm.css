@@ -6,14 +6,29 @@
   margin: 0 8px 0 0;
   font: inherit;
   color: #0b74d1;
-    width: 8px;
-    height: 8px;
+  width: 8px;
+  height: 8px;
   border: 2px solid #0b74d1;
   border-radius: 6px;
   display: inline-block;
   position: relative;
   vertical-align: middle;
   cursor: pointer;
+}
+
+.form-group input[type="checkbox"]:checked {
+  background: #0b74d1;
+}
+
+.form-group input[type="checkbox"]:checked::before {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 /* Only keep classes used in PreferencesForm.jsx */

@@ -1,10 +1,10 @@
 .argenmap-form-container {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  min-height: 80vh;
+  padding: 1rem;
+  box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
 
@@ -122,8 +122,65 @@
   font-weight: 600;
 }
 
+/* Layout principal del formulario */
+.argenmap-form-container {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Sidebar izquierda con formularios */
+.argenmap-form-sidebar {
+  flex: 0 0 40%;
+  border-right: 1px solid #ccc;
+  padding-right: 1rem;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+/* Navbar de tabs */
+.argenmap-form-navbar {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Botones de tabs */
+.tab-btn {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.tab-btn.active {
+  background-color: #007acc;
+  color: white;
+}
+
+.tab-btn:hover:not(.active) {
+  background-color: #e0e0e0;
+}
+
+/* Área de preview derecha */
+.argenmap-form-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Iframe de preview */
 .iframe-preview {
-  margin-top: 2rem;
-  border-top: 1px dashed #bbb;
-  padding-top: 1rem;
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 600px;
+}
+
+/* Formulario oculto */
+.hidden-form {
+  display: none;
 }
