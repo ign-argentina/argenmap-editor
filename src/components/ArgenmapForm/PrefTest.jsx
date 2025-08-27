@@ -249,7 +249,7 @@ function PrefTest({ preferences, onPreferencesChange }) {
 
   return (
     <div className="preferencesform-container">
-      <h2 className="preferencesform-header">Preferencias</h2>
+      <h2 className="preferencesform-header">Configuraciones Básicas 2: La Venganza</h2>
       {Object.entries(localPreferences).map(([k, v]) => renderNode(k, v, true))}
     </div>
   );
