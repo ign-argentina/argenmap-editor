@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import defaultPreferences from "./defaultPreferences";
 import "./PreferencesForm.css";
+import language from '../../static/language.json'
+
+const lang = language["es"];
 
 const emptyLike = (sample) => {
   if (Array.isArray(sample)) return [];
@@ -15,7 +18,14 @@ const emptyLike = (sample) => {
 };
 
 const labelFromPath = (path) => {
+  // Primero intentamos un match exacto en el idioma
+  if (lang[path]) return lang[path];
+
+  // Luego intentamos con la última clave
   const key = path.split(".").pop();
+  if (lang[key]) return lang[key];
+
+  // Por último, fallback automático
   return key.replace(/[_-]/g, " ");
 };
 
