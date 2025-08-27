@@ -6,6 +6,7 @@ import Form from '../components/Form/Form';
 import HomeRedirect from '../components/HomeRedirect';
 import Management from "../pages/Management";
 import Dashboard from "../pages/Dashboard";
+import ArgenmapForm from "../components/ArgenmapForm/ArgenmapForm";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: "/form", element: <Form /> },
       { path: "/management", element: <Management /> },
       { path: "/admin/dashboard", element: <Dashboard /> },
+      { path: "/aform", element: <ArgenmapForm /> },
     ]
   },
 ])

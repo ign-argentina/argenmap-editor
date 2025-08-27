@@ -1,0 +1,160 @@
+/* Checkbox simple, pequeño y sin efectos duplicados */
+.form-group input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff;
+  margin: 0 8px 0 0;
+  font: inherit;
+  color: #0b74d1;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #0b74d1;
+  border-radius: 6px;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.form-group input[type="checkbox"]:checked {
+  background: #0b74d1;
+}
+
+.form-group input[type="checkbox"]:checked::before {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Only keep classes used in PreferencesForm.jsx */
+.preferencesform-container {
+  width: 100%;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(23, 38, 59, 0.08);
+  box-sizing: border-box;
+}
+.preferencesform-header {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+}
+.preferencesform-subtitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #0b74d1;
+}
+.accordion-item {
+  border: 1px solid #e6e9ee;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  background: #f8fafc;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+.accordion-header {
+  background: linear-gradient(90deg, #0b74d1, #026aa7);
+  color: #fff;
+  padding: 0.9rem 1.2rem;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+.accordion-content {
+  padding: 1.2rem;
+  border-top: 1px solid #eef2f6;
+  background: #fff;
+}
+.form-group {
+  margin-bottom: 1.2rem;
+}
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  color: #243140;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d7dfe9;
+  font-size: 1rem;
+  color: #1f2a37;
+  transition: border-color 0.15s ease;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0b74d1;
+}
+.button-primary {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: opacity 0.2s ease;
+  margin-right: auto;
+  display: block;
+}
+.button-primary:hover {
+  opacity: 0.96;
+}
+.button-delete {
+  background: #e34b4b;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.button-delete:hover {
+  background: #c93c3c;
+}
+.zoom-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 1rem;
+  background: #f4f7fb;
+  border: 1px solid #dce3ed;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.array-item {
+  flex: 1;
+  margin-bottom: 0;
+}
+.geoprocessing-process {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 4px;
+}
+.hillshade-map {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.hillshade-map input {
+  flex: 1;
+}

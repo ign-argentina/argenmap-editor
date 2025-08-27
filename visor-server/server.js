@@ -16,15 +16,70 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
-/* app.use(cors({ origin: 'http://localhost:5173' })); // 👈 permitir tu frontend */
+/* app.use(cors({ origin: 'http://localhost:5173' })); // permitir tu frontend */
 app.use(cors());
 
 
-// Argenmap estatico
-app.use('/argenmap', express.static(path.join(__dirname, 'public/argenmap')))
+// ---- STATIC: Argenmap ----
+app.use('/argenmap', express.static(path.join(__dirname, 'public/argenmap')));
+/* app.use('/argenmap/src',  express.static(path.join(__dirname, 'public/argenmap/src')));
+app.use('/argenmap/assets', express.static(path.join(__dirname, 'public/argenmap/assets'))); */
+
 
 // Servir archivos estáticos para kharta (Si no, rompe. Analizar importaciones por lado de kharta de otra manera vite.config.js quizas)
+// ---- STATIC: Kharta ----
 app.use('/kharta/assets', express.static(path.join(__dirname, 'public/kharta/assets')));
+
+
+/* app.get('/argenmap/custom', async (req, res) => {
+
+  const web = path.join(__dirname, 'public/argenmap/index.html')
+    let html = await fs.readFile(web, 'utf-8');
+    res.send(html);
+})
+ */
+
+app.post('/argenmap/custom', (req, res) => {
+  try {
+    const { data, preferences } = req.body;
+    /*     console.log("data: ", a.data) */
+    // DEFAULT
+    const DEFAULT_CONFIG =
+    {
+      data: path.join(__dirname, 'statics/argenmap/data.json'),
+      preferences: path.join(__dirname, 'statics/argenmap/preferences.json')
+    }
+
+    //
+    const webPath = path.join(__dirname, 'public/argenmap/index.html');
+    let html = readFileSync(webPath, 'utf-8');
+
+
+    const randomInt = Math.floor(Math.random() * 4);
+
+    let dataJson = null
+    let preferencesJson = null
+    if (existsSync(webPath)) {
+      dataJson = data != "null" ? JSON.parse(data) : JSON.parse(readFileSync(DEFAULT_CONFIG.data, 'utf-8'));
+      preferencesJson = preferences != "null" ? JSON.parse(preferences) : JSON.parse(readFileSync(DEFAULT_CONFIG.preferences, 'utf-8'));
+    }
+
+    // 3) Inyectar datos de ejecución
+    const injectScript = `
+      <script>
+        window.appData = ${JSON.stringify(dataJson)};
+        window.appPreferences = ${JSON.stringify(preferencesJson)};
+      </script>
+    `;
+    html = html.replace('</head>', `${injectScript}\n</head>`);
+
+    res.status(200).send(html);
+  } catch (err) {
+    console.error('Error loading index.html or JSON:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // Endpoint que sirve Kharta e inyecta configuracion || ESTE ENDPOINT SE USA PARA EL SHARE
 app.get('/kharta', async (req, res) => {

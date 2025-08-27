@@ -5,24 +5,22 @@ import './FormNavbar.css';
 import { useUser } from '../../context/UserContext';
 import language from '../../static/language.json'
 
-const FormNavbar = ({
+function FormNavbar({
   config,
   viewer,
   sectionInfo,
   uiControls,
   actions,
   editorMode,
-}) => {
+}) {
   const { sectionKeys, selectedSection, handleSectionChange } = sectionInfo;
   const { handleLanguageChange, selectedLang, isFormShown, setIsFormShown } = uiControls;
   const { handleDownload, getWorkingConfig } = actions;
   const [cloneMode, setCloneMode] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false);
   const { isAuth } = useUser()
-  
 
   return (
-    
     <div className='editor-navbar'>
       <div className="configVersion-info">
         <label>
@@ -101,6 +99,6 @@ const FormNavbar = ({
       </div>
     </div>
   );
-};
+}
 
 export default FormNavbar;
