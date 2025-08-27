@@ -4,13 +4,11 @@ import PreferencesForm from "./PreferencesForm";
 import ViewerButtonActions from '../ViewerButtonActions/ViewerButtonActions';
 import './ArgenmapForm.css';
 
-function ArgenmapForm({config, editorMode}) {
+function ArgenmapForm({ config, editorMode, viewer }) {
   const [data, setData] = useState(config.data || null);
   const [preferences, setPreferences] = useState(config.preferences || null);
   const [debouncedData, setDebouncedData] = useState(null);
   const [debouncedPreferences, setDebouncedPreferences] = useState(null);
-
-  const viewer = {}
 
   // Memoize the callback functions to prevent unnecessary re-renders
   const handleDataChange = useCallback((newData) => {
@@ -85,7 +83,7 @@ function ArgenmapForm({config, editorMode}) {
           <div>
             {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
           </div>
-          <ViewerButtonActions editorMode = {editorMode} isArgenmap={true} getWorkingConfig={() => ({data, preferences})}></ViewerButtonActions>
+          <ViewerButtonActions viewer={viewer} editorMode={editorMode} isArgenmap={true} getWorkingConfig={() => ({ data, preferences })}></ViewerButtonActions>
         </div>
 
         {/* Preview */}

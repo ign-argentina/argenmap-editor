@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
 
-function ViewerButtonActions({ editorMode, viewer = false, getWorkingConfig, isArgenmap = false }) {
+function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArgenmap = false }) {
 
   const [cloneMode, setCloneMode] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false);
@@ -34,7 +34,7 @@ function ViewerButtonActions({ editorMode, viewer = false, getWorkingConfig, isA
           <SaveViewerModal
             editorMode={editorMode}
             cloneMode={cloneMode}
-            visor={viewer}
+            viewer={viewer}
             isOpen={showSaveModal}
             onClose={() => setShowSaveModal(false)}
             getWorkingConfig={getWorkingConfig}

@@ -5,13 +5,13 @@ import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
 
-const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode = false, getWorkingConfig }) => {
+const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMode = false, getWorkingConfig }) => {
 
-  const [name, setName] = useState(editorMode ? visor?.name : "");
-  const [description, setDescription] = useState(editorMode ? visor?.description : "");
-  const [imageData, setImageData] = useState(editorMode ? visor?.img : null)
+  const [name, setName] = useState(editorMode ? viewer?.name : "");
+  const [description, setDescription] = useState(editorMode ? viewer?.description : "");
+  const [imageData, setImageData] = useState(editorMode ? viewer?.img : null)
   const [isCapturing, setIsCapturing] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(editorMode ? visor?.gid : 'no-group')
+  const [selectedGroup, setSelectedGroup] = useState(editorMode ? viewer?.gid : 'no-group')
   const [groupList, setGroupList] = useState([])
   const [isPublic, setIsPublic] = useState(false)
   const { showToast } = useToast()
@@ -35,6 +35,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
   useEffect(() => {
     checkAuth()
     loadGroups()
+    console.log(viewer)
   }, []);
 
   const captureViewerImage = async () => {
@@ -125,7 +126,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
     }
     let res;
     if (editorMode && !cloneMode) {
-      res = await updateVisor(visor.id, visor.gid, name, description, visor.config.id, config, imageData)
+      res = await updateVisor(viewer.id, viewer.gid, name, description, viewer.config.id, config, imageData)
     } else {
       res = await createVisor(selectedGroup, name, description, config, imageData, isPublic)
     }

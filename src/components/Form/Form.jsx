@@ -56,7 +56,7 @@ function Form() {
     <>
       <div className="page-form">
         <div className="pg-form">
-          {argenmap ? <ArgenmapForm editorMode={editorMode} config={{ data, preferences }} /> : <h1>KhartaForm</h1>}
+          {argenmap ? <ArgenmapForm viewer={viewer} editorMode={editorMode} config={{ data, preferences }} /> : <h1>KhartaForm</h1>}
         </div>
       </div>
 
