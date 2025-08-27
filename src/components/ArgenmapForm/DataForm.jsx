@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./DataForm.css";
 
 const crearMapa = (firstMapaBase) => ({
@@ -48,6 +48,8 @@ function DataForm({ data, onDataChange }) {
       template: "ign-geoportal-basic",
     }
   );
+  
+  const isFirstRender = useRef(true);
 
   // Actualizar estado local cuando cambien las props externas
   useEffect(() => {
@@ -58,10 +60,15 @@ function DataForm({ data, onDataChange }) {
 
   // Notificar cambios hacia el padre
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    
     if (onDataChange) {
       onDataChange(localData);
     }
-  }, [localData, onDataChange]);
+  }, [localData]); // Removed onDataChange from dependencies
 
   const [openMapas, setOpenMapas] = useState([]);
   const [openCapas, setOpenCapas] = useState([]);

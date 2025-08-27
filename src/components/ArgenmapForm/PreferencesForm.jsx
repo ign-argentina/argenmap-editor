@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./PreferencesForm.css";
 
 const defaultPreferences = {
@@ -160,20 +160,61 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
   const [localPreferences, setLocalPreferences] = useState(() =>
     preferences || defaultPreferences
   );
+  
+  const isFirstRender = useRef(true);
+  const colorDebounceRef = useRef(null);
+
+  // Debounced function for color changes
+  const debouncedColorChange = useCallback((path, value) => {
+    if (colorDebounceRef.current) {
+      clearTimeout(colorDebounceRef.current);
+    }
+    
+    colorDebounceRef.current = setTimeout(() => {
+      setLocalPreferences(prev => {
+        const newPrefs = { ...prev };
+        const pathArray = path.split('.');
+        let current = newPrefs;
+        
+        // Navigate to the nested property
+        for (let i = 0; i < pathArray.length - 1; i++) {
+          current = current[pathArray[i]];
+        }
+        
+        // Set the final value
+        current[pathArray[pathArray.length - 1]] = value;
+        return newPrefs;
+      });
+    }, 150); // 150ms debounce
+  }, []);
 
   // Update local state when external props change  
-/*   useEffect(() => {
+  useEffect(() => {
     if (preferences) {
       setLocalPreferences(preferences);
     }
   }, [preferences]);
- */
+
   // Notify parent of changes
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    
     if (onPreferencesChange) {
       onPreferencesChange(localPreferences);
     }
-  }, [localPreferences, onPreferencesChange]);
+  }, [localPreferences]); // Removed onPreferencesChange from dependencies
+
+  // Cleanup color debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (colorDebounceRef.current) {
+        clearTimeout(colorDebounceRef.current);
+      }
+    };
+  }, []);
 
   // Simple accordion state arrays like DataForm
   const [openSections, setOpenSections] = useState([]);
@@ -546,11 +587,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.searchbar.color_focus}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.searchbar.color_focus = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('searchbar.color_focus', e.target.value)}
                 title="Color de foco"
               />
             </div>
@@ -949,11 +986,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.theme.bodyBackground}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.theme.bodyBackground = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('theme.bodyBackground', e.target.value)}
                 title="Selecciona el color de fondo principal de la aplicación"
               />
             </div>
@@ -962,11 +995,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.theme.headerBackground}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.theme.headerBackground = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('theme.headerBackground', e.target.value)}
                 title="Color de fondo de la barra superior"
               />
             </div>
@@ -975,11 +1004,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.theme.menuBackground}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.theme.menuBackground = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('theme.menuBackground', e.target.value)}
                 title="Color de fondo del panel de capas y menús laterales"
               />
             </div>
@@ -988,11 +1013,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.theme.activeLayer}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.theme.activeLayer = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('theme.activeLayer', e.target.value)}
                 title="Color de resaltado para la capa seleccionada"
               />
             </div>
@@ -1001,11 +1022,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.theme.textMenu}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.theme.textMenu = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('theme.textMenu', e.target.value)}
                 title="Color del texto en los menús laterales"
               />
             </div>
@@ -1028,11 +1045,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.theme.textLegendMenu}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.theme.textLegendMenu = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('theme.textLegendMenu', e.target.value)}
                 title="Color del texto en las leyendas de capas"
               />
             </div>
@@ -1055,11 +1068,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 type="color"
                 value={localPreferences.theme.iconBar}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.theme.iconBar = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => debouncedColorChange('theme.iconBar', e.target.value)}
                 title="Color de fondo de la barra de herramientas con iconos"
               />
             </div>
