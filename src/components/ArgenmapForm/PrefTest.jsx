@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import defaultPreferences from "./defaultPreferences";
 import "./PreferencesForm.css";
 
@@ -19,20 +19,11 @@ const labelFromPath = (path) => {
   return key.replace(/[_-]/g, " ");
 };
 
-// Detecta si un string es un color válido
-const isColorString = (value) => {
-  if (typeof value !== "string") return false;
-  const hex = /^#([0-9A-Fa-f]{3,8})$/;
-  const rgba = /^rgba?\(\s*(\d+\s*,){2,3}\s*[\d.]+\s*\)$/;
-  return hex.test(value) || rgba.test(value);
-};
-
 function PrefTest({ preferences, onPreferencesChange }) {
   const [localPreferences, setLocalPreferences] = useState(
     preferences || defaultPreferences
   );
   const [openSections, setOpenSections] = useState([]);
-  const colorTimeouts = useRef({});
 
   const toggleSection = (path) => {
     setOpenSections((prev) =>
@@ -50,40 +41,12 @@ function PrefTest({ preferences, onPreferencesChange }) {
     onPreferencesChange?.(newPrefs);
   };
 
-  // Debounced para cambios de color
-  const debouncedColorChange = (path, value) => {
-    clearTimeout(colorTimeouts.current[path]);
-    colorTimeouts.current[path] = setTimeout(() => {
-      updateValue(path, value);
-    }, 150);
-  };
-
   // -------- PRIMITIVOS --------
   const renderPrimitiveInline = (path, value) => {
     const label = labelFromPath(path);
     const isNumber = typeof value === "number";
     const isBoolean = typeof value === "boolean";
-
-    // Input de color si detecta un color válido
-    if (isColorString(value)) {
-      return (
-        <div className="form-group" key={path}>
-          <label>{label}</label>
-          {/* <input
-            type="text"
-            value={value}
-            onChange={(e) => debouncedColorChange(path, e.target.value)}
-            placeholder="ej: #ffffff o rgba(255,255,255,0.7)"
-          /> */}
-          <input
-            type="color"
-            value={value.startsWith("rgba") ? "#ffffff" : value} // fallback para rgba
-            onChange={(e) => debouncedColorChange(path, e.target.value)}
-            title={label}
-          />
-        </div>
-      );
-    }
+    const isHexColor = typeof value === "string" && /^#[0-9A-Fa-f]{6}$/.test(value);
 
     return (
       <div className="form-group" key={path}>
@@ -93,6 +56,12 @@ function PrefTest({ preferences, onPreferencesChange }) {
             type="checkbox"
             checked={value}
             onChange={(e) => updateValue(path, e.target.checked)}
+          />
+        ) : isHexColor ? (
+          <input
+            type="color"
+            value={value}
+            onChange={(e) => updateValue(path, e.target.value)}
           />
         ) : (
           <input
@@ -109,16 +78,50 @@ function PrefTest({ preferences, onPreferencesChange }) {
     );
   };
 
-  const renderPrimitiveAccordion = (path, value) => (
-    <div className="accordion-item" key={path}>
-      <div className="accordion-header" onClick={() => toggleSection(path)}>
-        <span>{labelFromPath(path)}</span>
+  const renderPrimitiveAccordion = (path, value) => {
+    const label = labelFromPath(path);
+    const isNumber = typeof value === "number";
+    const isBoolean = typeof value === "boolean";
+    const isHexColor = typeof value === "string" && /^#[0-9A-Fa-f]{6}$/.test(value);
+
+    return (
+      <div className="accordion-item" key={path}>
+        <div className="accordion-header" onClick={() => toggleSection(path)}>
+          <span>{label}</span>
+        </div>
+        {openSections.includes(path) && (
+          <div className="accordion-content">
+            <div className="form-group">
+              <label>{label}</label>
+              {isBoolean ? (
+                <input
+                  type="checkbox"
+                  checked={value}
+                  onChange={(e) => updateValue(path, e.target.checked)}
+                />
+              ) : isHexColor ? (
+                <input
+                  type="color"
+                  value={value}
+                  onChange={(e) => updateValue(path, e.target.value)}
+                />
+              ) : (
+                <input
+                  type={isNumber ? "number" : "text"}
+                  value={value}
+                  onChange={(e) =>
+                    isNumber
+                      ? updateValue(path, e.target.value === "" ? 0 : Number(e.target.value))
+                      : updateValue(path, e.target.value)
+                  }
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
-      {openSections.includes(path) && (
-        <div className="accordion-content">{renderPrimitiveInline(path, value)}</div>
-      )}
-    </div>
-  );
+    );
+  };
 
   // -------- ARRAYS --------
   const renderPrimitiveArrayInline = (path, value) => {
@@ -200,7 +203,9 @@ function PrefTest({ preferences, onPreferencesChange }) {
   // -------- ROUTER --------
   const renderNode = (path, value, isRoot) => {
     if (["string", "number", "boolean"].includes(typeof value)) {
-      return isRoot ? renderPrimitiveAccordion(path, value) : renderPrimitiveInline(path, value);
+      return isRoot
+        ? renderPrimitiveAccordion(path, value)
+        : renderPrimitiveInline(path, value);
     }
     if (Array.isArray(value)) {
       const isArrayOfObjects = value.every((it) => typeof it === "object" && it !== null);
