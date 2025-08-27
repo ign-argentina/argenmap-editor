@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import "./DataForm.css";
 
-const crearMapa = () => ({
-  titulo: "",
-  nombre: "",
+const crearMapa = (firstMapaBase) => ({
+  titulo: firstMapaBase ? "Argenmap" : "",
+  nombre: firstMapaBase ? "argenmap": "",
   servicio: "tms",
-  version: "",
+  version: "1.0.0",
   attribution: "",
-  host: "",
+  host: firstMapaBase ? "https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png" : "",
   legendImg: "",
-  peso: null,
+  peso: firstMapaBase ? 10 : null,
+  selected: firstMapaBase ? true : false,
   zoom: {
-    min: null,
-    max: null,
-    nativeMin: null,
-    nativeMax: null,
+    min: firstMapaBase ? 3: null,
+    max: firstMapaBase ? 19 : null,
+    nativeMin: firstMapaBase ? 3: null,
+    nativeMax: firstMapaBase ? 19: null,
   },
 });
 
@@ -91,7 +92,8 @@ function DataForm({ data, onDataChange }) {
 
   const agregarMapa = () => {
     const newItems = [...localData.items];
-    newItems[0].capas.push(crearMapa());
+    const firstMapaBase = newItems[0].capas.length == 0
+    newItems[0].capas.push(crearMapa(firstMapaBase));
     setLocalData({ ...localData, items: newItems });
   };
 

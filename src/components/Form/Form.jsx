@@ -9,17 +9,11 @@ import { useUser } from '../../context/UserContext';
 
 function Form() {
   const location = useLocation();
-  const { viewer, editorMode, externalUpload = false, isArgenmap = true } = location.state || {}; // Recibe configuraciones
+  const { viewer, editorMode, externalUpload = false} = location.state || {}; // Recibe configuraciones
   const { isAuth } = useUser()
 
-  const [config, setConfig] = useState();
-  const [workingConfig, setWorkingConfig] = useState(null);
-
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false); // No te vayas! -> Este va para el formulario
-
-  // Memoizamos para que mergedConfig solo cambie si cambia workingConfig o config
-  /*   const mergedConfig = useMemo(() => mergeViewer(workingConfig, config), [workingConfig, config]); */
-
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true); // No te vayas! -> Este va para el formulario
+  const [isArgenmap, setisArgenMap] = useState(viewer?.isArgenmap)
 
   useEffect(() => {
     if (viewer || externalUpload) {
@@ -32,8 +26,8 @@ function Form() {
       }
 
     } else {
-      setConfig(defaultConfig);
-      setWorkingConfig(defaultConfig);
+/*       setConfig(defaultConfig);
+      setWorkingConfig(defaultConfig); */
     }
   }, []);
 
@@ -60,7 +54,7 @@ function Form() {
     <>
       <div className="page-form">
         <div className="pg-form">
-          {isArgenmap ? <ArgenmapForm editorMode={editorMode} config={location.state || {}} /> : <h1>KhartaForm</h1>}
+          {!isArgenmap ? <ArgenmapForm editorMode={editorMode} config={location.state || {}} /> : <h1>KhartaForm</h1>}
         </div>
       </div>
 

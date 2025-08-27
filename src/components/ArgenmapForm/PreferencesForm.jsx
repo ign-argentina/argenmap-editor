@@ -3,7 +3,7 @@ import "./PreferencesForm.css";
 
 const defaultPreferences = {
   table: {
-    isActiva: false,
+    isActive: false,
     rowsLimit: 5,
   },
   charts: {
@@ -62,10 +62,10 @@ const defaultPreferences = {
     height: "31px",
   },
   theme: {
-    bodyBackground: "#FFA500",
-    headerBackground: "#FFA500",
-    menuBackground: "#00000",
-    activeLayer: "#FFA500",
+    bodyBackground: "#0db2e0",
+    headerBackground: "#0db2e0",
+    menuBackground: "#0db2e0",
+    activeLayer: "#33b560",
     textMenu: "white",
     textMenuStyle: "",
     textLegendMenu: "#fafafa",
@@ -85,8 +85,8 @@ const defaultPreferences = {
     link: "https://github.com/ign-argentina/argenmap",
   },
   logoText: {
-    content: "EL EDITOR EDITA",
-    title: "EDITA EL EDITOR",
+    content: "Lorem Ipsum",
+    title: "Lorem Ipsum",
     link: "#",
   },
   title: "Argenmap",
@@ -154,6 +154,7 @@ const defaultPreferences = {
     delete_geometry: "Eliminar geometría",
   },
 };
+
 
 function PreferencesForm({ preferences, onPreferencesChange }) {
   const [localPreferences, setLocalPreferences] = useState(() =>
