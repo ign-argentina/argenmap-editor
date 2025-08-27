@@ -35,6 +35,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
   useEffect(() => {
     checkAuth()
     loadGroups()
+    console.log(getWorkingConfig())
   }, []);
 
   const captureViewerImage = async () => {

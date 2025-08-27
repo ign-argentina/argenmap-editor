@@ -92,7 +92,8 @@ function DataForm({ data, onDataChange }) {
 
   const agregarMapa = () => {
     const newItems = [...localData.items];
-    newItems[0].capas.push(crearMapa());
+    const firstMapaBase = newItems[0].capas.length == 0
+    newItems[0].capas.push(crearMapa(firstMapaBase));
     setLocalData({ ...localData, items: newItems });
   };
 
