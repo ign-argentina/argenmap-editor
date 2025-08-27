@@ -85,7 +85,7 @@ function ArgenmapForm({config, editorMode}) {
           <div>
             {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
           </div>
-          <ViewerButtonActions editorMode = {editorMode} isArgenmap={true} getWorkingConfig={() => ({ data, preferences })}></ViewerButtonActions>
+          <ViewerButtonActions editorMode = {editorMode} isArgenmap={true} getWorkingConfig={() => ([data, preferences])}></ViewerButtonActions>
         </div>
 
         {/* Preview */}

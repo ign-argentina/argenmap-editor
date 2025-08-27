@@ -28,7 +28,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
             title="Crear visor Argenmap"
             // NAVIGATE, ENVIA ESTADO AL FORM
             onClick={() => {
-              navigate('/form', { state: { type: "isArgenmap" } });
+              navigate('/form', { state: { isArgenmap: true } });
             }}
           >
             <img src="/assets/logoArgenmap.png" alt="Argenmap" />
@@ -44,7 +44,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
             title="Crear visor Kharta"
             // NAVIGATE, ENVIA ESTADO AL FORM
             onClick={() => {
-              navigate('/form', { state: { type: "isKharta" } });
+              navigate('/form', { state: { isArgenmap: false } });
             }}
           >
             <img src="/assets/logoArgenmap.png" alt="Kharta" />
