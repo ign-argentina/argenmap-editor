@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "backend": "nodemon backend/app.js",
-    "visor": "node visor-server/server.js"
+    "visor": "nodemon visor-server/server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",

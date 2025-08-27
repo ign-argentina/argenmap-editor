@@ -55,8 +55,6 @@ app.post('/argenmap/custom', (req, res) => {
     let html = readFileSync(webPath, 'utf-8');
 
 
-    const randomInt = Math.floor(Math.random() * 4);
-
     let dataJson = null
     let preferencesJson = null
     if (existsSync(webPath)) {
