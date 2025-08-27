@@ -12,13 +12,11 @@ function ViewerButtonActions({ editorMode, viewer = false, getWorkingConfig, isA
   const { isAuth } = useUser()
 
   const handleDownload = () => {
-    const config = getWorkingConfig()
     if (isArgenmap) {
       downloadViewer(config, isArgenmap, viewer?.name)
     } else {
       downloadViewer(config, false, viewer?.name)
     }
-    console.log(config)
   };
 
   return (

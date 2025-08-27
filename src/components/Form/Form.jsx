@@ -9,25 +9,27 @@ import { useUser } from '../../context/UserContext';
 
 function Form() {
   const location = useLocation();
-  const { viewer, editorMode, externalUpload = false} = location.state || {}; // Recibe configuraciones
+  const { viewer, editorMode, externalUpload = {}, isArgenmap } = location.state || {}; // Recibe configuraciones
   const { isAuth } = useUser()
 
+  const { data, preferences } = viewer?.config || false
+  const argenmap = (isArgenmap || (data && preferences))
+
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true); // No te vayas! -> Este va para el formulario
-  const [isArgenmap, setisArgenMap] = useState(viewer?.isArgenmap)
 
   useEffect(() => {
     if (viewer || externalUpload) {
-      setConfig(externalUpload ? externalUpload : viewer.config.json);
+      /*       setConfig(externalUpload ? externalUpload : viewer.config.json); */
 
-      if (workingConfig) {
-        setWorkingConfig(workingConfig)
+      if (true) {
+        /*         setWorkingConfig(workingConfig) */
       } else {
-        setWorkingConfig(externalUpload ? externalUpload : viewer.config.json);
+        /*         setWorkingConfig(externalUpload ? externalUpload : viewer.config.json); */
       }
 
     } else {
-/*       setConfig(defaultConfig);
-      setWorkingConfig(defaultConfig); */
+      /*       setConfig(defaultConfig);
+            setWorkingConfig(defaultConfig); */
     }
   }, []);
 
@@ -48,13 +50,13 @@ function Form() {
   }, [hasUnsavedChanges]);
   // Fin no te vayas (OPTIMIZAR)
 
-/*   const { showToast } = useToast(); */
+  /*   const { showToast } = useToast(); */
 
   return (
     <>
       <div className="page-form">
         <div className="pg-form">
-          {!isArgenmap ? <ArgenmapForm editorMode={editorMode} config={location.state || {}} /> : <h1>KhartaForm</h1>}
+          {argenmap ? <ArgenmapForm editorMode={editorMode} config={{ data, preferences }} /> : <h1>KhartaForm</h1>}
         </div>
       </div>
 

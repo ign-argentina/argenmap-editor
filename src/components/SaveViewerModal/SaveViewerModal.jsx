@@ -35,7 +35,6 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
   useEffect(() => {
     checkAuth()
     loadGroups()
-    console.log(getWorkingConfig())
   }, []);
 
   const captureViewerImage = async () => {
@@ -119,6 +118,7 @@ const SaveViewerModal = ({ isOpen, onClose, visor, editorMode = false, cloneMode
 
   const saveVisor = async () => {
     const config = getWorkingConfig()
+    console.log(config)
     if (!config) {
       showToast('No hay configuración para guardar.', "error");
       return;

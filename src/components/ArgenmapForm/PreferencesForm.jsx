@@ -162,12 +162,12 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
   );
 
   // Update local state when external props change  
-  useEffect(() => {
+/*   useEffect(() => {
     if (preferences) {
       setLocalPreferences(preferences);
     }
   }, [preferences]);
-
+ */
   // Notify parent of changes
   useEffect(() => {
     if (onPreferencesChange) {
