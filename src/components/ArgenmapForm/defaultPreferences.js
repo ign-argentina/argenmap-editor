@@ -1,0 +1,155 @@
+const defaultPreferences = {
+  table: {
+    isActive: false,
+    rowsLimit: 5,
+  },
+  charts: {
+    isActive: true,
+  },
+  layer_options: {
+    isActive: false,
+  },
+  metaTags: {
+    title: "",
+    description: "",
+    image: "",
+  },
+  analytics_ids: [],
+  excluded_plugins: ["minimap"],
+  mapConfig: {
+    center: {
+      latitude: -40,
+      longitude: -59,
+    },
+    zoom: {
+      initial: 4,
+      min: 3,
+      max: 21,
+    },
+  },
+  service: {
+    wmts: {
+      maxZoom: 21,
+    },
+  },
+  showSearchBar: true,
+  searchbar: {
+    isActive: true,
+    top: "5px",
+    left: "40%",
+    color_focus: "#008dc9",
+    background_color: "rgba(255, 255, 255, 0.7)",
+    strings: {
+      placeholder: "Buscar lugar...",
+    },
+  },
+  geocoder: {
+    url: "https://api.ign.gob.ar/buscador/",
+    search: "search",
+    url_by_id: "places",
+    query: "q",
+    lang: "es",
+    limit: 5,
+    key: "",
+  },
+  referencias: {
+    show: false,
+    icon: "src/config/default/styles/images/referencias.png",
+    width: "25px",
+    height: "31px",
+  },
+  theme: {
+    bodyBackground: "#0db2e0",
+    headerBackground: "#0db2e0",
+    menuBackground: "#0db2e0",
+    activeLayer: "#33b560",
+    textMenu: "white",
+    textMenuStyle: "",
+    textLegendMenu: "#fafafa",
+    textLegendMenuStyle: "",
+    iconBar: "#4f4f4f",
+  },
+  logo: {
+    title: "Argenmap viewer",
+    src: "src/styles/images/argenmap-banner-white.webp",
+    height: "",
+    width: "",
+    style: "background-size: 160px;",
+    srcLogoMini: "src/styles/images/argenmap-banner-white.webp",
+    miniHeight: "",
+    miniWidth: "",
+    ministyle: "filter: drop-shadow(1px 1px 1px #103847); width: 128px;",
+    link: "https://github.com/ign-argentina/argenmap",
+  },
+  logoText: {
+    content: "Lorem Ipsum",
+    title: "Lorem Ipsum",
+    link: "#",
+  },
+  title: "Argenmap",
+  website: "https://github.com/ign-argentina/argenmap",
+  favicon: "src/styles/images/favicon.ico",
+  geoprocessing: {
+    isActive: true,
+    buttonTitle: "Geoprocesos",
+    buttonIcon: "fa fa-cog",
+    dialogTitle: "Geoprocesos",
+    strings: {
+      bounds: "Areas a procesar",
+    },
+    availableProcesses: [
+      {
+        name: "Curvas de Nivel",
+        geoprocess: "contour",
+        baseUrl:
+          "https://imagenes.ign.gob.ar/geoserver/geoprocesos/ows?service=WPS&version=1.0.0",
+        layer: "alos_unificado",
+        namePrefix: "curvas_de_nivel_",
+        styles: {
+          line_color: "#e0b44c",
+          line_weight: 0.8,
+          d_line_m: 500,
+          d_line_color: "#967529",
+          d_weigth: 1,
+          smoothFactor: 1.7,
+        },
+      },
+      {
+        name: "Cota",
+        geoprocess: "waterRise",
+        namePrefix: "cota_",
+        layer: "geoprocesos:alos_unificado",
+        baseUrl:
+          "https://imagenes.ign.gob.ar/geoserver/ows?service=WPS&version=1.0.0",
+      },
+      {
+        name: "Área de influencia",
+        geoprocess: "buffer",
+        namePrefix: "area_de_influencia_",
+      },
+      {
+        name: "Perfil de Elevación",
+        geoprocess: "elevationProfile",
+        namePrefix: "profile_",
+      },
+    ],
+  },
+  hillshade: {
+    name: "hillshade",
+    attribution:
+      "sombra de montaña <a target='_blank' href='https://www.arcgis.com/home/item.html?id=1b243539f4514b6ba35e7d995890db1d'>©Esri</a>",
+    url:
+      "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}.png",
+    addTo: ["argenmap", "argenmap_gris"],
+    icon: "src/styles/images/mountains.svg",
+    switchLabel: "Agregar sombra de montaña Esri",
+  },
+  strings: {
+    basemap_min_zoom: "Zoom mínimo de ",
+    basemap_max_zoom: " y máximo de ",
+    basemap_legend_button_text: "Ver leyenda del mapa",
+    delete_geometry: "Eliminar geometría",
+  },
+};
+
+export default defaultPreferences;
