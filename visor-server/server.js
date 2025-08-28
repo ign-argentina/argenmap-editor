@@ -146,19 +146,40 @@ app.post('/kharta/custom', async (req, res) => {
   let browser = null;
   try {
     const defaultConfigPath = path.join(__dirname, 'statics/map-config.json');
-    const indexPath = path.join(__dirname, 'public/kharta/index.html');
+    const khartaIndexPath = path.join(__dirname, 'public/kharta/index.html');
+    const argenmapIndexPath = path.join(__dirname, 'public/argenmap/index.html');
 
     // Read the configuration from request body or use default
     const config = req.body.config;
-    let html = await fs.readFile(indexPath, 'utf-8');
+
+    const isArgenmap = !!(config.data && config.preferences);
+    let html = fs.readFile((isArgenmap ? argenmapIndexPath : khartaIndexPath), 'utf-8');
 
     const defaultConfig = await fs.readFile(defaultConfigPath, 'utf-8');
-    const configInyectada = config ? config : JSON.parse(defaultConfig);
-    const scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`;
+
+    let configInyectada, scriptTag
+
+    if (isArgenmap) {
+      scriptTag = `
+      <script>
+        window.appData = ${JSON.stringify(config.data)};
+        window.appPreferences = ${JSON.stringify(config.preferences)};
+      </script>
+    `;
+    } else {
+      configInyectada = config ? config : JSON.parse(defaultConfig);
+      scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`;
+    }
+
+
 
     // Inject the configuration and adjust asset paths
     html = html.replace('</head>', `${scriptTag}</head>`);
-    html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
+
+    if (!isArgenmap) {
+      html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
+    }
+
 
     // Launch browser for screenshot
     browser = await puppeteer.launch({
@@ -180,6 +201,8 @@ app.post('/kharta/custom', async (req, res) => {
       tempRes.send(html);
     });
 
+    console.log(`http://localhost:${port}${tempRoutePath}`)
+
     // Navigate to the temporary route
     await page.goto(`http://localhost:${port}${tempRoutePath}`, {
       waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
@@ -197,6 +220,7 @@ app.post('/kharta/custom', async (req, res) => {
       fullPage: false,
       encoding: 'binary'
     });
+
 
     // Set response headers and send image
     const imageBase64 = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
