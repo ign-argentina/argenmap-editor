@@ -9,7 +9,7 @@ lerna-debug.log*
 
 .env
 node_modules
-dist
+/dist
 dist-ssr
 *.local
 
@@ -26,3 +26,4 @@ dist-ssr
 
 # Argenmap
 public
+injection-changes.txt
