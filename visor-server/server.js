@@ -153,7 +153,7 @@ app.post('/kharta/custom', async (req, res) => {
     const config = req.body.config;
 
     const isArgenmap = !!(config.data && config.preferences);
-    let html = fs.readFile((isArgenmap ? argenmapIndexPath : khartaIndexPath), 'utf-8');
+    let html = await fs.readFile((isArgenmap ? argenmapIndexPath : khartaIndexPath), 'utf-8');
 
     const defaultConfig = await fs.readFile(defaultConfigPath, 'utf-8');
 
@@ -171,13 +171,26 @@ app.post('/kharta/custom', async (req, res) => {
       scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`;
     }
 
-
-
     // Inject the configuration and adjust asset paths
+    if (isArgenmap) {
+      // Add base href for Argenmap to fix relative paths
+      html = html.replace('<head>', '<head>\n  <base href="/argenmap/">');
+    }
+    
     html = html.replace('</head>', `${scriptTag}</head>`);
 
     if (!isArgenmap) {
       html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
+    } else {
+      // Fix Argenmap asset paths to be absolute from the /argenmap route
+      // Fix relative paths that start with "src/"
+      html = html.replace(/(src|href)="src\//g, `$1="/argenmap/src/`);
+      
+      // Fix any other relative paths that don't start with http, https, or /
+      html = html.replace(/(src|href)="(?!https?:\/\/|\/)/g, `$1="/argenmap/`);
+      
+      // Make sure bootstrap and external CDN links remain intact
+      html = html.replace(/\/argenmap\/https:/g, 'https:');
     }
 
 
