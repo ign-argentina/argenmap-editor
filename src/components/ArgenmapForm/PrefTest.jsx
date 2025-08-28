@@ -5,6 +5,23 @@ import language from '../../static/language.json'
 
 const lang = language["es"];
 
+// helper
+const parseRgba = (rgbaString) => {
+  const match = rgbaString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d\.]+)?\)/);
+  if (!match) return null;
+  const [, r, g, b, a] = match;
+  return {
+    r: parseInt(r, 10),
+    g: parseInt(g, 10),
+    b: parseInt(b, 10),
+    a: a !== undefined ? parseFloat(a) : 1,
+  };
+};
+
+const rgbaToHex = ({ r, g, b }) =>
+  "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
+
+
 const emptyLike = (sample) => {
   if (Array.isArray(sample)) return [];
   if (sample === null || typeof sample !== "object") {
@@ -57,6 +74,7 @@ function PrefTest({ preferences, onPreferencesChange }) {
     const isNumber = typeof value === "number";
     const isBoolean = typeof value === "boolean";
     const isHexColor = typeof value === "string" && /^#[0-9A-Fa-f]{6}$/.test(value);
+    const rgba = typeof value === "string" ? parseRgba(value) : null;
 
     return (
       <div className="form-group" key={path}>
@@ -67,6 +85,31 @@ function PrefTest({ preferences, onPreferencesChange }) {
             checked={value}
             onChange={(e) => updateValue(path, e.target.checked)}
           />
+        ) : rgba ? (
+          <div className="color-picker-with-alpha">
+            <input
+              type="color"
+              value={rgbaToHex(rgba)}
+              onChange={(e) => {
+                const hex = e.target.value;
+                const r = parseInt(hex.slice(1, 3), 16);
+                const g = parseInt(hex.slice(3, 5), 16);
+                const b = parseInt(hex.slice(5, 7), 16);
+                updateValue(path, `rgba(${r}, ${g}, ${b}, ${rgba.a})`);
+              }}
+            />
+            <input
+              type="number"
+              step="0.1"
+              min="0"
+              max="1"
+              value={rgba.a}
+              onChange={(e) => {
+                const newAlpha = parseFloat(e.target.value);
+                updateValue(path, `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${newAlpha})`);
+              }}
+            />
+          </div>
         ) : isHexColor ? (
           <input
             type="color"
@@ -93,6 +136,7 @@ function PrefTest({ preferences, onPreferencesChange }) {
     const isNumber = typeof value === "number";
     const isBoolean = typeof value === "boolean";
     const isHexColor = typeof value === "string" && /^#[0-9A-Fa-f]{6}$/.test(value);
+    const rgba = typeof value === "string" ? parseRgba(value) : null;
 
     return (
       <div className="accordion-item" key={path}>
@@ -109,6 +153,31 @@ function PrefTest({ preferences, onPreferencesChange }) {
                   checked={value}
                   onChange={(e) => updateValue(path, e.target.checked)}
                 />
+              ) : rgba ? (
+                <div className="color-picker-with-alpha">
+                  <input
+                    type="color"
+                    value={rgbaToHex(rgba)}
+                    onChange={(e) => {
+                      const hex = e.target.value;
+                      const r = parseInt(hex.slice(1, 3), 16);
+                      const g = parseInt(hex.slice(3, 5), 16);
+                      const b = parseInt(hex.slice(5, 7), 16);
+                      updateValue(path, `rgba(${r}, ${g}, ${b}, ${rgba.a})`);
+                    }}
+                  />
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="1"
+                    value={rgba.a}
+                    onChange={(e) => {
+                      const newAlpha = parseFloat(e.target.value);
+                      updateValue(path, `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${newAlpha})`);
+                    }}
+                  />
+                </div>
               ) : isHexColor ? (
                 <input
                   type="color"
@@ -249,8 +318,11 @@ function PrefTest({ preferences, onPreferencesChange }) {
           )}
         </div>
       ) : (
-        <div key={path}>
-          {Object.entries(value).map(([k, v]) => renderNode(`${path}.${k}`, v, false))}
+        <div key={path} className="nested-object">
+          <strong className="nested-label">{labelFromPath(path)}</strong>
+          <div className="nested-content">
+            {Object.entries(value).map(([k, v]) => renderNode(`${path}.${k}`, v, false))}
+          </div>
         </div>
       );
     }
