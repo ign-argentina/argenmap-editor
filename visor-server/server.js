@@ -69,6 +69,7 @@ app.post('/argenmap/custom', (req, res) => {
         window.appPreferences = ${JSON.stringify(preferencesJson)};
       </script>
     `;
+
     html = html.replace('</head>', `${injectScript}\n</head>`);
 
     res.status(200).send(html);
