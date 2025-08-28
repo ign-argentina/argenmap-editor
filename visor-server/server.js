@@ -16,15 +16,69 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
-/* app.use(cors({ origin: 'http://localhost:5173' })); // 👈 permitir tu frontend */
+/* app.use(cors({ origin: 'http://localhost:5173' })); // permitir tu frontend */
 app.use(cors());
 
 
-// Argenmap estatico
-app.use('/argenmap', express.static(path.join(__dirname, 'public/argenmap')))
+// ---- STATIC: Argenmap ----
+app.use('/argenmap', express.static(path.join(__dirname, 'public/argenmap')));
+/* app.use('/argenmap/src',  express.static(path.join(__dirname, 'public/argenmap/src')));
+app.use('/argenmap/assets', express.static(path.join(__dirname, 'public/argenmap/assets'))); */
+
 
 // Servir archivos estáticos para kharta (Si no, rompe. Analizar importaciones por lado de kharta de otra manera vite.config.js quizas)
+// ---- STATIC: Kharta ----
 app.use('/kharta/assets', express.static(path.join(__dirname, 'public/kharta/assets')));
+
+
+/* app.get('/argenmap/custom', async (req, res) => {
+
+  const web = path.join(__dirname, 'public/argenmap/index.html')
+    let html = await fs.readFile(web, 'utf-8');
+    res.send(html);
+})
+ */
+
+app.post('/argenmap/custom', (req, res) => {
+  try {
+    const { data, preferences } = req.body;
+    /*     console.log("data: ", a.data) */
+    // DEFAULT
+    const DEFAULT_CONFIG =
+    {
+      data: path.join(__dirname, 'statics/argenmap/data.json'),
+      preferences: path.join(__dirname, 'statics/argenmap/preferences.json')
+    }
+
+    //
+    const webPath = path.join(__dirname, 'public/argenmap/index.html');
+    let html = readFileSync(webPath, 'utf-8');
+
+
+    let dataJson = null
+    let preferencesJson = null
+    if (existsSync(webPath)) {
+      dataJson = data != "null" ? JSON.parse(data) : JSON.parse(readFileSync(DEFAULT_CONFIG.data, 'utf-8'));
+      preferencesJson = preferences != "null" ? JSON.parse(preferences) : JSON.parse(readFileSync(DEFAULT_CONFIG.preferences, 'utf-8'));
+    }
+
+    // 3) Inyectar datos de ejecución
+    const injectScript = `
+      <script>
+        window.appData = ${JSON.stringify(dataJson)};
+        window.appPreferences = ${JSON.stringify(preferencesJson)};
+      </script>
+    `;
+
+    html = html.replace('</head>', `${injectScript}\n</head>`);
+
+    res.status(200).send(html);
+  } catch (err) {
+    console.error('Error loading index.html or JSON:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // Endpoint que sirve Kharta e inyecta configuracion || ESTE ENDPOINT SE USA PARA EL SHARE
 app.get('/kharta', async (req, res) => {
@@ -92,19 +146,53 @@ app.post('/kharta/custom', async (req, res) => {
   let browser = null;
   try {
     const defaultConfigPath = path.join(__dirname, 'statics/map-config.json');
-    const indexPath = path.join(__dirname, 'public/kharta/index.html');
+    const khartaIndexPath = path.join(__dirname, 'public/kharta/index.html');
+    const argenmapIndexPath = path.join(__dirname, 'public/argenmap/index.html');
 
     // Read the configuration from request body or use default
     const config = req.body.config;
-    let html = await fs.readFile(indexPath, 'utf-8');
+
+    const isArgenmap = !!(config.data && config.preferences);
+    let html = await fs.readFile((isArgenmap ? argenmapIndexPath : khartaIndexPath), 'utf-8');
 
     const defaultConfig = await fs.readFile(defaultConfigPath, 'utf-8');
-    const configInyectada = config ? config : JSON.parse(defaultConfig);
-    const scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`;
+
+    let configInyectada, scriptTag
+
+    if (isArgenmap) {
+      scriptTag = `
+      <script>
+        window.appData = ${JSON.stringify(config.data)};
+        window.appPreferences = ${JSON.stringify(config.preferences)};
+      </script>
+    `;
+    } else {
+      configInyectada = config ? config : JSON.parse(defaultConfig);
+      scriptTag = `<script id="external-config" type="application/json">${JSON.stringify(configInyectada)}</script>`;
+    }
 
     // Inject the configuration and adjust asset paths
+    if (isArgenmap) {
+      // Add base href for Argenmap to fix relative paths
+      html = html.replace('<head>', '<head>\n  <base href="/argenmap/">');
+    }
+    
     html = html.replace('</head>', `${scriptTag}</head>`);
-    html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
+
+    if (!isArgenmap) {
+      html = html.replace(/(src|href)="\/assets\//g, `$1="/kharta/assets/`);
+    } else {
+      // Fix Argenmap asset paths to be absolute from the /argenmap route
+      // Fix relative paths that start with "src/"
+      html = html.replace(/(src|href)="src\//g, `$1="/argenmap/src/`);
+      
+      // Fix any other relative paths that don't start with http, https, or /
+      html = html.replace(/(src|href)="(?!https?:\/\/|\/)/g, `$1="/argenmap/`);
+      
+      // Make sure bootstrap and external CDN links remain intact
+      html = html.replace(/\/argenmap\/https:/g, 'https:');
+    }
+
 
     // Launch browser for screenshot
     browser = await puppeteer.launch({
@@ -126,6 +214,8 @@ app.post('/kharta/custom', async (req, res) => {
       tempRes.send(html);
     });
 
+    console.log(`http://localhost:${port}${tempRoutePath}`)
+
     // Navigate to the temporary route
     await page.goto(`http://localhost:${port}${tempRoutePath}`, {
       waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
@@ -143,6 +233,7 @@ app.post('/kharta/custom', async (req, res) => {
       fullPage: false,
       encoding: 'binary'
     });
+
 
     // Set response headers and send image
     const imageBase64 = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;

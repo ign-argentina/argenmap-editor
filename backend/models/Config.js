@@ -1,8 +1,8 @@
 import BaseModel from "./BaseModel.js";
 
-const INSERT_CONFIG = 'INSERT INTO config (json) VALUES ($1) RETURNING id';
+const INSERT_CONFIG = 'INSERT INTO config (data, preferences) VALUES ($1, $2) RETURNING id';
 const SELECT_ALL_CONFIGS = 'SELECT * FROM config';
-const UPDATE_CONFIG = "UPDATE config SET json = $1 WHERE id = $2 RETURNING id";
+const UPDATE_CONFIG = "UPDATE config SET data = $1, preferences = $2 WHERE id = $3 RETURNING id";
 const SELECT_CONFIG_BY_ID = 'SELECT * FROM config WHERE id = $1';
 
 class Config extends BaseModel {
@@ -17,9 +17,11 @@ class Config extends BaseModel {
     }
   };
 
-  static newConfig = async (json) => {
+  static newConfig = async (config) => {
     try {
-      const result = await super.runQuery(INSERT_CONFIG, [JSON.stringify(json)]);
+      const { data, preferences } = config
+      /*       const preferences = preferences ? JSON.stringify */
+      const result = await super.runQuery(INSERT_CONFIG, [JSON.stringify(data), preferences ? JSON.stringify(preferences) : null]);
       if (!result || result.length === 0) {
         throw new Error("No se insertó ninguna config");
       }
@@ -30,9 +32,10 @@ class Config extends BaseModel {
     }
   };
 
-  static updateConfig = async (id, json) => {
+  static updateConfig = async (id, config) => {
     try {
-      const result = await super.runQuery(UPDATE_CONFIG, [json, id]);
+      const { data, preferences } = config
+      const result = await super.runQuery(UPDATE_CONFIG, [data, preferences, id]);
       return result;
     } catch (error) {
       console.log("CONFIG MODEL (updateConfig):", error);
