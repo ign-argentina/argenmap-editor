@@ -21,7 +21,6 @@ const parseRgba = (rgbaString) => {
 const rgbaToHex = ({ r, g, b }) =>
   "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
 
-
 const emptyLike = (sample) => {
   if (Array.isArray(sample)) return [];
   if (sample === null || typeof sample !== "object") {
@@ -202,7 +201,7 @@ function PrefTest({ preferences, onPreferencesChange }) {
     );
   };
 
-  // -------- ARRAYS --------
+  // -------- ARRAYS (primitivos) --------
   const renderPrimitiveArrayInline = (path, value) => {
     const label = labelFromPath(path);
     return (
@@ -218,6 +217,7 @@ function PrefTest({ preferences, onPreferencesChange }) {
                 newArr[i] = e.target.value;
                 updateValue(path, newArr);
               }}
+              style={{ flex: 1 }}
             />
             <button
               type="button"
@@ -242,9 +242,9 @@ function PrefTest({ preferences, onPreferencesChange }) {
     );
   };
 
+  // -------- ARRAYS DE OBJETOS: sin botones (solo edición interna) --------
   const renderObjectArrayInline = (path, arr) => {
     const label = labelFromPath(path);
-    const template = arr[0] ? emptyLike(arr[0]) : {};
     return (
       <div className="form-group" key={path}>
         <strong>{label}</strong>
@@ -252,29 +252,13 @@ function PrefTest({ preferences, onPreferencesChange }) {
           <div key={`${path}.${i}`} className="geoprocessing-process">
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span><b>Item {i + 1}</b></span>
-              <button
-                type="button"
-                className="button-delete"
-                onClick={() => {
-                  const newArr = arr.filter((_, idx) => idx !== i);
-                  updateValue(path, newArr);
-                }}
-              >
-                🗑️ Eliminar
-              </button>
             </div>
             {Object.entries(obj).map(([k, v]) =>
               renderNode(`${path}.${i}.${k}`, v, false)
             )}
           </div>
         ))}
-        <button
-          type="button"
-          className="button-primary"
-          onClick={() => updateValue(path, [...arr, emptyLike(template)])}
-        >
-          + Agregar objeto
-        </button>
+        {/* NOTA: quitaron los botones de "Eliminar" y "+ Agregar objeto" para arrays de objetos */}
       </div>
     );
   };
