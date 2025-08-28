@@ -162,18 +162,21 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
   );
   
   const isFirstRender = useRef(true);
-  const colorDebounceRef = useRef(null);
+  const debounceRef = useRef(null);
 
-  // Debounced function for color changes
-  const debouncedColorChange = useCallback((path, value) => {
-    if (colorDebounceRef.current) {
-      clearTimeout(colorDebounceRef.current);
-    }
-    
-    colorDebounceRef.current = setTimeout(() => {
-      setLocalPreferences(prev => {
-        const newPrefs = { ...prev };
-        const pathArray = path.split('.');
+  // Helper function to update preferences (accepts complete objects or path strings)
+  const updatePreferences = useCallback((newPrefsOrPath, value) => {
+    setLocalPreferences(prev => {
+      let newPrefs;
+      
+      // If first argument is an object, use it directly
+      if (typeof newPrefsOrPath === 'object' && newPrefsOrPath !== null && value === undefined) {
+        newPrefs = newPrefsOrPath;
+      } 
+      // If first argument is a string path, update nested property
+      else if (typeof newPrefsOrPath === 'string') {
+        newPrefs = { ...prev };
+        const pathArray = newPrefsOrPath.split('.');
         let current = newPrefs;
         
         // Navigate to the nested property
@@ -183,10 +186,39 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         
         // Set the final value
         current[pathArray[pathArray.length - 1]] = value;
-        return newPrefs;
-      });
-    }, 150); // 150ms debounce
+      } else {
+        console.error('updatePreferences: Invalid arguments');
+        return prev;
+      }
+      
+      return newPrefs;
+    });
   }, []);
+
+  // Debounced notification to parent (to prevent infinite loops)
+  const debouncedNotifyParent = useCallback(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    
+    debounceRef.current = setTimeout(() => {
+      if (onPreferencesChange && !isFirstRender.current) {
+        onPreferencesChange(localPreferences);
+      }
+    }, 150);
+  }, [localPreferences, onPreferencesChange]);
+
+  // Effect to notify parent when localPreferences change
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    debouncedNotifyParent();
+  }, [localPreferences, debouncedNotifyParent]);
+
+  // Alias for color changes (compatibility)
+  const debouncedColorChange = updatePreferences;
 
   // Update local state when external props change  
   useEffect(() => {
@@ -195,23 +227,16 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
     }
   }, [preferences]);
 
-  // Notify parent of changes
+  // Notify parent of changes with debounce
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    
-    if (onPreferencesChange) {
-      onPreferencesChange(localPreferences);
-    }
-  }, [localPreferences]); // Removed onPreferencesChange from dependencies
+    debouncedNotifyParent();
+  }, [localPreferences, debouncedNotifyParent]);
 
-  // Cleanup color debounce timer on unmount
+  // Cleanup debounce timer on unmount
   useEffect(() => {
     return () => {
-      if (colorDebounceRef.current) {
-        clearTimeout(colorDebounceRef.current);
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
       }
     };
   }, []);
@@ -279,12 +304,8 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <label>
                 <input
                   type="checkbox"
-                  checked={localPreferences.table.isActiva}
-                  onChange={(e) => {
-                    const newPrefs = { ...localPreferences };
-                    newPrefs.table.isActiva = e.target.checked;
-                    setLocalPreferences(newPrefs);
-                  }}
+                  checked={localPreferences.table.isActive}
+                  onChange={(e) => updatePreferences('table.isActive', e.target.checked)}
                 />
                 Tabla Activa
               </label>
@@ -295,11 +316,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 type="number"
                 placeholder="Límite de filas"
                 value={localPreferences.table.rowsLimit}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.table.rowsLimit = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('table.rowsLimit', Number(e.target.value))}
               />
             </div>
           </div>
@@ -326,11 +343,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 <input
                   type="checkbox"
                   checked={localPreferences.charts.isActive}
-                  onChange={(e) => {
-                    const newPrefs = { ...localPreferences };
-                    newPrefs.charts.isActive = e.target.checked;
-                    setLocalPreferences(newPrefs);
-                  }}
+                  onChange={(e) => updatePreferences('charts.isActive', e.target.checked)}
                 />
                 Gráficos Activos
               </label>
@@ -359,11 +372,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 <input
                   type="checkbox"
                   checked={localPreferences.layer_options.isActive}
-                  onChange={(e) => {
-                    const newPrefs = { ...localPreferences };
-                    newPrefs.layer_options.isActive = e.target.checked;
-                    setLocalPreferences(newPrefs);
-                  }}
+                  onChange={(e) => updatePreferences('layer_options.isActive', e.target.checked)}
                 />
                 Opciones de Capas Activas
               </label>
@@ -394,11 +403,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 type="number"
                 placeholder="Zoom máximo"
                 value={localPreferences.service.wmts.maxZoom}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.service.wmts.maxZoom = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('service.wmts.maxZoom', Number(e.target.value))}
               />
             </div>
           </div>
@@ -425,11 +430,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 placeholder="Título de la aplicación"
                 value={localPreferences.title}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.title = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('title', e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -437,11 +438,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 placeholder="Sitio web"
                 value={localPreferences.website}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.website = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('website', e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -449,11 +446,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 placeholder="Favicon"
                 value={localPreferences.favicon}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.favicon = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('favicon', e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -461,11 +454,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 <input
                   type="checkbox"
                   checked={localPreferences.showSearchBar}
-                  onChange={(e) => {
-                    const newPrefs = { ...localPreferences };
-                    newPrefs.showSearchBar = e.target.checked;
-                    setLocalPreferences(newPrefs);
-                  }}
+                  onChange={(e) => updatePreferences('showSearchBar', e.target.checked)}
                 />
                 Mostrar barra de búsqueda
               </label>
@@ -494,11 +483,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 placeholder="Título"
                 value={localPreferences.metaTags.title}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.metaTags.title = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('metaTags.title', e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -506,11 +491,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 placeholder="Descripción"
                 value={localPreferences.metaTags.description}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.metaTags.description = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('metaTags.description', e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -518,11 +499,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
               <input
                 placeholder="URL de imagen"
                 value={localPreferences.metaTags.image}
-                onChange={(e) => {
-                  const newPrefs = { ...localPreferences };
-                  newPrefs.metaTags.image = e.target.value;
-                  setLocalPreferences(newPrefs);
-                }}
+                onChange={(e) => updatePreferences('metaTags.image', e.target.value)}
               />
             </div>
           </div>
@@ -552,7 +529,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.searchbar.isActive = e.target.checked;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
                 Barra de búsqueda activa
@@ -566,7 +543,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.searchbar.top = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -578,7 +555,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.searchbar.left = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -599,7 +576,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.searchbar.background_color = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -611,7 +588,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.searchbar.strings.placeholder = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -642,7 +619,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geocoder.url = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -654,7 +631,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geocoder.search = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -666,7 +643,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geocoder.url_by_id = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -678,7 +655,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geocoder.query = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -690,7 +667,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geocoder.lang = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -703,7 +680,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geocoder.limit = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -715,7 +692,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geocoder.key = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -746,7 +723,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.referencias.show = e.target.checked;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
                 Mostrar referencias
@@ -760,7 +737,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.referencias.icon = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -772,7 +749,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.referencias.width = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -784,7 +761,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.referencias.height = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -816,7 +793,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.analytics_ids[index] = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                   style={{ flex: 1 }}
                 />
@@ -864,7 +841,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.excluded_plugins[index] = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                   style={{ flex: 1 }}
                 />
@@ -912,7 +889,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.mapConfig.center.latitude = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -925,7 +902,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.mapConfig.center.longitude = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -938,7 +915,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.mapConfig.zoom.initial = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
               <input
@@ -948,7 +925,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.mapConfig.zoom.min = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
               <input
@@ -958,7 +935,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.mapConfig.zoom.max = Number(e.target.value);
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1035,7 +1012,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.theme.textMenuStyle = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
                 title="Estilos CSS adicionales para el texto del menú"
               />
@@ -1058,7 +1035,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.theme.textLegendMenuStyle = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
                 title="Estilos CSS adicionales para el texto de leyendas"
               />
@@ -1099,7 +1076,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.title = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1111,7 +1088,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.src = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1123,7 +1100,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.height = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1135,7 +1112,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.width = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1147,7 +1124,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.style = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1159,7 +1136,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.srcLogoMini = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1171,7 +1148,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.miniHeight = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1183,7 +1160,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.miniWidth = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1195,7 +1172,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.ministyle = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1207,7 +1184,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logo.link = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1238,7 +1215,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logoText.content = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1250,7 +1227,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logoText.title = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1262,7 +1239,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.logoText.link = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1293,7 +1270,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.geoprocessing.isActive = e.target.checked;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
                 Geoprocesamiento activo
@@ -1307,7 +1284,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geoprocessing.buttonTitle = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1319,7 +1296,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geoprocessing.buttonIcon = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1331,7 +1308,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geoprocessing.dialogTitle = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1343,7 +1320,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.geoprocessing.strings.bounds = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1357,7 +1334,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.geoprocessing.availableProcesses[index].name = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
                 <label>Geoproceso</label>
@@ -1367,7 +1344,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.geoprocessing.availableProcesses[index].geoprocess = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
                 <label>Base URL</label>
@@ -1377,7 +1354,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.geoprocessing.availableProcesses[index].baseUrl = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
                 <label>Capa</label>
@@ -1387,7 +1364,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.geoprocessing.availableProcesses[index].layer = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
                 <label>Prefijo del nombre</label>
@@ -1397,7 +1374,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.geoprocessing.availableProcesses[index].namePrefix = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                 />
               </div>
@@ -1429,7 +1406,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.hillshade.name = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1441,7 +1418,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.hillshade.attribution = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1453,7 +1430,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.hillshade.url = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1465,7 +1442,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.hillshade.icon = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1477,7 +1454,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.hillshade.switchLabel = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1491,7 +1468,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                   onChange={(e) => {
                     const newPrefs = { ...localPreferences };
                     newPrefs.hillshade.addTo[index] = e.target.value;
-                    setLocalPreferences(newPrefs);
+                    updatePreferences(newPrefs);
                   }}
                   style={{ flex: 1 }}
                 />
@@ -1538,7 +1515,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.strings.basemap_min_zoom = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1550,7 +1527,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.strings.basemap_max_zoom = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1562,7 +1539,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.strings.basemap_legend_button_text = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
@@ -1574,7 +1551,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
                 onChange={(e) => {
                   const newPrefs = { ...localPreferences };
                   newPrefs.strings.delete_geometry = e.target.value;
-                  setLocalPreferences(newPrefs);
+                  updatePreferences(newPrefs);
                 }}
               />
             </div>
