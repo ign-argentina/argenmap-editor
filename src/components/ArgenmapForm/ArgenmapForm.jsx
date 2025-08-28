@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import DataForm from "./DataForm";
 import PreferencesForm from "./PreferencesForm";
-import PrefTest from "./PrefTest";
 import ViewerButtonActions from '../ViewerButtonActions/ViewerButtonActions';
 import './ArgenmapForm.css';
 
@@ -78,7 +77,6 @@ function ArgenmapForm({ config, editorMode, viewer }) {
             {/* Mostrar el formulario seleccionado */}
             {activeForm === 'dataform' && <DataForm data={data} onDataChange={handleDataChange} />}
             {activeForm === 'preferences' && <PreferencesForm preferences={preferences} onPreferencesChange={handlePreferencesChange} />}
-            {activeForm === 'preferences' && <PrefTest preferences={preferences} onPreferencesChange={handlePreferencesChange} />}
           </div>
 
           {/* Footer */}
