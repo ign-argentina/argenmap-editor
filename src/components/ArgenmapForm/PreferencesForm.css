@@ -158,3 +158,26 @@
 .hillshade-map input {
   flex: 1;
 }
+
+/* Estilo para objetos anidados */
+.nested-object {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid #0b74d1;
+  background: #f9fbfd;
+  border-radius: 6px;
+}
+
+.nested-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0b74d1;
+  margin-bottom: 0.6rem;
+}
+
+.nested-content {
+  padding-left: 1rem;
+  border-left: 2px dashed #cbd5e1;
+  margin-left: 0.5rem;
+}
