@@ -12,6 +12,8 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
   const { isAuth } = useUser()
 
   const handleDownload = () => {
+  
+const config = getWorkingConfig()
     if (isArgenmap) {
       downloadViewer(config, isArgenmap, viewer?.name)
     } else {
