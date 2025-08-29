@@ -58,16 +58,18 @@ const ViewerManager = () => {
   };
 
   const handleDownload = () => {
-    if (!selectedViewer?.config?.json) {
+    if (selectedViewer?.config) {
+      const isArgenmap = selectedViewer.config?.data != null && selectedViewer.config?.preferences != null;
+
+      const config = {
+        data: selectedViewer.config?.data,
+        preferences: selectedViewer.config?.preferences
+      };
+
+      downloadViewer(config, isArgenmap, selectedViewer.name) // Config, baseConfig nula, nombre
+    } else {
       showToast('No hay visor seleccionado con configuración válida.', "error");
-      return;
     }
-
-    const configJson = typeof selectedViewer.config.json === 'string'
-      ? JSON.parse(selectedViewer.config.json)
-      : selectedViewer.config.json;
-
-    downloadViewer(configJson, null, selectedViewer.name) // Config, baseConfig nula, nombre
   };
 
   const handleDeleteVisor = async (visorCompleto) => {
