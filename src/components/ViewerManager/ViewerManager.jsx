@@ -236,18 +236,18 @@ const ViewerManager = () => {
                   ) : !Array.isArray(viewers) || viewers.length === 0 ? (
                     <p className="no-viewers-message">No hay visores disponibles.</p>
                   ) : (
-                    viewers.map((visor) => (
+                    viewers.map((viewer) => (
                       <div
-                        key={visor.id}
-                        className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
+                        key={viewer.id}
+                        className={`viewer-item ${selectedViewer?.id === viewer.id ? 'selected' : ''}`}
                         onClick={async () => {
-                          if (selectedViewer?.id === visor.id) {
+                          if (selectedViewer?.id === viewer.id) {
                             setSelectedViewer(null);
                             setShowDescriptionModal(false);
                             return;
                           }
                           try {
-                            const visorCompleto = await getVisorById(visor.id);
+                            const visorCompleto = await getVisorById(viewer.id);
                             setSelectedViewer(visorCompleto);
                             setShowDescriptionModal(true);
                           } catch (error) {
@@ -259,14 +259,14 @@ const ViewerManager = () => {
                           className="viewer-context-button"
                           title="Más opciones"
                           onClick={async (e) => {
-                            if (contextMenuVisorId === visor.id) {
+                            if (contextMenuVisorId === viewer.id) {
                               closeContextMenu();
                             } else {
                               e.stopPropagation();
-                              setContextMenuVisorId(visor.id);
+                              setContextMenuVisorId(viewer.id);
                               setContextMenuPosition({ x: e.clientX, y: e.clientY });
                               try {
-                                const visorCompleto = await getVisorById(visor.id);
+                                const visorCompleto = await getVisorById(viewer.id);
                                 setSelectedViewer(visorCompleto);
                               } catch (error) {
                                 showToast('No se pudo cargar el visor.', "error");
@@ -278,20 +278,20 @@ const ViewerManager = () => {
                         </div>
 
                         <img
-                          src={visor.img || '/assets/no-image.png'}
+                          src={viewer.img || '/assets/no-image.png'}
                           alt="img"
                           className="viewer-image"
                         />
                         <div className="viewer-info">
-                          <h3>{visor.name}</h3>
-                          <p>{visor.description}</p>
+                          <h3>{viewer.name}</h3>
+                          <p>{viewer.description}</p>
                           <p className="viewer-date">
-                            {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                            {new Date(viewer.lastupdate).toLocaleDateString('es-AR', {
                               day: 'numeric',
                               month: 'short',
                               year: 'numeric'
                             })}
-                            {visor.publico ? (
+                            {viewer.publico ? (
                               <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
                             ) : (
                               <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
