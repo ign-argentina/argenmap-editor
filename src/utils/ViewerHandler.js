@@ -118,7 +118,6 @@ const orderObjectByReference = (obj, reference) => {
   return ordered;
 };
 
-
 /**
  * Generates a date and time string formatted for safe use in filenames.
  * Example: "23-07-2025_16-30-45"
@@ -189,7 +188,6 @@ const downloadArgenmap = async (viewer, filename) => {
     const content = await zip.generateAsync({ type: 'blob' });
     saveAs(content, `${filename}.zip`);
 };
-
 
 function getEmptyValue(defaultVal) {
   if (Array.isArray(defaultVal)) return [];

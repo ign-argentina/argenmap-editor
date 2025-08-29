@@ -2,11 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import DataForm from "./DataForm";
 import PreferencesForm from "./PreferencesForm";
 import ViewerButtonActions from '../ViewerButtonActions/ViewerButtonActions';
+import defaultPreferences from '../../static/defaultPreferences';
 import './ArgenmapForm.css';
 
 function ArgenmapForm({ config, editorMode, viewer }) {
   const [data, setData] = useState(config.data || null);
-  const [preferences, setPreferences] = useState(config.preferences || null);
+  const [preferences, setPreferences] = useState(config.preferences || defaultPreferences);
   const [debouncedData, setDebouncedData] = useState(null);
   const [debouncedPreferences, setDebouncedPreferences] = useState(null);
 
