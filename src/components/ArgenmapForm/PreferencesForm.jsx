@@ -208,7 +208,7 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
       <div className="form-group" key={path}>
         <label>{label}</label>
         {value.map((item, i) => (
-          <div key={`${path}.${i}`} style={{ display: "flex", gap: "0.5rem" }}>
+          <div key={`${path}.${i}`} style={{ display: "flex", gap: "0.5rem", marginBottom: "8px" }}>
             <input
               className="array-item"
               value={item}
@@ -250,9 +250,6 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
         <strong>{label}</strong>
         {arr.map((obj, i) => (
           <div key={`${path}.${i}`} className="geoprocessing-process">
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span><b>Item {i + 1}</b></span>
-            </div>
             {Object.entries(obj).map(([k, v]) =>
               renderNode(`${path}.${i}.${k}`, v, false)
             )}

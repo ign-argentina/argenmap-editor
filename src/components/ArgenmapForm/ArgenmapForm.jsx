@@ -55,24 +55,24 @@ function ArgenmapForm({ config, editorMode, viewer }) {
       <div className="argenmap-form-container">
         {/* Contenedor con navbar y formularios */}
 
-        <div className="AAA">
+        <div className="argenmap-form">
+          <div className="argenmap-form-navbar">
+            <button
+              className={`tab-btn${activeForm === 'dataform' ? ' active' : ''}`}
+              onClick={() => setActiveForm('dataform')}
+            >
+              Mapas y Capas
+            </button>
+            <button
+              className={`tab-btn${activeForm === 'preferences' ? ' active' : ''}`}
+              onClick={() => setActiveForm('preferences')}
+            >
+              Estilos y Preferencias
+            </button>
+          </div>
 
           <div className="argenmap-form-sidebar">
             {/* Navbar */}
-            <div className="argenmap-form-navbar">
-              <button
-                className={`tab-btn${activeForm === 'dataform' ? ' active' : ''}`}
-                onClick={() => setActiveForm('dataform')}
-              >
-                Mapas y Capas
-              </button>
-              <button
-                className={`tab-btn${activeForm === 'preferences' ? ' active' : ''}`}
-                onClick={() => setActiveForm('preferences')}
-              >
-                Estilos y Preferencias
-              </button>
-            </div>
 
             {/* Mostrar el formulario seleccionado */}
             {activeForm === 'dataform' && <DataForm data={data} onDataChange={handleDataChange} />}
@@ -80,10 +80,13 @@ function ArgenmapForm({ config, editorMode, viewer }) {
           </div>
 
           {/* Footer */}
-          <div>
-            {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
+          <div className='argenmap-form-footer'>
+            <div className='footer-viewer-name'>
+              {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
+            </div>
+            <ViewerButtonActions viewer={viewer} editorMode={editorMode} isArgenmap={true} getWorkingConfig={() => ({ data, preferences })}></ViewerButtonActions>
           </div>
-          <ViewerButtonActions viewer={viewer} editorMode={editorMode} isArgenmap={true} getWorkingConfig={() => ({ data, preferences })}></ViewerButtonActions>
+
         </div>
 
         {/* Preview */}

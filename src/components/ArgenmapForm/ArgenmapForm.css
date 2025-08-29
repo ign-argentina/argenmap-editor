@@ -1,29 +1,33 @@
 /* Layout principal del formulario */
 .argenmap-form-container {
   display: flex;
-  gap: 1rem;
   width: 100%;
-  min-height: 80vh;
-  padding: 1rem;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  height: 83vh;
 }
 
 /* Sidebar izquierda con formularios */
 .argenmap-form-sidebar {
-  flex: 0 0 25%;
   border-right: 1px solid #ccc;
-  padding-right: 1rem;
+  padding-right: 0.5rem;
   overflow-y: auto;
-  max-height: 80vh;
+  max-height: 72vh;
 }
 
 /* Navbar de tabs */
 .argenmap-form-navbar {
-  margin-bottom: 1rem;
   display: flex;
   justify-content: center;
   gap: 1rem;
+  padding: 0.5rem;
+}
+
+.argenmap-form-footer {
+  background-color: var(--primary--color);
+
+}
+
+.footer-viewer-name {
+  color: var(--text--color);
 }
 
 /* Botones de tabs */
@@ -57,7 +61,6 @@
 .iframe-preview {
   flex: 1;
   border: 1px solid #ccc;
-  border-radius: 6px;
   min-height: 600px;
 }
 

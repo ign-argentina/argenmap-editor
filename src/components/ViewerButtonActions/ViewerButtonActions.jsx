@@ -1,6 +1,5 @@
 
 import SaveViewerModal from "../SaveViewerModal/SaveViewerModal";
-import "./ViewerButtonActions.css"
 import { useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
@@ -22,7 +21,7 @@ const config = getWorkingConfig()
   };
 
   return (
-    <div className="button-group">
+    <div className="global-buttons">
 
       <button className="btn-download" onClick={handleDownload} title="Descargar JSON">
         <span className="icon">
