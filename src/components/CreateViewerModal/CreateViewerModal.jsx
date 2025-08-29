@@ -26,7 +26,6 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
             onMouseLeave={() => setHoverText("")}
             className="create-option"
             title="Crear visor Argenmap"
-            // NAVIGATE, ENVIA ESTADO AL FORM
             onClick={() => {
               navigate('/form', { state: { isArgenmap: true } });
             }}
@@ -42,7 +41,6 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
             onMouseLeave={() => setHoverText("")}
             className="create-option"
             title="Crear visor Kharta"
-            // NAVIGATE, ENVIA ESTADO AL FORM
             onClick={() => {
               navigate('/form', { state: { isArgenmap: false } });
             }}

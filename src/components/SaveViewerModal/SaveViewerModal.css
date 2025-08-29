@@ -52,7 +52,7 @@
 
 .modal-buttons button {
   flex: 1;
-  padding: 10px 0;
+  /* padding: 10px 0; */
   font-size: 14px;
   border: none;
   border-radius: 6px;
