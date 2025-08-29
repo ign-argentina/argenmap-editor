@@ -52,45 +52,44 @@ function ArgenmapForm({ config, editorMode, viewer }) {
 
   return (
     <>
-      <div className="argenmap-form-container">
-        {/* Contenedor con navbar y formularios */}
+      <div className="argenmap-viewer">
+        <div className="argenmap-navbar">
 
-        <div className="argenmap-form">
-          <div className="argenmap-form-navbar">
-            <button
-              className={`tab-btn${activeForm === 'dataform' ? ' active' : ''}`}
-              onClick={() => setActiveForm('dataform')}
-            >
-              Mapas y Capas
-            </button>
-            <button
-              className={`tab-btn${activeForm === 'preferences' ? ' active' : ''}`}
-              onClick={() => setActiveForm('preferences')}
-            >
-              Estilos y Preferencias
-            </button>
+          <div className='argenmap-viewer-name'>
+            {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
           </div>
 
-          <div className="argenmap-form-sidebar">
-            {/* Navbar */}
-
-            {/* Mostrar el formulario seleccionado */}
-            {activeForm === 'dataform' && <DataForm data={data} onDataChange={handleDataChange} />}
-            {activeForm === 'preferences' && <PreferencesForm preferences={preferences} onPreferencesChange={handlePreferencesChange} />}
-          </div>
-
-          {/* Footer */}
-          <div className='argenmap-form-footer'>
-            <div className='footer-viewer-name'>
-              {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
+          <div className='argenmap-form'>
+            <div className="argenmap-form-selector">
+              <button
+                className={`tab-btn${activeForm === 'dataform' ? ' active' : ''}`}
+                onClick={() => setActiveForm('dataform')}
+              >
+                Mapas y Capas
+              </button>
+              <button
+                className={`tab-btn${activeForm === 'preferences' ? ' active' : ''}`}
+                onClick={() => setActiveForm('preferences')}
+              >
+                Estilos y Preferencias
+              </button>
             </div>
+
+            <div className="argenmap-form-content">
+              {activeForm === 'dataform' && <DataForm data={data} onDataChange={handleDataChange} />}
+              {activeForm === 'preferences' && <PreferencesForm preferences={preferences} onPreferencesChange={handlePreferencesChange} />}
+            </div>
+
+          </div>
+
+          <div className='argenmap-footer'>
             <ViewerButtonActions viewer={viewer} editorMode={editorMode} isArgenmap={true} getWorkingConfig={() => ({ data, preferences })}></ViewerButtonActions>
           </div>
 
         </div>
 
         {/* Preview */}
-        <div className="argenmap-form-preview">
+        <div className="argenmap-preview">
           <iframe
             name={iframeName}
             title="Preview"

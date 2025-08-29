@@ -54,7 +54,7 @@ function Form() {
 
   return (
     <>
-      <div className="page-form">
+      <div>
         {argenmap ? <ArgenmapForm viewer={viewer} editorMode={editorMode} config={{ data, preferences }} /> : <h1>KhartaForm</h1>}
       </div>
     </>
