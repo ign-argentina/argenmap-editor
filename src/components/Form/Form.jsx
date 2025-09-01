@@ -19,7 +19,7 @@ function Form() {
   const preferences = viewerConfig?.preferences || externalConfig?.preferences || null;
 
   // Si viene flag o si detectamos que tiene data+preferences => argeanmap
-  const argenmap = isArgenmap || (data && preferences);
+  const argenmap = viewer?.isArgenmap || (data && preferences);
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true);
 
