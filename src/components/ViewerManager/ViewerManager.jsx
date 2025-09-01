@@ -300,11 +300,13 @@ const ViewerManager = () => {
                               <img
                                 src={'/assets/logoArgenmap.png'}
                                 alt="Visor Argenmap"
+                                title="Visor Argenmap"
                                 className='viewer-card-logo'
                               />) : (
                               <img
                                 src={'/assets/logoKharta.png'}
                                 alt="Visor Kharta"
+                                title="Visor Kharta"
                                 className='viewer-card-logo'
                               />
                             )}

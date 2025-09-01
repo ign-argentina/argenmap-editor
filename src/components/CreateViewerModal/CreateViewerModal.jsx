@@ -45,7 +45,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
               navigate('/form', { state: { isArgenmap: false } });
             }}
           >
-            <img src="/assets/logoArgenmap.png" alt="Kharta" />
+            <img src="/assets/logoKharta.png" alt="Kharta" />
             <span>Kharta</span>
           </button>
         </div>

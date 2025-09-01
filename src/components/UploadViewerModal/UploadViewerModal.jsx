@@ -168,7 +168,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
             onMouseEnter={() => setHoverText("Subí un archivo JSON válido para Kharta")}
             onMouseLeave={() => setHoverText("")}
           >
-            <img src="/assets/logoArgenmap.png" alt="Kharta" />
+            <img src="/assets/logoKharta.png" alt="Kharta" />
             <span>Kharta</span>
 
             <input
