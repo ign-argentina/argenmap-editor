@@ -346,3 +346,8 @@
 .viewer-context-menu i {
   margin-right: 8px;
 }
+
+.viewer-card-logo {
+  width: 32px;
+  height: auto;
+}

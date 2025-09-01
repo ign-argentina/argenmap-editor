@@ -296,6 +296,18 @@ const ViewerManager = () => {
                             ) : (
                               <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
                             )}
+                            {viewer.isArgenmap ? (
+                              <img
+                                src={'/assets/logoArgenmap.png'}
+                                alt="Visor Argenmap"
+                                className='viewer-card-logo'
+                              />) : (
+                              <img
+                                src={'/assets/logoKharta.png'}
+                                alt="Visor Kharta"
+                                className='viewer-card-logo'
+                              />
+                            )}
                           </p>
                         </div>
                       </div>
