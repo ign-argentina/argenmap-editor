@@ -10,9 +10,11 @@ const SELECT_VISOR_BY_ID = `
 SELECT 
   v.*, 
   g.name AS gName, 
-  g.img AS gImg
+  g.img AS gImg,
+  (c.preferences IS NOT NULL) AS "isArgenmap"
 FROM visores v
 LEFT JOIN grupos g ON v.gid = g.id
+LEFT JOIN config c ON v.cid = c.id
 WHERE v.id = $1
   AND v.deleted = false
 `;
@@ -26,8 +28,13 @@ LEFT JOIN config c ON v.cid = c.id
 WHERE v.publico = true AND v.deleted = false`;
 
 const SELECT_MY_VISORS = `
-  SELECT * FROM visores
-  WHERE uid = $1 AND deleted = false AND gid IS NULL`;
+  SELECT 
+    v.*, 
+    (c.preferences IS NOT NULL) AS "isArgenmap"
+  FROM visores v
+  LEFT JOIN config c ON v.cid = c.id
+  WHERE v.uid = $1 AND v.deleted = false AND v.gid IS NULL
+`;
 
 const DELETE_VISOR = `
   UPDATE visores
@@ -36,8 +43,13 @@ const DELETE_VISOR = `
   RETURNING 1`;
 
 const SELECT_GROUP_VISORS = `
-  SELECT * FROM visores 
-  WHERE gid = $1 AND deleted = false`;
+  SELECT 
+    v.*, 
+    (c.preferences IS NOT NULL) AS "isArgenmap"
+  FROM visores v
+  LEFT JOIN config c ON v.cid = c.id
+  WHERE v.gid = $1 AND v.deleted = false
+`;
 
 const GET_SHARE_TOKEN = `SELECT sharetoken FROM visores WHERE id = $1`
 

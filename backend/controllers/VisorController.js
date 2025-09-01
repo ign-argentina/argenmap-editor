@@ -112,7 +112,6 @@ class VisorController {
       if (!result.success) {
         return res.status(500).json({ error: result.error });
       }
-
       return res.status(200).json(result.data);
     } catch (err) {
       return res.status(500).json({ error: 'Error al obtener visores públicos', detail: err.message });
