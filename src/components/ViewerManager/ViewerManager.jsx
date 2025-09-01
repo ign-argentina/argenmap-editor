@@ -425,7 +425,7 @@ const ViewerManager = () => {
               {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
                 onClick={() => {
                   if (!selectedViewer) return;
-                  navigate('/form', { state: { viewer: selectedViewer, editorMode: true } });
+                  navigate('/form', { state: { viewer: selectedViewer, editorMode: true, } });
                 }}
                 disabled={!selectedViewer}
               >
