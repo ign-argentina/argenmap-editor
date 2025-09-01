@@ -18,8 +18,12 @@ WHERE v.id = $1
 `;
 
 const SELECT_PUBLIC_VISORS = `
-  SELECT * FROM visores
-  WHERE publico = true AND deleted = false`;
+SELECT 
+  v.*, 
+  (c.preferences IS not NULL) AS "isArgenmap"
+FROM visores v
+LEFT JOIN config c ON v.cid = c.id
+WHERE v.publico = true AND v.deleted = false`;
 
 const SELECT_MY_VISORS = `
   SELECT * FROM visores
