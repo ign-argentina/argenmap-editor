@@ -5,11 +5,13 @@ import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import CreateViewerModal from '../CreateViewerModal/CreateViewerModal';
 import UploadViewerModal from '../UploadViewerModal/UploadViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
-import './ViewerManager.css';
-import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
 import { downloadViewer } from '../../utils/ViewerHandler';
+import { createShareLink } from '../../api/configApi.js';
+import currentVisor from '../../api/visorApi.js';
+import './ViewerManager.css';
+import '../Preview/Preview.css';
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
@@ -36,6 +38,26 @@ const ViewerManager = () => {
     // Inicializamos el estado al montar el componente, no en cada render. 
     return sessionStorage.getItem("lastGroupPicked") || "public-visors";
   });
+
+  const addShareLinks = async (visors) => {
+    const visorsWithLinks = await Promise.all(
+      visors.map(async (v) => {
+        try {
+          const response = await createShareLink(v.id, v.gid);
+          if (response.success && response.data) {
+            return {
+              ...v,
+              shareUrl: `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`,
+            };
+          }
+        } catch (err) {
+          console.error("Error creando shareLink:", err);
+        }
+        return v;
+      })
+    );
+    return visorsWithLinks;
+  };
 
   const closeContextMenu = () => {
     setContextMenuVisorId(null);
@@ -114,14 +136,16 @@ const ViewerManager = () => {
           vl = await getGroupVisors(currentFilter);
           access = await getPermissions(currentFilter);
         }
-        setViewers(vl);
+        const vlWithLinks = await addShareLinks(vl);
+        setViewers(vlWithLinks);
         setAccess(access);
       } catch (error) {
         console.error("Error loading viewers:", error);
         showToast("Error loading viewers", "error");
         // Fallback to public viewers
         const vl = await getPublicVisors();
-        setViewers(vl);
+        const vlWithLinks = await addShareLinks(vl);
+        setViewers(vlWithLinks);
         setAccess(PUBLIC_VISOR_ACCESS);
         setCurrentFilter("public-visors");
         sessionStorage.setItem("lastGroupPicked", "public-visors");
@@ -157,16 +181,22 @@ const ViewerManager = () => {
     if (value === "public-visors") {
       setAccess(PUBLIC_VISOR_ACCESS);
       const vl = await getPublicVisors();
-      setViewers(vl);
+      const vlWithLinks = await addShareLinks(vl);
+      setViewers(vlWithLinks);
+
     } else if (value === "my-visors") {
       setAccess(MY_VISOR_ACCESS);
       const vl = await getMyVisors();
-      setViewers(vl);
+      const vlWithLinks = await addShareLinks(vl);
+      setViewers(vlWithLinks);
+
     } else if (value !== '') {
       const vl = await getGroupVisors(value);
       const access = await getPermissions(value);
       setAccess(access);
-      setViewers(vl);
+      const vlWithLinks = await addShareLinks(vl);
+      setViewers(vlWithLinks);
+
     }
   };
 
@@ -237,7 +267,7 @@ const ViewerManager = () => {
                     <p className="no-viewers-message">No hay visores disponibles.</p>
                   ) : (
                     viewers.map((viewer) => (
-                      <div
+                      <a
                         key={viewer.id}
                         className={`viewer-item ${selectedViewer?.id === viewer.id ? 'selected' : ''}`}
                         onClick={async () => {
@@ -252,6 +282,18 @@ const ViewerManager = () => {
                             setShowDescriptionModal(true);
                           } catch (error) {
                             showToast('No se pudo cargar el visor.', "error");
+                          }
+                        }}
+                        onMouseDown={(e) => {
+                          if (e.button === 1 && viewer.shareUrl) {
+                            e.preventDefault();
+                            window.open(viewer.shareUrl, "_blank");
+                          }
+                        }}
+                        onContextMenu={(e) => {
+                          if (viewer.shareUrl) {
+                            e.preventDefault();
+                            window.open(viewer.shareUrl, "_blank");
                           }
                         }}
                       >
@@ -312,7 +354,7 @@ const ViewerManager = () => {
                             )}
                           </p>
                         </div>
-                      </div>
+                      </a>
                     ))
                   )}
 
@@ -478,7 +520,7 @@ const ViewerManager = () => {
           </div>
         )}
       </div>
-      {/* )} */}
+
     </>
   );
 };
