@@ -191,7 +191,6 @@ class VisorController {
         return res.status(403).json({ error: result.error });
       }
 
-      console.log(result.data)
       return res.status(200).json(result);
     } catch (err) {
       console.error("Error en VisorController (deleteVisor):", err);
