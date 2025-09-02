@@ -28,7 +28,6 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
         setKhartaFile({ file, json });
         setKhartaError("");
-        // NAVIGATE, ENVIA ESTADO AL FORM Y JSON
         navigate('/form', {
           state: {
             externalUpload: {
@@ -94,13 +93,12 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     handleFiles(e.target.files);
   };
 
-  // NAVIGATE, ENVIA ESTADO AL FORM Y JSON
   useEffect(() => {
     if (preferencesFile && dataFile) {
       navigate('/form', {
         state: {
+          isArgenmap: true,
           externalUpload: {
-            type: "isArgenmap",
             files: {
               preferences: preferencesFile.json,
               data: dataFile.json
@@ -108,7 +106,6 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
           }
         }
       });
-      console.log("Tamos listos")
     }
   }, [preferencesFile, dataFile, navigate]);
 
@@ -171,7 +168,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
             onMouseEnter={() => setHoverText("Subí un archivo JSON válido para Kharta")}
             onMouseLeave={() => setHoverText("")}
           >
-            <img src="/assets/logoArgenmap.png" alt="Kharta" />
+            <img src="/assets/logoKharta.png" alt="Kharta" />
             <span>Kharta</span>
 
             <input

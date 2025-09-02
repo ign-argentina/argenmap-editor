@@ -40,7 +40,7 @@
   backdrop-filter: blur(2px);
 }
 
-.viewer-list-container > *:not(.background-overlay) {
+.viewer-list-container>*:not(.background-overlay) {
   position: relative;
   z-index: 1;
 }
@@ -345,4 +345,11 @@
 
 .viewer-context-menu i {
   margin-right: 8px;
+}
+
+.viewer-card-logo {
+  width: auto;
+  height: 23px;
+  vertical-align: bottom;
+  margin-left: 5px;
 }

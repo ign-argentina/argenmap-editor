@@ -1,40 +1,29 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '/src/global.css';
 import './Form.css';
-import { useToast } from '../../context/ToastContext';
-import defaultConfig from '../../static/config.json';
-import ArgenmapForm from '../ArgenmapForm/ArgenmapForm';
 import { useUser } from '../../context/UserContext';
+import ArgenmapForm from '../ArgenmapForm/ArgenmapForm';
+import defaultConfig from '../../static/config.json';
 
 function Form() {
   const location = useLocation();
-  const { viewer, editorMode, externalUpload = {}, isArgenmap } = location.state || {}; // Recibe configuraciones
-  const { isAuth } = useUser()
+  const { viewer, editorMode, externalUpload = null, isArgenmap } = location.state || {}; 
+  const { isAuth } = useUser();
 
-  const { data, preferences } = viewer?.config || false
-  const argenmap = (isArgenmap || (data && preferences))
+  // ---- Unificamos config ----
+  const viewerConfig = viewer?.config;
+  const externalConfig = externalUpload?.files;
 
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true); // No te vayas! -> Este va para el formulario
+  const data = viewerConfig?.data || externalConfig?.data || null;
+  const preferences = viewerConfig?.preferences || externalConfig?.preferences || null;
 
-  useEffect(() => {
-    if (viewer || externalUpload) {
-      /*       setConfig(externalUpload ? externalUpload : viewer.config.json); */
+  // Si viene flag o si detectamos que tiene data+preferences => argeanmap
+  const argenmap = viewer?.isArgenmap || isArgenmap || (data && preferences);
 
-      if (true) {
-        /*         setWorkingConfig(workingConfig) */
-      } else {
-        /*         setWorkingConfig(externalUpload ? externalUpload : viewer.config.json); */
-      }
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true);
 
-    } else {
-      /*       setConfig(defaultConfig);
-            setWorkingConfig(defaultConfig); */
-    }
-  }, []);
-
-
-  // No te vayas! Se pueden borrar los cambios!! (OPTIMIZAR)
+  // No te vayas! Se pueden borrar los cambios!!
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (hasUnsavedChanges) {
@@ -43,24 +32,23 @@ function Form() {
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [hasUnsavedChanges]);
-  // Fin no te vayas (OPTIMIZAR)
-
-  /*   const { showToast } = useToast(); */
 
   return (
-    <>
-      <div className="page-form">
-        <div className="pg-form">
-          {argenmap ? <ArgenmapForm viewer={viewer} editorMode={editorMode} config={{ data, preferences }} /> : <h1>KhartaForm</h1>}
-        </div>
-      </div>
-
-    </>
+    <div>
+      {argenmap ? (
+        <ArgenmapForm
+          viewer={viewer}
+          editorMode={editorMode}
+          config={{ data, preferences }}
+        />
+      ) : (
+        <h1>KhartaForm</h1>
+      )}
+    </div>
   );
 }
 

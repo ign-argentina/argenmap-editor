@@ -187,21 +187,21 @@ class VisorService {
     try {
       let config = null
       if (validate(shareToken)) {
-
-
-
         const visor = await Visor.getConfigIdByShareToken(shareToken)
 
         if (visor) {
           config = await Config.getConfigById(visor);
+          config = config.preferences == null ? config.data : config
         }
       }
-      return config ? Result.success(config.json) : Result.fail("No se ha podido recuperar la configuracion del visor")
+
+      return config ? Result.success(config) : Result.fail("No se ha podido recuperar la configuracion del visor")
     } catch (error) {
       console.log("VISORES: Error en la capa de servicio [getConfigByShareToken]")
       return Result.fail("Error en la capa de servicio")
     }
   }
+
 }
 
 export default VisorService

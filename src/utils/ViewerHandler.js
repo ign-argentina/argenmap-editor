@@ -9,43 +9,27 @@ import { saveAs } from "file-saver";
 const BASE_FILE_NAME = "Visor"
 
 /**
- * Descarga un archivo JSON con nombre y contenido definidos.
- * Completa los campos faltantes a partir de una referencia base (si se provee),
- * y garantiza el orden de las propiedades según dicha referencia.
+ * Downloads a JSON file with the specified name and content.
+ * If a base reference object is provided, missing fields are completed
+ * and the properties are ordered according to that reference.
  *
- * @param {Object} viewer - El objeto JSON principal que se va a descargar.
- * @param {Object|null} baseViewer - Objeto de referencia que define la estructura y orden. Opcional.
- * @param {string|null} name - Nombre base del archivo. Si no se pasa, se usa `BASE_FILE_NAME`.
+ * @param {Object} viewer - The main JSON object to be downloaded.
+ * @param {boolean} [isArgenmap=false] - A flag to determine if the download should be processed as an "ArgenMap" format.
+ * @param {string|null} [name=null] - The base name for the file. If not provided, `BASE_FILE_NAME` will be used.
+ * 
+ * If `isArgenmap` is true, the function delegates the download to the `downloadArgenmap` function.
+ * If `isArgenmap` is false, it delegates the download to the `downloadKharta` function with the `viewer.data`.
  */
 export const downloadViewer = async (viewer, isArgenmap = false, name = null) => {
   const date = formatDateForFilename(new Date());
   const filename = `${name || BASE_FILE_NAME}_${isArgenmap ? "ArgenMap" : ""}_${date}`;
 
   if (isArgenmap) {
-    // Si viewer es un objeto con múltiples recursos (por ejemplo: {data, config, image})
-    const zip = new JSZip();
-
-    // Suponiendo que viewer tiene claves como data, config, image, etc.
-    for (const [key, value] of Object.entries(viewer)) {
-      if (typeof value === 'string' || value instanceof Blob) {
-        // Si es una cadena o blob (ej. JSON string, texto, imagen, etc.)
-        zip.file(`${key}.txt`, value); // o `${key}.json`, `.png`, según corresponda
-      } else {
-        // Si es un objeto, lo serializamos como JSON
-        zip.file(`${key}.json`, JSON.stringify(value, null, 2));
-      }
-    }
-
-    const content = await zip.generateAsync({ type: 'blob' });
-    saveAs(content, `${filename}.zip`);
+    downloadArgenmap(viewer, filename);
   } else {
-    // Comportamiento anterior: descargar archivo suelto
-    download(viewer, filename);
+    downloadKharta(viewer.data, filename);
   }
 };
-
-
-//  const date = formatDateForFilename(new Date());
 
 /**
  * Fusiona un objeto `viewer` con una estructura base (`baseViewer`),
@@ -134,13 +118,12 @@ const orderObjectByReference = (obj, reference) => {
   return ordered;
 };
 
-
 /**
- * Genera una cadena de fecha y hora en formato seguro para nombre de archivo.
- * Ejemplo: "23-07-2025_16-30-45"
+ * Generates a date and time string formatted for safe use in filenames.
+ * Example: "23-07-2025_16-30-45"
  *
- * @param {Date} date - Objeto de fecha a formatear.
- * @returns {string} - Fecha formateada como string.
+ * @param {Date} date - The Date object to format.
+ * @returns {string} - The formatted date as a string.
  */
 const formatDateForFilename = (date) => {
   const day = String(date.getDate()).padStart(2, '0');
@@ -154,13 +137,16 @@ const formatDateForFilename = (date) => {
 };
 
 /**
- * Descarga un archivo `.json` en el navegador con nombre y contenido especificado.
+ * Downloads a `.json` file in the browser with the specified name and content.
  *
- * @param {Object} file - Contenido del archivo a descargar (JSON ya estructurado).
- * @param {string} fileName - Nombre base del archivo.
- * @param {string} date - Fecha formateada para incluir en el nombre del archivo.
+ * @param {Object} file - The structured JSON content to be downloaded.
+ * @param {string} fileName - The base name for the downloaded file.
+ * @param {string} [date=""] - Optional formatted date to include in the filename.
+ *
+ * The function stringifies the JSON content, creates a Blob object,
+ * and triggers a browser download with a file name in the format: `fileName - date.json`.
  */
-const download = (file, fileName, date = "") => {
+const downloadKharta = (file, fileName, date = "") => {
   const fileData = JSON.stringify(file, null, 2);
   const blob = new Blob([fileData], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -170,6 +156,37 @@ const download = (file, fileName, date = "") => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+/**
+ * Downloads a ZIP file containing the contents of the viewer object.
+ *
+ * @param {Object} viewer - The viewer object containing data to be exported.
+ * @param {string} filename - The desired name for the downloaded ZIP file (without extension).
+ *
+ * This function iterates over the properties of the `viewer` object and:
+ * - If a value is a string or a Blob (e.g., text, JSON string, image), it is added as a `.txt` file.
+ * - If a value is an object, it is serialized as formatted JSON and added as a `.json` file.
+ *
+ * After processing all properties, the files are bundled into a ZIP archive and automatically downloaded.
+ *
+ * @returns {Promise<void>} A promise that resolves when the ZIP file has been generated and downloaded.
+ */
+const downloadArgenmap = async (viewer, filename) => {
+    const zip = new JSZip();
+
+    for (const [key, value] of Object.entries(viewer)) {
+        if (typeof value === 'string' || value instanceof Blob) {
+            // If the value is a string or Blob (e.g., text, JSON string, image, etc.)
+            zip.file(`${key}.txt`, value); // could also be `.json`, `.png`, etc.
+        } else {
+            // If the value is an object, serialize it as JSON
+            zip.file(`${key}.json`, JSON.stringify(value, null, 2));
+        }
+    }
+
+    const content = await zip.generateAsync({ type: 'blob' });
+    saveAs(content, `${filename}.zip`);
 };
 
 function getEmptyValue(defaultVal) {
@@ -218,9 +235,4 @@ function deepMergeWithDefaults(userConfig, defaultConfig) {
 
   // Para valores primitivos
   return userConfig !== undefined ? userConfig : getEmptyValue(defaultConfig);
-}
-
-const ordenar = (actual, base) => {
-
-
 }

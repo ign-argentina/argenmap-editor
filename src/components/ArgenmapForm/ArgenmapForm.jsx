@@ -2,11 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import DataForm from "./DataForm";
 import PreferencesForm from "./PreferencesForm";
 import ViewerButtonActions from '../ViewerButtonActions/ViewerButtonActions';
+import defaultPreferences from '../../static/defaultPreferences';
 import './ArgenmapForm.css';
 
 function ArgenmapForm({ config, editorMode, viewer }) {
   const [data, setData] = useState(config.data || null);
-  const [preferences, setPreferences] = useState(config.preferences || null);
+  const [preferences, setPreferences] = useState(config.preferences || defaultPreferences);
   const [debouncedData, setDebouncedData] = useState(null);
   const [debouncedPreferences, setDebouncedPreferences] = useState(null);
 
@@ -52,14 +53,15 @@ function ArgenmapForm({ config, editorMode, viewer }) {
 
   return (
     <>
-      <div className="argenmap-form-container">
-        {/* Contenedor con navbar y formularios */}
+      <div className="argenmap-viewer">
+        <div className="argenmap-navbar">
 
-        <div className="AAA">
+          <div className='argenmap-viewer-name'>
+            {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
+          </div>
 
-          <div className="argenmap-form-sidebar">
-            {/* Navbar */}
-            <div className="argenmap-form-navbar">
+          <div className='argenmap-form'>
+            <div className="argenmap-form-selector">
               <button
                 className={`tab-btn${activeForm === 'dataform' ? ' active' : ''}`}
                 onClick={() => setActiveForm('dataform')}
@@ -74,20 +76,21 @@ function ArgenmapForm({ config, editorMode, viewer }) {
               </button>
             </div>
 
-            {/* Mostrar el formulario seleccionado */}
-            {activeForm === 'dataform' && <DataForm data={data} onDataChange={handleDataChange} />}
-            {activeForm === 'preferences' && <PreferencesForm preferences={preferences} onPreferencesChange={handlePreferencesChange} />}
+            <div className="argenmap-form-content">
+              {activeForm === 'dataform' && <DataForm data={data} onDataChange={handleDataChange} />}
+              {activeForm === 'preferences' && <PreferencesForm preferences={preferences} onPreferencesChange={handlePreferencesChange} />}
+            </div>
+
           </div>
 
-          {/* Footer */}
-          <div>
-            {viewer?.name ? `${viewer.name}` : "Nuevo Visor"}
+          <div className='argenmap-footer'>
+            <ViewerButtonActions viewer={viewer} editorMode={editorMode} isArgenmap={true} getWorkingConfig={() => ({ data, preferences })}></ViewerButtonActions>
           </div>
-          <ViewerButtonActions viewer={viewer} editorMode={editorMode} isArgenmap={true} getWorkingConfig={() => ({ data, preferences })}></ViewerButtonActions>
+
         </div>
 
         {/* Preview */}
-        <div className="argenmap-form-preview">
+        <div className="argenmap-preview">
           <iframe
             name={iframeName}
             title="Preview"

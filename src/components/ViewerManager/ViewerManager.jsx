@@ -5,11 +5,13 @@ import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import CreateViewerModal from '../CreateViewerModal/CreateViewerModal';
 import UploadViewerModal from '../UploadViewerModal/UploadViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
-import './ViewerManager.css';
-import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
 import { downloadViewer } from '../../utils/ViewerHandler';
+import { createShareLink } from '../../api/configApi.js';
+import currentVisor from '../../api/visorApi.js';
+import './ViewerManager.css';
+import '../Preview/Preview.css';
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
@@ -37,6 +39,26 @@ const ViewerManager = () => {
     return sessionStorage.getItem("lastGroupPicked") || "public-visors";
   });
 
+  const addShareLinks = async (visors) => {
+    const visorsWithLinks = await Promise.all(
+      visors.map(async (v) => {
+        try {
+          const response = await createShareLink(v.id, v.gid);
+          if (response.success && response.data) {
+            return {
+              ...v,
+              shareUrl: `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`,
+            };
+          }
+        } catch (err) {
+          console.error("Error creando shareLink:", err);
+        }
+        return v;
+      })
+    );
+    return visorsWithLinks;
+  };
+
   const closeContextMenu = () => {
     setContextMenuVisorId(null);
   };
@@ -58,16 +80,18 @@ const ViewerManager = () => {
   };
 
   const handleDownload = () => {
-    if (!selectedViewer?.config?.json) {
+    if (selectedViewer?.config) {
+      const isArgenmap = selectedViewer.config?.data != null && selectedViewer.config?.preferences != null;
+
+      const config = {
+        data: selectedViewer.config?.data,
+        preferences: selectedViewer.config?.preferences
+      };
+
+      downloadViewer(config, isArgenmap, selectedViewer.name) // Config, baseConfig nula, nombre
+    } else {
       showToast('No hay visor seleccionado con configuración válida.', "error");
-      return;
     }
-
-    const configJson = typeof selectedViewer.config.json === 'string'
-      ? JSON.parse(selectedViewer.config.json)
-      : selectedViewer.config.json;
-
-    downloadViewer(configJson, null, selectedViewer.name) // Config, baseConfig nula, nombre
   };
 
   const handleDeleteVisor = async (visorCompleto) => {
@@ -112,14 +136,16 @@ const ViewerManager = () => {
           vl = await getGroupVisors(currentFilter);
           access = await getPermissions(currentFilter);
         }
-        setViewers(vl);
+        const vlWithLinks = await addShareLinks(vl);
+        setViewers(vlWithLinks);
         setAccess(access);
       } catch (error) {
         console.error("Error loading viewers:", error);
         showToast("Error loading viewers", "error");
         // Fallback to public viewers
         const vl = await getPublicVisors();
-        setViewers(vl);
+        const vlWithLinks = await addShareLinks(vl);
+        setViewers(vlWithLinks);
         setAccess(PUBLIC_VISOR_ACCESS);
         setCurrentFilter("public-visors");
         sessionStorage.setItem("lastGroupPicked", "public-visors");
@@ -155,16 +181,22 @@ const ViewerManager = () => {
     if (value === "public-visors") {
       setAccess(PUBLIC_VISOR_ACCESS);
       const vl = await getPublicVisors();
-      setViewers(vl);
+      const vlWithLinks = await addShareLinks(vl);
+      setViewers(vlWithLinks);
+
     } else if (value === "my-visors") {
       setAccess(MY_VISOR_ACCESS);
       const vl = await getMyVisors();
-      setViewers(vl);
+      const vlWithLinks = await addShareLinks(vl);
+      setViewers(vlWithLinks);
+
     } else if (value !== '') {
       const vl = await getGroupVisors(value);
       const access = await getPermissions(value);
       setAccess(access);
-      setViewers(vl);
+      const vlWithLinks = await addShareLinks(vl);
+      setViewers(vlWithLinks);
+
     }
   };
 
@@ -234,22 +266,34 @@ const ViewerManager = () => {
                   ) : !Array.isArray(viewers) || viewers.length === 0 ? (
                     <p className="no-viewers-message">No hay visores disponibles.</p>
                   ) : (
-                    viewers.map((visor) => (
-                      <div
-                        key={visor.id}
-                        className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
+                    viewers.map((viewer) => (
+                      <a
+                        key={viewer.id}
+                        className={`viewer-item ${selectedViewer?.id === viewer.id ? 'selected' : ''}`}
                         onClick={async () => {
-                          if (selectedViewer?.id === visor.id) {
+                          if (selectedViewer?.id === viewer.id) {
                             setSelectedViewer(null);
                             setShowDescriptionModal(false);
                             return;
                           }
                           try {
-                            const visorCompleto = await getVisorById(visor.id);
+                            const visorCompleto = await getVisorById(viewer.id);
                             setSelectedViewer(visorCompleto);
                             setShowDescriptionModal(true);
                           } catch (error) {
                             showToast('No se pudo cargar el visor.', "error");
+                          }
+                        }}
+                        onMouseDown={(e) => {
+                          if (e.button === 1 && viewer.shareUrl) {
+                            e.preventDefault();
+                            window.open(viewer.shareUrl, "_blank");
+                          }
+                        }}
+                        onContextMenu={(e) => {
+                          if (viewer.shareUrl) {
+                            e.preventDefault();
+                            window.open(viewer.shareUrl, "_blank");
                           }
                         }}
                       >
@@ -257,14 +301,14 @@ const ViewerManager = () => {
                           className="viewer-context-button"
                           title="Más opciones"
                           onClick={async (e) => {
-                            if (contextMenuVisorId === visor.id) {
+                            if (contextMenuVisorId === viewer.id) {
                               closeContextMenu();
                             } else {
                               e.stopPropagation();
-                              setContextMenuVisorId(visor.id);
+                              setContextMenuVisorId(viewer.id);
                               setContextMenuPosition({ x: e.clientX, y: e.clientY });
                               try {
-                                const visorCompleto = await getVisorById(visor.id);
+                                const visorCompleto = await getVisorById(viewer.id);
                                 setSelectedViewer(visorCompleto);
                               } catch (error) {
                                 showToast('No se pudo cargar el visor.', "error");
@@ -276,27 +320,41 @@ const ViewerManager = () => {
                         </div>
 
                         <img
-                          src={visor.img || '/assets/no-image.png'}
+                          src={viewer.img || '/assets/no-image.png'}
                           alt="img"
                           className="viewer-image"
                         />
                         <div className="viewer-info">
-                          <h3>{visor.name}</h3>
-                          <p>{visor.description}</p>
+                          <h3>{viewer.name}</h3>
+                          <p>{viewer.description}</p>
                           <p className="viewer-date">
-                            {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
+                            {new Date(viewer.lastupdate).toLocaleDateString('es-AR', {
                               day: 'numeric',
                               month: 'short',
                               year: 'numeric'
                             })}
-                            {visor.publico ? (
+                            {viewer.publico ? (
                               <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
                             ) : (
                               <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
                             )}
+                            {viewer.isArgenmap ? (
+                              <img
+                                src={'/assets/logoArgenmap.png'}
+                                alt="Visor Argenmap"
+                                title="Visor Argenmap"
+                                className='viewer-card-logo'
+                              />) : (
+                              <img
+                                src={'/assets/logoKharta.png'}
+                                alt="Visor Kharta"
+                                title="Visor Kharta"
+                                className='viewer-card-logo'
+                              />
+                            )}
                           </p>
                         </div>
-                      </div>
+                      </a>
                     ))
                   )}
 
@@ -369,9 +427,7 @@ const ViewerManager = () => {
             {showShareViewerModal && (
               <div className="save-viewer-modal-overlay">
                 <ShareViewerModal
-                  // editorMode={editorMode}
-                  // cloneMode={cloneMode}
-                  visor={selectedViewer}
+                  viewer={selectedViewer}
                   isOpen={showShareViewerModal}
                   onClose={() => setShowShareViewerModal(false)}
                 />
@@ -409,7 +465,7 @@ const ViewerManager = () => {
               {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
                 onClick={() => {
                   if (!selectedViewer) return;
-                  navigate('/form', { state: { viewer: selectedViewer, editorMode: true } });
+                  navigate('/form', { state: { viewer: selectedViewer, editorMode: true, } });
                 }}
                 disabled={!selectedViewer}
               >
@@ -464,7 +520,7 @@ const ViewerManager = () => {
           </div>
         )}
       </div>
-      {/* )} */}
+
     </>
   );
 };

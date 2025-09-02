@@ -6,6 +6,8 @@
   );
   color: var(--primary--color);
   font-family: 'Segoe UI', sans-serif;
+  overflow-y: scroll;
+  max-height: 83.5vh;
 }
 
 .dashboard-title {

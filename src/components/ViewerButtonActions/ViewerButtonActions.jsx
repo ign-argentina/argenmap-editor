@@ -1,19 +1,19 @@
 
 import SaveViewerModal from "../SaveViewerModal/SaveViewerModal";
-import "./ViewerButtonActions.css"
 import { useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
+import { useNavigate } from "react-router-dom";
 
 function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArgenmap = false }) {
 
   const [cloneMode, setCloneMode] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false);
   const { isAuth } = useUser()
+  const navigate = useNavigate();
 
   const handleDownload = () => {
-  
-const config = getWorkingConfig()
+    const config = getWorkingConfig()
     if (isArgenmap) {
       downloadViewer(config, isArgenmap, viewer?.name)
     } else {
@@ -22,7 +22,7 @@ const config = getWorkingConfig()
   };
 
   return (
-    <div className="button-group">
+    <div className="global-buttons">
 
       <button className="btn-download" onClick={handleDownload} title="Descargar JSON">
         <span className="icon">
@@ -56,6 +56,17 @@ const config = getWorkingConfig()
         <i className="fa-solid fa-floppy-disk"></i>
         Guardar cambios
       </button>}
+
+      <button
+        className="btn-cancel"
+        onClick={() => navigate("/visores")}
+        title="Cancelar"
+      >
+        <span className="icon">
+          <i className="fa-solid fa-close"></i>
+        </span>
+        Cancelar
+      </button>
 
     </div>
   )
