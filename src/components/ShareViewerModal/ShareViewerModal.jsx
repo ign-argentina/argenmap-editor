@@ -1,12 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
-import { useUser } from '../../context/UserContext';
 import { createShareLink } from '../../api/configApi.js';
 import currentVisor from '../../api/visorApi.js';
 import { useToast } from '../../context/ToastContext.jsx';
 import './ShareViewerModal.css';
 
-const ShareViewerModal = ({ isOpen, onClose, visor }) => {
-  const { isAuth } = useUser();
+const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
   const [shareUrl, setShareUrl] = useState('');
   const [iframeCode, setIframeCode] = useState('');
   const linkRef = useRef(null);
@@ -15,31 +13,31 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
 
   useEffect(() => {
     const fetchUrl = async () => {
-      if (visor && isOpen) {
+      if (viewer && isOpen) {
         try {
-          const { id: vid, gid: vgid } = visor;
+          const { id: vid, gid: vgid } = viewer;
           const response = await createShareLink(vid, vgid);
           if (response.success && response.data) {
-            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/kharta?view=${response.data}`;
+            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${viewer.isArgenmap ? 'argenmap' : 'kharta'}?view=${response.data}`;
 
-            setShareUrl(fullUrl);
+            setShareUrl(fullUrl)
             setIframeCode(
               `<iframe src="${fullUrl}" width="100%" height="500" style="border:0;" allowfullscreen></iframe>`
             );
           } else {
             console.error('Respuesta inesperada:', response);
-            setShareUrl('');
-            setIframeCode('');
+            setShareUrl('')
+            setIframeCode('')
           }
         } catch (error) {
           console.error('Error al generar el enlace:', error);
-          setShareUrl('');
-          setIframeCode('');
+          setShareUrl('')
+          setIframeCode('')
         }
       }
-    };
+    }
     fetchUrl();
-  }, [visor, isOpen]);
+  }, [viewer, isOpen]);
 
   const handleCopy = (ref) => {
     if (!ref?.current) return;
@@ -52,12 +50,12 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
     }
   };
 
-  if (!isOpen || !visor) return null;
+  if (!isOpen || !viewer) return null;
 
   return (
     <div className="share-viewer-modal-overlay">
       <div className="share-viewer-modal">
-        <h2 className="share-viewer-title">Compartir {visor.name}</h2>
+        <h2 className="share-viewer-title">Compartir {viewer.name}</h2>
 
         <div className="share-viewer-link-container">
           <div className="share-viewer-link" ref={linkRef}>
@@ -100,7 +98,7 @@ const ShareViewerModal = ({ isOpen, onClose, visor }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default ShareViewerModal;

@@ -385,9 +385,7 @@ const ViewerManager = () => {
             {showShareViewerModal && (
               <div className="save-viewer-modal-overlay">
                 <ShareViewerModal
-                  // editorMode={editorMode}
-                  // cloneMode={cloneMode}
-                  visor={selectedViewer}
+                  viewer={selectedViewer}
                   isOpen={showShareViewerModal}
                   onClose={() => setShowShareViewerModal(false)}
                 />
