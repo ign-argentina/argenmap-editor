@@ -175,8 +175,7 @@ const ViewerManager = () => {
     }
   };
 
-  const redirectToViewer = async (viewer) => {
-
+  const redirectToViewerShare = async (viewer) => {
     const response = await createShareLink(viewer.id, viewer.gid)
     if (response.success) {
       window.open(`http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`, "_blank");
@@ -269,13 +268,12 @@ const ViewerManager = () => {
                         }}
                         onMouseDown={(e) => {
                           if (e.button === 1) {
-                            redirectToViewer(viewer)
+                            redirectToViewerShare(viewer)
                           }
                         }}
                         onContextMenu={(e) => {
                           if (viewer.shareUrl) {
-                            e.preventDefault();
-                            window.open(viewer.shareUrl, "_blank");
+                            redirectToViewerShare(viewer)
                           }
                         }}
                       >
@@ -433,7 +431,6 @@ const ViewerManager = () => {
                 />
               </div>
             )}
-
           </div>
         </div>
 
@@ -502,7 +499,6 @@ const ViewerManager = () => {
           </div>
         )}
       </div>
-
     </>
   );
 };
