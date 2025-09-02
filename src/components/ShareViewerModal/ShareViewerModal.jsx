@@ -18,7 +18,7 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
           const { id: vid, gid: vgid } = viewer;
           const response = await createShareLink(vid, vgid);
           if (response.success && response.data) {
-            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${viewer.isArgenmap ? 'argenmap' : 'kharta'}?view=${response.data}`;
+            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`;
 
             setShareUrl(fullUrl)
             setIframeCode(
