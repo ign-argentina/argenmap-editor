@@ -39,25 +39,6 @@ const ViewerManager = () => {
     return sessionStorage.getItem("lastGroupPicked") || "public-visors";
   });
 
-  const addShareLinks = async (visors) => {
-    const visorsWithLinks = await Promise.all(
-      visors.map(async (v) => {
-        try {
-          const response = await createShareLink(v.id, v.gid);
-          if (response.success && response.data) {
-            return {
-              ...v,
-              shareUrl: `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`,
-            };
-          }
-        } catch (err) {
-          console.error("Error creando shareLink:", err);
-        }
-        return v;
-      })
-    );
-    return visorsWithLinks;
-  };
 
   const closeContextMenu = () => {
     setContextMenuVisorId(null);
@@ -136,16 +117,14 @@ const ViewerManager = () => {
           vl = await getGroupVisors(currentFilter);
           access = await getPermissions(currentFilter);
         }
-        const vlWithLinks = await addShareLinks(vl);
-        setViewers(vlWithLinks);
+        setViewers(vl);
         setAccess(access);
       } catch (error) {
         console.error("Error loading viewers:", error);
         showToast("Error loading viewers", "error");
         // Fallback to public viewers
         const vl = await getPublicVisors();
-        const vlWithLinks = await addShareLinks(vl);
-        setViewers(vlWithLinks);
+        setViewers(vl);
         setAccess(PUBLIC_VISOR_ACCESS);
         setCurrentFilter("public-visors");
         sessionStorage.setItem("lastGroupPicked", "public-visors");
@@ -181,24 +160,28 @@ const ViewerManager = () => {
     if (value === "public-visors") {
       setAccess(PUBLIC_VISOR_ACCESS);
       const vl = await getPublicVisors();
-      const vlWithLinks = await addShareLinks(vl);
-      setViewers(vlWithLinks);
-
+      setViewers(vl);
     } else if (value === "my-visors") {
       setAccess(MY_VISOR_ACCESS);
       const vl = await getMyVisors();
-      const vlWithLinks = await addShareLinks(vl);
-      setViewers(vlWithLinks);
+      setViewers(vl);
 
     } else if (value !== '') {
       const vl = await getGroupVisors(value);
       const access = await getPermissions(value);
       setAccess(access);
-      const vlWithLinks = await addShareLinks(vl);
-      setViewers(vlWithLinks);
+      setViewers(vl);
 
     }
   };
+
+  const redirectToViewer = async (viewer) => {
+
+    const response = await createShareLink(viewer.id, viewer.gid)
+    if (response.success) {
+      window.open(`http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`, "_blank");
+    }
+  }
 
   return (
     <>
@@ -285,9 +268,8 @@ const ViewerManager = () => {
                           }
                         }}
                         onMouseDown={(e) => {
-                          if (e.button === 1 && viewer.shareUrl) {
-                            e.preventDefault();
-                            window.open(viewer.shareUrl, "_blank");
+                          if (e.button === 1) {
+                            redirectToViewer(viewer)
                           }
                         }}
                         onContextMenu={(e) => {
