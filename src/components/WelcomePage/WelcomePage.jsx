@@ -22,21 +22,21 @@ const WelcomePage = () => {
           <button className="welcome-page-button" onClick={() => navigate('/visores')}>
             <i className="fa-solid fa-eye"></i> COMENZAR
           </button>
-        <div className="checkbox-container">
-          <label className="checkbox-label">
-            <input
-              className="welcome-checkbox"
-              type="checkbox"
-              checked={skipWelcome}
-              onChange={(e) => {
-                const value = e.target.checked;
-                setSkipWelcome(value);
-                localStorage.setItem('skipWelcome', value);
-              }}
-            />
-            No volver a mostrar
-          </label>
-        </div>
+          <div className="checkbox-container">
+            <label className="checkbox-label">
+              <input
+                className="welcome-checkbox"
+                type="checkbox"
+                checked={skipWelcome}
+                onChange={(e) => {
+                  const value = e.target.checked;
+                  setSkipWelcome(value);
+                  localStorage.setItem('skipWelcome', value);
+                }}
+              />
+              No volver a mostrar
+            </label>
+          </div>
         </div>
         <div>
           <ChangelogModal />
