@@ -76,6 +76,12 @@ const defaultPreferences = {
       "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}.png",
   },
 
+  logoText: {
+    content: "Lorem Ipsum",
+    title: "Siempre",
+    link: "#"
+  },
+
   logo: {
     title: "Instituto Geográfico Nacional",
     link: "https://www.ign.gob.ar/",
