@@ -272,9 +272,8 @@ const ViewerManager = () => {
                           }
                         }}
                         onContextMenu={(e) => {
-                          if (viewer.shareUrl) {
-                            redirectToViewerShare(viewer)
-                          }
+                          e.preventDefault()
+                          redirectToViewerShare(viewer)
                         }}
                       >
                         <div
