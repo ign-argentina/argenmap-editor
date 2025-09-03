@@ -3,7 +3,7 @@ import "./DataForm.css";
 
 const crearMapa = (firstMapaBase) => ({
   titulo: firstMapaBase ? "Argenmap" : "",
-  nombre: firstMapaBase ? "argenmap": "",
+  nombre: firstMapaBase ? "argenmap" : "",
   servicio: "tms",
   version: "1.0.0",
   attribution: "",
@@ -12,10 +12,10 @@ const crearMapa = (firstMapaBase) => ({
   peso: firstMapaBase ? 10 : null,
   selected: firstMapaBase ? true : false,
   zoom: {
-    min: firstMapaBase ? 3: null,
+    min: firstMapaBase ? 3 : null,
     max: firstMapaBase ? 19 : null,
-    nativeMin: firstMapaBase ? 3: null,
-    nativeMax: firstMapaBase ? 19: null,
+    nativeMin: firstMapaBase ? 3 : null,
+    nativeMax: firstMapaBase ? 19 : null,
   },
 });
 
@@ -48,7 +48,7 @@ function DataForm({ data, onDataChange }) {
       template: "ign-geoportal-basic",
     }
   );
-  
+
   const isFirstRender = useRef(true);
 
   // Actualizar estado local cuando cambien las props externas
@@ -64,7 +64,7 @@ function DataForm({ data, onDataChange }) {
       isFirstRender.current = false;
       return;
     }
-    
+
     if (onDataChange) {
       onDataChange(localData);
     }
@@ -127,76 +127,72 @@ function DataForm({ data, onDataChange }) {
 
   return (
     <div className="dataform-container">
-      
-      <section className="controls">
-        <div className="highlight-badge">Mapas Base</div>
-      </section>
+      <div>
 
-      <section className="controls">
-        <button type="button" className="button-primary" onClick={agregarMapa}>+ Agregar Mapa Base</button>
-        <span className="info-text">Tienes cargado {localData.items[0].capas.length} mapa/s</span>
-      </section>
 
-      {localData.items[0].capas.length === 0 && <div className="empty-state">No hay mapas base. Agrega uno para comenzar.</div>}
+        <section className="controls">
+          <button type="button" className="button-primary" onClick={agregarMapa}>+</button>
+          <div className="highlight-badge">Mapas Base</div>
+          <span className="info-text">Hay cargados {localData.items[0].capas.length} mapa/s</span>
+        </section>
 
-      {localData.items[0].capas.map((capa, index) => (
-        <div key={index} className="accordion-item">
-          <div
-            className="accordion-header"
-            onClick={() => toggleMapa(index)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleMapa(index); }}
-          >
-            <div className="accordion-title">
-              <span>{capa.titulo || '(sin título)'}</span>
+        {localData.items[0].capas.length === 0 && <div className="empty-state">No hay mapas base.</div>}
+
+        {localData.items[0].capas.map((capa, index) => (
+          <div key={index} className="accordion-item">
+            <div
+              className="accordion-header"
+              onClick={() => toggleMapa(index)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleMapa(index); }}
+            >
+              <div className="accordion-title">
+                <span>{capa.titulo || '(sin título)'}</span>
+              </div>
+              <div>
+                <span className="accordion-caret">{openMapas.includes(index) ? '▾' : '▸'}</span>
+                <button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarMapa(index); }} title="Eliminar Mapa">🗑️</button>
+              </div>
             </div>
-            <div>
-              <span className="accordion-caret">{openMapas.includes(index) ? '▾' : '▸'}</span>
-              <button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarMapa(index); }} title="Eliminar Mapa">🗑️</button>
-            </div>
+            {openMapas.includes(index) && (
+              <div className="accordion-content">
+                <div className="form-group"><label>Título</label><input placeholder="Título del mapa" value={capa.titulo} onChange={(e) => handleMapaChange(index, "titulo", e.target.value)} /></div>
+                <div className="form-group"><label>Nombre</label><input placeholder="Identificador interno" value={capa.nombre} onChange={(e) => handleMapaChange(index, "nombre", e.target.value)} /></div>
+
+                <div className="grid-2">
+                  <div className="form-group"><label>Versión</label><input placeholder="Versión del servicio" value={capa.version} onChange={(e) => handleMapaChange(index, "version", e.target.value)} /></div>
+                  <div className="form-group"><label>Attribution</label><input placeholder="Texto de atribución" value={capa.attribution} onChange={(e) => handleMapaChange(index, "attribution", e.target.value)} /></div>
+                </div>
+
+                <div className="form-group"><label>Host / URL</label><input placeholder="https://example.com/tiles" value={capa.host} onChange={(e) => handleMapaChange(index, "host", e.target.value)} /></div>
+
+                <div className="grid-2">
+                  <div className="form-group"><label>Peso</label><input placeholder="Peso (orden)" type="number" value={capa.peso || ""} onChange={(e) => handleMapaChange(index, "peso", Number(e.target.value))} /></div>
+                  <div className="form-group"><label>Imagen de leyenda (opcional)</label><input placeholder="URL de la imagen de la leyenda" value={capa.legendImg || ""} onChange={(e) => handleMapaChange(index, "legendImg", e.target.value)} /></div>
+                </div>
+
+                <strong>Zoom</strong>
+                <div className="zoom-inputs">
+                  <input type="number" placeholder="min" value={capa.zoom.min || ""} onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)} />
+                  <input type="number" placeholder="max" value={capa.zoom.max || ""} onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)} />
+                  <input type="number" placeholder="nativeMin" value={capa.zoom.nativeMin || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMin", e.target.value)} />
+                  <input type="number" placeholder="nativeMax" value={capa.zoom.nativeMax || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMax", e.target.value)} />
+                </div>
+              </div>
+            )}
           </div>
-          {openMapas.includes(index) && (
-            <div className="accordion-content">
-              <div className="form-group"><label>Título</label><input placeholder="Título del mapa" value={capa.titulo} onChange={(e) => handleMapaChange(index, "titulo", e.target.value)} /></div>
-              <div className="form-group"><label>Nombre</label><input placeholder="Identificador interno" value={capa.nombre} onChange={(e) => handleMapaChange(index, "nombre", e.target.value)} /></div>
-
-              <div className="grid-2">
-                <div className="form-group"><label>Versión</label><input placeholder="Versión del servicio" value={capa.version} onChange={(e) => handleMapaChange(index, "version", e.target.value)} /></div>
-                <div className="form-group"><label>Attribution</label><input placeholder="Texto de atribución" value={capa.attribution} onChange={(e) => handleMapaChange(index, "attribution", e.target.value)} /></div>
-              </div>
-
-              <div className="form-group"><label>Host / URL</label><input placeholder="https://example.com/tiles" value={capa.host} onChange={(e) => handleMapaChange(index, "host", e.target.value)} /></div>
-
-              <div className="grid-2">
-                <div className="form-group"><label>Peso</label><input placeholder="Peso (orden)" type="number" value={capa.peso || ""} onChange={(e) => handleMapaChange(index, "peso", Number(e.target.value))} /></div>
-                <div className="form-group"><label>Imagen de leyenda (opcional)</label><input placeholder="URL de la imagen de la leyenda" value={capa.legendImg || ""} onChange={(e) => handleMapaChange(index, "legendImg", e.target.value)} /></div>
-              </div>
-
-              <strong>Zoom</strong>
-              <div className="zoom-inputs">
-                <input type="number" placeholder="min" value={capa.zoom.min || ""} onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)} />
-                <input type="number" placeholder="max" value={capa.zoom.max || ""} onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)} />
-                <input type="number" placeholder="nativeMin" value={capa.zoom.nativeMin || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMin", e.target.value)} />
-                <input type="number" placeholder="nativeMax" value={capa.zoom.nativeMax || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMax", e.target.value)} />
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
-
+        ))}
+      </div>
       <hr />
 
       <section className="controls">
+        <button type="button" className="button-primary" onClick={agregarCapa}>+ </button>
         <div className="highlight-badge">Capas</div>
+        <span className="info-text">Hay cargadas {localData.items.slice(1).length} capa/s</span>
       </section>
 
-      <section className="controls">
-        <button type="button" className="button-primary" onClick={agregarCapa}>+ Agregar Capa</button>
-        <span className="info-text">Tienes cargado {localData.items.slice(1).length} capa/s</span>
-      </section>
-
-      {localData.items.slice(1).length === 0 && <div className="empty-state">No hay capas definidas. Añade capas para que aparezcan en el listado.</div>}
+      {localData.items.slice(1).length === 0 && <div className="empty-state">No hay capas definidas.</div>}
 
       {localData.items.slice(1).map((capa, index) => (
         <div key={index} className="accordion-item">
