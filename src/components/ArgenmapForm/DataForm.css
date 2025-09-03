@@ -102,10 +102,14 @@
   background: linear-gradient(145deg, #ffffff, #f8fafc);
   border-radius: 0 0 12px 12px;
   margin-top: 0.5rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .form-group label {
@@ -136,6 +140,7 @@
   background: #ffffff;
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -232,6 +237,7 @@
   padding: 2rem;
   background: linear-gradient(145deg, #fefcbf, #fef3c7);
   border-radius: 16px;
+  width: 100%;
   color: #92400e;
   border: 2px solid #fed7aa;
   text-align: center;

@@ -1,11 +1,63 @@
 const defaultPreferences = {
+  title: "IGN - Argenmap",
+  website: "https://www.ign.gob.ar/",
+  logoText: {
+    content: "Lorem Ipsum",
+    title: "Siempre",
+    link: "#"
+  },
+  logo: {
+    title: "Instituto Geográfico Nacional",
+    link: "https://www.ign.gob.ar/",
+    src: "https://static.ign.gob.ar/img/logo/Logo-MinDef-IGN-Visores.svg",
+    style: "",
+    height: "49px",
+    width: "200px",
+    srcLogoMini: "https://static.ign.gob.ar/img/logo/LogoIGN_Blanco_SinTexto.svg",
+    ministyle: "",
+    miniHeight: "",
+    miniWidth: "",
+  },
+  mapConfig: {
+    center: {
+      latitude: -40,
+      longitude: -59,
+    },
+    zoom: {
+      initial: 4,
+      min: 3,
+      max: 21,
+    },
+  },
+  theme: {
+    activeLayer: "#33b560",
+    bodyBackground: "#0094d4",
+    headerBackground: "#157DB9",
+    iconBar: "#4f4f4f",
+    menuBackground: "#157DB9",
+    btnColor: "white",
+    textLegendMenu: "white",
+    textLegendMenuStyle: "",
+    textMenu: "white",
+    textMenuStyle: "",
+  },
+  metaTags: {
+    description:
+      "Visor de mapas desarrollado por el Instituto Geográfico Nacional",
+    image: "/src/styles/images/argenmap.png",
+    title: "IGN - Argenmap",
+  },
+  onInit: {
+    showToolbar: true,
+    showLayerMenu: true,
+  },
+
   analytics_ids: ["G-WPKNSX1QMS"],
 
   charts: {
     isActive: true,
   },
 
-  excluded_plugins: ["minimap"],
 
   favicon: "src/config/styles/images/favicon.ico",
 
@@ -18,7 +70,34 @@ const defaultPreferences = {
     url: "https://api.ign.gob.ar/buscador/",
     url_by_id: "places",
   },
-
+  hillshade: {
+    addTo: ["argenmap", "argenmap_gris"],
+    attribution:
+      "sombra de montaña <a target='_blank' href='https://www.arcgis.com/home/item.html?id=1b243539f4514b6ba35e7d995890db1d'>©Esri</a>",
+    icon: "src/styles/images/mountains.svg",
+    name: "hillshade",
+    switchLabel: "Agregar sombra de montaña Esri",
+    url:
+      "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}.png",
+  },
+  strings: {
+    basemap_legend_button_text: "Ver leyenda del mapa",
+    basemap_max_zoom: " y máximo de ",
+    basemap_min_zoom: "Zoom mínimo de ",
+    delete_geometry: "Eliminar geometría",
+  },
+  excluded_plugins: ["minimap"],
+  showSearchBar: true,
+  searchbar: {
+    background_color: "rgba(255, 255, 255, 0.7)",
+    color_focus: "#008dc9",
+    isActive: true,
+    left: "40%",
+    strings: {
+      placeholder: "Buscar localidad...",
+    },
+    top: "5px",
+  },
   geoprocessing: {
     availableProcesses: [
       {
@@ -64,104 +143,6 @@ const defaultPreferences = {
       bounds: "Areas a procesar",
     },
   },
-
-  hillshade: {
-    addTo: ["argenmap", "argenmap_gris"],
-    attribution:
-      "sombra de montaña <a target='_blank' href='https://www.arcgis.com/home/item.html?id=1b243539f4514b6ba35e7d995890db1d'>©Esri</a>",
-    icon: "src/styles/images/mountains.svg",
-    name: "hillshade",
-    switchLabel: "Agregar sombra de montaña Esri",
-    url:
-      "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}.png",
-  },
-
-  logo: {
-    title: "Instituto Geográfico Nacional",
-    link: "https://www.ign.gob.ar/",
-    src: "https://static.ign.gob.ar/img/logo/Logo-MinDef-IGN-Visores.svg",
-    style: "",
-    height: "49px",
-    width: "200px",
-    srcLogoMini: "https://static.ign.gob.ar/img/logo/LogoIGN_Blanco_SinTexto.svg",
-    ministyle: "",
-    miniHeight: "",
-    miniWidth: "",
-  },
-
-  mapConfig: {
-    center: {
-      latitude: -40,
-      longitude: -59,
-    },
-    zoom: {
-      initial: 4,
-      min: 3,
-      max: 21,
-    },
-  },
-
-  metaTags: {
-    description:
-      "Visor de mapas desarrollado por el Instituto Geográfico Nacional",
-    image: "/src/styles/images/argenmap.png",
-    title: "IGN - Argenmap",
-  },
-
-  onInit: {
-    showToolbar: true,
-    showLayerMenu: true,
-  },
-
-  referencias: {
-    height: "",
-    icon: "src/config/styles/images/referencias.png",
-    image: "src/config/styles/images/legends/referencias.png",
-    show: false,
-    width: "",
-  },
-
-  searchbar: {
-    background_color: "rgba(255, 255, 255, 0.7)",
-    color_focus: "#008dc9",
-    isActive: true,
-    left: "40%",
-    strings: {
-      placeholder: "Buscar localidad...",
-    },
-    top: "5px",
-  },
-
-  showSearchBar: true,
-
-  strings: {
-    basemap_legend_button_text: "Ver leyenda del mapa",
-    basemap_max_zoom: " y máximo de ",
-    basemap_min_zoom: "Zoom mínimo de ",
-    delete_geometry: "Eliminar geometría",
-  },
-
-  table: {
-    isActive: false,
-    rowsLimit: 5,
-  },
-
-  theme: {
-    activeLayer: "#33b560",
-    bodyBackground: "#0094d4",
-    headerBackground: "#157DB9",
-    iconBar: "#4f4f4f",
-    menuBackground: "#157DB9",
-    btnColor: "white",
-    textLegendMenu: "white",
-    textLegendMenuStyle: "",
-    textMenu: "white",
-    textMenuStyle: "",
-  },
-
-  title: "IGN - Argenmap",
-  website: "https://www.ign.gob.ar/",
-
   mainPopup: {
     isActive: true,
     welcomeSign: "Novedades",
@@ -174,6 +155,17 @@ const defaultPreferences = {
                <button onclick='document.getElementById("nav-help-btn").click();document.getElementById("popupExitBtn").click();document.getElementById("initModalBtnConfirm").click();' target='_blank' style='background-color:#157DB9;color:white;padding:12px 25px;border:none;border-radius:5px;font-size:1.1em;cursor:pointer;text-decoration:none;transition:background-color 0.3s ease;display:inline-block;'>Haz un recorrido por el visor</button>
              </div>
            </div>`,
+  },
+  referencias: {
+    height: "",
+    icon: "src/config/styles/images/referencias.png",
+    image: "src/config/styles/images/legends/referencias.png",
+    show: false,
+    width: "",
+  },
+  table: {
+    isActive: false,
+    rowsLimit: 5,
   },
 };
 
