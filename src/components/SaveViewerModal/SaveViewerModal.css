@@ -52,7 +52,7 @@
 
 .modal-buttons button {
   flex: 1;
-  padding: 10px 0;
+  /* padding: 10px 0; */
   font-size: 14px;
   border: none;
   border-radius: 6px;
@@ -110,4 +110,33 @@
 .upload-image-from-pc.disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  color:  var(--text--color);
+  font-weight: bold;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #ccc;
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -1,105 +1,29 @@
-import { useEffect, useState, useMemo } from 'react';
-import { JsonForms } from '@jsonforms/react';
-import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
-import { rankWith, schemaMatches, uiTypeIs, and } from '@jsonforms/core';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import ColorPickerControl from '../ColorPickerControl/ColorPickerControl';
-import Preview from '../Preview/Preview';
-import FormNavbar from '../FormNavbar/FormNavbar';
 import '/src/global.css';
 import './Form.css';
-import { useToast } from '../../context/ToastContext';
+import { useUser } from '../../context/UserContext';
+import ArgenmapForm from '../ArgenmapForm/ArgenmapForm';
 import defaultConfig from '../../static/config.json';
-import language from '../../static/language.json';
-import GenerateSchema from '../../utils/GenerateSchema';
-import FilterEmptySections from '../../utils/FilterEmptySections';
-import TranslateSchema from '../../utils/TranslateSchema';
-import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
-import { khartaSchema } from '../../static/formSchemas/khartaSchema';
-
 
 function Form() {
   const location = useLocation();
-  const { viewer, editorMode, externalUpload = false } = location.state || {};
-  const [config, setConfig] = useState();
-  const [workingConfig, setWorkingConfig] = useState(null);
-  const [schema, setSchema] = useState({});
-  const [schemaLoaded, setSchemaLoaded] = useState(false)
+  const { viewer, editorMode, externalUpload = null, isArgenmap } = location.state || {}; 
+  const { isAuth } = useUser();
 
-  const savedLanguage = localStorage.getItem('selectedLang') || 'es';
-  const [selectedLang, setSelectedLang] = useState(savedLanguage);
-  const [selectedSection, setSelectedSection] = useState(null);
+  // ---- Unificamos config ----
+  const viewerConfig = viewer?.config;
+  const externalConfig = externalUpload?.files;
 
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false); // No te vayas!
+  const data = viewerConfig?.data || externalConfig?.data || null;
+  const preferences = viewerConfig?.preferences || externalConfig?.preferences || null;
 
-  // Memoizamos para que mergedConfig solo cambie si cambia workingConfig o config
-  const mergedConfig = useMemo(() => mergeViewer(workingConfig, config), [workingConfig, config]);
+  // Si viene flag o si detectamos que tiene data+preferences => argeanmap
+  const argenmap = viewer?.isArgenmap || isArgenmap || (data && preferences);
 
-  const uploadSchema = (config) => {
-    if (/* !config || */ !language) return;
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true);
 
-    let translatedSchema
-
-    if (config) {
-      const generatedSchema = GenerateSchema({ data: config });
-    //  const filteredSchema = FilterEmptySections(generatedSchema);
-      translatedSchema = TranslateSchema({
-        schema: generatedSchema,
-        translations: language[selectedLang] || language['default'],
-        defaultTranslations: language['default'] || {},
-      });
-    } else {
-      translatedSchema = TranslateSchema({
-        schema: khartaSchema,
-        translations: language[selectedLang] || language['default'],
-        defaultTranslations: language['default'] || {},
-      });
-    }
-
-    setSchema(translatedSchema);
-    const sectionKeys = Object.keys(translatedSchema.properties || {});
-    setSelectedSection((prev) => {
-      if (!prev || !sectionKeys.includes(prev)) {
-        return sectionKeys[0] || null;
-      }
-      return prev;
-    });
-  };
-
-  useEffect(() => {
-    if (viewer || externalUpload) {
-      setConfig(externalUpload ? externalUpload : viewer.config.json);
-
-      if (workingConfig) {
-        setWorkingConfig(workingConfig)
-      } else {
-        setWorkingConfig(externalUpload ? externalUpload : viewer.config.json);
-      }
-
-    } else {
-      setConfig(defaultConfig);
-      setWorkingConfig(defaultConfig);
-    }
-    setSchemaLoaded(true)
-  }, []);
-
-  useEffect(() => {
-    /* uploadSchema(workingConfig); */
-    uploadSchema(externalUpload);
-  }, [schemaLoaded]);
-
-  // Translates schema on change
-  useEffect(() => {
-    if (schemaLoaded && workingConfig) {
-      if (externalUpload) {
-        uploadSchema(externalUpload);
-      } else {
-        uploadSchema();
-      }
-    }
-  }, [selectedLang]);
-
-  // No te vayas! Se pueden borrar los cambios!! (OPTIMIZAR)
+  // No te vayas! Se pueden borrar los cambios!!
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       if (hasUnsavedChanges) {
@@ -108,103 +32,22 @@ function Form() {
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [hasUnsavedChanges]);
-  // Fin no te vayas (OPTIMIZAR)
-
-  const { showToast } = useToast();
-
-  const handleLanguageChange = (e) => {
-    const selectedLanguage = e.target.value;
-    setSelectedLang(selectedLanguage);
-    localStorage.setItem('selectedLang', selectedLanguage);
-  };
-
-  const handleSectionChange = (section) => {
-    setSelectedSection(section);
-  };
-
-  const colorPickerTester = rankWith(
-    3,
-    and(uiTypeIs('Control'), schemaMatches((schema) => schema.format === 'color'))
-  );
-
-  const customRenderers = [
-    ...materialRenderers,
-    { tester: colorPickerTester, renderer: ColorPickerControl }
-  ];
-
-  const handleDownload = () => {
-    downloadViewer(workingConfig, config, viewer?.name)
-  };
-
-  const getWorkingConfig = () => {
-    return mergeViewer(workingConfig, config)
-  }
-
-  const handleJsonFormsChange = async (updatedData) => {
-    setHasUnsavedChanges(true);
-    const hasChanged = JSON.stringify(workingConfig[selectedSection]) !== JSON.stringify(updatedData);
-    if (hasChanged) {
-      setWorkingConfig((prevConfig) => ({
-        ...prevConfig,
-        [selectedSection]: updatedData,
-      }));
-
-      /* 
-            // Podriamos leer una flag para ver que tipo previsualizar.
-            const visores = ['argenmap', 'kharta'];
-            const url = `http://${currentVisor.IP}:${currentVisor.API_PORT}/${visores[1]}`;
-      
-            const response = await fetch(url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(getWorkingConfig()),
-            });
-      
-      
-            const html = await response.text();
-            setPreviewHtml(html); */
-    }
-  };
 
   return (
     <div>
-      <div className="editor-container">
-        <FormNavbar
-          config={config}
+      {argenmap ? (
+        <ArgenmapForm
           viewer={viewer}
-          sectionInfo={{ sectionKeys: Object.keys(schema?.properties || {}), selectedSection, handleSectionChange }}
-          uiControls={{
-            handleLanguageChange,
-            selectedLang,
-            isFormShown: true,
-            setIsFormShown: () => { }
-          }}
-          actions={{ handleDownload, getWorkingConfig }}
           editorMode={editorMode}
+          config={{ data, preferences }}
         />
-        {selectedSection && (
-          <div className="form-container">
-            <div className="custom-form-group">
-              <JsonForms
-                schema={schema.properties?.[selectedSection]}
-                data={workingConfig?.[selectedSection]}
-                renderers={customRenderers}
-                cells={materialCells}
-                onChange={({ data: updatedData }) => handleJsonFormsChange(updatedData)} // Usamos la nueva función de manejo
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="side-panel">
-          <Preview config={workingConfig} />
-        </div>
-      </div>
+      ) : (
+        <h1>KhartaForm</h1>
+      )}
     </div>
   );
 }

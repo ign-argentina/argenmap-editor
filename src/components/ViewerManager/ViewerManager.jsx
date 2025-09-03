@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
+import CreateViewerModal from '../CreateViewerModal/CreateViewerModal';
+import UploadViewerModal from '../UploadViewerModal/UploadViewerModal';
 import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
-import './ViewerManager.css';
-import '../Preview/Preview.css';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
 import { downloadViewer } from '../../utils/ViewerHandler';
-
+import { createShareLink } from '../../api/configApi.js';
+import currentVisor from '../../api/visorApi.js';
+import './ViewerManager.css';
+import '../Preview/Preview.css';
 
 const PUBLIC_VISOR_ACCESS = { sa: false, ga: false, editor: false }
 const MY_VISOR_ACCESS = { sa: false, ga: true, editor: false, myvisors: true }
@@ -23,6 +26,8 @@ const ViewerManager = () => {
   const [hasFetched, setHasFetched] = useState(false);
   const [groupList, setGroupList] = useState([]);
   const [showShareViewerModal, setShowShareViewerModal] = useState(false);
+  const [showCreateViewerModal, setShowCreateViewerModal] = useState(false);
+  const [showUploadViewerModal, setShowUploadViewerModal] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState(() => () => { });
   const [confirmData, setConfirmData] = useState({ title: "", message: "" });
@@ -33,6 +38,7 @@ const ViewerManager = () => {
     // Inicializamos el estado al montar el componente, no en cada render. 
     return sessionStorage.getItem("lastGroupPicked") || "public-visors";
   });
+
 
   const closeContextMenu = () => {
     setContextMenuVisorId(null);
@@ -55,16 +61,18 @@ const ViewerManager = () => {
   };
 
   const handleDownload = () => {
-    if (!selectedViewer?.config?.json) {
+    if (selectedViewer?.config) {
+      const isArgenmap = selectedViewer.config?.data != null && selectedViewer.config?.preferences != null;
+
+      const config = {
+        data: selectedViewer.config?.data,
+        preferences: selectedViewer.config?.preferences
+      };
+
+      downloadViewer(config, isArgenmap, selectedViewer.name) // Config, baseConfig nula, nombre
+    } else {
       showToast('No hay visor seleccionado con configuración válida.', "error");
-      return;
     }
-
-    const configJson = typeof selectedViewer.config.json === 'string'
-      ? JSON.parse(selectedViewer.config.json)
-      : selectedViewer.config.json;
-
-    downloadViewer(configJson, null, selectedViewer.name) // Config, baseConfig nula, nombre
   };
 
   const handleDeleteVisor = async (visorCompleto) => {
@@ -80,18 +88,6 @@ const ViewerManager = () => {
     } catch (error) {
       console.error("Error al eliminar el visor:", error);
       showToast("Error al eliminar el visor", "error");
-    }
-  };
-
-  const handleUploadViewer = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const jsonData = JSON.parse(e.target.result);
-        navigate('/form', { state: { externalUpload: jsonData /* , editorMode: true  */ } });
-      };
-      reader.readAsText(file);
     }
   };
 
@@ -169,36 +165,25 @@ const ViewerManager = () => {
       setAccess(MY_VISOR_ACCESS);
       const vl = await getMyVisors();
       setViewers(vl);
+
     } else if (value !== '') {
       const vl = await getGroupVisors(value);
       const access = await getPermissions(value);
       setAccess(access);
       setViewers(vl);
+
     }
   };
 
+  const redirectToViewerShare = async (viewer) => {
+    const response = await createShareLink(viewer.id, viewer.gid)
+    if (response.success) {
+      window.open(`http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`, "_blank");
+    }
+  }
+
   return (
     <>
-      {/*       {!hasFetched && isLoading && (
-        <div className="loading-message" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          width: '100%',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          backgroundColor: 'rgba(255, 255, 255, 0.9)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span className="spinner" />
-            <span style={{ marginLeft: '10px' }}>El gestor está cargando...</span>
-          </div>
-        </div>
-      )} */}
-
-      {/*  {hasFetched && ( */}
       <div className='container-display-0'>
         <div className="viewer-content flex-1">
           <div className="viewer-modal">
@@ -255,79 +240,102 @@ const ViewerManager = () => {
               <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
                 <div className="background-overlay" />
                 <div className="viewer-list">
-                  {isLoading && (
+                  {isLoading ? (
                     <div className="loading-message">
                       <span className="spinner" />
                       <span style={{ marginLeft: '10px' }}>Cargando visores...</span>
                     </div>
-                  )}
-   {/*                {viewers?.length === 0 && (
+                  ) : !Array.isArray(viewers) || viewers.length === 0 ? (
                     <p className="no-viewers-message">No hay visores disponibles.</p>
-                  )} */}
-
-                  {!isLoading && viewers?.length > 0 && viewers?.map((visor) => (
-                    <div
-                      key={visor.id}
-                      className={`viewer-item ${selectedViewer?.id === visor.id ? 'selected' : ''}`}
-                      onClick={async () => {
-                        if (selectedViewer?.id === visor.id) {
-                          setSelectedViewer(null);
-                          setShowDescriptionModal(false);
-                          return;
-                        }
-                        try {
-                          const visorCompleto = await getVisorById(visor.id);
-                          setSelectedViewer(visorCompleto);
-                          setShowDescriptionModal(true);
-                        } catch (error) {
-                          showToast('No se pudo cargar el visor.', "error");
-                        }
-                      }}
-                    >
-                      <div
-                        className="viewer-context-button"
-                        onClick={async (e) => {
-                          if (contextMenuVisorId === visor.id) {
-                            closeContextMenu();
-                          } else {
-                            e.stopPropagation();
-                            setContextMenuVisorId(visor.id);
-                            setContextMenuPosition({ x: e.clientX, y: e.clientY });
-                            try {
-                              const visorCompleto = await getVisorById(visor.id);
-                              setSelectedViewer(visorCompleto);
-                            } catch (error) {
-                              showToast('No se pudo cargar el visor.', "error");
-                            }
+                  ) : (
+                    viewers.map((viewer) => (
+                      <a
+                        key={viewer.id}
+                        className={`viewer-item ${selectedViewer?.id === viewer.id ? 'selected' : ''}`}
+                        onClick={async () => {
+                          if (selectedViewer?.id === viewer.id) {
+                            setSelectedViewer(null);
+                            setShowDescriptionModal(false);
+                            return;
+                          }
+                          try {
+                            const visorCompleto = await getVisorById(viewer.id);
+                            setSelectedViewer(visorCompleto);
+                            setShowDescriptionModal(true);
+                          } catch (error) {
+                            showToast('No se pudo cargar el visor.', "error");
                           }
                         }}
+                        onMouseDown={(e) => {
+                          if (e.button === 1) {
+                            redirectToViewerShare(viewer)
+                          }
+                        }}
+                        onContextMenu={(e) => {
+                          e.preventDefault()
+                          redirectToViewerShare(viewer)
+                        }}
                       >
-                        <i className="fas fa-ellipsis-v"></i>
-                      </div>
+                        <div
+                          className="viewer-context-button"
+                          title="Más opciones"
+                          onClick={async (e) => {
+                            if (contextMenuVisorId === viewer.id) {
+                              closeContextMenu();
+                            } else {
+                              e.stopPropagation();
+                              setContextMenuVisorId(viewer.id);
+                              setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                              try {
+                                const visorCompleto = await getVisorById(viewer.id);
+                                setSelectedViewer(visorCompleto);
+                              } catch (error) {
+                                showToast('No se pudo cargar el visor.', "error");
+                              }
+                            }
+                          }}
+                        >
+                          <i className="fas fa-ellipsis-v"></i>
+                        </div>
 
-                      <img
-                        src={visor.img || '/assets/no-image.png'}
-                        alt="img"
-                        className="viewer-image"
-                      />
-                      <div className="viewer-info">
-                        <h3>{visor.name}</h3>
-                        <p>{visor.description}</p>
-                        <p className="viewer-date">
-                          {new Date(visor.lastupdate).toLocaleDateString('es-AR', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                          })}
-                          {visor.publico ? (
-                            <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
-                          ) : (
-                            <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                        <img
+                          src={viewer.img || '/assets/no-image.png'}
+                          alt="img"
+                          className="viewer-image"
+                        />
+                        <div className="viewer-info">
+                          <h3>{viewer.name}</h3>
+                          <p>{viewer.description}</p>
+                          <p className="viewer-date">
+                            {new Date(viewer.lastupdate).toLocaleDateString('es-AR', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                            {viewer.publico ? (
+                              <i className="fas fa-globe-americas viewer-public-icon" title="Público"></i>
+                            ) : (
+                              <i className="fas fa-lock viewer-private-icon" title="Privado"></i>
+                            )}
+                            {viewer.isArgenmap ? (
+                              <img
+                                src={'/assets/logoArgenmap.png'}
+                                alt="Visor Argenmap"
+                                title="Visor Argenmap"
+                                className='viewer-card-logo'
+                              />) : (
+                              <img
+                                src={'/assets/logoKharta.png'}
+                                alt="Visor Kharta"
+                                title="Visor Kharta"
+                                className='viewer-card-logo'
+                              />
+                            )}
+                          </p>
+                        </div>
+                      </a>
+                    ))
+                  )}
 
                 </div>
               </div>
@@ -335,28 +343,24 @@ const ViewerManager = () => {
                 <div className="global-buttons">
                   <button
                     className="btn-common"
+                    title="Crear nuevo visor"
                     onClick={() => {
-                      navigate('/form');
+                      setShowCreateViewerModal(true);
                     }}>
                     <i className="fa-solid fa-plus"></i>
                     Crear
                   </button>
 
-                  <label className="btn-common">
-                    <input
-                      type="file"
-                      accept=".json"
-                      onChange={(e) => {
-                        handleUploadViewer(e);
-                      }}
-                      style={{ display: "none" }}
-                      title="Subir JSON"
-                    />
-                    <span className="icon">
-                      <i className="fa-solid fa-upload" style={{ cursor: "pointer" }}></i>
-                    </span>
+                  <button
+                    className="btn-common"
+                    title="Subir visor"
+                    onClick={() => {
+                      setShowUploadViewerModal(true);
+                    }}>
+                    <i className="fa-solid fa-upload"></i>
                     Subir
-                  </label>
+                  </button>
+
                 </div>
               </div>
             </div>
@@ -402,15 +406,30 @@ const ViewerManager = () => {
             {showShareViewerModal && (
               <div className="save-viewer-modal-overlay">
                 <ShareViewerModal
-                  // editorMode={editorMode}
-                  // cloneMode={cloneMode}
-                  visor={selectedViewer}
+                  viewer={selectedViewer}
                   isOpen={showShareViewerModal}
                   onClose={() => setShowShareViewerModal(false)}
                 />
               </div>
             )}
 
+            {showCreateViewerModal && (
+              <div className="save-viewer-modal-overlay">
+                <CreateViewerModal
+                  isOpen={showCreateViewerModal}
+                  onClose={() => setShowCreateViewerModal(false)}
+                />
+              </div>
+            )}
+
+            {showUploadViewerModal && (
+              <div className="save-viewer-modal-overlay">
+                <UploadViewerModal
+                  isOpen={showUploadViewerModal}
+                  onClose={() => setShowUploadViewerModal(false)}
+                />
+              </div>
+            )}
           </div>
         </div>
 
@@ -424,7 +443,7 @@ const ViewerManager = () => {
               {(access?.sa || access?.ga || access?.editor || access?.myvisors) && <button
                 onClick={() => {
                   if (!selectedViewer) return;
-                  navigate('/form', { state: { viewer: selectedViewer, editorMode: true } });
+                  navigate('/form', { state: { viewer: selectedViewer, editorMode: true, } });
                 }}
                 disabled={!selectedViewer}
               >
@@ -479,7 +498,6 @@ const ViewerManager = () => {
           </div>
         )}
       </div>
-      {/* )} */}
     </>
   );
 };

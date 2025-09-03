@@ -1,0 +1,287 @@
+.dataform-container {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  width: 100%;
+  padding: 0.5rem;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 3px;
+  box-shadow: 0 20px 40px rgba(23, 38, 59, 0.12), 0 8px 16px rgba(23, 38, 59, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 0 2rem 0;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  border-radius: 3px;
+  border: 1px solid #e2e8f0;
+}
+
+.info-text {
+  font-size: 0.9rem;
+  color: #586070;
+  margin-left: auto;
+}
+
+.accordion-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #0b74d1, #026aa7);
+  color: #fff;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  padding: 1rem 1.5rem;
+  height: auto;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(11, 116, 209, 0.15);
+  box-sizing: border-box;
+  position: relative;
+}
+
+.accordion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ffffff40, #ffffff80, #ffffff40);
+}
+
+.accordion-item:hover {
+  box-shadow: 0 8px 24px rgba(11, 116, 209, 0.25);
+  transform: translateY(-2px);
+}
+
+.accordion-header {
+  background: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+
+.accordion-header:hover {
+  opacity: 0.9;
+}
+
+.accordion-title {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+}
+
+.section-badge {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.accordion-caret {
+  font-size: 18px;
+  opacity: 0.9;
+  transition: transform 0.2s ease;
+}
+
+.accordion-content {
+  padding: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border-radius: 0 0 12px 12px;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 10px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.accordion-content strong {
+  display: block;
+  font-size: 1rem;
+  color: #374151;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+  font-size: 1rem;
+  color: #1f2937;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #0b74d1;
+  box-shadow: 0 0 0 3px rgba(11, 116, 209, 0.1), 0 4px 12px rgba(11, 116, 209, 0.15);
+  transform: translateY(-1px);
+}
+
+.form-group input:hover {
+  border-color: #cbd5e1;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.button-primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  margin-right: auto;
+  display: block;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.button-primary:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.button-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+}
+
+.button-delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.zoom-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 20px;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 0.5rem;
+}
+
+.zoom-inputs input {
+  padding: 1rem 1.2rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #1f2937;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.zoom-inputs input:focus {
+  outline: none;
+  border-color: #0b74d1;
+  box-shadow: 0 0 0 3px rgba(11, 116, 209, 0.1), 0 4px 12px rgba(11, 116, 209, 0.15);
+  transform: translateY(-1px);
+}
+
+.zoom-inputs input:hover {
+  border-color: #cbd5e1;
+}
+
+.empty-state {
+  padding: 2rem;
+  background: linear-gradient(145deg, #fefcbf, #fef3c7);
+  border-radius: 16px;
+  width: 100%;
+  color: #92400e;
+  border: 2px solid #fed7aa;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(252, 211, 77, 0.15);
+}
+
+.highlight-badge {
+  background: none;
+  color: var(--primary--color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  /* Centering the text */
+  background: linear-gradient(90deg, var(--primary--color), var(--secondary--color));
+  /* Restored color transition */
+  background-clip: text;
+  /* Added standard property for compatibility */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  /* Ensures centering works properly */
+  margin: 0 auto;
+  /* Centers the block element */
+}
+
+@media (max-width: 720px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .zoom-inputs {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .zoom-inputs input {
+    font-size: 0.95rem;
+  }
+}
