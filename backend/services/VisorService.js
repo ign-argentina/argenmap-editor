@@ -4,7 +4,7 @@ import Result from "../utils/Result.js";
 import Group from '../models/Group.js';
 import User from '../models/User.js';
 import { validate } from 'uuid';
-
+import jwt from 'jsonwebtoken'
 import { config } from 'dotenv';
 
 class VisorService {
@@ -157,14 +157,22 @@ class VisorService {
 
       const result = await Visor.getShareToken(visorId);
 
+      const shareHash = jwt.sign({sharetoken: result[0].sharetoken}, "SECRET", {expiresIn:60})
+
       return result.length > 0
-        ? Result.success(result[0].sharetoken)
+        ? Result.success(shareHash)
         : Result.fail("No se ha podido generar el link");
     } catch (error) {
       console.log("VISORES: Error en la capa de servicio")
       return Result.fail("Error en la capa de servicio")
     }
   }
+
+/*   #signToken = async (userId) => {
+    const isAdmin = await User.isSuperAdmin(userId)
+    const isGroupAdmin = await User.isGroupAdmin(userId)
+    return jwt.sign({ uid: userId, isa: isAdmin, isag: isGroupAdmin }, process.env.JWT_SECRET, { expiresIn: parseInt(process.env.JWT_EXPIRES) })
+  } */
 
   changePublicStatus = async (uid, visorid, visorgid = null) => {
     try {

@@ -102,7 +102,7 @@ function ArgenmapForm({ config, editorMode, viewer }) {
         <form
           ref={formRef}
           method="POST"
-          action="http://localhost:4000/argenmap/custom"
+          action="http://172.20.202.88:4000/argenmap/custom"
           target={iframeName}
           className="hidden-form"
         >

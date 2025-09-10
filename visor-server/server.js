@@ -6,6 +6,7 @@ import { existsSync, readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import puppeteer from 'puppeteer';
 import { config } from 'dotenv';
+import jwt from 'jsonwebtoken'
 
 const app = express();
 const port = 4000;
@@ -48,25 +49,36 @@ app.post('/argenmap/custom', async (req, res) => {
     const html = await getArgenMap({ data, preferences })
     return res.status(200).send(html)
   } catch (err) {
-    console.error('Error loading index.html or JSON:', err);
     res.status(500).send('Server error');
   }
 });
 
 
 // Endpoint que sirve Kharta e inyecta configuracion || ESTE ENDPOINT SE USA PARA EL SHARE
+// REFACTOR Y DEJAR LINDO
 app.get('/map', async (req, res) => {
   const { view } = req.query;
+  let sharetoken = null;
+  let apikey = null;
 
-  if (!view) {
-    return res.status(404).send("Acceso inválido")
+  try {
+    const decoded = jwt.verify(view, "SECRET")
+    sharetoken = decoded.sharetoken
+    apikey = decoded.apikey
+  } catch (error) {
+  }
+
+  // Debe tener al menos uno de los dos campos
+  if (!view || (!sharetoken && !apikey)) {
+    return res.status(404).send("Acceso inválido");
   }
   ///////////////////////////////
   // TEST MEJORAR PROXIMAMENTE //
   ///////////////////////////////
   let configInyectada = null;
+
   try {
-    const response = await fetch(`http://localhost:3001/visores/share?shareToken=${view}`);
+    const response = await fetch(`http://172.20.202.88:3001/visores/share?shareToken=${sharetoken}`);
     configInyectada = await response.json(); // Devuelve campo .error si no se pudo
   } catch (error) {
     console.error('Error al hacer fetch:', error);
@@ -297,7 +309,7 @@ app.post('/kharta/custom', async (req, res) => {
     });
 
     // Navigate to the temporary route
-    await page.goto(`http://localhost:${port}${tempRoutePath}`, {
+    await page.goto(`http://172.20.202.88:${port}${tempRoutePath}`, {
       waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
       timeout: 30000
     });
