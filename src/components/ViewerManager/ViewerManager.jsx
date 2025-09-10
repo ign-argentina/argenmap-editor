@@ -103,11 +103,15 @@ const ViewerManager = () => {
       } else {
         setGroupList([]);
         setSelectedViewer(null);
+        setShowDescriptionModal(false);
+        setCurrentFilter("public-visors");
+        sessionStorage.setItem("lastGroupPicked", "public-visors");
       }
 
       try {
         let vl, access;
-        if (currentFilter === "public-visors") {
+        if (currentFilter === "public-visors" || !isAuth) {
+          // fallback to publicos if not authenticated
           vl = await getPublicVisors();
           access = PUBLIC_VISOR_ACCESS;
         } else if (currentFilter === "my-visors") {
