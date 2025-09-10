@@ -155,7 +155,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
           <div className="upload-separator"></div>
 
-          <label
+          <div
             className="upload-option"
             onClick={() => document.getElementById("fileInputKharta").click()}
             onDrop={(e) => {
@@ -177,9 +177,8 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
               accept=".json"
               style={{ display: "none" }}
               onChange={handleUploadKhartaFile}
-              onDrop={(e) => e.preventDefault()}
             />
-          </label>
+          </div>
 
         </div>
 
