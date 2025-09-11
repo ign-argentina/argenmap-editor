@@ -35,10 +35,12 @@
 
 .viewer-list-container.viewer-description-closed {
   height: 63vh;
+  transition: all 0.2s ease;
 }
 
 .viewer-list-container.viewer-description-open {
   height: 47vh;
+  transition: all 0.2s ease;
 }
 
 .viewer-list {
@@ -66,7 +68,7 @@
 }
 
 .viewer-item.selected {
-  border-color: var(--active--color);
+  border: 3px solid var(--active--color);
   color: black;
   background-color: var(--active--color);
 }
@@ -296,8 +298,8 @@
   right: 8px;
   z-index: 5;
   background: rgba(255, 255, 255, 0.85);
-  border-radius: 50%;
-  padding: 6px;
+  border-radius: 3px;
+  padding: 11px;
   cursor: pointer;
   color: #333;
   transition: background 0.2s ease;
