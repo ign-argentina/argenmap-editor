@@ -373,6 +373,7 @@ const ViewerManager = () => {
                 <div className="viewer-info-row">
                   <div className="viewer-info-text">
                     <h3>{selectedViewer.name}</h3>
+                    <div className='viewer-filter-divider'></div>
                     <p>{selectedViewer.description}</p>
                     <p className="viewer-date">
                       {selectedViewer.lastupdate
