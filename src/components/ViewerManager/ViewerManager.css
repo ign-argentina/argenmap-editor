@@ -43,12 +43,14 @@
 
 .viewer-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(203px, 1fr));
+  grid-template-columns: repeat(auto-fit, 250px);
+  justify-content: start;
   gap: 12px;
 }
 
 .viewer-item {
   display: flex;
+  width: 250px;
   flex-direction: column;
   border: 1px solid var(--secondary--color);
   cursor: pointer;
