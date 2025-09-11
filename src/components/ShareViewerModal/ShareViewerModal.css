@@ -34,19 +34,12 @@
 }
 
 .share-viewer-dropdown {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
   padding: 8px 12px;
   font-size: 14px;
   font-weight: 500;
   border-radius: 6px;
   border: 1px solid #ccc;
-  background-color: #f7f7f7;
   cursor: pointer;
-  min-width: 120px;
-  transition: all 0.2s ease-in-out;
 }
 
 .share-viewer-dropdown:hover {
