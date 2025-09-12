@@ -159,7 +159,6 @@ class VisorService {
 
       // Si es permanente, generamos siempre el mismo hash. Si no, genera uno con el expiresIn
       const expires = expirationTime === "x" ? {noTimestamp: true} : {expiresIn: expirationTime} 
-      console.log(expirationTime)
       const shareHash = jwt.sign({sharetoken: result[0].sharetoken}, "SECRET", expires)
 
       return result.length > 0
