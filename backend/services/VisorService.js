@@ -144,15 +144,19 @@ class VisorService {
     }
   }
 
-  createShareLink = async (uid, visorId, visorgid, expirationTime) => {
+
+      /* Actualmente, si abris el link desde el editor para previsualizar y envio el link a otra persona del mismo 
+       * que me aparece, va a poder acceder. Ver como validar esto, si una apikey, externalkey o algi asi
+       * Como solucion momentanea, si no llega nada (porque el front no envia ningun expiratioNtime) la setea en 10 segs*/
+  createShareLink = async (uid, visorId, visorgid, expirationTime = 10) => {
     try {
 
-      const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
+      const haveAccessToVisor = visorgid && (await Group.isMember(uid, visorgid) || await User.isSuperAdmin(uid));
 
       const isVisorOwner = !visorgid && await Visor.isOwner(visorId, uid);
 
       if (!haveAccessToVisor && !isVisorOwner) {
-        return Result.fail("No tenés permisos para realizar esta accion");
+        return Result.fail("No tenés permisos para realizar esta accion");    
       }
 
       const result = await Visor.getShareToken(visorId);
