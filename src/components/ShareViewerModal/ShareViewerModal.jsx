@@ -131,7 +131,6 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
 
     // Clear URLs when disabling, but keep them when enabling
     if (isEnabled) {
-      setShareUrl('');
       setIframeCode(null);
     }
   };
