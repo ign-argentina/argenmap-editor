@@ -155,7 +155,7 @@ class VisorController {
   changePublicStatus = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { visorid, visorgid } = req.body
+      const { visorid, visorgid,  } = req.body
       const { uid } = this.authService.getDataToken(token)
 
       if (!visorid || !visorgid) {
@@ -177,7 +177,7 @@ class VisorController {
   createShareLink = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { visorid, visorgid } = req.body
+      const { visorid, visorgid, expires } = req.body
       const { uid } = this.authService.getDataToken(token)
 
 
@@ -185,7 +185,7 @@ class VisorController {
         return res.status(400).json({ error: 'Falta el ID del visor' });
       }
 
-      const result = await this.visorService.createShareLink(uid, visorid, visorgid);
+      const result = await this.visorService.createShareLink(uid, visorid, visorgid, expires);
 
       if (!result.success) {
         return res.status(403).json({ error: result.error });

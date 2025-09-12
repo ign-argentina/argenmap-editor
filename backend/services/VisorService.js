@@ -144,7 +144,7 @@ class VisorService {
     }
   }
 
-  createShareLink = async (uid, visorId, visorgid) => {
+  createShareLink = async (uid, visorId, visorgid, expirationTime) => {
     try {
 
       const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
@@ -157,14 +157,17 @@ class VisorService {
 
       const result = await Visor.getShareToken(visorId);
 
-      const shareHash = jwt.sign({sharetoken: result[0].sharetoken}, "SECRET", {expiresIn:60})
+      // Si es permanente, generamos siempre el mismo hash. Si no, genera uno con el expiresIn
+      const expires = expirationTime === "x" ? {noTimestamp: true} : {expiresIn: expirationTime} 
+      console.log(expirationTime)
+      const shareHash = jwt.sign({sharetoken: result[0].sharetoken}, "SECRET", expires)
 
       return result.length > 0
         ? Result.success(shareHash)
         : Result.fail("No se ha podido generar el link");
     } catch (error) {
-      console.log("VISORES: Error en la capa de servicio")
-      return Result.fail("Error en la capa de servicio")
+      console.log("VISORES: Error en la capa de servicio", error)
+      return Result.fail("Error en la capa de servicio",)
     }
   }
 

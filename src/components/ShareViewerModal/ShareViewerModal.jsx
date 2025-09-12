@@ -8,16 +8,16 @@ import './ShareViewerModal.css';
 
 const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
   const [shareUrl, setShareUrl] = useState('');
-  const [iframeCode, setIframeCode] = useState('');
+  const [iframeCode, setIframeCode] = useState(null);
   const [dropdownValue, setDropdownValue] = useState(60);
-  const [isEnabled, setIsEnabled] = useState(true);
+  const [isEnabled, setIsEnabled] = useState(viewer?.isshared);
   const linkRef = useRef(null);
   const iframeRef = useRef(null);
   const { showToast } = useToast();
-
+/* 
   useEffect(() => {
     const fetchUrl = async () => {
-      if (viewer && isOpen) {
+      if (viewer.isshared && isOpen) {
         try {
           const { id: vid, gid: vgid } = viewer;
           const response = await createShareLink(vid, vgid);
@@ -39,11 +39,13 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
       }
     };
     fetchUrl();
-  }, [viewer, isOpen]);
+  }, [viewer, isOpen]); */
+
+
 
   const handleCopy = (ref) => {
     if (!ref?.current) return;
-    
+
     const el = ref.current;
     const text = 'value' in el ? el.value : el.textContent;
 
@@ -63,13 +65,8 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
     setDropdownValue(value === "x" ? "x" : Number(value));
   };
 
-  const handleDropdownButtonClick = () => {
-    // Prevent permanent link generation when disabled
-    if (!isEnabled && dropdownValue === "x") {
-      showToast('Habilita el visor para generar enlaces permanentes', 'warning', 2000);
-      return;
-    }
-    
+  const handleLinkGenerator = async () => {
+
     if (dropdownValue === "x") {
       console.log('Valor seleccionado: Permanente (sin expiración)');
       showToast('Generando enlace permanente...', 'info', 2000);
@@ -78,10 +75,33 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
       const timeText = getTimeText(dropdownValue);
       showToast(`Generando enlace por ${timeText}...`, 'info', 2000);
     }
+
+    const response = await createShareLink(viewer.id, viewer.gid, dropdownValue);
+    if (response.success) {
+
+      setShareLink(response.data)
+
+      if (isEnabled && iframeCode === null) {
+        await setHtmlLabel(viewer.id, viewer.gid, "x")
+      }
+    }
   };
 
+  const setShareLink = (id) => {
+    const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${id}`;
+    setShareUrl(fullUrl);
+  }
+
+  const setHtmlLabel = async (id, gid, expirationTime) => {
+    const response = await createShareLink(id, gid, expirationTime);
+    const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`;
+    setIframeCode(
+      `<iframe src="${fullUrl}" width="100%" height="500" style="border:0;" allowfullscreen></iframe>`
+    );
+  }
+
   const getTimeText = (value) => {
-    switch(value) {
+    switch (value) {
       case 60: return '1 minuto';
       case 600: return '10 minutos';
       case 3600: return '1 hora';
@@ -92,21 +112,21 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
 
   const handleToggleEnabled = () => {
     setIsEnabled(!isEnabled);
-    const message = !isEnabled 
-      ? 'Visor habilitado para compartir' 
+    const message = !isEnabled
+      ? 'Visor habilitado para compartir'
       : 'Visor deshabilitado para compartir';
     showToast(message, 'info', 2000);
-    
+
     // When disabling, switch to temporal link if permanent was selected
     if (isEnabled && dropdownValue === "x") {
       setDropdownValue(60); // Default to 1 minute
       showToast('Cambiado a enlace temporal', 'info', 1000);
     }
-    
+
     // Clear URLs when disabling, but keep them when enabling
     if (isEnabled) {
       setShareUrl('');
-      setIframeCode('');
+      setIframeCode(null);
     }
   };
 
@@ -137,9 +157,9 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
               Permanente {!isEnabled ? '(Deshabilitado)' : ''}
             </option>
           </select>
-          <button 
-            className={`generate-link-button ${dropdownValue === "x" ? 'permanent' : ''}`} 
-            onClick={handleDropdownButtonClick}
+          <button
+            className={`generate-link-button ${dropdownValue === "x" ? 'permanent' : ''}`}
+            onClick={handleLinkGenerator}
             disabled={!isEnabled && dropdownValue === "x"}
           >
             <i className={`fas ${dropdownValue === "x" ? 'fa-infinity' : 'fa-magic'}`}></i>
@@ -208,7 +228,7 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
 
         {/* Footer */}
         <div className="footer-buttons">
-          <button 
+          <button
             className={`toggle-button ${isEnabled ? 'disable-button' : 'enable-button'}`}
             onClick={handleToggleEnabled}
           >
