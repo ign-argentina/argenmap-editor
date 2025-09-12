@@ -14,34 +14,40 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
   const linkRef = useRef(null);
   const iframeRef = useRef(null);
   const { showToast } = useToast();
-/* 
-  useEffect(() => {
-    const fetchUrl = async () => {
-      if (viewer.isshared && isOpen) {
-        try {
-          const { id: vid, gid: vgid } = viewer;
-          const response = await createShareLink(vid, vgid);
-          if (response.success && response.data) {
-            const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`;
-            setShareUrl(fullUrl);
-            setIframeCode(
-              `<iframe src="${fullUrl}" width="100%" height="500" style="border:0;" allowfullscreen></iframe>`
-            );
-          } else {
+
+  /* 
+    useEffect(() => {
+      const fetchUrl = async () => {
+        if (viewer.isshared && isOpen) {
+          try {
+            const { id: vid, gid: vgid } = viewer;
+            const response = await createShareLink(vid, vgid);
+            if (response.success && response.data) {
+              const fullUrl = `http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`;
+              setShareUrl(fullUrl);
+              setIframeCode(
+                `<iframe src="${fullUrl}" width="100%" height="500" style="border:0;" allowfullscreen></iframe>`
+              );
+            } else {
+              setShareUrl('');
+              setIframeCode('');
+            }
+          } catch (error) {
+            console.error('Error al generar el enlace:', error);
             setShareUrl('');
             setIframeCode('');
           }
-        } catch (error) {
-          console.error('Error al generar el enlace:', error);
-          setShareUrl('');
-          setIframeCode('');
         }
-      }
-    };
-    fetchUrl();
-  }, [viewer, isOpen]); */
+      };
+      fetchUrl();
+    }, [viewer, isOpen]); */
 
 
+  useEffect(() => {
+    if (iframeCode === null){
+      setHtmlLabel(viewer.id, viewer.gid, "x")
+    }
+  }, [isEnabled])
 
   const handleCopy = (ref) => {
     if (!ref?.current) return;
