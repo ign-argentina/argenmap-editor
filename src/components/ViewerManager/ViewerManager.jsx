@@ -103,11 +103,15 @@ const ViewerManager = () => {
       } else {
         setGroupList([]);
         setSelectedViewer(null);
+        setShowDescriptionModal(false);
+        setCurrentFilter("public-visors");
+        sessionStorage.setItem("lastGroupPicked", "public-visors");
       }
 
       try {
         let vl, access;
-        if (currentFilter === "public-visors") {
+        if (currentFilter === "public-visors" || !isAuth) {
+          // fallback to publicos if not authenticated
           vl = await getPublicVisors();
           access = PUBLIC_VISOR_ACCESS;
         } else if (currentFilter === "my-visors") {
@@ -238,7 +242,6 @@ const ViewerManager = () => {
 
             <div className="viewer-modal-container">
               <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
-                <div className="background-overlay" />
                 <div className="viewer-list">
                   {isLoading ? (
                     <div className="loading-message">
@@ -365,26 +368,29 @@ const ViewerManager = () => {
               </div>
             </div>
 
-            {showDescriptionModal && (
+            {showDescriptionModal && selectedViewer && (
               <div className="viewer-description">
                 <div className="viewer-info-row">
                   <div className="viewer-info-text">
                     <h3>{selectedViewer.name}</h3>
+                    <div className='viewer-desc-divider'></div>
                     <p>{selectedViewer.description}</p>
                     <p className="viewer-date">
-                      {new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
-                      })}
+                      {selectedViewer.lastupdate
+                        ? new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })
+                        : "Fecha no disponible"}
                     </p>
                     <p className="viewer-privacy">
                       {selectedViewer.publico ? 'Público' : 'Privado'}
                     </p>
-                    <h3>Grupo: {selectedViewer.gname || 'Grupo: Sin grupo'}</h3>
+                    <h3>Grupo: {selectedViewer.gname || 'Sin grupo'}</h3>
                   </div>
                   <img
-                    src={selectedViewer?.gimg || '/assets/no-image.png'}
+                    src={selectedViewer.gimg || '/assets/no-image.png'}
                     alt="Imagen del grupo"
                     className="group-image-right"
                   />
