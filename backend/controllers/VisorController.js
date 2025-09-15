@@ -155,20 +155,40 @@ class VisorController {
   changePublicStatus = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { visorid, visorgid } = req.body
+      const { visorid, visorgid, } = req.body
       const { uid } = this.authService.getDataToken(token)
 
-      if (!visorid || !visorgid) {
+      if (!visorid) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
 
       const result = await this.visorService.changePublicStatus(uid, visorid, visorgid)
 
-      if (!result.success) {
-        return res.status(400).json({ error: result.error })
+      /*       if (!result.success) {
+              return res.status(400).json({ error: result.error })
+            } */
+      /*       return res.status(200).json(result) */
+      return result.success ? res.status(200).json(result) : res.status(400).json({ error: result.error })
+
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  changeIsSharedStatus = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { visorid, visorgid } = req.body
+      const { uid } = this.authService.getDataToken(token)
+
+      if (!visorid) {
+        return res.status(400).json({ error: "Faltan campos requeridos" })
       }
 
-      return res.status(200).json(result)
+      const result = await this.visorService.changeIsSharedStatus(uid, visorid, visorgid)
+
+      return result.success ? res.status(200).json(result) : res.status(400).json({ error: result.error })
+
     } catch (error) {
       return res.status(500).json(error)
     }
@@ -177,7 +197,7 @@ class VisorController {
   createShareLink = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { visorid, visorgid } = req.body
+      const { visorid, visorgid, expires } = req.body
       const { uid } = this.authService.getDataToken(token)
 
 
@@ -185,7 +205,7 @@ class VisorController {
         return res.status(400).json({ error: 'Falta el ID del visor' });
       }
 
-      const result = await this.visorService.createShareLink(uid, visorid, visorgid);
+      const result = await this.visorService.createShareLink(uid, visorid, visorgid, expires);
 
       if (!result.success) {
         return res.status(403).json({ error: result.error });
@@ -200,10 +220,9 @@ class VisorController {
 
   getConfigByShareToken = async (req, res) => { // ASEGURAR CON HEADERS PROVENIENTES DEL VISOR SERVER PARA QUE EL ACCESO SEA SOLO DESDE AHI.
     try {
-      const { shareToken } = req.query;
+      const { shareToken, isTemporal } = req.query;
 
-      const result = shareToken ? await this.visorService.getConfigByShareToken(shareToken) : null
-
+      const result = shareToken ? await this.visorService.getConfigByShareToken(shareToken, isTemporal) : null
       if (!result.success) {
         return res.status(403).json({ error: result.error });
       }
