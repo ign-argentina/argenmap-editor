@@ -54,17 +54,20 @@ app.post('/argenmap/custom', async (req, res) => {
 });
 
 
-// Endpoint que sirve Kharta e inyecta configuracion || ESTE ENDPOINT SE USA PARA EL SHARE
+// ESTE ENDPOINT SE USA PARA EL SHARE
+// Endpoint que sirve Kharta e inyecta configuracion || 
 // REFACTOR Y DEJAR LINDO
 app.get('/map', async (req, res) => {
   const { view } = req.query;
   let sharetoken = null;
   let apikey = null;
-
+  let isTemporal = false
   try {
     const decoded = jwt.verify(view, "SECRET")
+    console.log(decoded)
     sharetoken = decoded.sharetoken
     apikey = decoded.apikey
+    isTemporal = !!decoded.exp;
   } catch (error) {
   }
 
@@ -77,9 +80,14 @@ app.get('/map', async (req, res) => {
   ///////////////////////////////
   let configInyectada = null;
 
+
   try {
-    const response = await fetch(`http://172.20.202.88:3001/visores/share?shareToken=${sharetoken}`);
+    const response = await fetch(`http://172.20.202.88:3001/visores/share?shareToken=${sharetoken}&isTemporal=${isTemporal}`);
     configInyectada = await response.json(); // Devuelve campo .error si no se pudo
+
+    if (configInyectada.error) {
+      return res.status(404).send("This viewer is unavailable")
+    }
   } catch (error) {
     console.error('Error al hacer fetch:', error);
   }

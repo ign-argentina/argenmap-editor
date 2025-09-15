@@ -145,9 +145,9 @@ class VisorService {
   }
 
 
-      /* Actualmente, si abris el link desde el editor para previsualizar y envio el link a otra persona del mismo 
-       * que me aparece, va a poder acceder. Ver como validar esto, si una apikey, externalkey o algi asi
-       * Como solucion momentanea, si no llega nada (porque el front no envia ningun expiratioNtime) la setea en 10 segs*/
+  /* Actualmente, si abris el link desde el editor para previsualizar y envio el link a otra persona del mismo 
+   * que me aparece, va a poder acceder. Ver como validar esto, si una apikey, externalkey o algi asi
+   * Como solucion momentanea, si no llega nada (porque el front no envia ningun expiratioNtime) la setea en 10 segs*/
   createShareLink = async (uid, visorId, visorgid, expirationTime = 10) => {
     try {
 
@@ -156,14 +156,14 @@ class VisorService {
       const isVisorOwner = !visorgid && await Visor.isOwner(visorId, uid);
 
       if (!haveAccessToVisor && !isVisorOwner) {
-        return Result.fail("No tenés permisos para realizar esta accion");    
+        return Result.fail("No tenés permisos para realizar esta accion");
       }
 
       const result = await Visor.getShareToken(visorId);
 
       // Si es permanente, generamos siempre el mismo hash. Si no, genera uno con el expiresIn
-      const expires = expirationTime === "x" ? {noTimestamp: true} : {expiresIn: expirationTime} 
-      const shareHash = jwt.sign({sharetoken: result[0].sharetoken}, "SECRET", expires)
+      const expires = expirationTime === "x" ? { noTimestamp: true } : { expiresIn: expirationTime }
+      const shareHash = jwt.sign({ sharetoken: result[0].sharetoken }, "SECRET", expires)
 
       return result.length > 0
         ? Result.success(shareHash)
@@ -174,17 +174,18 @@ class VisorService {
     }
   }
 
-/*   #signToken = async (userId) => {
-    const isAdmin = await User.isSuperAdmin(userId)
-    const isGroupAdmin = await User.isGroupAdmin(userId)
-    return jwt.sign({ uid: userId, isa: isAdmin, isag: isGroupAdmin }, process.env.JWT_SECRET, { expiresIn: parseInt(process.env.JWT_EXPIRES) })
-  } */
+  /*   #signToken = async (userId) => {
+      const isAdmin = await User.isSuperAdmin(userId)
+      const isGroupAdmin = await User.isGroupAdmin(userId)
+      return jwt.sign({ uid: userId, isa: isAdmin, isag: isGroupAdmin }, process.env.JWT_SECRET, { expiresIn: parseInt(process.env.JWT_EXPIRES) })
+    } */
 
   changePublicStatus = async (uid, visorid, visorgid = null) => {
     try {
       let result = []
 
       const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
+
 
       if (haveAccessToVisor) {
         result = await Visor.changePublicStatus(visorid)
@@ -197,11 +198,36 @@ class VisorService {
     }
   }
 
-  getConfigByShareToken = async (shareToken) => {
+  changeIsSharedStatus = async (uid, visorid, visorgid) => {
+    try {
+      let result = []
+      const isVisorOwner = !visorgid && await Visor.isOwner(visorid, uid);
+      let haveAccesToVisor = false
+
+      if (visorgid && !isVisorOwner) {
+        haveAccesToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) ||
+          await Group.isEditorForThisGroup(visorgid, uid) ||
+          await User.isSuperAdmin(uid))
+      }
+
+
+      if (haveAccesToVisor || isVisorOwner) {
+        result = await Visor.changeIsSharedStatus(visorid)
+      }
+
+      return result.length > 0 ? Result.success(result) : Result.fail("Nose ha podido cambiar el estado del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio")
+      console.log(error)
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  getConfigByShareToken = async (shareToken, isTemporal) => {
     try {
       let config = null
       if (validate(shareToken)) {
-        const visor = await Visor.getConfigIdByShareToken(shareToken)
+        const visor = await Visor.getConfigIdByShareToken(shareToken, isTemporal)
 
         if (visor) {
           config = await Config.getConfigById(visor);

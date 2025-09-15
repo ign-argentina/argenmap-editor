@@ -62,6 +62,12 @@ export const changePublicStatus = async (visorid, visorgid) => {
   return res.data
 }
 
+export const changeIsSharedStatus = async (visorid, visorgid) => {
+  const res = await axios.post(`${API_URL}/visores/share/status`,
+    { visorid, visorgid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
 export const getPublicVisors = async () => {
   const res = await axios.get(`${API_URL}/visores/publics`,
     { withCredentials: true, validateStatus: () => true });

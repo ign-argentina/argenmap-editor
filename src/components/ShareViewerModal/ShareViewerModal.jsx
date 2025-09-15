@@ -3,8 +3,7 @@ import { createShareLink } from '../../api/configApi.js';
 import currentVisor from '../../api/visorApi.js';
 import { useToast } from '../../context/ToastContext.jsx';
 import './ShareViewerModal.css';
-
-
+import { changeIsSharedStatus } from '../../api/configApi.js';
 
 const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
   const [shareUrl, setShareUrl] = useState('');
@@ -44,7 +43,7 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
 
 
   useEffect(() => {
-    if (iframeCode === null){
+    if (iframeCode === null) {
       setHtmlLabel(viewer.id, viewer.gid, "x")
     }
   }, [isEnabled])
@@ -116,7 +115,7 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
     }
   };
 
-  const handleToggleEnabled = () => {
+  const handleToggleEnabled = async () => {
     setIsEnabled(!isEnabled);
     const message = !isEnabled
       ? 'Visor habilitado para compartir'
@@ -128,6 +127,8 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
       setDropdownValue(60); // Default to 1 minute
       showToast('Cambiado a enlace temporal', 'info', 1000);
     }
+
+    await changeIsSharedStatus(viewer.id, viewer.gid);
 
     // Clear URLs when disabling, but keep them when enabling
     if (isEnabled) {

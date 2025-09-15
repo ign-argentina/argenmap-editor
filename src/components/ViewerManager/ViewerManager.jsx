@@ -464,7 +464,7 @@ const ViewerManager = () => {
                 {selectedViewer?.publico ? "Despublicar" : "Publicar"}
               </button>}
 
-              {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
+              {((access?.sa || access?.ga || access?.myvisors) && selectedViewer) && <button
                 onClick={() => {
                   setShowShareViewerModal(true);
                   closeContextMenu();
@@ -481,7 +481,7 @@ const ViewerManager = () => {
                 Descargar
               </button>
 
-              {(access?.sa || access?.ga) && <button
+              {(access?.sa || access?.ga || access?.myvisors) && <button
                 className="btn-delete"
                 onClick={() =>
                   pedirConfirmacion({

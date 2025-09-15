@@ -20,6 +20,6 @@ visoresRoutes.get("/", visorController.getAllVisors);
 visoresRoutes.post("/share", PROTECT.REQUIRE_AUTH, visorController.createShareLink);
 visoresRoutes.get("/share", visorController.getConfigByShareToken);
 visoresRoutes.get("/:id", visorController.getVisorById);
-
+visoresRoutes.post("/share/status", PROTECT.REQUIRE_AUTH, visorController.changeIsSharedStatus)
 
 export default visoresRoutes;
