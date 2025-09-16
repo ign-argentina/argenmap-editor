@@ -64,7 +64,6 @@ app.get('/map', async (req, res) => {
   let isTemporal = false
   try {
     const decoded = jwt.verify(view, "SECRET")
-    console.log(decoded)
     sharetoken = decoded.sharetoken
     apikey = decoded.apikey
     isTemporal = !!decoded.exp;

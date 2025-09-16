@@ -156,6 +156,7 @@ const ViewerManager = () => {
   }
 
   const handleChange = async (value) => {
+    const lastPicked = sessionStorage.getItem("lastGroupPicked")
     setSelectedViewer(null);
     setShowDescriptionModal(false);
     setCurrentFilter(value);
@@ -170,7 +171,7 @@ const ViewerManager = () => {
       const vl = await getMyVisors();
       setViewers(vl);
 
-    } else if (value !== '') {
+    } else if (value !== '' && value != lastPicked) {
       const vl = await getGroupVisors(value);
       const access = await getPermissions(value);
       setAccess(access);
