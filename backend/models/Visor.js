@@ -57,6 +57,16 @@ const GET_BY_SHARE_TOKEN = `SELECT cid FROM visores WHERE sharetoken = $1 AND ($
 
 const CHANGE_SHARE_STATUS = `UPDATE visores SET isshared = NOT isshared WHERE id = $1 RETURNING 1`
 
+const GET_DELETED_GROUP_VIEWERS = `SELECT v.id, v.name, (c.preferences IS NOT NULL) AS isArgenmap
+FROM visores v
+JOIN config c ON v.cid = c.id
+WHERE v.gid = $1 AND v.deleted = true;`
+
+const GET_DELETED_USER_VIEWERS = `SELECT v.id, v.name, (c.preferences IS NOT NULL) AS isArgenmap
+FROM visores v
+JOIN config c ON v.cid = c.id
+WHERE v.uid = $1 AND v.deleted = true;`
+
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
     try {
@@ -160,13 +170,43 @@ class Visor extends BaseModel {
   static getConfigIdByShareToken = async (shareToken, isTemporal) => {
     try {
       const result = await super.runQuery(GET_BY_SHARE_TOKEN, [shareToken, isTemporal]);
-      console.log(result)
       return result.length > 0 ? result?.[0].cid : null;
     } catch (err) {
       console.error("Error en Visor.getConfigIdByShareToken:", err);
       throw err; // O devolver null
     }
   };
+
+  static restoreViewer = async (viewerid) => {
+    try {
+      const result = await super.runQuery("UPDATE visores SET deleted = false  WHERE id = $1 RETURNING TRUE", [viewerid])
+      return result.length > 0
+    } catch (error) {
+      console.log("Error en Visor.restoreViewer", error)
+      throw error
+    }
+  }
+
+  static getDeletedViewersFromGroup = async (groupid) => {
+    try {
+      const result = await super.runQuery(GET_DELETED_GROUP_VIEWERS, [groupid])
+      return result
+    } catch (error) {
+      console.log("Error en la capa de persistencia", error)
+      throw error
+    }
+  }
+
+
+  static getMyDeletedViewers = async (userid) => {
+    try {
+      const result = await super.runQuery(GET_DELETED_USER_VIEWERS, [userid])
+      return result
+    } catch (error) {
+      console.log("Error en la capa de persistencia", error)
+      throw error
+    }
+  }
 }
 
 export default Visor

@@ -210,10 +210,7 @@ class VisorService {
           await User.isSuperAdmin(uid))
       }
 
-
-      if (haveAccesToVisor || isVisorOwner) {
-        result = await Visor.changeIsSharedStatus(visorid)
-      }
+      result = (haveAccesToVisor || isVisorOwner) ? await Visor.changeIsSharedStatus(visorid) : result
 
       return result.length > 0 ? Result.success(result) : Result.fail("Nose ha podido cambiar el estado del visor")
     } catch (error) {
@@ -238,6 +235,46 @@ class VisorService {
       return config ? Result.success(config) : Result.fail("No se ha podido recuperar la configuracion del visor")
     } catch (error) {
       console.log("VISORES: Error en la capa de servicio [getConfigByShareToken]")
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  restoreViewer = async (viewerid, uid, groupid) => {
+    try {
+      let result = []
+      const isVisorOwner = !groupid && await Visor.isOwner(groupid, uid);
+      let haveAccesToVisor = false
+
+      if (groupid && !isVisorOwner) {
+        haveAccesToVisor = groupid && (await Group.isAdminForThisGroup(groupid, uid) ||
+          await User.isSuperAdmin(uid))
+      }
+
+      result = (haveAccesToVisor || isVisorOwner) ? await Visor.restoreViewer(viewerid) : result
+
+      return result ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio [restoreViewer]")
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  getDeletedViewers = async (uid, groupid) => {
+    try {
+      const isVisorOwner = !groupid && await Visor.isOwner(groupid, uid);
+      let isGroupAdmin = false
+
+
+      if (groupid && !isVisorOwner) {
+        isGroupAdmin = groupid && (await Group.isAdminForThisGroup(groupid, uid) ||
+          await User.isSuperAdmin(uid))
+      }
+
+      const result = (isGroupAdmin) ? await Visor.getDeletedViewersFromGroup(groupid) : await Visor.getMyDeletedViewers(uid)
+
+      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio [getDeletedViewers]")
       return Result.fail("Error en la capa de servicio")
     }
   }

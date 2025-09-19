@@ -21,5 +21,8 @@ visoresRoutes.post("/share", PROTECT.REQUIRE_AUTH, visorController.createShareLi
 visoresRoutes.get("/share", visorController.getConfigByShareToken);
 visoresRoutes.get("/:id", visorController.getVisorById);
 visoresRoutes.post("/share/status", PROTECT.REQUIRE_AUTH, visorController.changeIsSharedStatus)
+visoresRoutes.put("/group/restoreviewer", [PROTECT.REQUIRE_AUTH, PROTECT.REQUIRE_GROUP_ADMIN], visorController.restoreViewer)
+visoresRoutes.get("/group/deleted/:viewerid", [PROTECT.REQUIRE_AUTH, PROTECT.REQUIRE_GROUP_ADMIN], visorController.getDeletedViewers)
+
 
 export default visoresRoutes;
