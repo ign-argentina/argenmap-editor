@@ -43,6 +43,7 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     setIsCapturing(true);
 
     try {
+      // SACAR HARCODEO
       const response = await fetch('http://localhost:4000/kharta/custom', {
         method: 'POST',
         headers: {

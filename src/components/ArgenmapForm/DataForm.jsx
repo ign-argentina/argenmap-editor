@@ -152,7 +152,9 @@ function DataForm({ data, onDataChange }) {
               </div>
               <div>
                 <span className="accordion-caret">{openMapas.includes(index) ? '▾' : '▸'}</span>
-                <button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarMapa(index); }} title="Eliminar Mapa">🗑️</button>
+                <button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarMapa(index); }} title="Eliminar Mapa">
+                  <i className="fas fa-trash-alt"></i>
+                </button>
               </div>
             </div>
             {openMapas.includes(index) && (
@@ -198,7 +200,7 @@ function DataForm({ data, onDataChange }) {
         <div key={index} className="accordion-item">
           <div className="accordion-header" onClick={() => toggleCapa(index)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleCapa(index); }}>
             <div className="accordion-title"><span>{capa.nombre || '(sin nombre)'}</span><span className="section-badge">{"- " + capa.seccion || 'sin sección'}</span></div>
-            <div><span className="accordion-caret">{openCapas.includes(index) ? '▾' : '▸'}</span><button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarCapa(index); }} title="Eliminar Capa">🗑️</button></div>
+            <div><span className="accordion-caret">{openCapas.includes(index) ? '▾' : '▸'}</span><button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarCapa(index); }} title="Eliminar Capa"><i className="fas fa-trash-alt"></i></button></div>
           </div>
           {openCapas.includes(index) && (
             <div className="accordion-content">

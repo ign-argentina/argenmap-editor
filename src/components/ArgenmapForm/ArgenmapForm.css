@@ -17,13 +17,13 @@
 .argenmap-form {
   flex: 1;
   overflow: hidden;
+  background-color: whitesmoke;
 }
 
 .argenmap-form-content {
-  border-right: 1px solid #ccc;
-  padding-right: 0.5rem;
   overflow-y: auto;
   max-height: 67.5vh;
+  background-color: whitesmoke;
 }
 
 .argenmap-form-selector {
@@ -35,7 +35,7 @@
 
 .argenmap-footer {
   margin-top: auto;
-  background-color: #e1e1e1;
+  background-color: whitesmoke;
   padding: 0.5rem;
 }
 

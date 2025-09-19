@@ -28,7 +28,7 @@ if (config[mode]) {
 // SEGUIR
 const API_URL = `http://${currentConfig.IP}:${currentConfig.API_PORT}`;
 
-// ***** VISORS METHODS ***** 
+// ***** VIEWER METHODS ***** 
 export async function getAllVisors() {
   const res = await fetch(`${API_URL}/visores`);
   if (!res.ok) throw new Error('Error al obtener visores');
@@ -62,6 +62,12 @@ export const changePublicStatus = async (visorid, visorgid) => {
   return res.data
 }
 
+export const changeIsSharedStatus = async (visorid, visorgid) => {
+  const res = await axios.post(`${API_URL}/visores/share/status`,
+    { visorid, visorgid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
 export const getPublicVisors = async () => {
   const res = await axios.get(`${API_URL}/visores/publics`,
     { withCredentials: true, validateStatus: () => true });
@@ -88,12 +94,27 @@ export const getGroupVisors = async (groupId) => {
   return res.data;
 };
 
-export const createShareLink = async (vid, vgid) => {
+export const createShareLink = async (vid, vgid, expirationTime) => {
   const result = await axios.post(`${API_URL}/visores/share`,
-  { visorid: vid, visorgid: vgid }, { withCredentials: true, validateStatus: () => true });
+    { visorid: vid, visorgid: vgid, expires: expirationTime }, { withCredentials: true, validateStatus: () => true });
   return result.data
 }
-// ***** END VISORS METHODS ***** 
+
+export const getDeletedViewers = async (groupId) => {
+  const res = await axios.get(`${API_URL}/visores/group/deleted/${groupId}`, {
+    withCredentials: true,
+    validateStatus: () => true
+  });
+  return res.data;
+}
+
+export const restoreViewer = async (viewerid, groupid) => {
+  const result = await axios.put(`${API_URL}/visores/group/restoreviewer`,
+    { viewerid: viewerid, groupid: groupid }, { withCredentials: true, validateStatus: () => true });
+  return result.data
+}
+
+// ***** END VIEWER METHODS ***** 
 
 
 //CONFIGS

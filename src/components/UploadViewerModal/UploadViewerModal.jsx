@@ -21,7 +21,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     reader.onload = (e) => {
       try {
         const json = JSON.parse(e.target.result);
-
+        //Kharta validation
         if (!json.configVersion) {
           throw new Error("El JSON no tiene la propiedad 'configVersion'");
         }
@@ -46,47 +46,54 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     reader.readAsText(file);
   };
 
-  const validateFile = (file, content) => {
+  const validateArgenmapFiles = (file, content) => {
     try {
       const json = JSON.parse(content);
 
-      // Validar preferences.json
-      if (file.name.toLowerCase().includes("preferences")) {
-        if (!json.mapConfig || !json.table || !json.charts) {
-          throw new Error("Estructura inválida en preferences.json");
-        }
+      // Validar por estructura → preferences.json
+      if (json.mapConfig && json.table && json.charts && json.searchbar && json.geoprocessing) {
         setPreferencesFile({ file, json });
         return;
       }
 
-      // Validar data.json
-      if (file.name.toLowerCase().includes("data")) {
-        if (!Array.isArray(json.items)) {
-          throw new Error("Estructura inválida en data.json");
+      // Validar por estructura → data.json
+      if (Array.isArray(json.items)) {
+        const items = json.items;
+
+        if (items.length === 0) {
+          throw new Error("El archivo data.json esta vacío");
         }
+
+        // Validamos que los objetos tengan al menos una de estas claves esperadas
+        const hasValidStructure = items.some(item =>
+          item.type ||
+          item.nombre ||
+          item.servicio ||
+          item.host ||
+          (Array.isArray(item.capas) && item.capas.length > 0)
+        );
+
+        if (!hasValidStructure) {
+          throw new Error("El archivo data.json esta vacío");
+        }
+
         setDataFile({ file, json });
         return;
       }
 
       throw new Error("El archivo no es válido para Argenmap");
     } catch (err) {
-      setError(`${file.name}: ${err.message}`);
+      setError(`${file.name}: El archivo no es válido`);
     }
   };
 
   const handleFiles = (files) => {
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      reader.onload = (e) => validateFile(file, e.target.result);
+      reader.onload = (e) => validateArgenmapFiles(file, e.target.result);
       reader.readAsText(file);
     });
   };
-
-  // const handleDrop = (e) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   handleFiles(e.dataTransfer.files);
-  // };
 
   const handleInputChange = (e) => {
     setError("");
@@ -155,7 +162,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
           <div className="upload-separator"></div>
 
-          <label
+          <div
             className="upload-option"
             onClick={() => document.getElementById("fileInputKharta").click()}
             onDrop={(e) => {
@@ -177,9 +184,8 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
               accept=".json"
               style={{ display: "none" }}
               onChange={handleUploadKhartaFile}
-              onDrop={(e) => e.preventDefault()}
             />
-          </label>
+          </div>
 
         </div>
 

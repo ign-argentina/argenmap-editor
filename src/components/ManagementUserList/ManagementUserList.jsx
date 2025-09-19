@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./ManagementTable.css";
-import { useUser } from "../context/UserContext";
+import "./ManagementUserList.css";
+import { useUser } from "../../context/UserContext";
 
-function ManagementTable({
+function ManagementTableUserList({
   headers,
   data,
   onDelete,
@@ -201,4 +201,4 @@ function ManagementTable({
   );
 }
 
-export default ManagementTable;
+export default ManagementTableUserList;

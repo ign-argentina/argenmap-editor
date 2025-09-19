@@ -155,20 +155,40 @@ class VisorController {
   changePublicStatus = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { visorid, visorgid } = req.body
+      const { visorid, visorgid, } = req.body
       const { uid } = this.authService.getDataToken(token)
 
-      if (!visorid || !visorgid) {
+      if (!visorid) {
         return res.status(400).json({ error: 'Faltan campos requeridos' });
       }
 
       const result = await this.visorService.changePublicStatus(uid, visorid, visorgid)
 
-      if (!result.success) {
-        return res.status(400).json({ error: result.error })
+      /*       if (!result.success) {
+              return res.status(400).json({ error: result.error })
+            } */
+      /*       return res.status(200).json(result) */
+      return result.success ? res.status(200).json(result) : res.status(400).json({ error: result.error })
+
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  changeIsSharedStatus = async (req, res) => {
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { visorid, visorgid } = req.body
+      const { uid } = this.authService.getDataToken(token)
+
+      if (!visorid) {
+        return res.status(400).json({ error: "Faltan campos requeridos" })
       }
 
-      return res.status(200).json(result)
+      const result = await this.visorService.changeIsSharedStatus(uid, visorid, visorgid)
+
+      return result.success ? res.status(200).json(result) : res.status(400).json({ error: result.error })
+
     } catch (error) {
       return res.status(500).json(error)
     }
@@ -177,7 +197,7 @@ class VisorController {
   createShareLink = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { visorid, visorgid } = req.body
+      const { visorid, visorgid, expires } = req.body
       const { uid } = this.authService.getDataToken(token)
 
 
@@ -185,13 +205,9 @@ class VisorController {
         return res.status(400).json({ error: 'Falta el ID del visor' });
       }
 
-      const result = await this.visorService.createShareLink(uid, visorid, visorgid);
+      const result = await this.visorService.createShareLink(uid, visorid, visorgid, expires);
 
-      if (!result.success) {
-        return res.status(403).json({ error: result.error });
-      }
-
-      return res.status(200).json(result);
+      return result.success ? res.status(200).json(result) : res.status(403).json({ error: result.error });
     } catch (err) {
       console.error("Error en VisorController (deleteVisor):", err);
       return res.status(500).json({ error: 'Error al eliminar el visor', detail: err.message });
@@ -200,18 +216,51 @@ class VisorController {
 
   getConfigByShareToken = async (req, res) => { // ASEGURAR CON HEADERS PROVENIENTES DEL VISOR SERVER PARA QUE EL ACCESO SEA SOLO DESDE AHI.
     try {
-      const { shareToken } = req.query;
+      const { shareToken, isTemporal } = req.query;
 
-      const result = shareToken ? await this.visorService.getConfigByShareToken(shareToken) : null
+      const result = shareToken ? await this.visorService.getConfigByShareToken(shareToken, isTemporal) : null
 
-      if (!result.success) {
-        return res.status(403).json({ error: result.error });
-      }
-
-      return res.status(200).json(result.data);
+      return result.success ? res.status(200).json(result.data) : res.status(403).json({ error: result.error });
     } catch (error) {
       console.log("Error en la capa de controladores (getConfigByShareToken)", error)
       return res.status(500).json({ error: 'Error al buscar el visor', detail: error.message });
+    }
+  }
+
+    // Se puede volver a usar el mismo metodo en distintoe ndpoint para los visores personales
+
+  restoreViewer = async (req, res) => {
+    try {
+      const { viewerid, groupid } = req.body
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { uid } = this.authService.getDataToken(token)
+
+      if (!viewerid) {
+        return res.status(400).json({ error: 'Faltan parámetros para realizar la consulta' });
+      }
+
+      const result = await this.visorService.restoreViewer(viewerid, uid, groupid)
+
+      return result.success ? res.status(200).json(result.data) : res.status(403).json({ error: result.error })
+    } catch (error) {
+      console.log("Error en la capa de controladores (restoreGroupViewer)", error)
+      return res.status(500).json({ error: 'Error ', detail: error.message });
+    }
+  }
+
+  // Se puede volver a usar el mismo metodo en distintoe ndpoint para los visores personales
+  getDeletedViewers = async (req, res) => {
+    try {
+      const { groupid } = req.params
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME]
+      const { uid } = this.authService.getDataToken(token)
+
+      const result = await this.visorService.getDeletedViewers(uid, groupid)
+
+      return result.success ? res.status(200).json(result.data) : res.status(403).json({ error: result.error })
+    } catch (error) {
+      console.log("Error en el controlador ", error)
+      return res.status(500).json({ error: "Error ", error })
     }
   }
 }
