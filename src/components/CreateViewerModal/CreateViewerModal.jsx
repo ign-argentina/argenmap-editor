@@ -37,13 +37,13 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
           <div className="create-separator"></div>
 
           <button
-            onMouseEnter={() => setHoverText("Kharta: Visor moderno [En Desarrollo]")}
+            onMouseEnter={() => setHoverText("Kharta [En Desarrollo]")}
             onMouseLeave={() => setHoverText("")}
-            className="create-option"
+            className="create-option kharta-option"
             title="Crear visor Kharta"
-            onClick={() => {
+  /*           onClick={() => {
               navigate('/form', { state: { isArgenmap: false } });
-            }}
+            }} */
           >
             <img src="/assets/logoKharta.png" alt="Kharta" />
             <span>Kharta</span>
