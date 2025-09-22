@@ -174,12 +174,23 @@ function DataForm({ data, onDataChange }) {
                   <div className="form-group"><label>Imagen de leyenda (opcional)</label><input placeholder="URL de la imagen de la leyenda" value={capa.legendImg || ""} onChange={(e) => handleMapaChange(index, "legendImg", e.target.value)} /></div>
                 </div>
 
-                <strong>Zoom</strong>
                 <div className="zoom-inputs">
-                  <input type="number" placeholder="min" value={capa.zoom.min || ""} onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)} />
-                  <input type="number" placeholder="max" value={capa.zoom.max || ""} onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)} />
-                  <input type="number" placeholder="nativeMin" value={capa.zoom.nativeMin || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMin", e.target.value)} />
-                  <input type="number" placeholder="nativeMax" value={capa.zoom.nativeMax || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMax", e.target.value)} />
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">min</label>
+                    <input type="number" value={capa.zoom.min || ""} onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)} />
+                  </div>
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">max</label>
+                    <input type="number" value={capa.zoom.max || ""} onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)} />
+                  </div>
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">nativeMin</label>
+                    <input type="number" value={capa.zoom.nativeMin || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMin", e.target.value)} />
+                  </div>
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">nativeMax</label>
+                    <input type="number" value={capa.zoom.nativeMax || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMax", e.target.value)} />
+                  </div>
                 </div>
               </div>
             )}
