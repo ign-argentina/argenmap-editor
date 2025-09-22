@@ -185,7 +185,9 @@
 }
 
 .accordion-content strong {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1rem;
   color: #1f2937;
   margin-bottom: 1rem;
@@ -194,10 +196,14 @@
   padding: 1rem 1.25rem;
   background: #f1f5f9;
   border-radius: 0.625rem;
-  border-left: 4px solid var(--primary--color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   position: relative;
   text-align: center;
+}
+
+.accordion-content strong::before {
+  content: '\1F50E'; /* Unicode for magnifying glass icon */
+  margin-right: 0.5rem;
 }
 
 .form-group input {
@@ -309,7 +315,7 @@
 
 .zoom-inputs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   padding: 1.5rem;
   background: #f8fafc;
@@ -324,18 +330,39 @@
 }
 
 .zoom-inputs::before {
-  content: '';
+  content: '🔍 Zoom';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    var(--primary--color), 
-    var(--secondary--color), 
-    var(--active--color)
-  );
-  border-radius: 0.875rem 0.875rem 0 0;
+  top: -1.2rem;
+  left: 0.7rem;
+  background: rgb(244, 247, 251);
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1f2937;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  z-index: 1;
+}
+
+.zoom-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.zoom-input-group:nth-child(1) { grid-row: 1; grid-column: 1; }
+.zoom-input-group:nth-child(2) { grid-row: 1; grid-column: 2; }
+.zoom-input-group:nth-child(3) { grid-row: 2; grid-column: 1; }
+.zoom-input-group:nth-child(4) { grid-row: 2; grid-column: 2; }
+
+.zoom-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  opacity: 0.8;
 }
 
 .zoom-inputs input {
@@ -408,9 +435,19 @@
   }
 
   .zoom-inputs {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 0.75rem;
     padding: 1rem;
+  }
+
+  .zoom-input-group {
+    gap: 0.375rem;
+    grid-row: auto !important;
+    grid-column: auto !important;
+  }
+
+  .zoom-label {
+    font-size: 0.7rem;
   }
 
   .controls {
