@@ -105,14 +105,29 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  /* transition: all 0.3s ease;
-  opacity: 0.6; */
+  transition: all 0.3s ease;
+  opacity: 0.6;
 }
 
-/* .upload-option:hover {
+.upload-option.selected {
   opacity: 1;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-} */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.upload-option:not(.selected) {
+  opacity: 0.6;
+}
+
+/* Desactivar hover para Kharta (KHARTA DISABLE) */
+.upload-option:nth-child(3):hover { 
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.upload-option:hover {
+  opacity: 1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
 
 .upload-option img {
   width: 60px;
@@ -141,7 +156,7 @@
   color: #999;
 }
 
-.upload-option + p {
+.upload-option+p {
   color: red;
   font-weight: bold;
   margin-top: 10px;

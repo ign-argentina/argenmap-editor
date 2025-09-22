@@ -12,6 +12,12 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
   const [preferencesFile, setPreferencesFile] = useState(null);
   const [dataFile, setDataFile] = useState(null);
   const [error, setError] = useState("");
+  const [selectedType, setSelectedType] = useState('')
+
+
+  const handleSelectType = (type) => {
+    setSelectedType(type);
+  };
 
   const handleUploadKhartaFile = (event) => {
     const file = event.target.files[0];
@@ -133,8 +139,11 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
         <div className="upload-viewer-options">
 
           <div
-            className="upload-option"
-            onClick={() => document.getElementById("fileInput").click()}
+            className={`upload-option ${selectedType === 'argenmap' ? 'selected' : ''}`}
+            onClick={() => {
+              handleSelectType('argenmap');
+              document.getElementById("fileInput").click();
+            }}
             onDrop={(e) => {
               e.preventDefault();
               setError("");
@@ -142,7 +151,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
             }}
             onDragOver={(e) => e.preventDefault()}
             onMouseEnter={() =>
-              setHoverText("Subir preferences.json y data.json para Argenmap")
+              setHoverText("Subí tus archivos de configuración Argenmap")
             }
             onMouseLeave={() => setHoverText("")}
           >
@@ -163,16 +172,19 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
           <div className="upload-separator"></div>
 
           <div
-            className="upload-option"
-            onClick={() => document.getElementById("fileInputKharta").click()}
-            onDrop={(e) => {
+            className={`upload-option ${selectedType === 'kharta' ? 'selected' : ''}`}
+           /*  onClick={() => {
+              handleSelectType('kharta');
+              document.getElementById("fileInputKharta").click();
+            }} */
+         /*    onDrop={(e) => {
               e.preventDefault();
               const files = e.dataTransfer.files;
               if (files.length === 0) return;
               handleUploadKhartaFile({ target: { files } });
-            }}
-            onDragOver={(e) => e.preventDefault()}
-            onMouseEnter={() => setHoverText("Subí un archivo JSON válido para Kharta")}
+            }} */
+/*             onDragOver={(e) => e.preventDefault()} */
+            onMouseEnter={() => setHoverText("Kharta [En Desarrollo]"/* "Subí un archivo JSON válido para Kharta" */)}
             onMouseLeave={() => setHoverText("")}
           >
             <img src="/assets/logoKharta.png" alt="Kharta" />
