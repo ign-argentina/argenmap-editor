@@ -97,7 +97,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-/* Hover desactivado para Kharta */
+/* DISABLE KHARTA */
 .kharta-option:hover {
   opacity: 0.6; 
   box-shadow: none;  /* Sacar sombra */
