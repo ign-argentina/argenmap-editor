@@ -83,7 +83,7 @@ const ViewerManager = () => {
       await deleteVisor(visorid, visorgid);
       showToast("Visor eliminado con éxito", "success");
       setSelectedViewer(null);
-      const vl = await getGroupVisors(visorgid)
+      const vl =  currentFilter === "my-visors" ? await getMyVisors() : await getGroupVisors(visorgid)
       setViewers(vl)
     } catch (error) {
       console.error("Error al eliminar el visor:", error);

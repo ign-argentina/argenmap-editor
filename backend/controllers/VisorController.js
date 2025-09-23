@@ -19,11 +19,7 @@ class VisorController {
 
       const result = await this.visorService.createVisor(uid, groupid, name, description, configJson, img, isPublic)
 
-      if (!result.success) {
-        return res.status(400).json({ error: result.error })
-      }
-
-      return res.status(201).json(result)
+      return result.success ? res.status(201).json(result) : res.status(400).json({ error: result.error })
     } catch (err) {
       console.log(err)
       return res.status(500).json({ error: 'Error al guardar visor', detail: err.message });
