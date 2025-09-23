@@ -23,8 +23,8 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     setGroupList(groups);
   }
 
-  const handleSelectChange = async (e) => {
-    if (e.target.value === "no-group" || e.target.value === "") {
+  const handleSelectGroupChange = async (e) => {
+    if (e.target.value === "no-group" || e.target.value === "my-visors") {
       setSelectedGroup(null)
       setIsPublic(false)
     } else {
@@ -110,7 +110,7 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
       setName('');
       setDescription('');
       setImageData(null);
-      sessionStorage.setItem("lastGroupPicked", `${selectedGroup}`);
+      sessionStorage.setItem("lastGroupPicked", `${(selectedGroup === null ? "my-visors" : selectedGroup)}`);
       navigate('/');
     } else {
       showToast("El visor debe ser asignado en un grupo.", "error")
@@ -202,14 +202,14 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
         {(!editorMode && isAuth) ?
           <>
             <h3>Selecciona un grupo al cual quieras agregar este editor</h3>
-            <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
+            <select defaultValue="no-group" id="group-select" onChange={handleSelectGroupChange}>
               <option disabled value="no-group">-- Selecciona un grupo --</option>
               {groupList?.map((grupo) => (
                 <option key={grupo.id} value={grupo.id}>
                   {grupo.name}
                 </option>
               ))}
-              <option key={null} value="">
+              <option key={null} value="my-visors">
                 Mis Visores
               </option>
             </select>
