@@ -37,6 +37,7 @@ C:0% M:0% Y:0% K:0% */
   --secondary-default--color: #45658D;
   --text-default--color: #ffffff;
   --active-default--color: #E7BA61;
+  --black-color: #000000;
 }
 
 /* RESET GOBAL de formato predeterminado de los navegadores (El famoso borde blanco al renderizar) */
