@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateViewerModal.css';
+import logoArgenmap from '../../assets/logoArgenmap.png';
+import logoKharta from '../../assets/logoKharta.png';
 
 const CreateViewerModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
               navigate('/form', { state: { isArgenmap: true } });
             }}
           >
-            <img src="/assets/logoArgenmap.png" alt="Argenmap" />
+            <img src={logoArgenmap} alt="Argenmap" />
             <span>Argenmap</span>
           </button>
 
@@ -45,7 +47,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
               navigate('/form', { state: { isArgenmap: false } });
             }} */
           >
-            <img src="/assets/logoKharta.png" alt="Kharta" />
+            <img src={logoKharta} alt="Kharta" />
             <span>Kharta</span>
           </button>
         </div>

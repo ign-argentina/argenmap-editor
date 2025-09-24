@@ -10,6 +10,10 @@ import { useToast } from '../../context/ToastContext';
 import { downloadViewer } from '../../utils/ViewerHandler';
 import { createShareLink } from '../../api/configApi.js';
 import currentVisor from '../../api/visorApi.js';
+import noImage from '../../assets/no-image.png';
+import logoArgenmap from '../../assets/logoArgenmap.png';
+import logoKharta from '../../assets/logoKharta.png';
+import cartografiaImage from '../../assets/cartografia.jpg';
 import './ViewerManager.css';
 import '../Preview/Preview.css';
 
@@ -189,7 +193,7 @@ const ViewerManager = () => {
 
   return (
     <>
-      <div className='container-display-0'>
+      <div className='container-display-0' style={{'--cartografia-bg': `url(${cartografiaImage})`}}>
         <div className="viewer-content flex-1">
           <div className="viewer-modal">
             <h2>GESTOR DE VISORES</h2>
@@ -303,7 +307,7 @@ const ViewerManager = () => {
                         </div>
 
                         <img
-                          src={viewer.img || '/assets/no-image.png'}
+                          src={viewer.img || noImage}
                           alt="img"
                           className="viewer-image"
                         />
@@ -323,13 +327,13 @@ const ViewerManager = () => {
                             )}
                             {viewer.isArgenmap ? (
                               <img
-                                src={'/assets/logoArgenmap.png'}
+                                src={logoArgenmap}
                                 alt="Visor Argenmap"
                                 title="Visor Argenmap"
                                 className='viewer-card-logo'
                               />) : (
                               <img
-                                src={'/assets/logoKharta.png'}
+                                src={logoKharta}
                                 alt="Visor Kharta"
                                 title="Visor Kharta"
                                 className='viewer-card-logo'
@@ -391,7 +395,7 @@ const ViewerManager = () => {
                     <h3>Grupo: {selectedViewer.gname || 'Sin grupo'}</h3>
                   </div>
                   <img
-                    src={selectedViewer.gimg || '/assets/no-image.png'}
+                    src={selectedViewer.gimg || noImage}
                     alt="Imagen del grupo"
                     className="group-image-right"
                   />
