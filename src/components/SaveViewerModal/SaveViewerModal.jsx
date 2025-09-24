@@ -4,6 +4,7 @@ import './SaveViewerModal.css';
 import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
+import currentViewer from '../../api/visorApi.js';
 
 const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMode = false, getWorkingConfig }) => {
 
@@ -41,10 +42,9 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     const config = getWorkingConfig();
 
     setIsCapturing(true);
-
     try {
       // SACAR HARCODEO
-      const response = await fetch('http://localhost:4000/kharta/custom', {
+      const response = await fetch(`http://${currentViewer.IP}:${currentViewer.API_PORT}/kharta/custom`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
