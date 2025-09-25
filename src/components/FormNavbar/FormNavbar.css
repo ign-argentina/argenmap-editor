@@ -1,6 +1,6 @@
 .editor-navbar {
   background-color: var(--primary--color);
-  padding: 5px;
+  padding: 0.3125rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,20 +16,20 @@
 }
 
 .editor-navbar ul li {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 .lang-select {
   background-color: var(--primary--color);
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+  border: 0.0625rem solid #ccc;
+  border-radius: 0.3125rem;
+  font-size: 1rem;
   font-family: 'Arial', sans-serif;
   color: var(--text--color);
   outline: none;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-  width: 53px;
+  width: 3.3125rem;
 }
 
 .lang-select option {
@@ -65,7 +65,7 @@
 .showHide-button {
   color: var(--text--color);
   border: none;
-  border-radius: 5px;
+  border-radius: 0.3125rem;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -76,12 +76,12 @@
 .button-container {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 15px;
+  gap: 0.625rem;
+  margin: 0.9375rem;
 }
 
 .configVersion-info {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: inherit;
   color: var(--text--color);
   user-select: none;
