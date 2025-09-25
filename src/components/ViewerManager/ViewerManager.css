@@ -17,14 +17,13 @@
 }
 
 .viewer-list-container {
-  position: relative;
   flex: 1;
+  position: relative;
   margin: 0.9375rem 0;
   padding: 1rem;
   border: 0.125rem solid #ccc;
   border-radius: 0.1875rem;
   background-image: var(--cartografia-bg, url('/assets/cartografia.jpg'));
-  background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
@@ -169,6 +168,8 @@
 }
 
 .container-display-0 {
+  height: 100vh;
+  width: 100vh;
   display: contents;
   opacity: 0;
   height: 0;

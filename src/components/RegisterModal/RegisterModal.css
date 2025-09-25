@@ -13,11 +13,11 @@
 
 .register-modal {
   background-color: var(--primary--color);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.2);
   width: 90%;
-  max-width: 400px;
-  padding: 30px 25px;
+  max-width: 25rem;
+  padding: 1.875rem 1.5625rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -36,8 +36,8 @@
 }
 
 .register-modal h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin-bottom: 1.25rem;
+  font-size: 1.5rem;
   color: var(--text--color);
   text-align: center;
 }
@@ -45,16 +45,16 @@
 .form-register {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 0.9375rem;
 }
 
 .form-register input {
-  padding: 12px 15px;
-  border-radius: 8px;
-  border: 1px solid var(--secondary--color);
+  padding: 0.75rem 0.9375rem;
+  border-radius: 0.5rem;
+  border: 0.0625rem solid var(--secondary--color);
   background-color: var(--secondary--color);
   color: var(--text--color);
-  font-size: 16px;
+  font-size: 1rem;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -69,12 +69,12 @@
 }
 
 .form-register button {
-  padding: 12px;
+  padding: 0.75rem;
   background-color: var(--active--color);
   color: var(--primary--color);
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 0.5rem;
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
