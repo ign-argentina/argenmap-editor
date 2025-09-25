@@ -1,8 +1,6 @@
 .changelog-modal-wrapper {
-  flex: 1 1 400px;
-  max-width: 600px;
+
   box-sizing: border-box;
-  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,11 +9,11 @@
 .changelog-modal {
   background-color: var(--primary--color);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   position: relative;
-  border: 2px solid var(--secondary--color);
-  width: 30vw;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 0.125rem solid var(--secondary--color);
+  width: 100%;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
 }
 
 .changelog-title {

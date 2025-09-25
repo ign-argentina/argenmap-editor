@@ -52,7 +52,7 @@ const WelcomePage = () => {
           <div className="welcome-description">
             <p className="intro-text">
               Argenmap Editor es una plataforma integral para la gestión, edición y despliegue de visores de mapas, 
-              pensada para equipos, instituciones y usuarios que necesitan crear, personalizar y compartir visores de mapas 
+              pensada para equipos, instituciones y usuarios que necesitan crear, personalizar y compartir mapas 
               de manera sencilla y colaborativa.
             </p>
             
@@ -70,7 +70,7 @@ const WelcomePage = () => {
               </div>
 
               <div className="feature-card">
-                <div className="feature-icon">�</div>
+                <div className="feature-icon">👩‍💻 👨‍💻</div>
                 <h3>Para quién es útil</h3>
                 <ul>
                   <li>Organismos públicos y privados</li>
@@ -93,7 +93,7 @@ const WelcomePage = () => {
         {/* Novedades Section */}
         <div className="novedades-section">
           <div className="novedades-toggle" onClick={() => setShowNovedades(!showNovedades)}>
-            <h2>Novedades</h2>
+            <h2>Conocé las últimas actualizaciones</h2>
             <span className={`novedades-indicator ${showNovedades ? 'expanded' : ''}`}>
               {showNovedades ? 'ocultar' : 'ver'}
             </span>

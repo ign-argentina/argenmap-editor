@@ -288,14 +288,14 @@
 .viewer-public-icon {
   color: #4caf50;
   margin-left: 0.5rem;
-  font-size: 0.9em;
+  font-size: 1rem;
   vertical-align: right;
 }
 
 .viewer-private-icon {
-  color: #737373;
+  color: #ff6767;
   margin-left: 0.5rem;
-  font-size: 0.9em;
+  font-size: 1rem;
   vertical-align: right;
 }
 
