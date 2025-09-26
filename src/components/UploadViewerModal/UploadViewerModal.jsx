@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useToast } from '../../context/ToastContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import './UploadViewerModal.css';
+import logoArgenmap from '../../assets/logoArgenmap.png';
+import logoKharta from '../../assets/logoKharta.png';
 
 const UploadViewerModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const { showToast } = useToast()
   const [hoverText, setHoverText] = useState("");
   const [khartaFile, setKhartaFile] = useState(null);
   const [khartaError, setKhartaError] = useState("");
@@ -13,6 +14,28 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
   const [dataFile, setDataFile] = useState(null);
   const [error, setError] = useState("");
   const [selectedType, setSelectedType] = useState('')
+  const modalRef = useRef(null);
+
+  // Cerrar modal al hacer click fuera o presionar Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
 
   const handleSelectType = (type) => {
@@ -126,7 +149,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="upload-viewer-modal-overlay">
-      <div className="upload-viewer-modal">
+      <div className="upload-viewer-modal" ref={modalRef}>
         <h2 className="create-viewer-title">
           <i className="fa-solid fa-upload upload-title-icon"></i>
           Subir nuevo visor
@@ -155,7 +178,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
             }
             onMouseLeave={() => setHoverText("")}
           >
-            <img src="/assets/logoArgenmap.png" alt="Argenmap" />
+            <img src={logoArgenmap} alt="Argenmap" />
             <span>Argenmap</span>
 
             <input
@@ -187,7 +210,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
             onMouseEnter={() => setHoverText("Kharta [En Desarrollo]"/* "Subí un archivo JSON válido para Kharta" */)}
             onMouseLeave={() => setHoverText("")}
           >
-            <img src="/assets/logoKharta.png" alt="Kharta" />
+            <img src={logoKharta} alt="Kharta" />
             <span>Kharta</span>
 
             <input

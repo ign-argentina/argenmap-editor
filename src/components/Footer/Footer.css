@@ -10,13 +10,13 @@
   display: flex;
   gap: 1rem;
   color: white;
-  margin-right: 20px;
+  margin-right: 1.25rem;
 }
 
 .release-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .release-version {

@@ -5,6 +5,7 @@ import { useToast } from '../../context/ToastContext.jsx';
 import './ShareViewerModal.css';
 import { changeIsSharedStatus } from '../../api/configApi.js';
 
+
 const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
   const [shareUrl, setShareUrl] = useState('');
   const [iframeCode, setIframeCode] = useState(null);
@@ -12,7 +13,28 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
   const [isEnabled, setIsEnabled] = useState(viewer?.isshared);
   const linkRef = useRef(null);
   const iframeRef = useRef(null);
+  const modalRef = useRef(null);
   const { showToast } = useToast();
+  // Cerrar modal al hacer click fuera o presionar Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   /* 
     useEffect(() => {
@@ -118,9 +140,9 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
   const handleToggleEnabled = async () => {
     setIsEnabled(!isEnabled);
     const message = !isEnabled
-      ? 'Visor habilitado para compartir'
-      : 'Visor deshabilitado para compartir';
-    showToast(message, 'info', 2000);
+      ? 'Acceso externo permanente habilitado'
+      : 'Acceso externo permanente deshabilitado';
+    showToast(message, (!isEnabled ? 'success' : 'warning'), 2000);
 
     // When disabling, switch to temporal link if permanent was selected
     if (isEnabled && dropdownValue === "x") {
@@ -140,7 +162,7 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
 
   return (
     <div className="share-viewer-modal-overlay">
-      <div className="share-viewer-modal">
+      <div className="share-viewer-modal" ref={modalRef}>
         <h2 className="share-viewer-title">Compartir {viewer.name}</h2>
 
         {/* Dropdown + botón */}
@@ -209,7 +231,7 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
           {!isEnabled ? (
             <div className="disabled-message">
               <i className="fas fa-info-circle"></i>
-              <p>El visor no está habilitado para compartirse permanentemente. Habilitelo para desbloquear la sección.</p>
+              <p>El acceso externo permanente no está habilitado en este visor. Habilítelo para desbloquear la sección.</p>
             </div>
           ) : (
             <div className="share-viewer-iframe-container">
@@ -239,7 +261,7 @@ const ShareViewerModal = ({ isOpen, onClose, viewer }) => {
             onClick={handleToggleEnabled}
           >
             <i className={`fas ${isEnabled ? 'fa-ban' : 'fa-check-circle'}`}></i>
-            {isEnabled ? 'Deshabilitar' : 'Habilitar'}
+            {isEnabled ? 'Deshabilitar acceso externo permanente' : 'Habilitar acceso externo permanente'}
           </button>
           <button className="share-viewer-close-button" onClick={onClose}>
             <i className="fas fa-times"></i>

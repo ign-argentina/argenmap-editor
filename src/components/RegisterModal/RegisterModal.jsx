@@ -68,4 +68,5 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
   );
 }
 
+
 export default RegisterModal;
