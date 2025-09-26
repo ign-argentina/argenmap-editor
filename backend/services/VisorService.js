@@ -133,7 +133,7 @@ class VisorService {
   getGroupVisors = async (uid, groupid) => {
     try {
       let result = []
-      if (await Group.isMember(uid, groupid) || await User.isSuperAdmin(uid)) {
+      if (await Group.isMemberOfThisGroup(uid, groupid) || await User.isSuperAdmin(uid)) {
         result = await Visor.getGroupVisors(groupid)
       }
 
@@ -151,7 +151,7 @@ class VisorService {
   createShareLink = async (uid, visorId, visorgid, expirationTime = 10) => {
     try {
 
-      const haveAccessToVisor = visorgid && (await Group.isMember(uid, visorgid) || await User.isSuperAdmin(uid));
+      const haveAccessToVisor = visorgid && (await Group.isMemberOfThisGroup(uid, visorgid) || await User.isSuperAdmin(uid));
 
       const isVisorOwner = !visorgid && await Visor.isOwner(visorId, uid);
 
