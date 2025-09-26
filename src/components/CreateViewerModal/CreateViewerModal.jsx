@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateViewerModal.css';
 import logoArgenmap from '../../assets/logoArgenmap.png';
@@ -7,12 +7,34 @@ import logoKharta from '../../assets/logoKharta.png';
 const CreateViewerModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [hoverText, setHoverText] = useState("");
+  const modalRef = useRef(null);
+
+  // Cerrar modal al hacer click fuera o presionar Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
     <div className="create-viewer-modal-overlay">
-      <div className="create-viewer-modal">
+      <div className="create-viewer-modal" ref={modalRef}>
         <h2 className="create-viewer-title">
           <i className="fa-solid fa-solid fa-plus create-title-icon"></i>
           Crear nuevo visor
