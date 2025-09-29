@@ -162,9 +162,12 @@
 
 .no-viewers-message {
   text-align: center;
-  color: #000000;
-  font-size: 1.1rem;
+  font-size: 2rem;
   margin-top: 1.25rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .container-display-0 {
