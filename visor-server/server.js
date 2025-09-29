@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import puppeteer from 'puppeteer';
 import { config } from 'dotenv';
 import jwt from 'jsonwebtoken'
+import currentConfig from '../backend/config.js';
 
 const app = express();
 const port = 4000;
@@ -81,7 +82,7 @@ app.get('/map', async (req, res) => {
 
 
   try {
-    const response = await fetch(`http://172.20.202.88:3001/visores/share?shareToken=${sharetoken}&isTemporal=${isTemporal}`);
+    const response = await fetch(`http://${currentConfig.IP}:${currentConfig.API_PORT}/visores/share?shareToken=${sharetoken}&isTemporal=${isTemporal}`);
     configInyectada = await response.json(); // Devuelve campo .error si no se pudo
 
     if (configInyectada.error) {
@@ -316,7 +317,7 @@ app.post('/kharta/custom', async (req, res) => {
     });
 
     // Navigate to the temporary route
-    await page.goto(`http://172.20.202.88:${port}${tempRoutePath}`, {
+    await page.goto(`http://${currentConfig.IP}:${port}${tempRoutePath}`, {
       waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
       timeout: 30000
     });
