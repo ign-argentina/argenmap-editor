@@ -212,7 +212,7 @@ const ViewerManager = () => {
                     className={currentFilter === "my-visors" ? "active" : ""}
                     onClick={() => handleChange("my-visors")}
                   >
-                    PROPIOS
+                    MIS VISORES
                   </button>
                 )}
 
