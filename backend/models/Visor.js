@@ -53,7 +53,7 @@ const SELECT_GROUP_VISORS = `
 
 const GET_SHARE_TOKEN = `SELECT sharetoken FROM visores WHERE id = $1`
 
-const GET_BY_SHARE_TOKEN = `SELECT cid FROM visores WHERE sharetoken = $1 AND ($2::boolean = true OR isshared = true);`
+const GET_BY_SHARE_TOKEN = `SELECT cid FROM visores WHERE sharetoken = $1 AND ($2::boolean = true OR isshared = true OR publico = true);`
 
 const CHANGE_SHARE_STATUS = `UPDATE visores SET isshared = NOT isshared WHERE id = $1 RETURNING 1`
 
@@ -170,6 +170,7 @@ class Visor extends BaseModel {
   static getConfigIdByShareToken = async (shareToken, isTemporal) => {
     try {
       const result = await super.runQuery(GET_BY_SHARE_TOKEN, [shareToken, isTemporal]);
+
       return result.length > 0 ? result?.[0].cid : null;
     } catch (err) {
       console.error("Error en Visor.getConfigIdByShareToken:", err);

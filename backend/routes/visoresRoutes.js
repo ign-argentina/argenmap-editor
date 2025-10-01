@@ -17,7 +17,7 @@ visoresRoutes.put("/", PROTECT.REQUIRE_AUTH, visorController.updateVisor)
 visoresRoutes.delete("/", PROTECT.REQUIRE_AUTH, visorController.deleteVisor);
 
 visoresRoutes.get("/", visorController.getAllVisors);
-visoresRoutes.post("/share", PROTECT.REQUIRE_AUTH, visorController.createShareLink);
+visoresRoutes.post("/share", visorController.createShareLink);
 visoresRoutes.get("/share", visorController.getConfigByShareToken);
 visoresRoutes.get("/:id", visorController.getVisorById);
 visoresRoutes.post("/share/status", PROTECT.REQUIRE_AUTH, visorController.changeIsSharedStatus)
