@@ -143,7 +143,7 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     <div className="save-viewer-modal-overlay">
       <div className="save-viewer-modal">
         <h3>{editorMode && !cloneMode ? "Guardar Cambios" : "Crear Nuevo Visor"}</h3>
-        <span>{cloneMode ? "Crearás un nuevo visor para el grupo seleccionado" : null}</span>
+{/*         <span>{cloneMode ? "Crearás un nuevo visor con las mismas caracteristicas que este" : null}</span> */}
         <input
           type="text"
           placeholder="Nombre del visor"

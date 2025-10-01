@@ -45,7 +45,7 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
       )}
 
       {isAuth && <button className="btn-common" onClick={() => {
-        setCloneMode(true);
+        setCloneMode(true);    
         setShowSaveModal(true);
       }}>
         <i className="fa-solid fa-floppy-disk"></i>

@@ -11,11 +11,20 @@ const UPDATE_USER = `UPDATE usuarios SET name = COALESCE($1, name), lastname = C
 
 const IS_SUPER_ADMIN = `SELECT superadmin FROM usuarios WHERE id = $1`;
 
-const IS_GROUP_ADMIN = `
+/* const IS_GROUP_ADMIN = `
   SELECT EXISTS (
     SELECT 1
     FROM usuarios_por_grupo
     WHERE usuarioId = $1 AND rolId = 2
+  ) as groupadmin
+`; */
+
+const IS_GROUP_ADMIN = `
+  SELECT EXISTS (
+    SELECT 1
+    FROM usuarios_por_grupo ug
+    JOIN grupos g ON ug.grupoId = g.id
+    WHERE ug.usuarioId = $1 AND ug.rolId = 2 AND g.deleted = false
   ) as groupadmin
 `;
 

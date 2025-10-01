@@ -6,7 +6,7 @@ import defaultPreferences from '../../static/defaultPreferences';
 import currentViewer from '../../api/visorApi.js';
 import './ArgenmapForm.css';
 
-function ArgenmapForm({ config, editorMode, viewer }) {
+function ArgenmapForm({ config, editorMode = false, viewer }) {
   const [data, setData] = useState(config.data || null);
   const [preferences, setPreferences] = useState(config.preferences || defaultPreferences);
   const [debouncedData, setDebouncedData] = useState(null);

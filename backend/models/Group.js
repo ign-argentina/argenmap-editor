@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js";
 
 const GET_GROUP_LIST = `SELECT g.* FROM grupos g JOIN usuarios_por_grupo ug ON ug.grupoId = g.id WHERE ug.usuarioId = $1 AND ($2::int IS NULL OR ug.rolId = $2) AND g.deleted = false ORDER BY g.id ASC; `
-const GET_GROUP_ADMIN_LIST = 'SELECT * FROM grupos ORDER BY id ASC' 
+const GET_GROUP_ADMIN_LIST = 'SELECT * FROM grupos WHERE deleted = false ORDER BY id ASC ';
 
 // Le enviamos 2 parámetros. userId y groupId. Si el userId no llega, es porque la peticion la hizo un superadmin, por lo tanto devuelve directamente.
 // Si llega, es porq es un usuario y corrobora que sea admin del grupo antes de devolverlo
@@ -159,11 +159,10 @@ class Group extends BaseModel {
     return await super.runQuery('UPDATE grupos SET name = $1, description = $2, img = $3 WHERE id = $4 RETURNING true', [name, description, img, gid])
   }
 
-  static isMember = async (uid, groupid) => {
+  static isMemberOfThisGroup = async (uid, groupid) => {
     const data = await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2)', [groupid, uid]);
     return data[0]?.exists ?? false;
   }
 }
-
 
 export default Group

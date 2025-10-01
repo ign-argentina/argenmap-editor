@@ -51,7 +51,7 @@ const CreateViewerModal = ({ isOpen, onClose }) => {
             className="create-option"
             title="Crear visor Argenmap"
             onClick={() => {
-              navigate('/form', { state: { isArgenmap: true } });
+              navigate('/form', { state: { isArgenmap: true} });
             }}
           >
             <img src={logoArgenmap} alt="Argenmap" />
