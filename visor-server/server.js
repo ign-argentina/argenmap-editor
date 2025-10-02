@@ -85,9 +85,9 @@ app.get('/map', async (req, res) => {
   if (apikey) {
     const referer = req.get('Referer');
     const allowedDomains = [
-      'http://localhost:5173', // Desarrollo
-      'http://172.20.202.88:5173', // IP de desarrollo
-      process.env.FRONTEND_URL  // Producción (Pasar todo a .env proximamente)
+      process.env.VITE_DEV_IP, // Desarrollo
+      process.env.VITE_UAT_IP, // UAT de desarrollo
+      process.env.VITE_PROD_IP  // Producción
     ].filter(Boolean);
 
     const isFromAllowedDomain = allowedDomains.some(domain => 
