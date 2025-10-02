@@ -199,7 +199,7 @@ class VisorController {
         return res.status(400).json({ error: 'Falta el ID del visor' });
       }
 
-      const result = apiKey ? await this.visorService.publicShareLink(visorid) : await this.visorService.createShareLink(token, visorid, visorgid, expires);
+      const result = apiKey ? await this.visorService.publicShareLink(visorid, apiKey) : await this.visorService.createShareLink(token, visorid, visorgid, expires);
 
       return result.success ? res.status(200).json(result) : res.status(403).json({ error: result.error });
     } catch (err) {
@@ -210,9 +210,13 @@ class VisorController {
 
   getConfigByShareToken = async (req, res) => { // ASEGURAR CON HEADERS PROVENIENTES DEL VISOR SERVER PARA QUE EL ACCESO SEA SOLO DESDE AHI.
     try {
-      const { shareToken, isTemporal } = req.query;
+      const { shareToken, isTemporal, apikey } = req.query;
 
-      const result = shareToken ? await this.visorService.getConfigByShareToken(shareToken, isTemporal) : null
+      const result = await this.visorService.getConfigByShareToken(
+        shareToken, 
+        isTemporal === 'true', 
+        apikey
+      );
 
       return result.success ? res.status(200).json(result.data) : res.status(403).json({ error: result.error });
     } catch (error) {
