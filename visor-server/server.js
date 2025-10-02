@@ -85,9 +85,9 @@ app.get('/map', async (req, res) => {
   if (apikey) {
     const referer = req.get('Referer');
     const allowedDomains = [
-      process.env.VITE_DEV_IP, // Desarrollo
-      process.env.VITE_UAT_IP, // UAT de desarrollo
-      process.env.VITE_PROD_IP  // Producción
+      `http://${process.env.VITE_DEV_IP}`, // Desarrollo
+      `http://${process.env.VITE_UAT_IP}`, // UAT de desarrollo
+      `http://${process.env.VITE_PROD_IP}`  // Producción http://
     ].filter(Boolean);
 
     const isFromAllowedDomain = allowedDomains.some(domain => 
