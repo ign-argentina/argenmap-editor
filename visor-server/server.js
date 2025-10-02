@@ -8,6 +8,8 @@ import puppeteer from 'puppeteer';
 import { config } from 'dotenv';
 import jwt from 'jsonwebtoken'
 import currentConfig from '../backend/config.js';
+// Cargar variables de entorno
+config();
 
 const app = express();
 const port = 4000;
@@ -60,29 +62,62 @@ app.post('/argenmap/custom', async (req, res) => {
 // REFACTOR Y DEJAR LINDO
 app.get('/map', async (req, res) => {
   const { view } = req.query;
-  let sharetoken = null;
-  let apikey = null;
-  let isTemporal = false
-  try {
-    const decoded = jwt.verify(view, "SECRET")
-    sharetoken = decoded.sharetoken
-    apikey = decoded.apikey
-    isTemporal = !!decoded.exp;
-  } catch (error) {
-  }
 
-  // Debe tener al menos uno de los dos campos
-  if (!view || (!sharetoken && !apikey)) {
+  if (!view) {
     return res.status(404).send("Acceso inválido");
   }
+
+  // Decodificar JWT para obtener sharetoken y apikey
+  let sharetoken = view;
+  let apikey = null;
+  let isTemporal = false;
+
+  try {
+    const decoded = jwt.verify(view, "SECRET");
+    sharetoken = decoded.sharetoken;
+    apikey = decoded.apikey;
+    isTemporal = !!decoded.exp;
+  } catch (error) {
+    // Si falla la decodificación, usar view como sharetoken directo
+  }
+
+  // Si tiene apikey, verificar que venga del dominio correcto
+  if (apikey) {
+    const referer = req.get('Referer');
+    const allowedDomains = [
+      'http://localhost:5173', // Desarrollo
+      'http://172.20.202.88:5173', // IP de desarrollo
+      process.env.FRONTEND_URL  // Producción (Pasar todo a .env proximamente)
+    ].filter(Boolean);
+
+    const isFromAllowedDomain = allowedDomains.some(domain => 
+      referer && referer.startsWith(domain)
+    );
+
+    if (!isFromAllowedDomain) {
+      // Si tiene apikey pero no viene de un dominio permitido, nulleamos apikey
+      apikey = null;
+    }
+  }
+
   ///////////////////////////////
   // TEST MEJORAR PROXIMAMENTE //
   ///////////////////////////////
   let configInyectada = null;
 
-
   try {
-    const response = await fetch(`http://${currentConfig.IP}:${currentConfig.API_PORT}/visores/share?shareToken=${sharetoken}&isTemporal=${isTemporal}`);
+    // Construir URL con todos los parámetros
+    let fetchUrl = `http://${currentConfig.IP}:${currentConfig.API_PORT}/visores/share?shareToken=${sharetoken}`;
+    
+    if (isTemporal) {
+      fetchUrl += `&isTemporal=true`;
+    }
+    
+    if (apikey) {
+      fetchUrl += `&apikey=${apikey}`;
+    }
+
+    const response = await fetch(fetchUrl);
     configInyectada = await response.json(); // Devuelve campo .error si no se pudo
 
     if (configInyectada.error) {
