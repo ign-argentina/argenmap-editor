@@ -152,7 +152,9 @@ function DataForm({ data, onDataChange }) {
               </div>
               <div>
                 <span className="accordion-caret">{openMapas.includes(index) ? '▾' : '▸'}</span>
-                <button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarMapa(index); }} title="Eliminar Mapa">🗑️</button>
+                <button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarMapa(index); }} title="Eliminar Mapa">
+                  <i className="fas fa-trash-alt"></i>
+                </button>
               </div>
             </div>
             {openMapas.includes(index) && (
@@ -172,12 +174,23 @@ function DataForm({ data, onDataChange }) {
                   <div className="form-group"><label>Imagen de leyenda (opcional)</label><input placeholder="URL de la imagen de la leyenda" value={capa.legendImg || ""} onChange={(e) => handleMapaChange(index, "legendImg", e.target.value)} /></div>
                 </div>
 
-                <strong>Zoom</strong>
                 <div className="zoom-inputs">
-                  <input type="number" placeholder="min" value={capa.zoom.min || ""} onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)} />
-                  <input type="number" placeholder="max" value={capa.zoom.max || ""} onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)} />
-                  <input type="number" placeholder="nativeMin" value={capa.zoom.nativeMin || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMin", e.target.value)} />
-                  <input type="number" placeholder="nativeMax" value={capa.zoom.nativeMax || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMax", e.target.value)} />
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">min</label>
+                    <input type="number" value={capa.zoom.min || ""} onChange={(e) => handleMapaZoomChange(index, "min", e.target.value)} />
+                  </div>
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">max</label>
+                    <input type="number" value={capa.zoom.max || ""} onChange={(e) => handleMapaZoomChange(index, "max", e.target.value)} />
+                  </div>
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">nativeMin</label>
+                    <input type="number" value={capa.zoom.nativeMin || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMin", e.target.value)} />
+                  </div>
+                  <div className="zoom-input-group">
+                    <label className="zoom-label">nativeMax</label>
+                    <input type="number" value={capa.zoom.nativeMax || ""} onChange={(e) => handleMapaZoomChange(index, "nativeMax", e.target.value)} />
+                  </div>
                 </div>
               </div>
             )}
@@ -198,7 +211,7 @@ function DataForm({ data, onDataChange }) {
         <div key={index} className="accordion-item">
           <div className="accordion-header" onClick={() => toggleCapa(index)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleCapa(index); }}>
             <div className="accordion-title"><span>{capa.nombre || '(sin nombre)'}</span><span className="section-badge">{"- " + capa.seccion || 'sin sección'}</span></div>
-            <div><span className="accordion-caret">{openCapas.includes(index) ? '▾' : '▸'}</span><button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarCapa(index); }} title="Eliminar Capa">🗑️</button></div>
+            <div><span className="accordion-caret">{openCapas.includes(index) ? '▾' : '▸'}</span><button className="button-delete" onClick={(e) => { e.stopPropagation(); eliminarCapa(index); }} title="Eliminar Capa"><i className="fas fa-trash-alt"></i></button></div>
           </div>
           {openCapas.includes(index) && (
             <div className="accordion-content">

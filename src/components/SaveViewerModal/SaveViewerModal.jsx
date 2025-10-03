@@ -4,6 +4,7 @@ import './SaveViewerModal.css';
 import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
+import currentViewer from '../../api/visorApi.js';
 
 const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMode = false, getWorkingConfig }) => {
 
@@ -23,8 +24,8 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     setGroupList(groups);
   }
 
-  const handleSelectChange = async (e) => {
-    if (e.target.value === "no-group" || e.target.value === "") {
+  const handleSelectGroupChange = async (e) => {
+    if (e.target.value === "no-group" || e.target.value === "my-visors") {
       setSelectedGroup(null)
       setIsPublic(false)
     } else {
@@ -41,9 +42,9 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     const config = getWorkingConfig();
 
     setIsCapturing(true);
-
     try {
-      const response = await fetch('http://localhost:4000/kharta/custom', {
+      // SACAR HARCODEO
+      const response = await fetch(`http://${currentViewer.IP}:${currentViewer.API_PORT}/kharta/custom`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -109,7 +110,7 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
       setName('');
       setDescription('');
       setImageData(null);
-      sessionStorage.setItem("lastGroupPicked", `${selectedGroup}`);
+      sessionStorage.setItem("lastGroupPicked", `${(selectedGroup === null ? "my-visors" : selectedGroup)}`);
       navigate('/');
     } else {
       showToast("El visor debe ser asignado en un grupo.", "error")
@@ -142,7 +143,7 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     <div className="save-viewer-modal-overlay">
       <div className="save-viewer-modal">
         <h3>{editorMode && !cloneMode ? "Guardar Cambios" : "Crear Nuevo Visor"}</h3>
-        <span>{cloneMode ? "Crearás un nuevo visor para el grupo a partir de las mismas caracteristicas que este" : null}</span>
+{/*         <span>{cloneMode ? "Crearás un nuevo visor con las mismas caracteristicas que este" : null}</span> */}
         <input
           type="text"
           placeholder="Nombre del visor"
@@ -201,14 +202,14 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
         {(!editorMode && isAuth) ?
           <>
             <h3>Selecciona un grupo al cual quieras agregar este editor</h3>
-            <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
+            <select defaultValue="no-group" id="group-select" onChange={handleSelectGroupChange}>
               <option disabled value="no-group">-- Selecciona un grupo --</option>
               {groupList?.map((grupo) => (
                 <option key={grupo.id} value={grupo.id}>
                   {grupo.name}
                 </option>
               ))}
-              <option key={null} value="">
+              <option key={null} value="my-visors">
                 Mis Visores
               </option>
             </select>

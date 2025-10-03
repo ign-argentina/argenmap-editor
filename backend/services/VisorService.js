@@ -3,11 +3,15 @@ import Visor from "../models/Visor.js";
 import Result from "../utils/Result.js";
 import Group from '../models/Group.js';
 import User from '../models/User.js';
+import AuthService from './AuthService.js';
 import { validate } from 'uuid';
-
+import jwt from 'jsonwebtoken'
 import { config } from 'dotenv';
 
 class VisorService {
+  constructor() {
+    this.authService = new AuthService();
+  }
 
   createVisor = async (uid, groupid = null, name, description, configJson, img, isPublic = false) => {
     try {
@@ -133,7 +137,7 @@ class VisorService {
   getGroupVisors = async (uid, groupid) => {
     try {
       let result = []
-      if (await Group.isMember(uid, groupid) || await User.isSuperAdmin(uid)) {
+      if (await Group.isMemberOfThisGroup(uid, groupid) || await User.isSuperAdmin(uid)) {
         result = await Visor.getGroupVisors(groupid)
       }
 
@@ -144,11 +148,14 @@ class VisorService {
     }
   }
 
-  createShareLink = async (uid, visorId, visorgid) => {
+
+  /* Actualmente, si abris el link desde el editor para previsualizar y envio el link a otra persona del mismo 
+   * que me aparece, va a poder acceder. Ver como validar esto, si una apikey, externalkey o algi asi
+   * Como solucion momentanea, si no llega nada (porque el front no envia ningun expiratioNtime) la setea en 10 segs*/
+  createShareLink = async (token, visorId, visorgid, expirationTime = 10) => {
     try {
-
-      const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
-
+      const { uid } = this.authService.getDataToken(token)
+      const haveAccessToVisor = visorgid && (await Group.isMemberOfThisGroup(uid, visorgid) || await User.isSuperAdmin(uid));
       const isVisorOwner = !visorgid && await Visor.isOwner(visorId, uid);
 
       if (!haveAccessToVisor && !isVisorOwner) {
@@ -157,20 +164,38 @@ class VisorService {
 
       const result = await Visor.getShareToken(visorId);
 
+      // Si es permanente, generamos siempre el mismo hash. Si no, genera uno con el expiresIn
+      const expires = expirationTime === "x" ? { noTimestamp: true } : { expiresIn: expirationTime }
+      const shareHash = jwt.sign({ sharetoken: result[0].sharetoken }, "SECRET", expires)
+
       return result.length > 0
-        ? Result.success(result[0].sharetoken)
+        ? Result.success(shareHash)
         : Result.fail("No se ha podido generar el link");
     } catch (error) {
-      console.log("VISORES: Error en la capa de servicio")
-      return Result.fail("Error en la capa de servicio")
+      console.log("VISORES: Error en la capa de servicio", error)
+      return Result.fail("Error en la capa de servicio",)
     }
   }
+
+  publicShareLink = async (visorId, apiKey) => {
+    const result = await Visor.getShareToken(visorId);
+    const shareHash = jwt.sign({ sharetoken: result[0].sharetoken, apikey: apiKey }, "SECRET", { noTimestamp: true })
+    return result.length > 0
+      ? Result.success(shareHash)
+      : Result.fail("No se ha podido generar el link");
+  }
+  /*   #signToken = async (userId) => {
+      const isAdmin = await User.isSuperAdmin(userId)
+      const isGroupAdmin = await User.isGroupAdmin(userId)
+      return jwt.sign({ uid: userId, isa: isAdmin, isag: isGroupAdmin }, process.env.JWT_SECRET, { expiresIn: parseInt(process.env.JWT_EXPIRES) })
+    } */
 
   changePublicStatus = async (uid, visorid, visorgid = null) => {
     try {
       let result = []
 
       const haveAccessToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) || await User.isSuperAdmin(uid));
+
 
       if (haveAccessToVisor) {
         result = await Visor.changePublicStatus(visorid)
@@ -183,11 +208,34 @@ class VisorService {
     }
   }
 
-  getConfigByShareToken = async (shareToken) => {
+  changeIsSharedStatus = async (uid, visorid, visorgid) => {
+    try {
+      let result = []
+      const isVisorOwner = !visorgid && await Visor.isOwner(visorid, uid);
+      let haveAccesToVisor = false
+
+      if (visorgid && !isVisorOwner) {
+        haveAccesToVisor = visorgid && (await Group.isAdminForThisGroup(visorgid, uid) ||
+          await Group.isEditorForThisGroup(visorgid, uid) ||
+          await User.isSuperAdmin(uid))
+      }
+
+      result = (haveAccesToVisor || isVisorOwner) ? await Visor.changeIsSharedStatus(visorid) : result
+
+      return result.length > 0 ? Result.success(result) : Result.fail("Nose ha podido cambiar el estado del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio")
+      console.log(error)
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  getConfigByShareToken = async (shareToken, isTemporal, apikey) => {
     try {
       let config = null
+
       if (validate(shareToken)) {
-        const visor = await Visor.getConfigIdByShareToken(shareToken)
+        const visor = await Visor.getConfigIdByShareToken(shareToken, isTemporal, apikey)
 
         if (visor) {
           config = await Config.getConfigById(visor);
@@ -198,6 +246,46 @@ class VisorService {
       return config ? Result.success(config) : Result.fail("No se ha podido recuperar la configuracion del visor")
     } catch (error) {
       console.log("VISORES: Error en la capa de servicio [getConfigByShareToken]")
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  restoreViewer = async (viewerid, uid, groupid) => {
+    try {
+      let result = []
+      const isVisorOwner = !groupid && await Visor.isOwner(groupid, uid);
+      let haveAccesToVisor = false
+
+      if (groupid && !isVisorOwner) {
+        haveAccesToVisor = groupid && (await Group.isAdminForThisGroup(groupid, uid) ||
+          await User.isSuperAdmin(uid))
+      }
+
+      result = (haveAccesToVisor || isVisorOwner) ? await Visor.restoreViewer(viewerid) : result
+
+      return result ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio [restoreViewer]")
+      return Result.fail("Error en la capa de servicio")
+    }
+  }
+
+  getDeletedViewers = async (uid, groupid) => {
+    try {
+      const isVisorOwner = !groupid && await Visor.isOwner(groupid, uid);
+      let isGroupAdmin = false
+
+
+      if (groupid && !isVisorOwner) {
+        isGroupAdmin = groupid && (await Group.isAdminForThisGroup(groupid, uid) ||
+          await User.isSuperAdmin(uid))
+      }
+
+      const result = (isGroupAdmin) ? await Visor.getDeletedViewersFromGroup(groupid) : await Visor.getMyDeletedViewers(uid)
+
+      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
+    } catch (error) {
+      console.log("VISORES: Error en la capa de servicio [getDeletedViewers]")
       return Result.fail("Error en la capa de servicio")
     }
   }

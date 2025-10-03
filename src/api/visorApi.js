@@ -1,6 +1,6 @@
 const mode = import.meta.env.VITE_MODE;
 
-const visorServer = {
+const viewerServer = {
   dev: {
     IP: import.meta.env.VITE_DEV_IP_VISOR,
     API_PORT: import.meta.env.VITE_DEV_VISOR_SERVER_PORT,
@@ -15,6 +15,6 @@ const visorServer = {
   },
 };
 
-const currentVisor = visorServer[mode] || visorServer['dev'];
+const currentViewer = viewerServer[mode] || viewerServer['dev'];
 
-export default currentVisor;
+export default currentViewer;

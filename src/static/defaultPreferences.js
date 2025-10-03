@@ -144,7 +144,7 @@ const defaultPreferences = {
     },
   },
   mainPopup: {
-    isActive: true,
+    isActive: false,
     welcomeSign: "Novedades",
     image: "",
     text: `<div class='modal-overlay' style='width:100%;height:100%;display:flex;justify-content:center;align-items:center;z-index:1000;'>

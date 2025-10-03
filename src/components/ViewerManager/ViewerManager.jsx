@@ -10,6 +10,10 @@ import { useToast } from '../../context/ToastContext';
 import { downloadViewer } from '../../utils/ViewerHandler';
 import { createShareLink } from '../../api/configApi.js';
 import currentVisor from '../../api/visorApi.js';
+import noImage from '../../assets/no-image.png';
+import logoArgenmap from '../../assets/logoArgenmap.png';
+import logoKharta from '../../assets/logoKharta.png';
+import cartografiaImage from '../../assets/cartografia.jpg';
 import './ViewerManager.css';
 import '../Preview/Preview.css';
 
@@ -83,7 +87,7 @@ const ViewerManager = () => {
       await deleteVisor(visorid, visorgid);
       showToast("Visor eliminado con éxito", "success");
       setSelectedViewer(null);
-      const vl = await getGroupVisors(visorgid)
+      const vl = currentFilter === "my-visors" ? await getMyVisors() : await getGroupVisors(visorgid)
       setViewers(vl)
     } catch (error) {
       console.error("Error al eliminar el visor:", error);
@@ -103,11 +107,15 @@ const ViewerManager = () => {
       } else {
         setGroupList([]);
         setSelectedViewer(null);
+        setShowDescriptionModal(false);
+        setCurrentFilter("public-visors");
+        sessionStorage.setItem("lastGroupPicked", "public-visors");
       }
 
       try {
         let vl, access;
-        if (currentFilter === "public-visors") {
+        if (currentFilter === "public-visors" || !isAuth) {
+          // fallback to publicos if not authenticated
           vl = await getPublicVisors();
           access = PUBLIC_VISOR_ACCESS;
         } else if (currentFilter === "my-visors") {
@@ -152,6 +160,7 @@ const ViewerManager = () => {
   }
 
   const handleChange = async (value) => {
+    const lastPicked = sessionStorage.getItem("lastGroupPicked")
     setSelectedViewer(null);
     setShowDescriptionModal(false);
     setCurrentFilter(value);
@@ -166,7 +175,7 @@ const ViewerManager = () => {
       const vl = await getMyVisors();
       setViewers(vl);
 
-    } else if (value !== '') {
+    } else if (value !== '' && value != lastPicked) {
       const vl = await getGroupVisors(value);
       const access = await getPermissions(value);
       setAccess(access);
@@ -176,7 +185,7 @@ const ViewerManager = () => {
   };
 
   const redirectToViewerShare = async (viewer) => {
-    const response = await createShareLink(viewer.id, viewer.gid)
+    const response = await createShareLink(viewer.id, viewer.gid, undefined, import.meta.env.VITE_FRONT_APIKEY)
     if (response.success) {
       window.open(`http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`, "_blank");
     }
@@ -184,7 +193,7 @@ const ViewerManager = () => {
 
   return (
     <>
-      <div className='container-display-0'>
+      <div className='container-display-0' style={{ '--cartografia-bg': `url(${cartografiaImage})` }}>
         <div className="viewer-content flex-1">
           <div className="viewer-modal">
             <h2>GESTOR DE VISORES</h2>
@@ -203,7 +212,7 @@ const ViewerManager = () => {
                     className={currentFilter === "my-visors" ? "active" : ""}
                     onClick={() => handleChange("my-visors")}
                   >
-                    PROPIOS
+                    MIS VISORES
                   </button>
                 )}
 
@@ -238,7 +247,6 @@ const ViewerManager = () => {
 
             <div className="viewer-modal-container">
               <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
-                <div className="background-overlay" />
                 <div className="viewer-list">
                   {isLoading ? (
                     <div className="loading-message">
@@ -299,7 +307,7 @@ const ViewerManager = () => {
                         </div>
 
                         <img
-                          src={viewer.img || '/assets/no-image.png'}
+                          src={viewer.img || noImage}
                           alt="img"
                           className="viewer-image"
                         />
@@ -319,13 +327,13 @@ const ViewerManager = () => {
                             )}
                             {viewer.isArgenmap ? (
                               <img
-                                src={'/assets/logoArgenmap.png'}
+                                src={logoArgenmap}
                                 alt="Visor Argenmap"
                                 title="Visor Argenmap"
                                 className='viewer-card-logo'
                               />) : (
                               <img
-                                src={'/assets/logoKharta.png'}
+                                src={logoKharta}
                                 alt="Visor Kharta"
                                 title="Visor Kharta"
                                 className='viewer-card-logo'
@@ -365,26 +373,29 @@ const ViewerManager = () => {
               </div>
             </div>
 
-            {showDescriptionModal && (
+            {showDescriptionModal && selectedViewer && (
               <div className="viewer-description">
                 <div className="viewer-info-row">
                   <div className="viewer-info-text">
                     <h3>{selectedViewer.name}</h3>
+                    <div className='viewer-desc-divider'></div>
                     <p>{selectedViewer.description}</p>
                     <p className="viewer-date">
-                      {new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
-                      })}
+                      {selectedViewer.lastupdate
+                        ? new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })
+                        : "Fecha no disponible"}
                     </p>
                     <p className="viewer-privacy">
                       {selectedViewer.publico ? 'Público' : 'Privado'}
                     </p>
-                    <h3>Grupo: {selectedViewer.gname || 'Grupo: Sin grupo'}</h3>
+                    <h3>Grupo: {selectedViewer.gname || 'Sin grupo'}</h3>
                   </div>
                   <img
-                    src={selectedViewer?.gimg || '/assets/no-image.png'}
+                    src={selectedViewer.gimg || noImage}
                     alt="Imagen del grupo"
                     className="group-image-right"
                   />
@@ -458,13 +469,24 @@ const ViewerManager = () => {
                 {selectedViewer?.publico ? "Despublicar" : "Publicar"}
               </button>}
 
-              {((access?.sa || access?.ga) && !access?.myvisors && selectedViewer) && <button
+              {((access?.sa || access?.ga || access?.myvisors) && selectedViewer) && <button
                 onClick={() => {
                   setShowShareViewerModal(true);
                   closeContextMenu();
                 }} title="Compartir Visor">
                 <i className="fa-solid fa-share"></i>
                 Compartir
+              </button>}
+
+              {(currentFilter === "public-visors" && selectedViewer) && <button
+                onClick={async () => {
+                  const response = await createShareLink(selectedViewer.id, selectedViewer.gid, undefined, import.meta.env.VITE_FRONT_APIKEY)
+                  if (response.success) {
+                    alert(`http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`)
+                  }
+                }} title="Compartir Visor">
+                <i className="fa-solid fa-share"></i>
+                Copiar link de acceso
               </button>}
 
               <button
@@ -475,7 +497,7 @@ const ViewerManager = () => {
                 Descargar
               </button>
 
-              {(access?.sa || access?.ga) && <button
+              {(access?.sa || access?.ga || access?.myvisors) && <button
                 className="btn-delete"
                 onClick={() =>
                   pedirConfirmacion({

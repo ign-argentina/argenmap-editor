@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-
+import currentViewer from '../../api/visorApi';
 function Preview({ config }) {
   const iframeName = 'previewIframe';
   const formRef = useRef(null);
@@ -15,7 +15,7 @@ function Preview({ config }) {
       <form
         ref={formRef}
         method="POST"
-        action="http://localhost:4000/kharta"
+        action={`http://${currentViewer.IP}:${currentViewer.API_PORT}`}
         target={iframeName}
         style={{ display: 'none' }}
       >

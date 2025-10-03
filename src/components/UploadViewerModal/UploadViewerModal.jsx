@@ -1,17 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useToast } from '../../context/ToastContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import './UploadViewerModal.css';
+import logoArgenmap from '../../assets/logoArgenmap.png';
+import logoKharta from '../../assets/logoKharta.png';
 
 const UploadViewerModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const { showToast } = useToast()
   const [hoverText, setHoverText] = useState("");
   const [khartaFile, setKhartaFile] = useState(null);
   const [khartaError, setKhartaError] = useState("");
   const [preferencesFile, setPreferencesFile] = useState(null);
   const [dataFile, setDataFile] = useState(null);
   const [error, setError] = useState("");
+  const [selectedType, setSelectedType] = useState('')
+  const modalRef = useRef(null);
+
+  // Cerrar modal al hacer click fuera o presionar Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+
+  const handleSelectType = (type) => {
+    setSelectedType(type);
+  };
 
   const handleUploadKhartaFile = (event) => {
     const file = event.target.files[0];
@@ -21,7 +50,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     reader.onload = (e) => {
       try {
         const json = JSON.parse(e.target.result);
-
+        //Kharta validation
         if (!json.configVersion) {
           throw new Error("El JSON no tiene la propiedad 'configVersion'");
         }
@@ -46,47 +75,54 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
     reader.readAsText(file);
   };
 
-  const validateFile = (file, content) => {
+  const validateArgenmapFiles = (file, content) => {
     try {
       const json = JSON.parse(content);
 
-      // Validar preferences.json
-      if (file.name.toLowerCase().includes("preferences")) {
-        if (!json.mapConfig || !json.table || !json.charts) {
-          throw new Error("Estructura inválida en preferences.json");
-        }
+      // Validar por estructura → preferences.json
+      if (json.mapConfig && json.table && json.charts && json.searchbar && json.geoprocessing) {
         setPreferencesFile({ file, json });
         return;
       }
 
-      // Validar data.json
-      if (file.name.toLowerCase().includes("data")) {
-        if (!Array.isArray(json.items)) {
-          throw new Error("Estructura inválida en data.json");
+      // Validar por estructura → data.json
+      if (Array.isArray(json.items)) {
+        const items = json.items;
+
+        if (items.length === 0) {
+          throw new Error("El archivo data.json esta vacío");
         }
+
+        // Validamos que los objetos tengan al menos una de estas claves esperadas
+        const hasValidStructure = items.some(item =>
+          item.type ||
+          item.nombre ||
+          item.servicio ||
+          item.host ||
+          (Array.isArray(item.capas) && item.capas.length > 0)
+        );
+
+        if (!hasValidStructure) {
+          throw new Error("El archivo data.json esta vacío");
+        }
+
         setDataFile({ file, json });
         return;
       }
 
       throw new Error("El archivo no es válido para Argenmap");
     } catch (err) {
-      setError(`${file.name}: ${err.message}`);
+      setError(`${file.name}: El archivo no es válido`);
     }
   };
 
   const handleFiles = (files) => {
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      reader.onload = (e) => validateFile(file, e.target.result);
+      reader.onload = (e) => validateArgenmapFiles(file, e.target.result);
       reader.readAsText(file);
     });
   };
-
-  // const handleDrop = (e) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   handleFiles(e.dataTransfer.files);
-  // };
 
   const handleInputChange = (e) => {
     setError("");
@@ -113,7 +149,7 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="upload-viewer-modal-overlay">
-      <div className="upload-viewer-modal">
+      <div className="upload-viewer-modal" ref={modalRef}>
         <h2 className="create-viewer-title">
           <i className="fa-solid fa-upload upload-title-icon"></i>
           Subir nuevo visor
@@ -126,8 +162,11 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
         <div className="upload-viewer-options">
 
           <div
-            className="upload-option"
-            onClick={() => document.getElementById("fileInput").click()}
+            className={`upload-option ${selectedType === 'argenmap' ? 'selected' : ''}`}
+            onClick={() => {
+              handleSelectType('argenmap');
+              document.getElementById("fileInput").click();
+            }}
             onDrop={(e) => {
               e.preventDefault();
               setError("");
@@ -135,11 +174,11 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
             }}
             onDragOver={(e) => e.preventDefault()}
             onMouseEnter={() =>
-              setHoverText("Subir preferences.json y data.json para Argenmap")
+              setHoverText("Subí tus archivos de configuración Argenmap")
             }
             onMouseLeave={() => setHoverText("")}
           >
-            <img src="/assets/logoArgenmap.png" alt="Argenmap" />
+            <img src={logoArgenmap} alt="Argenmap" />
             <span>Argenmap</span>
 
             <input
@@ -155,20 +194,23 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
 
           <div className="upload-separator"></div>
 
-          <label
-            className="upload-option"
-            onClick={() => document.getElementById("fileInputKharta").click()}
-            onDrop={(e) => {
+          <div
+            className={`upload-option ${selectedType === 'kharta' ? 'selected' : ''}`}
+           /*  onClick={() => {
+              handleSelectType('kharta');
+              document.getElementById("fileInputKharta").click();
+            }} */
+         /*    onDrop={(e) => {
               e.preventDefault();
               const files = e.dataTransfer.files;
               if (files.length === 0) return;
               handleUploadKhartaFile({ target: { files } });
-            }}
-            onDragOver={(e) => e.preventDefault()}
-            onMouseEnter={() => setHoverText("Subí un archivo JSON válido para Kharta")}
+            }} */
+/*             onDragOver={(e) => e.preventDefault()} */
+            onMouseEnter={() => setHoverText("Kharta [En Desarrollo]"/* "Subí un archivo JSON válido para Kharta" */)}
             onMouseLeave={() => setHoverText("")}
           >
-            <img src="/assets/logoKharta.png" alt="Kharta" />
+            <img src={logoKharta} alt="Kharta" />
             <span>Kharta</span>
 
             <input
@@ -177,9 +219,8 @@ const UploadViewerModal = ({ isOpen, onClose }) => {
               accept=".json"
               style={{ display: "none" }}
               onChange={handleUploadKhartaFile}
-              onDrop={(e) => e.preventDefault()}
             />
-          </label>
+          </div>
 
         </div>
 

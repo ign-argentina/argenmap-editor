@@ -20,7 +20,7 @@
     "@jsonforms/core": "^3.5.1",
     "@jsonforms/material-renderers": "^3.5.1",
     "@jsonforms/react": "^3.5.1",
-    "axios": "^1.8.4",
+    "axios": "^1.12.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -49,6 +49,6 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
-    "vite": "^6.2.0"
+    "vite": "^6.3.6"
   }
 }

@@ -1,7 +1,7 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ */
 /* #242C4F
 R:37 G:44 B:79
 C:96% M:85% Y:38% K:38%
@@ -30,22 +30,22 @@ C:0% M:0% Y:0% K:0% */
 
   --primary--color: #242C4F;
   --secondary--color: #45658D;
-  --text--color: #ffffff;
+  --text--color: #FFFFFF;
   --active--color: #E7BA61;
+  --black-color: #141414;
 
   --primary-default--color: #242C4F;
   --secondary-default--color: #45658D;
-  --text-default--color: #ffffff;
+  --text-default--color: #FFFFFF;
   --active-default--color: #E7BA61;
 }
 
 /* RESET GOBAL de formato predeterminado de los navegadores (El famoso borde blanco al renderizar) */
 * {
   margin: 0;
-  box-sizing: border-box;
-  /* Con border-box el ellemento entero mide lo que se declara y el contenido se ajusta automaticamente
+  box-sizing: border-box;  /* Con border-box el elemento entero mide lo que se declara y el contenido se ajusta automaticamente
                               (Ejemplo 200px va a ser 200px en total) Con content-box el contenido mide 200px pero el elemento total puede medir mas sumando paddings, etc */
-  font-family: Helvetica;
+  font-family: Montserrat;
 }
 
 input[type='number'] {
@@ -84,16 +84,16 @@ main,
 .global-buttons button,
 .global-buttons label {
   border: none;
-  padding: 10px 15px;
-  border-radius: 3px;
+  padding: 0.625rem 0.9375rem;
+  border-radius: 0.1875rem;
   cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 50px;
+  height: 3.125rem;
   width: 100%;
-  margin-bottom: 5px;
-  font-size: 13px;
+  margin-bottom: 0.3125rem;
+  font-size: 0.8125rem;
   transition: background-color 0.3s;
   text-align: left;
   user-select: none;
@@ -162,15 +162,15 @@ main,
 /* LABEL del form */
 .css-1dpseql-MuiCardHeader-content {
   background-color: rgb(255, 255, 255);
-  padding: 5px;
-  border-radius: 5px;
+  padding: 0.3125rem;
+  border-radius: 0.3125rem;
 }
 
 /* CONTENIDO DEL FORM */
 .MuiGrid-root {
   background-color: rgb(255, 255, 255);
-  padding: 8px;
-  border-radius: 5px;
+  padding: 0.5rem;
+  border-radius: 0.3125rem;
 }
 
 /* .MuiCardContent-root {
@@ -212,8 +212,8 @@ main,
 
 /* Paddings de formularios */
 .css-46bh2p-MuiCardContent-root:last-child {
-  padding-bottom: 0px;
-  padding: 0px;
+  padding-bottom: 0;
+  padding: 0;
 }
 
 /* .css-46bh2p-MuiCardContent-root {

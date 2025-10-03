@@ -97,6 +97,13 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
+/* DISABLE KHARTA */
+.kharta-option:hover {
+  opacity: 0.6; 
+  box-shadow: none;  /* Sacar sombra */
+}
+
+
 .create-option img {
   width: 60px;
   height: 60px;

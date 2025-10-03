@@ -3,9 +3,10 @@ import DataForm from "./DataForm";
 import PreferencesForm from "./PreferencesForm";
 import ViewerButtonActions from '../ViewerButtonActions/ViewerButtonActions';
 import defaultPreferences from '../../static/defaultPreferences';
+import currentViewer from '../../api/visorApi.js';
 import './ArgenmapForm.css';
 
-function ArgenmapForm({ config, editorMode, viewer }) {
+function ArgenmapForm({ config, editorMode = false, viewer }) {
   const [data, setData] = useState(config.data || null);
   const [preferences, setPreferences] = useState(config.preferences || defaultPreferences);
   const [debouncedData, setDebouncedData] = useState(null);
@@ -102,7 +103,7 @@ function ArgenmapForm({ config, editorMode, viewer }) {
         <form
           ref={formRef}
           method="POST"
-          action="http://localhost:4000/argenmap/custom"
+          action={`http://${currentViewer.IP}:${currentViewer.API_PORT}/argenmap/custom`}
           target={iframeName}
           className="hidden-form"
         >

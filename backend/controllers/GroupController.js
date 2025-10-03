@@ -216,7 +216,6 @@ class GroupController {
       const { uid } = this.authService.getDataToken(token)
 
       const result = await this.groupService.getPermissions(uid, req.params.id)
-
       if (!result.success) {
         return res.status(403).json("Acceso denegado")
       }

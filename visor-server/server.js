@@ -6,6 +6,10 @@ import { existsSync, readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import puppeteer from 'puppeteer';
 import { config } from 'dotenv';
+import jwt from 'jsonwebtoken'
+import currentConfig from '../backend/config.js';
+// Cargar variables de entorno
+config();
 
 const app = express();
 const port = 4000;
@@ -48,26 +52,77 @@ app.post('/argenmap/custom', async (req, res) => {
     const html = await getArgenMap({ data, preferences })
     return res.status(200).send(html)
   } catch (err) {
-    console.error('Error loading index.html or JSON:', err);
     res.status(500).send('Server error');
   }
 });
 
 
-// Endpoint que sirve Kharta e inyecta configuracion || ESTE ENDPOINT SE USA PARA EL SHARE
+// ESTE ENDPOINT SE USA PARA EL SHARE
+// Endpoint que sirve Kharta e inyecta configuracion || 
+// REFACTOR Y DEJAR LINDO
 app.get('/map', async (req, res) => {
   const { view } = req.query;
 
   if (!view) {
-    return res.status(404).send("Acceso inválido")
+    return res.status(404).send("Acceso inválido");
   }
+
+  // Decodificar JWT para obtener sharetoken y apikey
+  let sharetoken = view;
+  let apikey = null;
+  let isTemporal = false;
+
+  try {
+    const decoded = jwt.verify(view, "SECRET");
+    sharetoken = decoded.sharetoken;
+    apikey = decoded.apikey;
+    isTemporal = !!decoded.exp;
+  } catch (error) {
+    // Si falla la decodificación, usar view como sharetoken directo
+  }
+
+  // Si tiene apikey, verificar que venga del dominio correcto
+  if (apikey) {
+    const referer = req.get('Referer');
+    const allowedDomains = [
+      `http://${process.env.VITE_DEV_IP}`, // Desarrollo
+      `http://${process.env.VITE_UAT_IP}`, // UAT de desarrollo
+      `http://${process.env.VITE_PROD_IP}`  // Producción http://
+    ].filter(Boolean);
+
+    const isFromAllowedDomain = allowedDomains.some(domain => 
+      referer && referer.startsWith(domain)
+    );
+
+    if (!isFromAllowedDomain) {
+      // Si tiene apikey pero no viene de un dominio permitido, nulleamos apikey
+      apikey = null;
+    }
+  }
+
   ///////////////////////////////
   // TEST MEJORAR PROXIMAMENTE //
   ///////////////////////////////
   let configInyectada = null;
+
   try {
-    const response = await fetch(`http://localhost:3001/visores/share?shareToken=${view}`);
+    // Construir URL con todos los parámetros
+    let fetchUrl = `http://${currentConfig.IP}:${currentConfig.API_PORT}/visores/share?shareToken=${sharetoken}`;
+    
+    if (isTemporal) {
+      fetchUrl += `&isTemporal=true`;
+    }
+    
+    if (apikey) {
+      fetchUrl += `&apikey=${apikey}`;
+    }
+
+    const response = await fetch(fetchUrl);
     configInyectada = await response.json(); // Devuelve campo .error si no se pudo
+
+    if (configInyectada.error) {
+      return res.status(404).send("This viewer is unavailable")
+    }
   } catch (error) {
     console.error('Error al hacer fetch:', error);
   }
@@ -297,7 +352,7 @@ app.post('/kharta/custom', async (req, res) => {
     });
 
     // Navigate to the temporary route
-    await page.goto(`http://localhost:${port}${tempRoutePath}`, {
+    await page.goto(`http://${currentConfig.IP}:${port}${tempRoutePath}`, {
       waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
       timeout: 30000
     });

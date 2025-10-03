@@ -13,23 +13,23 @@
 
 .confirm-modal {
   background: var(--primary--color);
-  border-radius: 8px;
-  max-width: 400px;
+  border-radius: 0.5rem;
+  max-width: 25rem;
   width: 90%;
-  padding: 20px 25px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 1.25rem 1.5625rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
 .confirm-modal h3 {
   margin-top: 0;
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem;
   font-size: 1.5rem;
   color: var(--text--color);
 }
 
 .confirm-modal p {
-  margin-bottom: 25px;
+  margin-bottom: 1.5625rem;
   font-size: 1.1rem;
   color: var(--text--color);
 }
@@ -40,12 +40,12 @@
 }
 
 .confirm-modal-actions button {
-  padding: 10px 20px;
+  padding: 0.625rem 1.25rem;
   font-size: 1rem;
-  border-radius: 5px;
+  border-radius: 0.3125rem;
   border: none;
   cursor: pointer;
-  min-width: 100px;
+  min-width: 6.25rem;
   transition: background-color 0.2s ease;
 }
 
