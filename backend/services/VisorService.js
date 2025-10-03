@@ -3,11 +3,15 @@ import Visor from "../models/Visor.js";
 import Result from "../utils/Result.js";
 import Group from '../models/Group.js';
 import User from '../models/User.js';
+import AuthService from './AuthService.js';
 import { validate } from 'uuid';
 import jwt from 'jsonwebtoken'
 import { config } from 'dotenv';
 
 class VisorService {
+  constructor() {
+    this.authService = new AuthService();
+  }
 
   createVisor = async (uid, groupid = null, name, description, configJson, img, isPublic = false) => {
     try {
@@ -148,11 +152,10 @@ class VisorService {
   /* Actualmente, si abris el link desde el editor para previsualizar y envio el link a otra persona del mismo 
    * que me aparece, va a poder acceder. Ver como validar esto, si una apikey, externalkey o algi asi
    * Como solucion momentanea, si no llega nada (porque el front no envia ningun expiratioNtime) la setea en 10 segs*/
-  createShareLink = async (uid, visorId, visorgid, expirationTime = 10) => {
+  createShareLink = async (token, visorId, visorgid, expirationTime = 10) => {
     try {
-
+      const { uid } = this.authService.getDataToken(token)
       const haveAccessToVisor = visorgid && (await Group.isMemberOfThisGroup(uid, visorgid) || await User.isSuperAdmin(uid));
-
       const isVisorOwner = !visorgid && await Visor.isOwner(visorId, uid);
 
       if (!haveAccessToVisor && !isVisorOwner) {
@@ -174,6 +177,13 @@ class VisorService {
     }
   }
 
+  publicShareLink = async (visorId, apiKey) => {
+    const result = await Visor.getShareToken(visorId);
+    const shareHash = jwt.sign({ sharetoken: result[0].sharetoken, apikey: apiKey }, "SECRET", { noTimestamp: true })
+    return result.length > 0
+      ? Result.success(shareHash)
+      : Result.fail("No se ha podido generar el link");
+  }
   /*   #signToken = async (userId) => {
       const isAdmin = await User.isSuperAdmin(userId)
       const isGroupAdmin = await User.isGroupAdmin(userId)
@@ -220,11 +230,12 @@ class VisorService {
     }
   }
 
-  getConfigByShareToken = async (shareToken, isTemporal) => {
+  getConfigByShareToken = async (shareToken, isTemporal, apikey) => {
     try {
       let config = null
+
       if (validate(shareToken)) {
-        const visor = await Visor.getConfigIdByShareToken(shareToken, isTemporal)
+        const visor = await Visor.getConfigIdByShareToken(shareToken, isTemporal, apikey)
 
         if (visor) {
           config = await Config.getConfigById(visor);

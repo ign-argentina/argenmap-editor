@@ -193,28 +193,30 @@ class VisorController {
   createShareLink = async (req, res) => {
     try {
       const token = req.cookies[process.env.AUTH_COOKIE_NAME]
-      const { visorid, visorgid, expires } = req.body
-      const { uid } = this.authService.getDataToken(token)
-
+      const { visorid, visorgid, expires, apiKey } = req.body
 
       if (!visorid) {
         return res.status(400).json({ error: 'Falta el ID del visor' });
       }
 
-      const result = await this.visorService.createShareLink(uid, visorid, visorgid, expires);
+      const result = apiKey ? await this.visorService.publicShareLink(visorid, apiKey) : await this.visorService.createShareLink(token, visorid, visorgid, expires);
 
       return result.success ? res.status(200).json(result) : res.status(403).json({ error: result.error });
     } catch (err) {
-      console.error("Error en VisorController (deleteVisor):", err);
-      return res.status(500).json({ error: 'Error al eliminar el visor', detail: err.message });
+      console.error("Error en VisorController (Create Share Link):", err);
+      return res.status(500).json({ error: 'Error al crear sharelink', detail: err.message });
     }
   };
 
   getConfigByShareToken = async (req, res) => { // ASEGURAR CON HEADERS PROVENIENTES DEL VISOR SERVER PARA QUE EL ACCESO SEA SOLO DESDE AHI.
     try {
-      const { shareToken, isTemporal } = req.query;
+      const { shareToken, isTemporal, apikey } = req.query;
 
-      const result = shareToken ? await this.visorService.getConfigByShareToken(shareToken, isTemporal) : null
+      const result = await this.visorService.getConfigByShareToken(
+        shareToken, 
+        isTemporal === 'true', 
+        apikey
+      );
 
       return result.success ? res.status(200).json(result.data) : res.status(403).json({ error: result.error });
     } catch (error) {
@@ -223,7 +225,7 @@ class VisorController {
     }
   }
 
-    // Se puede volver a usar el mismo metodo en distintoe ndpoint para los visores personales
+  // Se puede volver a usar el mismo metodo en distintoe ndpoint para los visores personales
 
   restoreViewer = async (req, res) => {
     try {

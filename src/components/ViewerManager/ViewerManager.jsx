@@ -87,7 +87,7 @@ const ViewerManager = () => {
       await deleteVisor(visorid, visorgid);
       showToast("Visor eliminado con éxito", "success");
       setSelectedViewer(null);
-      const vl =  currentFilter === "my-visors" ? await getMyVisors() : await getGroupVisors(visorgid)
+      const vl = currentFilter === "my-visors" ? await getMyVisors() : await getGroupVisors(visorgid)
       setViewers(vl)
     } catch (error) {
       console.error("Error al eliminar el visor:", error);
@@ -185,7 +185,7 @@ const ViewerManager = () => {
   };
 
   const redirectToViewerShare = async (viewer) => {
-    const response = await createShareLink(viewer.id, viewer.gid)
+    const response = await createShareLink(viewer.id, viewer.gid, undefined, import.meta.env.VITE_FRONT_APIKEY)
     if (response.success) {
       window.open(`http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`, "_blank");
     }
@@ -193,7 +193,7 @@ const ViewerManager = () => {
 
   return (
     <>
-      <div className='container-display-0' style={{'--cartografia-bg': `url(${cartografiaImage})`}}>
+      <div className='container-display-0' style={{ '--cartografia-bg': `url(${cartografiaImage})` }}>
         <div className="viewer-content flex-1">
           <div className="viewer-modal">
             <h2>GESTOR DE VISORES</h2>
@@ -476,6 +476,17 @@ const ViewerManager = () => {
                 }} title="Compartir Visor">
                 <i className="fa-solid fa-share"></i>
                 Compartir
+              </button>}
+
+              {(currentFilter === "public-visors" && selectedViewer) && <button
+                onClick={async () => {
+                  const response = await createShareLink(selectedViewer.id, selectedViewer.gid, undefined, import.meta.env.VITE_FRONT_APIKEY)
+                  if (response.success) {
+                    alert(`http://${currentVisor.IP}:${currentVisor.API_PORT}/map?view=${response.data}`)
+                  }
+                }} title="Compartir Visor">
+                <i className="fa-solid fa-share"></i>
+                Copiar link de acceso
               </button>}
 
               <button
