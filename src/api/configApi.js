@@ -124,12 +124,12 @@ export async function getConfigById(id) {
   return res.json();
 }
 
-export async function getAllConfigs() {
+/* export async function getAllConfigs() {
   const res = await fetch(`${API_URL}/configs`);
   if (!res.ok) throw new Error('Error al obtener configs');
   return res.json();
 }
-
+ */
 export async function createConfig(jsonData) {
   const res = await fetch(`${API_URL}/configs`, {
     method: 'POST',

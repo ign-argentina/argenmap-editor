@@ -52,7 +52,7 @@ class ConfigController {
     }
   }
 
-  getAllConfigs = async (req, res) => {
+/*   getAllConfigs = async (req, res) => {
     try {
       const result = await this.configService.getAllConfigs();
 
@@ -64,12 +64,7 @@ class ConfigController {
     } catch (err) {
       return res.status(500).json({ error: 'Error al obtener las configuraciones', detail: err.message });
     }
-  };
-
-
-  // getAllConfigs() {
-  //   return ["v1", "v2", "v3"]
-  // }
+  }; */
 
   getConfigById = async (req, res) => {
     try {

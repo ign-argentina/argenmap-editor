@@ -275,7 +275,6 @@ class VisorService {
       const isVisorOwner = !groupid && await Visor.isOwner(groupid, uid);
       let isGroupAdmin = false
 
-
       if (groupid && !isVisorOwner) {
         isGroupAdmin = groupid && (await Group.isAdminForThisGroup(groupid, uid) ||
           await User.isSuperAdmin(uid))
@@ -283,7 +282,7 @@ class VisorService {
 
       const result = (isGroupAdmin) ? await Visor.getDeletedViewersFromGroup(groupid) : await Visor.getMyDeletedViewers(uid)
 
-      return result.length > 0 ? Result.success(result) : Result.fail("No se ha podido cambiar el estado del visor")
+      return Result.success(result)
     } catch (error) {
       console.log("VISORES: Error en la capa de servicio [getDeletedViewers]")
       return Result.fail("Error en la capa de servicio")

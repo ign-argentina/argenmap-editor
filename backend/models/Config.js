@@ -43,7 +43,7 @@ class Config extends BaseModel {
     }
   };
 
-  static getAllConfigs = async () => {
+/*   static getAllConfigs = async () => {
     try {
       const result = await super.runQuery(SELECT_ALL_CONFIGS);
       return result;
@@ -51,7 +51,7 @@ class Config extends BaseModel {
       console.log("CONFIG MODEL (getAllConfigs):", error);
       return null;
     }
-  };
+  }; */
 }
 
 export default Config;

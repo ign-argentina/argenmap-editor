@@ -16,7 +16,7 @@ class ConfigService {
     // implementación futura
   };
 
-  getAllConfigs = async () => {
+/*   getAllConfigs = async () => {
     try {
       const result = await Config.getAllConfigs();
       return result
@@ -26,7 +26,7 @@ class ConfigService {
       console.log("Error en la capa de servicio (getAllConfigs):", error);
       return { success: false, error: error.message };
     }
-  };
+  }; */
 
   getConfigById = async (id) => {
     try {
