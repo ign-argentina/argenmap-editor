@@ -6,7 +6,7 @@ const configController = new ConfigController();
 
 configRoutes.post("/", configController.newConfig);
 configRoutes.put("/:id", configController.updateConfig);
-configRoutes.get("/", configController.getAllConfigs);
+/* configRoutes.get("/", configController.getAllConfigs); */
 configRoutes.get("/:id", configController.getConfigById);
 
 export default configRoutes;
