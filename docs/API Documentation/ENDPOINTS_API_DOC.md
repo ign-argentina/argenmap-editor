@@ -1,7 +1,7 @@
 # API Testing Guide - Argenmap Editor
 
-## Base Configuration
-- **Base URL**: `http://<host>:<port>`
+## Configuración Base
+- **Base URL**: `http://172.20.209.60:3001`
 - **Content-Type**: `application/json`
 - **Authentication**: Cookie `authArgenmap` (JWT)
 
