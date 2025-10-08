@@ -1,3 +1,28 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+ */
+/* #242C4F
+R:37 G:44 B:79
+C:96% M:85% Y:38% K:38%
+
+#45658D
+R:69 G:101 B:141
+C:79% M:56% Y:25% K:8%
+
+#E7BA61
+R:231 G:186 B:97
+C:10% M:27% Y:69% K:1%
+
+#141414
+R: 20 G:20 B:20
+C:78% M:69% Y:61% K:87%
+
+#ffffff
+R:255 G:255 B:255
+C:0% M:0% Y:0% K:0% */
+
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -38,11 +63,11 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* .app-container {
+.app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-} */
+}
 
 .content {
   flex: 1;
@@ -165,7 +190,6 @@ main,
   display: block;
 }
 
-/* 
 .css-18pjc51-MuiFormLabel-root-MuiInputLabel-root {
   color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -185,12 +209,12 @@ main,
   left: 0;
   top: 0;
 }
- */
+
 /* Paddings de formularios */
-/* .css-46bh2p-MuiCardContent-root:last-child {
+.css-46bh2p-MuiCardContent-root:last-child {
   padding-bottom: 0;
   padding: 0;
-} */
+}
 
 /* .css-46bh2p-MuiCardContent-root {
 	padding: 0px;
