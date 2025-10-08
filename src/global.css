@@ -69,17 +69,10 @@ input[type='number']::-webkit-outer-spin-button {
   min-height: 100vh;
 }
 
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-main,
-.content {
-  flex: 1;
-}
-
+.content{
+  height: 83vh;
+ }
+ 
 /* GLOBAL BUTTONS */
 .global-buttons button,
 .global-buttons label {
@@ -160,19 +153,19 @@ main,
   border-radius: 5px;
 } */
 /* LABEL del form */
-.css-1dpseql-MuiCardHeader-content {
+/* .css-1dpseql-MuiCardHeader-content {
   background-color: rgb(255, 255, 255);
   padding: 0.3125rem;
   border-radius: 0.3125rem;
-}
+} */
 
 /* CONTENIDO DEL FORM */
-.MuiGrid-root {
+/* .MuiGrid-root {
   background-color: rgb(255, 255, 255);
   padding: 0.5rem;
   border-radius: 0.3125rem;
 }
-
+ */
 /* .MuiCardContent-root {
   background-color: green;
   border-radius: 5px;
@@ -190,7 +183,7 @@ main,
   display: block;
 }
 
-.css-18pjc51-MuiFormLabel-root-MuiInputLabel-root {
+/* .css-18pjc51-MuiFormLabel-root-MuiInputLabel-root {
   color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 400;
@@ -208,14 +201,14 @@ main,
   position: absolute;
   left: 0;
   top: 0;
-}
+} */
 
 /* Paddings de formularios */
-.css-46bh2p-MuiCardContent-root:last-child {
+/* .css-46bh2p-MuiCardContent-root:last-child {
   padding-bottom: 0;
   padding: 0;
 }
-
+ */
 /* .css-46bh2p-MuiCardContent-root {
 	padding: 0px;
   padding-bottom: 0px;
