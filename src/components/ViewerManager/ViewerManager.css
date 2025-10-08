@@ -258,6 +258,7 @@
   transition: background-color 0.2s;
   height: 5vh;
   margin-bottom: -1rem;
+  min-height: 2.5rem;
 }
 
 .viewer-filter-buttons button.active {
@@ -267,6 +268,21 @@
 
 .viewer-filter-buttons button:hover {
   background-color: var(--active--color);
+}
+
+@media (max-width: 768px) {
+  .viewer-filter-buttons {
+    justify-content: center;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .viewer-filter-buttons button {
+    flex: 1;
+    min-width: calc(50% - 0.125rem);
+    text-align: center;
+  }
 }
 
 .viewer-role {
