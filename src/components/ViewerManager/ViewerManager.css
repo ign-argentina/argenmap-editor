@@ -19,22 +19,6 @@
 
 }
 
-.viewer-list-container {
-  height: 100%;
-  flex: 1;
-  position: relative;
-  margin: 0.9375rem 0;
-  padding: 1rem;
-  border: 0.125rem solid #ccc;
-  border-radius: 0.1875rem;
-  background-image: var(--cartografia-bg, url('/assets/cartografia.jpg'));
-  background-position: center;
-  background-size: cover;
-  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
-  overflow: auto;
-  background-color: rgba(200, 200, 200, 0.5);
-  background-blend-mode: overlay;
-}
 
 /* .viewer-list-container.viewer-description-closed {
   transition: all 0.2s ease;
@@ -409,13 +393,29 @@
   flex-direction: column;
 }
 
-.viewer-list {
+.viewer-list-container {
   background-color: blue;
   /*   height: 80%; */
   flex: 1 1 auto;
   /* Ocupa el espacio disponible */
   transition: flex-basis 0.2s;
 }
+
+.viewer-list-container {
+  position: relative;
+
+  padding: 1rem;
+  border: 0.125rem solid #ccc;
+  border-radius: 0.1875rem;
+  background-image: var(--cartografia-bg, url('/assets/cartografia.jpg'));
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+  overflow: auto;
+  background-color: rgba(200, 200, 200, 0.5);
+  background-blend-mode: overlay;
+}
+
 
 .viewer-description2 {
   background-color: #fff;

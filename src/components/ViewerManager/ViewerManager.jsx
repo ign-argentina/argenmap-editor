@@ -553,10 +553,10 @@ const ViewerManager = () => {
 
           <div className='manager-main'> {/* cyan */}
             <div className='viewer-container'> {/* brown */}
-              <div className='viewer-list'>{/* blue */}
+              <div className='viewer-list-container'>{/* blue */}
 
                 {/* <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}> */}
-                  {/* <div className="viewer-list"> */}
+                  <div className="viewer-list">
                     {isLoading ? (
                       <div className="loading-message">
                         <span className="spinner" />
@@ -653,8 +653,7 @@ const ViewerManager = () => {
                         </a>
                       ))
                     )}
-
-                 {/*  </div> */}
+                  </div>
                {/*  </div> */}
               </div>
 
