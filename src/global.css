@@ -69,10 +69,10 @@ input[type='number']::-webkit-outer-spin-button {
   min-height: 100vh;
 }
 
-.content{
+main{
   height: 83vh;
  }
- 
+
 /* GLOBAL BUTTONS */
 .global-buttons button,
 .global-buttons label {
