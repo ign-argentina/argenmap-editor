@@ -239,10 +239,9 @@
 }
 
 .manager-group-role {
-  font-size: 0.9rem;
   font-style: italic;
-  margin-top: 0.5rem;
   color: white;
+  padding: 0.5rem;
 }
 
 .viewer-filter-divider {
