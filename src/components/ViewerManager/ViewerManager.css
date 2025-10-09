@@ -384,11 +384,10 @@
 }
 
 .viewer-actions {
-  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
-  margin-top: 1.25rem;
   flex-shrink: 0;
   background-color: var(--primary--color);
+  margin-left: 1rem;
 }
