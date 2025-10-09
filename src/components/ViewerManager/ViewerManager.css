@@ -1,11 +1,3 @@
-.viewer-modal-container {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
-  height: 80%;
-
-}
-
 .viewer-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, 15.625rem);
@@ -85,7 +77,6 @@
   border: 0.125rem solid var(--secondary--color);
 }
 
-
 .loading-message {
   display: flex;
   flex-direction: column;
@@ -136,32 +127,6 @@
   transition: opacity 0.3s ease, height 0.3s ease;
 }
 
-.container-display-1 {
-  display: flex;
-  height: 83vh;
-  opacity: 1;
-  transition: opacity 0.3s ease, height 0.3s ease;
-}
-
-.flex-0 {
-  flex: 0;
-  width: 59%;
-}
-
-/* .flex-1 {
-  flex: 1;
-}
- */
-.viewer-content {
-  /*   display: flex;
-  justify-content: center;
-  align-items: center; */
-  background-color: var(--primary--color);
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  height: 100%;
-}
-
 .viewer-filter {
   display: flex;
   align-items: center;
@@ -185,18 +150,6 @@
   height: auto;
   border-radius: 0.5rem;
   object-fit: cover;
-}
-
-.viewer-filter-navbar {
-  display: flex;
-  flex-direction: column;
-  color: white;
-  height: 100%;
-}
-
-.viewer-filter-label {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
 }
 
 .manager-group-tabs {
@@ -293,7 +246,6 @@
   overflow: hidden;
 }
 
-/* CONTEXT MENU */
 .viewer-context-menu {
   position: fixed;
   background: white;
