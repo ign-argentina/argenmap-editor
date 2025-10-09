@@ -97,14 +97,6 @@
   color: #575757;
 }
 
-.viewer-modal-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-  margin-top: 1.25rem;
-  flex-shrink: 0;
-}
-
 .viewer-description {
   background-color: var(--primary--color);
   border-radius: 0.1875rem;
@@ -399,7 +391,6 @@
   background-color: blue;
   /*   height: 80%; */
   flex: 1 1 auto;
-  /* Ocupa el espacio disponible */
   transition: flex-basis 0.2s;
   position: relative;
   padding: 1rem;
@@ -414,14 +405,10 @@
   background-blend-mode: overlay;
 }
 
-
-.viewer-description2 {
-  background-color: #fff;
-  height: 20%;
-}
-
 .viewer-actions {
   display: flex;
   flex-direction: column;
-  background-color: #4caf50;
+  gap: 0.625rem;
+  margin-top: 1.25rem;
+  flex-shrink: 0;
 }

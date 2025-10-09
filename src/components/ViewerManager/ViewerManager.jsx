@@ -550,9 +550,9 @@ const ViewerManager = () => {
             </div>
           </div>
 
-          <div className='manager-main'> {/* cyan */}
-            <div className='viewer-container'> {/* brown */}
-              <div className='viewer-list-container'>{/* blue */}
+          <div className='manager-main'>
+            <div className='viewer-container'>
+              <div className='viewer-list-container'>
 
                 {/* <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}> */}
                 <div className="viewer-list">
@@ -656,8 +656,7 @@ const ViewerManager = () => {
                 {/*  </div> */}
               </div>
 
-              {selectedViewer && (<div className='viewer-description'>{/* white */}
-
+              {selectedViewer && (<div className='viewer-description'>
                 <div className="viewer-info-row">
                   <div className="viewer-info-text">
                     <h3>{selectedViewer.name}</h3>
@@ -683,11 +682,10 @@ const ViewerManager = () => {
                     className="group-image-right"
                   />
                 </div>
-
               </div>)}
             </div>
 
-            <div className='viewer-actions global-buttons'> {/* green */}
+            <div className='viewer-actions global-buttons'>
               <button
                 className="btn-common"
                 title="Crear nuevo visor"
