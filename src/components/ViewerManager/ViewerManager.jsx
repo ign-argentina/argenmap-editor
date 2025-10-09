@@ -531,22 +531,23 @@ const ViewerManager = () => {
                     {grupo.name.toUpperCase()}
                   </button>
                 ))}
-       
 
-              <div className="manager-group-role">
-                {access !== PUBLIC_VISOR_ACCESS ? (
-                  <>
-                    Tu rol dentro del grupo es:{' '}
-                    {(access?.ga || access?.sa) ? "Administrador" :
-                      access?.editor ? "Editor" :
-                        access?.myvisors ? "Dueño" :
-                          "Lector"}
-                  </>
-                ) : (
-                  "Listado de visores públicos"
-                )}
               </div>
-            </div>)}
+            )}
+
+            <div className="manager-group-role">
+              {access !== PUBLIC_VISOR_ACCESS ? (
+                <>
+                  Tu rol dentro del grupo es:{' '}
+                  {(access?.ga || access?.sa) ? "Administrador" :
+                    access?.editor ? "Editor" :
+                      access?.myvisors ? "Dueño" :
+                        "Lector"}
+                </>
+              ) : (
+                "Listado de visores públicos"
+              )}
+            </div>
           </div>
 
           <div className='manager-main'> {/* cyan */}
