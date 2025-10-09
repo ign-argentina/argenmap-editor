@@ -1,16 +1,3 @@
-.viewer-modal {
-  background-color: var(--primary--color);
-  border-radius: 0.1875rem;
-  width: 100%;
-  /*   max-height: 83vh; */
-  padding: 1.25rem;
-  /*   position: relative; */
-  color: var(--text--color);
-  border: 0.125rem solid var(--secondary--color);
-  /* height: 83vh; */
-  height: 100%;
-}
-
 .viewer-modal-container {
   display: flex;
   align-items: flex-start;
@@ -18,16 +5,6 @@
   height: 80%;
 
 }
-
-
-/* .viewer-list-container.viewer-description-closed {
-  transition: all 0.2s ease;
-}
-
-.viewer-list-container.viewer-description-open {
-  height: 60%;
-  transition: all 0.2s ease;
-} */
 
 .viewer-list {
   display: grid;
@@ -106,8 +83,8 @@
   position: relative;
   color: var(--text--color);
   border: 0.125rem solid var(--secondary--color);
-  height: 20%;
 }
+
 
 .loading-message {
   display: flex;
@@ -352,7 +329,7 @@
 
 /* NUEVO (de acá para arriba es como tener a borja y al fabra*/
 .manager-container {
-  background-color: #000000;
+  background-color: var(--primary--color);
   height: 100%;
   width: 100%;
   border-radius: 2rem;
@@ -360,10 +337,10 @@
   display: flex;
   flex-direction: column;
   align-content: center;
+  padding: 1.25rem;
 }
 
 .manager-header {
-  /*   background-color: yellow; */
   display: flex;
   flex-direction: column;
   background-color: var(--primary--color);
@@ -372,11 +349,14 @@
 }
 
 .manager-main {
-  background-color: cyan;
+  background-color: var(--primary--color);
   height: 90%;
-
   display: flex;
   flex-direction: row;
+  border-radius: 0.1875rem;
+  padding: 1.25rem;
+  color: var(--text--color);
+  border: 0.125rem solid var(--secondary--color);
 }
 
 .viewer-container {
@@ -406,9 +386,11 @@
 }
 
 .viewer-actions {
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
   margin-top: 1.25rem;
   flex-shrink: 0;
+  background-color: var(--primary--color);
 }
