@@ -71,6 +71,10 @@ input[type='number']::-webkit-outer-spin-button {
 
 main{
   height: 83vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
  }
 
 /* GLOBAL BUTTONS */

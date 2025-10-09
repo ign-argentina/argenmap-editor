@@ -159,8 +159,8 @@
 }
 
 .container-display-0 {
-  height: 100vh;
-  width: 100vh;
+  height: 100%;
+  width: 100%;
   display: contents;
   opacity: 0;
   height: 0;
@@ -369,6 +369,10 @@
 .manager-container {
   background-color: #000000;
   height: 100%;
+  width: 90%;
+/*   display: flex;
+  flex-direction: column;
+  align-content: center; */
 }
 
 
