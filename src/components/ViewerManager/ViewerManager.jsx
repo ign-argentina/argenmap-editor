@@ -536,6 +536,8 @@ const ViewerManager = () => {
               </div>
             )}
 
+            <div className="viewer-filter-divider" />
+
             <div className="manager-group-role">
               {access !== PUBLIC_VISOR_ACCESS ? (
                 <>
