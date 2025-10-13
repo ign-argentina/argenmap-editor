@@ -29,7 +29,6 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
         <span className="icon">
           <i className="fa-solid fa-download"></i>
         </span>
-        Descargar
       </button>
 
       {showSaveModal && (

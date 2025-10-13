@@ -9,14 +9,11 @@
   padding: 0.625rem 0.9375rem;
   border-radius: 0.1875rem;
   cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   height: 3.125rem;
-  font-size: 0.8125rem;
+  font-size: 1.5rem;
   transition: background-color 0.3s;
   user-select: none;
-  gap: 0.5rem;
+  width: 100%;
 }
 
 /* COLOR STYLES */
