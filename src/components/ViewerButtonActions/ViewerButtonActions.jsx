@@ -24,60 +24,45 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
 
   return (
     <div className="form-options-buttons">
-
       <button className="btn-download" onClick={handleDownload} title="Descargar JSON">
-        <span className="icon">
-          <i className="fa-solid fa-download"></i>
-        </span>
+        <i className="fa-solid fa-download icon"></i>
+        <span className="label">Descargar</span>
       </button>
-
-      {showSaveModal && (
-        <div className="save-viewer-modal-overlay">
-          <SaveViewerModal
-            editorMode={editorMode}
-            cloneMode={cloneMode}
-            viewer={viewer}
-            isOpen={showSaveModal}
-            onClose={() => setShowSaveModal(false)}
-            getWorkingConfig={getWorkingConfig}
-          />
-        </div>
-      )}
 
       {isAuth && (
         <button
-          className="btn-common"
-          title={editorMode ? "Crear Visor a Partir de Este" : "Crear Nuevo Visor"}
+          className="btn-share"
+          title={editorMode ? "Crear visor a partir de este" : "Crear nuevo visor"}
           onClick={() => {
             setCloneMode(true);
             setShowSaveModal(true);
           }}
         >
-          <i className="fa-solid fa-square-plus"></i>
+          <i className="fa-solid fa-square-plus icon"></i>
+          <span className="label">{editorMode ? "Clonar" : "Nuevo"}</span>
         </button>
       )}
 
-      {(editorMode && isAuth) &&
+      {(editorMode && isAuth) && (
         <button
           className="btn-common"
-          title="Guardar Cambios"
-          onClick={() => { setCloneMode(false); setShowSaveModal(true) }}
+          title="Guardar cambios"
+          onClick={() => {
+            setCloneMode(false);
+            setShowSaveModal(true);
+          }}
         >
-          <i className="fa-solid fa-floppy-disk"></i>
+          <i className="fa-solid fa-floppy-disk icon"></i>
+          <span className="label">Guardar</span>
         </button>
-      }
+      )}
 
-      <button
-        className="btn-cancel"
-        onClick={() => navigate("/visores")}
-        title="Cancelar"
-      >
-        <span className="icon">
-          <i className="fa-solid fa-close"></i>
-        </span>
+      <button className="btn-cancel" onClick={() => navigate("/visores")} title="Cancelar">
+        <i className="fa-solid fa-close icon"></i>
+        <span className="label">Cancelar</span>
       </button>
-
     </div>
+
   )
 }
 
