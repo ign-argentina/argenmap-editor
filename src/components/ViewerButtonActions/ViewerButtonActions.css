@@ -1,0 +1,73 @@
+.form-options-buttons {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.form-options-buttons button,
+.form-options-buttons label {
+  border: none;
+  padding: 0.625rem 0.9375rem;
+  border-radius: 0.1875rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 3.125rem;
+  font-size: 0.8125rem;
+  transition: background-color 0.3s;
+  user-select: none;
+  gap: 0.5rem;
+}
+
+/* COLOR STYLES */
+.btn-common {
+  background-color: var(--secondary--color);
+  color: var(--text--color);
+}
+
+.btn-common:hover {
+  background-color: var(--active--color);
+}
+
+.btn-common.active {
+  background-color: var(--active--color);
+  color: white;
+  font-weight: bold;
+}
+
+.btn-share {
+  background-color: rgb(1, 191, 169);
+  color: var(--text--color);
+}
+
+.btn-share:hover {
+  background-color: rgb(0, 231, 204);
+}
+
+.btn-download {
+  background-color: rgb(5, 142, 0);
+  color: var(--text--color);
+}
+
+.btn-download:hover {
+  background-color: rgb(6, 185, 0);
+}
+
+.btn-delete {
+  background-color: #bb0000;
+  color: var(--text--color);
+}
+
+.btn-delete:hover {
+  background-color: #ff0000;
+  color: var(--text--color);
+}
+
+.btn-cancel {
+  background-color: #999;
+}
+
+.btn-cancel:hover {
+  background-color: #ff0000;
+  color: var(--text--color);
+}

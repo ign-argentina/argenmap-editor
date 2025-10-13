@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { downloadViewer, mergeViewer } from '../../utils/ViewerHandler';
 import { useNavigate } from "react-router-dom";
+import './ViewerButtonActions.css';
 
 function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArgenmap = false }) {
 
@@ -22,7 +23,7 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
   };
 
   return (
-    <div className="global-buttons">
+    <div className="form-options-buttons">
 
       <button className="btn-download" onClick={handleDownload} title="Descargar JSON">
         <span className="icon">
@@ -44,18 +45,28 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
         </div>
       )}
 
-      {isAuth && <button className="btn-common" onClick={() => {
-        setCloneMode(true);    
-        setShowSaveModal(true);
-      }}>
-        <i className="fa-solid fa-floppy-disk"></i>
-        {editorMode ? ("Crear a partir de este ") : ("Crear nuevo visor")}
-      </button>
+      {isAuth && (
+        <button
+          className="btn-common"
+          title={editorMode ? "Crear Visor a Partir de Este" : "Crear Nuevo Visor"}
+          onClick={() => {
+            setCloneMode(true);
+            setShowSaveModal(true);
+          }}
+        >
+          <i className="fa-solid fa-square-plus"></i>
+        </button>
+      )}
+
+      {(editorMode && isAuth) &&
+        <button
+          className="btn-common"
+          title="Guardar Cambios"
+          onClick={() => { setCloneMode(false); setShowSaveModal(true) }}
+        >
+          <i className="fa-solid fa-floppy-disk"></i>
+        </button>
       }
-      {(editorMode && isAuth) && <button className="btn-common" onClick={() => { setCloneMode(false); setShowSaveModal(true) }}>
-        <i className="fa-solid fa-floppy-disk"></i>
-        Guardar cambios
-      </button>}
 
       <button
         className="btn-cancel"
@@ -65,7 +76,6 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
         <span className="icon">
           <i className="fa-solid fa-close"></i>
         </span>
-        Cancelar
       </button>
 
     </div>
