@@ -29,6 +29,19 @@ function ViewerButtonActions({ editorMode, viewer = {}, getWorkingConfig, isArge
         <span className="label">Descargar</span>
       </button>
 
+      {showSaveModal && (
+        <div className="save-viewer-modal-overlay">
+          <SaveViewerModal
+            editorMode={editorMode}
+            cloneMode={cloneMode}
+            viewer={viewer}
+            isOpen={showSaveModal}
+            onClose={() => setShowSaveModal(false)}
+            getWorkingConfig={getWorkingConfig}
+          />
+        </div>
+      )}
+
       {isAuth && (
         <button
           className="btn-share"
