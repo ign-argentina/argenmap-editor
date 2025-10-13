@@ -1,6 +1,7 @@
 .form-options-buttons {
   display: flex;
   gap: 0.3rem;
+  flex-wrap: nowrap;
 }
 
 .form-options-buttons button,
@@ -18,8 +19,35 @@
   width: auto;
 }
 
+.form-options-buttons::-webkit-scrollbar {
+  height: 6px;
+}
+
+.form-options-buttons::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+@media (min-width: 1367px) {
+  .form-options-buttons .label {
+    display: inline;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 1900px) {
+  .form-options-buttons .label {
+    display: none;
+  }
+
+  .form-options-buttons button,
+  .form-options-buttons label {
+    width: 24%;
+  }
+}
+
 .form-options-buttons .label {
-  display: none;
+  /* display: none; */
   margin-left: 0.4rem;
   font-size: 1rem;
 }
@@ -28,11 +56,6 @@
   font-size: 1rem;
 }
 
-@media (min-width: 1367px) {
-  .form-options-buttons .label {
-    display: inline;
-  }
-}
 
 /* COLOR STYLES */
 .btn-common {
