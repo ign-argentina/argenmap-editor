@@ -16,15 +16,16 @@ function RegisterModal({ onClose, onRegisterSuccess }) {
     e.preventDefault();
     try {
       const res = await registerUser(name, lastname, email, password);
-
-      if (res.status === 201) {
+      if (res) {
         login(email, password)
         onRegisterSuccess();
         showToast("Usuario creado correctamente!", "success");
+      } else {
+   
+        showToast('Error en el ingreso de datos. Verifique los campos ', "warning");
       }
     } catch (error) {
-      console.error('Error en registro:', error.response?.data || error.message);
-      showToast('Error en registro: ' + error, "error");
+      showToast(error.response?.data || error.message, "warning");
     }
   };
 
