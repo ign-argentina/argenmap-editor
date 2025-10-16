@@ -199,8 +199,7 @@
 
 .viewer-filter-divider {
   width: 100%;
-  height: 0.0625rem;
-  background-color: var(--secondary--color);
+  color: var(--secondary--color);
 }
 
 .viewer-desc-divider {
