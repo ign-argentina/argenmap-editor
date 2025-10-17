@@ -165,6 +165,7 @@
   border: none;
   cursor: pointer;
   transition: background-color 0.2s;
+  min-width: 3%;
 }
 
 .manager-group-tabs button.active {
