@@ -5,27 +5,26 @@ import { useUser } from '/src/context/UserContext';
 import { useToast } from '../../context/ToastContext';
 
 function RegisterModal({ onClose, onRegisterSuccess }) {
-  const [name, setName] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const { login } = useUser()
   const { showToast } = useToast()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const res = await registerUser(name, lastname, email, password);
       if (res) {
         login(email, password)
         onRegisterSuccess();
         showToast("Usuario creado correctamente!", "success");
-      } else {
-   
+      } else {   
         showToast('Error en el ingreso de datos. Verifique los campos ', "warning");
       }
     } catch (error) {
-      showToast(error.response?.data || error.message, "warning");
+      showToast(error.response?.data || error.message, "warning")
     }
   };
 

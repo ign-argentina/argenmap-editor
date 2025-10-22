@@ -16,13 +16,13 @@ export const UserProvider = ({ children }) => {
   const login = async (email, password) => {
     setIsAuthLoading(true);
     try {
-      const res = await userLogin(email, password);
+      const res = await userLogin(email, password)
 
       if (res) {
-        const userData = res.data;
-        updateAuth(true, userData.isag, userData.isa);
-        updateUser(userData);
-        showToast(`Hola ${userData.name}`, "success");
+        const userData = res.data
+        updateAuth(true, userData.isag, userData.isa)
+        updateUser(userData)
+        showToast(`Hola ${userData.name}`, "success")
       } else {
         showToast("Credenciales Invalidas", "error")
       }
@@ -62,7 +62,6 @@ export const UserProvider = ({ children }) => {
           setAuth(false);
           return;
         }
-
         // Mantenemos los datos de usuario todo el tiempo que la auth sea valida
         const userData = JSON.parse(storedUser);
         setUser(userData);
