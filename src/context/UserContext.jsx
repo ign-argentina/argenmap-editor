@@ -17,10 +17,16 @@ export const UserProvider = ({ children }) => {
     setIsAuthLoading(true);
     try {
       const res = await userLogin(email, password);
-      const userData = res.data;
-      updateAuth(true, userData.isag, userData.isa);
-      updateUser(userData);
-      showToast(`Hola ${userData.name}`, "success");
+
+      if (res) {
+        const userData = res.data;
+        updateAuth(true, userData.isag, userData.isa);
+        updateUser(userData);
+        showToast(`Hola ${userData.name}`, "success");
+      } else {
+        showToast("Credenciales Invalidas", "error")
+      }
+
       return res.status;
     } catch (error) {
       console.error('Error en login:', error.response?.data || error.message);
@@ -47,10 +53,10 @@ export const UserProvider = ({ children }) => {
       const res = await userCheckAuth();
       if (res.data) {
         const storedUser = localStorage.getItem('user');
-        
+
         // Si tenemos una auth valida
         updateAuth(true, res.data.isag, res.data.isa);
-        
+
         // Si no esta guardado en el store o la auth falló, forzamos un relogueo
         if (!storedUser) {
           setAuth(false);
@@ -114,7 +120,7 @@ export const UserProvider = ({ children }) => {
       // Despues validamos con el back
       await checkAuth();
     };
-    
+
     initializeUser();
   }, []);
 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './SaveViewerModal.css';
 import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
 import currentViewer from '../../api/visorApi.js';
+import './SaveViewerModal.css';
 
 const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMode = false, getWorkingConfig }) => {
 
@@ -143,7 +143,6 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
     <div className="save-viewer-modal-overlay">
       <div className="save-viewer-modal">
         <h3>{editorMode && !cloneMode ? "Guardar Cambios" : "Crear Nuevo Visor"}</h3>
-{/*         <span>{cloneMode ? "Crearás un nuevo visor con las mismas caracteristicas que este" : null}</span> */}
         <input
           type="text"
           placeholder="Nombre del visor"
@@ -162,27 +161,29 @@ const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMod
           {description?.length}/255
         </div>
 
-        {imageData == null ? (
-          <div className="image-options">
-            {!isCapturing && (
-              <button onClick={captureViewerImage}>
-                Capturar imagen del visor
-              </button>
-            )}
+        <div className="modal-buttons">
+          {imageData == null ? (
+            <div className="image-options">
+              {!isCapturing && (
+                <button onClick={captureViewerImage}>
+                  Capturar imagen del visor
+                </button>
+              )}
 
-            <label className="upload-image-from-pc">
-              Subir imagen desde PC
-              <input
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleImageUpload}
-                style={{ display: 'none' }}
-              />
-            </label>
-          </div>
-        ) : (
-          <button onClick={() => setImageData(null)}>Limpiar imagen</button>
-        )}
+              <label className="upload-image-from-pc">
+                Subir imagen desde PC
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={handleImageUpload}
+                  style={{ display: 'none' }}
+                />
+              </label>
+            </div>
+          ) : (
+            <button onClick={() => setImageData(null)}>Limpiar imagen</button>
+          )}
+        </div>
 
         {isCapturing && (
           <div className="loading-indicator">

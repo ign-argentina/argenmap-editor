@@ -261,18 +261,16 @@ export const userLogin = async (email, password) => {
 }
 
 export const registerUser = async (name, lastname, email, password) => {
-  try {
     const res = await axios.post(`${API_URL}/auth/register`, {
       name,
       lastname,
       email,
       password
     }, { withCredentials: true });
-    return res
-  } catch (error) {
 
+    return res.data
   }
-}
+
 export const userLogout = async () => {
   try {
     await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true, })

@@ -63,14 +63,15 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+
 
 main{
   height: 83vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--primary--color);
  }
 
 /* GLOBAL BUTTONS */

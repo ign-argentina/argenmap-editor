@@ -194,12 +194,12 @@ const ViewerManager = () => {
   return (
     <>
       <div className='container-display-0' style={{ '--cartografia-bg': `url(${cartografiaImage})` }}>
-        <div className="viewer-content flex-1">
-          <div className="viewer-modal">
-            <h2>GESTOR DE VISORES</h2>
 
-            {hasFetched && !isLoading && (<div className="viewer-filter-navbar">
-              <div className="viewer-filter-buttons">
+        <section className='manager-container'>
+          <div className='manager-header'>
+            <h2>GESTOR DE VISORES</h2>
+            {hasFetched && !isLoading && (
+              <div className="manager-group-tabs">
                 <button
                   className={currentFilter === "public-visors" ? "active" : ""}
                   onClick={() => handleChange("public-visors")}
@@ -225,28 +225,30 @@ const ViewerManager = () => {
                     {grupo.name.toUpperCase()}
                   </button>
                 ))}
-              </div>
 
-              <div className="viewer-filter-divider" />
-
-              <div className="viewer-role">
-                {access !== PUBLIC_VISOR_ACCESS ? (
-                  <>
-                    Tu rol dentro del grupo es:{' '}
-                    {(access?.ga || access?.sa) ? "Administrador" :
-                      access?.editor ? "Editor" :
-                        access?.myvisors ? "Dueño" :
-                          "Lector"}
-                  </>
-                ) : (
-                  "Listado de visores públicos"
-                )}
               </div>
-            </div>
             )}
 
-            <div className="viewer-modal-container">
-              <div className={`viewer-list-container ${showDescriptionModal ? 'viewer-description-open' : 'viewer-description-closed'}`}>
+            <hr className="viewer-filter-divider" />
+
+            <div className="manager-group-role">
+              {access !== PUBLIC_VISOR_ACCESS ? (
+                <>
+                  Tu rol dentro del grupo es:{' '}
+                  {(access?.ga || access?.sa) ? "Administrador" :
+                    access?.editor ? "Editor" :
+                      access?.myvisors ? "Dueño" :
+                        "Lector"}
+                </>
+              ) : (
+                "Listado de visores públicos"
+              )}
+            </div>
+          </div>
+
+          <div className='manager-main'>
+            <div className='viewer-container'>
+              <div className='viewer-list-container'>
                 <div className="viewer-list">
                   {isLoading ? (
                     <div className="loading-message">
@@ -344,37 +346,10 @@ const ViewerManager = () => {
                       </a>
                     ))
                   )}
-
                 </div>
               </div>
-              <div className="viewer-modal-actions">
-                <div className="global-buttons">
-                  <button
-                    className="btn-common"
-                    title="Crear nuevo visor"
-                    onClick={() => {
-                      setShowCreateViewerModal(true);
-                    }}>
-                    <i className="fa-solid fa-plus"></i>
-                    Crear
-                  </button>
 
-                  <button
-                    className="btn-common"
-                    title="Subir visor"
-                    onClick={() => {
-                      setShowUploadViewerModal(true);
-                    }}>
-                    <i className="fa-solid fa-upload"></i>
-                    Subir
-                  </button>
-
-                </div>
-              </div>
-            </div>
-
-            {showDescriptionModal && selectedViewer && (
-              <div className="viewer-description">
+              {selectedViewer && (<div className={`viewer-description ${showDescriptionModal ? 'open' : 'closed'}`}>
                 <div className="viewer-info-row">
                   <div className="viewer-info-text">
                     <h3>{selectedViewer.name}</h3>
@@ -400,50 +375,72 @@ const ViewerManager = () => {
                     className="group-image-right"
                   />
                 </div>
-              </div>
-            )}
+              </div>)}
+            </div>
 
-            <ConfirmDialog
-              isOpen={confirmVisible}
-              title={confirmData.title}
-              message={confirmData.message}
-              onConfirm={() => {
-                confirmAction();
-                setConfirmVisible(false);
-              }}
-              onCancel={() => setConfirmVisible(false)}
-            />
+            <div className='viewer-actions global-buttons'>
+              <button
+                className="btn-common"
+                title="Crear nuevo visor"
+                onClick={() => {
+                  setShowCreateViewerModal(true);
+                }}>
+                <i className="fa-solid fa-plus"></i>
+                Crear
+              </button>
 
-            {showShareViewerModal && (
-              <div className="save-viewer-modal-overlay">
-                <ShareViewerModal
-                  viewer={selectedViewer}
-                  isOpen={showShareViewerModal}
-                  onClose={() => setShowShareViewerModal(false)}
-                />
-              </div>
-            )}
+              <button
+                className="btn-common"
+                title="Subir visor"
+                onClick={() => {
+                  setShowUploadViewerModal(true);
+                }}>
+                <i className="fa-solid fa-upload"></i>
+                Subir
+              </button>
+            </div>
 
-            {showCreateViewerModal && (
-              <div className="save-viewer-modal-overlay">
-                <CreateViewerModal
-                  isOpen={showCreateViewerModal}
-                  onClose={() => setShowCreateViewerModal(false)}
-                />
-              </div>
-            )}
-
-            {showUploadViewerModal && (
-              <div className="save-viewer-modal-overlay">
-                <UploadViewerModal
-                  isOpen={showUploadViewerModal}
-                  onClose={() => setShowUploadViewerModal(false)}
-                />
-              </div>
-            )}
           </div>
-        </div>
 
+          <ConfirmDialog
+            isOpen={confirmVisible}
+            title={confirmData.title}
+            message={confirmData.message}
+            onConfirm={() => {
+              confirmAction();
+              setConfirmVisible(false);
+            }}
+            onCancel={() => setConfirmVisible(false)}
+          />
+
+          {showShareViewerModal && (
+            <div className="save-viewer-modal-overlay">
+              <ShareViewerModal
+                viewer={selectedViewer}
+                isOpen={showShareViewerModal}
+                onClose={() => setShowShareViewerModal(false)}
+              />
+            </div>
+          )}
+
+          {showCreateViewerModal && (
+            <div className="save-viewer-modal-overlay">
+              <CreateViewerModal
+                isOpen={showCreateViewerModal}
+                onClose={() => setShowCreateViewerModal(false)}
+              />
+            </div>
+          )}
+
+          {showUploadViewerModal && (
+            <div className="save-viewer-modal-overlay">
+              <UploadViewerModal
+                isOpen={showUploadViewerModal}
+                onClose={() => setShowUploadViewerModal(false)}
+              />
+            </div>
+          )}
+        </section>
         {contextMenuVisorId && (
           <div
             className="viewer-context-menu"
