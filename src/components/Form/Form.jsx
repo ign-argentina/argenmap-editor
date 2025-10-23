@@ -38,7 +38,7 @@ function Form() {
   }, [hasUnsavedChanges]);
 
   return (
-    <div>
+    <div className='form-container'>
       {argenmap ? (
         <ArgenmapForm
           viewer={viewer}

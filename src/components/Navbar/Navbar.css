@@ -3,6 +3,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: var(--primary--color);
+  height: 11vh; 
 }
 
 .logo {

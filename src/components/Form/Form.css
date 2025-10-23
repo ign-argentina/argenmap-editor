@@ -38,11 +38,7 @@
 }
 
 .form-container {
-  width: 50%;
-  border-right: 2px solid #ccc;
-  display: grid;
-  overflow: scroll;
-  /* background-color: var(--secondary--color); */
+  width: 100%;
 }
 
 .editor-container {

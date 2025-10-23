@@ -134,5 +134,5 @@ http://<host>:<port>/groups
 
 ## Notas para testing
 - Usar header `Content-Type: application/json` en todos los POST/PUT/DELETE.
-- Usar cookie `authArgenmap` para endpoints protegidos.
+- Usar cookie `authArgenmap` para endpoints protegidos .
 - Validar respuestas: 200 (OK), 201 (Creado), 400 (Error datos), 401 (No autenticado), 403 (Sin permisos), 404 (No encontrado), 500 (Error servidor).

@@ -53,18 +53,19 @@ class AuthController {
     try {
       const { email, name, lastname, password } = req.body
 
+  
       if (process.env.ALLOW_PUBLIC_REGISTER === '0') {
         return res.status(400).json("El registro publico ha sido dehabilitado por la administracion")
       }
 
       if (!password || !name || !lastname || !email) { // A CHEQUEAR SI JS LE HACE UN .length A UNA CADENA STRING
-        throw new Error("Se deben completar todos los campos para crear un nuevo usuario.")
+        return res.status(400).json("Se deben completar todos los campos para crear un nuevo usuario.")
       }
 
       if (password.length < MIN_PASSWORD_LENGTH) {
-        throw new Error(`La contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`);
+        return res.status(400).json(`La contraseña debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`)
       }
-
+      
       if ((await this.authService.isMailDuplicated(email)).success === true) {
         return res.status(400).json("El correo ya esta en uso")
       }

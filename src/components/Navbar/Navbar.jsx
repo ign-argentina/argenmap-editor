@@ -142,7 +142,7 @@ function Navbar() {
                         setShowDropdown(false);
                       }}
                     >
-                      <i className="fa-solid fa-people-group"></i> Administrar Grupos
+                      <i className="fa-solid fa-people-group"></i> Mis Grupos
                     </button>
                   )}
 
