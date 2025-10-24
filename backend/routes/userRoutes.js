@@ -7,7 +7,7 @@ const userController = new UserController();
 
 userRoutes.post("/update", PROTECT.REQUIRE_AUTH, userController.updateUser)
 userRoutes.get("/", PROTECT.REQUIRE_GROUP_ADMIN, userController.getUserList)
-userRoutes.get("/admin", PROTECT.REQUIRE_SUPER_ADMIN, userController.searchUser)
+
 
 
 export default userRoutes;

@@ -289,7 +289,18 @@ export const userCheckAuth = async () => {
   }
 }
 
+// EN EL FUTURO VUELA POR REESTRUCTURACION
 export const getUserList = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/users`, {
+      withCredentials: true,
+    });
+    return res.data
+  } catch (error) { console.log("Error al obtener listado de usuarios " + error) }
+}
+// ******************************************
+
+export const getAUserList = async () => {
   try {
     const res = await axios.get(`${API_URL}/users`, {
       withCredentials: true,
@@ -317,7 +328,7 @@ export const updateUserPassword = async (rePassword) => {
 }
 
 export const searchUser = async (search) => {
-  const res = await axios.get(`${API_URL}/users/admin?search=${search}`, {
+  const res = await axios.get(`${API_URL}/admin/user?search=${search}`, {
       withCredentials: true,
     });
     return res.data;

@@ -1,7 +1,7 @@
 import { useUser } from "../context/UserContext";
 import './ControlPanel.css'
 import GroupDashboard from "../components/GroupDashboard/GroupDashboard";
-import UserDashboard from "../components/AdminDashboard/UserDashboard";
+import UserDashboard from "../components/UserDashboard/UserDashboard";
 import { useState } from "react";
 
 function ControlPanel() {

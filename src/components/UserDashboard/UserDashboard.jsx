@@ -1,6 +1,6 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
-import { searchUser } from '../../api/configApi';
+import { getAUserList, searchUser } from '../../api/configApi';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -25,16 +25,21 @@ function UserDashboard() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
 
+  const getAllUsers = async () => {
+    const response = await getAUserList();
+    setUsuarios(response)
+  }
+
+  const findUsers = async (debouncedSearch) => {
+    const response = await searchUser(debouncedSearch)
+    setUsuarios(response)
+  };
 
   useEffect(() => {
-    if (debouncedSearch.trim()) {      
-      const fetchUsuarios = async () => {
-        const response = await searchUser(debouncedSearch)
-        setUsuarios(response);
-      };
-      fetchUsuarios();
+    if (debouncedSearch.trim()) {
+      findUsers(debouncedSearch);
     } else {
-      setUsuarios([]); // Si no hay búsqueda, mostramos vacío o no haces la consulta
+      getAllUsers(); // Si no hay búsqueda, mostramos todos
     }
   }, [debouncedSearch]);
 

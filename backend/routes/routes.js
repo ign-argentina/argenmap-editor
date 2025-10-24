@@ -5,6 +5,7 @@ import userRoutes from "./userRoutes.js";
 import authRoutes from "./authRoutes.js";
 import groupRoutes from "./groupRoutes.js";
 import rolesRoutes from "./rolesRoutes.js";
+import adminRoutes from "./adminRoutes.js";
 
 const routes = Router();
 
@@ -26,5 +27,6 @@ routes.use("/users", userRoutes)
 routes.use("/auth", authRoutes)
 routes.use("/groups", groupRoutes)
 routes.use("/roles", rolesRoutes);
+routes.use("/admin", adminRoutes);
 
 export default routes;
