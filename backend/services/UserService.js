@@ -36,6 +36,16 @@ class UserService {
       return error
     }
   }
+
+  searchUser = async (search) => {
+    try{
+      const LIMIT = 10;
+      const data = await User.searchUser(search, LIMIT);
+      return data
+    }catch(error){
+      return error;
+    }
+  }
   
 }
 

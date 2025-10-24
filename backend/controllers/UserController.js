@@ -62,6 +62,13 @@ class UserController {
     /**** TO DO ****/
   }
 
+  searchUser = async (req, res) => {
+    const { search } = req.query;
+    const result = await this.userService.searchUser(search)
+    console.log("Controoller ", result)
+    return res.status(200).json(result)
+  }
+
 }
 
 

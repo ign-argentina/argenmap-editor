@@ -316,4 +316,11 @@ export const updateUserPassword = async (rePassword) => {
   }, { withCredentials: true });
 }
 
+export const searchUser = async (search) => {
+  const res = await axios.get(`${API_URL}/users/admin?search=${search}`, {
+      withCredentials: true,
+    });
+    return res.data;
+}
+
 // ***** END USER METHODS *****

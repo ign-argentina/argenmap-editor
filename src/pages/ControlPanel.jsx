@@ -1,25 +1,30 @@
 import { useUser } from "../context/UserContext";
 import './ControlPanel.css'
+import GroupDashboard from "../components/GroupDashboard/GroupDashboard";
+import UserDashboard from "../components/AdminDashboard/UserDashboard";
+import { useState } from "react";
 
-function AdminDashboard() {
+function ControlPanel() {
   const { logout, setGroupAdmin, setSuperAdmin, superAdmin } = useUser()
-
+  const [tab, setTab] = useState(0);
   return (
     <div className='control-panel'>
 
       <div className='cpanel-navbar'>
-        <button>Administrar Usuarios</button>
-        <button>Administrar Grupos</button>
-        <button>Configuracion General</button>
-        <button>Métricas</button>
+        <button onClick={() => setTab(0)}>Administrar Usuarios</button>
+        <button onClick={() => setTab(1)}>Administrar Grupos</button>
+        <button onClick={() => setTab(2)}>Configuracion General</button>
+        <button onClick={() => setTab(3)}>Métricas</button>
       </div>
 
       <div className='cpanel-body'>
-          aaaaaaaa
+        {tab === 0 && <UserDashboard />}
+        {tab === 1 && <GroupDashboard />}
+          
       </div>
 
     </div>
   )
 }
 
-export default AdminDashboard
+export default ControlPanel
