@@ -5,8 +5,9 @@ import ViewerManager from '../components/ViewerManager/ViewerManager';
 import Form from '../components/Form/Form';
 import HomeRedirect from '../components/HomeRedirect';
 import Management from "../pages/Management";
-import Dashboard from "../pages/Dashboard";
+import ControlPanel from "../pages/ControlPanel";
 import ArgenmapForm from "../components/ArgenmapForm/ArgenmapForm";
+import PrivatedRoute from "./PrivatedRoute";
 
 const router = createBrowserRouter([
   {
@@ -16,8 +17,9 @@ const router = createBrowserRouter([
       { path: "/visores", element: <ViewerManager /> },
       { path: "/form", element: <Form /> },
       { path: "/management", element: <Management /> },
-      { path: "/admin/dashboard", element: <Dashboard /> },
+      { path: "/admin/dashboard", element: <PrivatedRoute element={<ControlPanel />} />},
       { path: "/aform", element: <ArgenmapForm /> },
+      { path: "*", element: <HomeRedirect /> } // Catch all routes
     ]
   },
 ])

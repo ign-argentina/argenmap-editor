@@ -1,0 +1,30 @@
+.control-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: wheat;
+}
+
+
+.cpanel-navbar {
+  width: 10%;
+  display: flex;
+  flex-direction: column;
+  background-color: aqua;
+  height: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.cpanel-navbar button {
+  width: 80%;
+  height: 8%;
+}
+
+.cpanel-body {
+  width: 86%;
+  height: 100%;
+  background-color: aliceblue;
+}

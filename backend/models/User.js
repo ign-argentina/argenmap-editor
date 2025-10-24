@@ -30,6 +30,10 @@ const IS_GROUP_ADMIN = `
 
 const SALT_ROUNDS = 10
 
+const SEARCH_USER = `SELECT email, name, lastname, active FROM usuarios
+                     WHERE email
+                     ILIKE $1 OR name ILIKE $1 OR lastname ILIKE $1 LIMIT $2;`
+
 /**
  * Modelo que maneja la tabla usuarios y toda la lógica relacionada.
  * Permite crear, actualizar, buscar usuarios y verificar roles.
@@ -161,6 +165,12 @@ class User extends BaseModel {
     } catch (error) {
       console.log("USER MODEL: ", error)
     }
+  }
+
+  static searchUser = async (search, limit) => {
+    const searchTerm = `%${search}%`;
+    const userList = await super.runQuery(SEARCH_USER, [searchTerm, limit])
+    return userList
   }
 }
 

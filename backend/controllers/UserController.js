@@ -61,7 +61,6 @@ class UserController {
   recoveryPassword = (req, res) => {
     /**** TO DO ****/
   }
-
 }
 
 
