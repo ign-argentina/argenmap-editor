@@ -9,7 +9,6 @@ class AdminService {
 
   searchUser = async (search) => {
     try {
-      console.log("Jijo")
       const LIMIT = 10;
       const data = await User.searchUser(search, LIMIT);
       return data
@@ -25,6 +24,11 @@ class AdminService {
     } catch (error) {
       return error
     }
+  }
+
+  changeUserStatus = async (id) => {
+    const data = await User.changeUserStatus(id)
+    return data
   }
 
 }
