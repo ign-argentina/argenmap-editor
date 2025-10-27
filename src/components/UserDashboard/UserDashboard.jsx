@@ -1,6 +1,6 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
-import { getAUserList, searchUser, changeUserStatus } from '../../api/configApi';
+import { getAUserList, searchUser, changeUserStatus, getUserMetrics } from '../../api/configApi';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -21,26 +21,25 @@ const useDebounce = (value, delay) => {
 
 function UserDashboard() {
 
+  useEffect(() => {
+    getUserMetrics().then(setMetrics)
+  }, []);
+
   const [usuarios, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
-  const [metrics, setMetrics] = useState({total: 0, unabled: 0, admins: 0})
+  const [metrics, setMetrics] = useState([])
 
-  const getAllUsers = async () => {
-    const response = await getAUserList();
-    setUsuarios(response)
+  const updateMetrics = async () => {
+    const metrica = await getUserMetrics()
+    setMetrics(metrica)
   }
-
-  const findUsers = async (debouncedSearch) => {
-    const response = await searchUser(debouncedSearch)
-    setUsuarios(response)
-  };
 
   useEffect(() => {
     if (debouncedSearch.trim()) {
-      findUsers(debouncedSearch);
+      searchUser(debouncedSearch).then(setUsuarios)
     } else {
-      getAllUsers(); // Si no hay búsqueda, mostramos todos
+      getAUserList().then(setUsuarios); // Si no hay búsqueda, mostramos todos
     }
   }, [debouncedSearch]);
 
@@ -93,7 +92,7 @@ function UserDashboard() {
                   <td>{usuario.lastname}</td>
                   <td>{usuario.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <button onClick={async () => {await changeUserStatus(usuario.id), getAllUsers(), updateMetrics()}}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
+                    <button onClick={async () => { await changeUserStatus(usuario.id), getAUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
                     <button>Editar</button>
                     <button onClick={() => blanquearClave(usuario.id)}>Blanquear Clave</button>
                   </td>
