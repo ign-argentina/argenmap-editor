@@ -28,6 +28,14 @@ if (config[mode]) {
 // SEGUIR
 const API_URL = `http://${currentConfig.IP}:${currentConfig.API_PORT}`;
 
+
+
+export const getUserMetrics = async () => {
+  return {total: 100, unabled: 30, admins: 4}
+}
+
+
+
 // ***** VIEWER METHODS ***** 
 export async function getAllVisors() {
   const res = await fetch(`${API_URL}/visores`);
