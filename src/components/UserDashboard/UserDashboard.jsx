@@ -1,6 +1,6 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
-import { getAUserList, searchUser } from '../../api/configApi';
+import { getAUserList, searchUser, changeUserStatus } from '../../api/configApi';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -24,6 +24,7 @@ function UserDashboard() {
   const [usuarios, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
+  const [metrics, setMetrics] = useState({total: 0, unabled: 0, admins: 0})
 
   const getAllUsers = async () => {
     const response = await getAUserList();
@@ -50,15 +51,15 @@ function UserDashboard() {
 
       <section className="ud-metricas">
         <div>
-          Total:
+          Total: {metrics.total}
         </div>
 
         <div>
-          Inactivos:
+          Inactivos: {metrics.unabled}
         </div>
 
         <div>
-          Administradores:
+          Administradores: {metrics.admins}
         </div>
 
         {/*         <div>
@@ -92,9 +93,9 @@ function UserDashboard() {
                   <td>{usuario.lastname}</td>
                   <td>{usuario.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <button onClick={() => changeUserStatus(usuario.email)}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
+                    <button onClick={async () => {await changeUserStatus(usuario.id), getAllUsers(), updateMetrics()}}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
                     <button>Editar</button>
-                    <button onClick={() => blanquearClave(usuario.email)}>Blanquear Clave</button>
+                    <button onClick={() => blanquearClave(usuario.id)}>Blanquear Clave</button>
                   </td>
                 </tr>
               ))

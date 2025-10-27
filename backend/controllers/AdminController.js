@@ -12,6 +12,7 @@ class AdminController {
     this.authService = new AuthService()
     this.adminService = new AdminService()
   }
+
   searchUser = async (req, res) => {
     const { search } = req.query;
     const result = await this.adminService.searchUser(search)
@@ -22,6 +23,15 @@ class AdminController {
     const result = await this.adminService.getAllUsers()
     return res.status(200).json(result)
   }
+
+  changeUserStatus = async (req, res) => {
+    try {
+      const { userId } = req.body
+      const result = await this.adminService.changeUserStatus(userId)
+      return res.status(200).json(result)
+    } catch(error){}
+      return res.status(200).json({success: false})
+    }
 }
 
 

@@ -8,5 +8,6 @@ const adminController = new AdminController();
 adminRoutes.get("/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.searchUser)
 adminRoutes.get("/users", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getAllUsers)
 /* adminRoutes.get("/metrics/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getAllUsers) */
+adminRoutes.post("/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeUserStatus)
 
 export default adminRoutes;

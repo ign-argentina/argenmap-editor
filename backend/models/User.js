@@ -11,14 +11,6 @@ const UPDATE_USER = `UPDATE usuarios SET name = COALESCE($1, name), lastname = C
 
 const IS_SUPER_ADMIN = `SELECT superadmin FROM usuarios WHERE id = $1`;
 
-/* const IS_GROUP_ADMIN = `
-  SELECT EXISTS (
-    SELECT 1
-    FROM usuarios_por_grupo
-    WHERE usuarioId = $1 AND rolId = 2
-  ) as groupadmin
-`; */
-
 const IS_GROUP_ADMIN = `
   SELECT EXISTS (
     SELECT 1
@@ -30,10 +22,18 @@ const IS_GROUP_ADMIN = `
 
 const SALT_ROUNDS = 10
 
-const SEARCH_USER = `SELECT email, name, lastname, active FROM usuarios
-                     WHERE email
-                     ILIKE $1 OR name ILIKE $1 OR lastname ILIKE $1 LIMIT $2;`
+const SEARCH_USER = `
+  SELECT email, name, lastname, active
+  FROM usuarios
+  WHERE (
+    email ILIKE $1 
+    OR CONCAT(name, ' ', lastname) ILIKE $1
+  )
+  ORDER BY email ASC
+  LIMIT $2;
+`;
 
+const CHANGE_USER_STATUS = `UPDATE usuarios SET active = NOT active WHERE id = $1`
 /**
  * Modelo que maneja la tabla usuarios y toda la lógica relacionada.
  * Permite crear, actualizar, buscar usuarios y verificar roles.
@@ -45,7 +45,7 @@ class User extends BaseModel {
  * @returns {Array} Lista de usuarios con id, nombre, apellido y email.
  */
   static getUserList = async () => {
-    const result = await super.runQuery(`SELECT id, name, lastname, email FROM usuarios WHERE NOT superadmin`)
+    const result = await super.runQuery(`SELECT id, name, lastname, email, active FROM usuarios WHERE NOT superadmin ORDER BY email ASC`)
     return result
   }
 
@@ -171,6 +171,11 @@ class User extends BaseModel {
     const searchTerm = `%${search}%`;
     const userList = await super.runQuery(SEARCH_USER, [searchTerm, limit])
     return userList
+  }
+
+  static changeUserStatus = async (id) => {
+    const result = await super.runQuery(CHANGE_USER_STATUS, [id])
+    return result
   }
 }
 

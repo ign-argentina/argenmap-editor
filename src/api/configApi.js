@@ -261,15 +261,15 @@ export const userLogin = async (email, password) => {
 }
 
 export const registerUser = async (name, lastname, email, password) => {
-    const res = await axios.post(`${API_URL}/auth/register`, {
-      name,
-      lastname,
-      email,
-      password
-    }, { withCredentials: true });
+  const res = await axios.post(`${API_URL}/auth/register`, {
+    name,
+    lastname,
+    email,
+    password
+  }, { withCredentials: true });
 
-    return res.data
-  }
+  return res.data
+}
 
 export const userLogout = async () => {
   try {
@@ -329,9 +329,14 @@ export const updateUserPassword = async (rePassword) => {
 
 export const searchUser = async (search) => {
   const res = await axios.get(`${API_URL}/admin/user?search=${search}`, {
-      withCredentials: true,
-    });
-    return res.data;
+    withCredentials: true,
+  });
+  return res.data;
+}
+
+export const changeUserStatus = async (id) => {
+  const res = await axios.post(`${API_URL}/admin/user`, {userId: id}, {withCredentials: true});
+  return res.data;
 }
 
 // ***** END USER METHODS *****
