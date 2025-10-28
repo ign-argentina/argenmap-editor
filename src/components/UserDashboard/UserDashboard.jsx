@@ -1,6 +1,7 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
 import { getAUserList, searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../api/configApi';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -93,7 +94,14 @@ function UserDashboard() {
                   <td>{usuario.active ? "Activo" : "Inactivo"}</td>
                   <td>
                     <button onClick={async () => { await changeUserStatus(usuario.id), getAUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
-                    <button onClick={() => resetUserPassword(usuario.id)}>Blanquear Clave</button>
+                    <button
+                      onClick={() => {if (confirm(`¿Estás seguro de que querés blanquear la clave de ${usuario.name} ${usuario.lastname}?`)) {
+                          resetUserPassword(usuario.id);
+                        }
+                      }}>
+
+                      Blanquear Clave
+                    </button>
                     <button>Hacer Administrador?</button>
                   </td>
                 </tr>
