@@ -1,6 +1,6 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
-import { getAUserList, searchUser, changeUserStatus, getUserMetrics } from '../../api/configApi';
+import { getAUserList, searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../api/configApi';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -93,8 +93,8 @@ function UserDashboard() {
                   <td>{usuario.active ? "Activo" : "Inactivo"}</td>
                   <td>
                     <button onClick={async () => { await changeUserStatus(usuario.id), getAUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
-                    <button>Editar</button>
-                    <button onClick={() => blanquearClave(usuario.id)}>Blanquear Clave</button>
+                    <button onClick={() => resetUserPassword(usuario.id)}>Blanquear Clave</button>
+                    <button>Hacer Administrador?</button>
                   </td>
                 </tr>
               ))

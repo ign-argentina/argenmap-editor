@@ -30,7 +30,16 @@ class AdminService {
     const data = await User.changeUserStatus(id)
     return data
   }
+  
+  getUserMetrics = async () => {
+    const data = await User.getUserMetrics();
+    return data
+  }
 
+  resetUserPassword = async (id) => {
+    const data = await User.resetUserPassword(id)
+    return data
+  }
 }
 
 export default AdminService

@@ -29,11 +29,18 @@ if (config[mode]) {
 const API_URL = `http://${currentConfig.IP}:${currentConfig.API_PORT}`;
 
 
-
+// ***** ADMIN METHODS ***** 
 export const getUserMetrics = async () => {
-  return {total: 100, unabled: 30, admins: 4}
+  const res = await axios.get(`${API_URL}/admin/user/metrics`,
+    { withCredentials: true, validateStatus: () => true });
+  return res.data
 }
 
+export const resetUserPassword = async (id) => {
+  const res = await axios.post(`${API_URL}/admin/user/resetpassword`, {id: id},
+    { withCredentials: true, validateStatus: () => true });
+}
+// ************************* 
 
 
 // ***** VIEWER METHODS ***** 
@@ -343,7 +350,7 @@ export const searchUser = async (search) => {
 }
 
 export const changeUserStatus = async (id) => {
-  const res = await axios.post(`${API_URL}/admin/user`, {userId: id}, {withCredentials: true});
+  const res = await axios.post(`${API_URL}/admin/user`, { userId: id }, { withCredentials: true });
   return res.data;
 }
 
