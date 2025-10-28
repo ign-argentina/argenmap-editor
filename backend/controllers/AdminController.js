@@ -29,9 +29,28 @@ class AdminController {
       const { userId } = req.body
       const result = await this.adminService.changeUserStatus(userId)
       return res.status(200).json(result)
-    } catch(error){}
-      return res.status(200).json({success: false})
+    } catch (error) { }
+    return res.status(200).json({ success: false })
+  }
+
+  resetUserPassword = async (req, res) => {
+    try {
+      const { id } = req.body
+      const result = await this.adminService.resetUserPassword(id)
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(200).json({ success: false })
     }
+  }
+
+    getUserMetrics = async (req, res) => {
+    try {
+      const result = await this.adminService.getUserMetrics()
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(200).json({ success: false })
+    }
+  }
 }
 
 
