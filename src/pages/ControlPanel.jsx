@@ -14,7 +14,7 @@ function ControlPanel() {
         <button onClick={() => setTab(0)}>Administrar Usuarios</button>
         <button onClick={() => setTab(1)}>Administrar Grupos</button>
         <button onClick={() => setTab(2)}>Configuracion General</button>
-        <button onClick={() => setTab(3)}>Métricas</button>
+        <button onClick={() => setTab(3)}>Estadísticas Globales</button>
       </div>
 
       <div className='cpanel-body'>
