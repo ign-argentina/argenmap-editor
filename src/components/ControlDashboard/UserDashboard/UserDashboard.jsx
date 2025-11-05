@@ -1,7 +1,7 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
-import { getAUserList, searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../api/configApi';
-import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
+import { getAUserList, searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../../api/configApi';
+import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
