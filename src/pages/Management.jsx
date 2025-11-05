@@ -4,7 +4,9 @@ import { useToast } from "../context/ToastContext.jsx";
 import { useNavigate } from "react-router-dom";
 import ManagementTableUserList from "../components/ManagementUserList/ManagementUserList.jsx";
 import ManagementDeletedViewerList from "../components/ManagementDeletedViewerList/ManagementDeletedViewerList.jsx";
-import { restoreViewer, getDeletedViewers, getManageGroups, getGroup, getGroupUserList, getUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/configApi.js"
+import { restoreViewer, getDeletedViewers } from "../api/viewers.js";
+import { getManageGroups, getGroup, getGroupUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/groups.js";
+import { getUserList } from "../api/users.js";
 import './Management.css'
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {

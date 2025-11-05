@@ -4,7 +4,7 @@ import RegisterModal from "../RegisterModal"
 import ProfileModal from "../ProfileModal/ProfileModal";
 import { useUser } from "../../context/UserContext";
 import './LoginSection.css';
-import { userCheckAuth } from "../../api/configApi";
+import { userCheckAuth } from "../../api/auth";
 
 function LoginSection() {
 

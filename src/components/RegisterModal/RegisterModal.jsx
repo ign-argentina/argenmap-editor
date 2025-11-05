@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './RegisterModal.css';
-import { registerUser } from '../../api/configApi';
+import { registerUser } from '../../api/auth';
 import { useUser } from '/src/context/UserContext';
 import { useToast } from '../../context/ToastContext';
 
