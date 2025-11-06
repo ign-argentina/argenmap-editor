@@ -1,3 +1,4 @@
+import Group from "../models/Group.js";
 import User from "../models/User.js"
 import Result from "../utils/Result.js"
 
@@ -11,6 +12,16 @@ class AdminService {
     try {
       const LIMIT = 10;
       const data = await User.searchUser(search, LIMIT);
+      return data
+    } catch (error) {
+      return error;
+    }
+  }
+  
+  searchGroup = async (search) => {
+    try {
+      const LIMIT = 10;
+      const data = await Group.searchGroup(search, LIMIT);
       return data
     } catch (error) {
       return error;
@@ -30,15 +41,25 @@ class AdminService {
     const data = await User.changeUserStatus(id)
     return data
   }
-  
+
   getUserMetrics = async () => {
     const data = await User.getUserMetrics();
+    return data
+  }
+
+  getGroupsMetrics = async () => {
+    const data = await Group.getGroupsMetrics();
     return data
   }
 
   resetUserPassword = async (id) => {
     const data = await User.resetUserPassword(id)
     return data
+  }
+
+  getAllGroups = async () => {
+    const data = await Group.getAllGroups();
+    return data;
   }
 }
 

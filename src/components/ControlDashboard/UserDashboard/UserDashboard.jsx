@@ -1,7 +1,7 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
-import { getAUserList } from '../../../api/users';
-import { searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../../api/admin';
+import { getUserList } from '../../../api/users';
+import { searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../../api/admin.js';
 
 
 import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
@@ -43,7 +43,7 @@ function UserDashboard() {
     if (debouncedSearch.trim()) {
       searchUser(debouncedSearch).then(setUsuarios)
     } else {
-      getAUserList().then(setUsuarios); // Si no hay búsqueda, mostramos todos
+      getUserList().then(setUsuarios); // Si no hay búsqueda, mostramos todos
     }
   }, [debouncedSearch]);
 
@@ -70,6 +70,8 @@ function UserDashboard() {
         </div> */}
       </section>
       <section className="ud-body">
+        <div className='ud-actions'><button onClick={() => alert("Open modal")}>Dar de alta nuevo usuario</button></div>
+
         <input
           type="text"
           placeholder="Buscar usuario..."
@@ -96,16 +98,17 @@ function UserDashboard() {
                   <td>{usuario.lastname}</td>
                   <td>{usuario.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <button onClick={async () => { await changeUserStatus(usuario.id), getAUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
+                    <button onClick={async () => { await changeUserStatus(usuario.id), getUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
                     <button
-                      onClick={() => {if (confirm(`¿Estás seguro de que querés blanquear la clave de ${usuario.name} ${usuario.lastname}?`)) {
+                      onClick={() => {
+                        if (confirm(`¿Estás seguro de que querés blanquear la clave de ${usuario.name} ${usuario.lastname}?`)) {
                           resetUserPassword(usuario.id);
                         }
                       }}>
 
                       Blanquear Clave
                     </button>
-                    <button>Hacer Administrador?</button>
+                 {/*    <button>Hacer Administrador?</button> */}
                   </td>
                 </tr>
               ))

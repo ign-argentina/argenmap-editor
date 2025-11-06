@@ -19,6 +19,13 @@ class AdminController {
     return res.status(200).json(result)
   }
 
+  searchGroup = async (req, res) => {
+    const { search } = req.query;
+    const result = await this.adminService.searchGroup(search)
+    return res.status(200).json(result)
+  }
+
+
   getAllUsers = async (req, res) => {
     const result = await this.adminService.getAllUsers()
     return res.status(200).json(result)
@@ -43,7 +50,7 @@ class AdminController {
     }
   }
 
-    getUserMetrics = async (req, res) => {
+  getUsersMetrics = async (req, res) => {
     try {
       const result = await this.adminService.getUserMetrics()
       return res.status(200).json(result)
@@ -51,6 +58,25 @@ class AdminController {
       return res.status(200).json({ success: false })
     }
   }
+
+  getGroupsMetrics = async (req, res) => {
+    try {
+      const result = await this.adminService.getGroupsMetrics()
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(200).json({ success: false })
+    }
+  }
+
+  getAllGroups = async (req, res) => {
+    try {
+      const result = await this.adminService.getAllGroups()
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(200).json({ success: false })
+    }
+  }
+
 }
 
 

@@ -1,0 +1,34 @@
+.group-dashboard {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.gd-metricas {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 10%;
+  width: 100%;
+}
+
+.gd-metricas div {
+  display: flex;
+  align-items: center;
+/*   justify-content: center; */
+  height: 100%;
+  width: 11%;
+  background-color: aqua;
+}
+
+.gd-body{
+  width: 90%;
+  background-color: aqua;
+}
+
+.gd-table {
+  text-align: center;
+  width: 100%;
+}
