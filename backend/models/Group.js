@@ -54,6 +54,22 @@ const SEARCH_GROUP = `SELECT g.id, g.name, g.description, g.deleted, COUNT(v.id)
 * Incluye funciones para gestionar grupos, miembros y sus roles.
 */
 class Group extends BaseModel {
+  /**
+   * Crea un nuevo grupo.
+   * @param {string} name - Nombre del grupo.
+   * @param {?string} description - Descripción opcional.
+   * @param {?string} img - Imagen opcional.
+   * @returns {Promise<Object>} Grupo creado (con id incluido).
+   */
+  static createGroup = async (name, description = null, img = null) => {
+    const result = await super.runQuery(
+      `INSERT INTO grupos (name, description, img)
+     VALUES ($1, $2, $3)
+     RETURNING id;`,
+      [name, description, img]
+    );
+    return result[0];
+  };
 
   /**
  * Elimina un grupo por su ID.

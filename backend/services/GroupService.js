@@ -9,6 +9,34 @@ import Result from "../utils/Result.js";
 class GroupService {
 
   /**
+ * Crea un nuevo grupo. Solo accesible para superadmins.
+ *
+ * @param {number} uid - ID del usuario solicitante.
+ * @param {string} name - Nombre del grupo.
+ * @param {?string} description - Descripción opcional.
+ * @param {?string} img - Imagen opcional.
+ * @returns {Object} Resultado con el ID del grupo creado.
+ */
+  createGroup = async (uid, name, description = null, img = null) => {
+    try {
+      const isSuperAdmin = await User.isSuperAdmin(uid);
+      if (!isSuperAdmin) {
+        return Result.fail("No tenés permisos para crear grupos.");
+      }
+
+      const group = await Group.createGroup(name, description, img);
+      if (!group || !group.gid) {
+        return Result.fail("No se pudo crear el grupo.");
+      }
+
+      return Result.success({ gid: group.gid });
+    } catch (error) {
+      console.log("Error en la capa de servicio createGroup:", error);
+      return Result.fail("Error interno al crear grupo.");
+    }
+  };
+
+  /**
  * Elimina un grupo si el usuario tiene permisos (es admin del grupo o super admin).
  *
  * @param {number} gid - ID del grupo a eliminar.

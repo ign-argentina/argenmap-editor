@@ -1,6 +1,19 @@
 import axios from "axios";
 import { API_URL } from "./index.js";
 
+export const createGroup = async (name, description, img = null) => {
+  try {
+    const res = await axios.post(`${API_URL}/groups/`,
+      { name, description, img },
+      { withCredentials: true, validateStatus: () => true }
+    );
+    return res.data; // Devuelve { success: true, data: { gid: ... } }
+  } catch (error) {
+    console.error("Error al crear grupo:", error);
+    throw error;
+  }
+};
+
 export const getGrupos = async () => {
   try {
     const res = await axios.get(`${API_URL}/groups/`, {
