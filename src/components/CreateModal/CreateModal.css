@@ -1,4 +1,4 @@
-/* .register-overlay {
+.register-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -82,4 +82,4 @@
 
 .form-register button:hover {
   background-color: #d6a850;
-} */
+}

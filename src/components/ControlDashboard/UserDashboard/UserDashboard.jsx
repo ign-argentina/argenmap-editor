@@ -2,9 +2,9 @@ import './UserDashboard.css'
 import { useState, useEffect } from 'react';
 import { getUserList } from '../../../api/users';
 import { searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../../api/admin.js';
-
-
+import CreateModal from "../../CreateModal/CreateModal"
 import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
+import { useUser } from "/src/context/UserContext";
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -33,6 +33,8 @@ function UserDashboard() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
   const [metrics, setMetrics] = useState([])
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const { checkAuth } = useUser();
 
   const updateMetrics = async () => {
     const metrica = await getUserMetrics()
@@ -46,6 +48,11 @@ function UserDashboard() {
       getUserList().then(setUsuarios); // Si no hay búsqueda, mostramos todos
     }
   }, [debouncedSearch]);
+
+  const handleRegisterSuccess = () => {
+    checkAuth();
+    setShowCreateUserModal(false);
+  };
 
   return (
     <div className="user-dashboard">
@@ -70,7 +77,12 @@ function UserDashboard() {
         </div> */}
       </section>
       <section className="ud-body">
-        <div className='ud-actions'><button onClick={() => alert("Open modal")}>Dar de alta nuevo usuario</button></div>
+        <div className='ud-actions'>
+          <button
+            onClick={() => setShowCreateUserModal(true)}>
+            Alta Nuevo Usuario
+          </button>
+        </div>
 
         <input
           type="text"
@@ -108,7 +120,7 @@ function UserDashboard() {
 
                       Blanquear Clave
                     </button>
-                 {/*    <button>Hacer Administrador?</button> */}
+                    {/*    <button>Hacer Administrador?</button> */}
                   </td>
                 </tr>
               ))
@@ -121,6 +133,13 @@ function UserDashboard() {
         </table>
       </section>
 
+      {showCreateUserModal && (
+        <CreateModal
+          type="user"
+          onClose={() => setShowCreateUserModal(false)}
+          onRegisterSuccess={handleRegisterSuccess}
+        />
+      )}
     </div>
   )
 }
