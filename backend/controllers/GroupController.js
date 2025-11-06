@@ -12,8 +12,27 @@ class GroupController {
   }
 
   createGroup = async (req, res) => {
-    /**** TO DO ****/
-  }
+    try {
+      const token = req.cookies[process.env.AUTH_COOKIE_NAME];
+      const { uid } = this.authService.getDataToken(token);
+      const { name, description, img } = req.body;
+
+      if (!name) {
+        return res.status(400).json({ error: "El nombre del grupo es obligatorio." });
+      }
+
+      const result = await this.groupService.createGroup(uid, name, description, img);
+
+      if (!result.success) {
+        return res.status(400).json(result);
+      }
+
+      return res.status(201).json(result);
+    } catch (error) {
+      console.log("Error en el controlador createGroup:", error);
+      return res.status(500).json({ error: "Error interno al crear grupo." });
+    }
+  };
 
   /**
  * Actualiza los datos de un grupo específico.

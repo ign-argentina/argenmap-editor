@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CreateModal.css';
 import { registerUser } from '../../api/auth';
-// import { createGroup } from '../../api/groups';
+import { createGroup } from '../../api/groups';
 import { useUser } from '/src/context/UserContext';
 import { useToast } from '../../context/ToastContext';
 
