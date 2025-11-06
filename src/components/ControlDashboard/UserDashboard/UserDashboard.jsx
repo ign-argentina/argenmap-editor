@@ -49,11 +49,11 @@ function UserDashboard() {
     }
   }, [debouncedSearch]);
 
-  const handleRegisterSuccess = () => {
+/*   const handleRegisterSuccess = () => {
     checkAuth();
     setShowCreateUserModal(false);
   };
-
+ */
   return (
     <div className="user-dashboard">
 
@@ -137,7 +137,7 @@ function UserDashboard() {
         <CreateModal
           type="user"
           onClose={() => setShowCreateUserModal(false)}
-          onRegisterSuccess={handleRegisterSuccess}
+          onRegisterSuccess={() =>{}}
         />
       )}
     </div>

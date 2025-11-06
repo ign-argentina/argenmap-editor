@@ -21,12 +21,11 @@ function CreateModal({ type = "user", onClose, onSuccess }) {
     e.preventDefault();
     try {
       let res;
-
       if (type === "user") {
         res = await registerUser(name, lastname, email, password);
         if (res) {
           showToast("Usuario creado correctamente!", "success");
-          onSuccess?.();
+/*           onSuccess?.(); */
         }
       } else if (type === "group") {
         // res = await createGroup({
