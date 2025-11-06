@@ -1,7 +1,8 @@
-import './GroupDashboard.css'
 import { useEffect, useState } from 'react';
-import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog'
 import { getGroupsMetrics, getAGroupList, searchGroup /* changeGroupStatus */ } from '../../../api/admin';
+import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog'
+import CreateModal from "../../CreateModal/CreateModal"
+import './GroupDashboard.css'
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -30,6 +31,7 @@ function GroupDashboard() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
   const [metrics, setMetrics] = useState([])
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
 
   const updateMetrics = async () => {
     const metrica = await getGroupsMetrics()
@@ -68,8 +70,13 @@ function GroupDashboard() {
         </div> */}
       </section>
       <section className="gd-body">
-        <div className='gd-actions'><button onClick={() => alert("Open modal")}>Crear nuevo grupo</button></div>
-
+        <div className='gd-actions'>
+          <button
+            onClick={() => setShowCreateUserModal(true)}>
+            Alta Nuevo Grupo
+          </button>
+        </div>
+        
         <input
           type="text"
           placeholder="Buscar grupo..."
@@ -119,6 +126,13 @@ function GroupDashboard() {
         </table>
       </section>
 
+      {showCreateUserModal && (
+        <CreateModal
+          type="group"
+          onClose={() => setShowCreateUserModal(false)}
+          // onRegisterSuccess={handleRegisterSuccess}
+        />
+      )}
     </div>
   )
 }

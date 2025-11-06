@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CreateModal.css';
 import { registerUser } from '../../api/auth';
-// import { createGroup } from '../../api/groups'; // lo crearás
+// import { createGroup } from '../../api/groups';
 import { useUser } from '/src/context/UserContext';
 import { useToast } from '../../context/ToastContext';
 
@@ -90,6 +90,7 @@ function CreateModal({ type = "user", onClose, onSuccess }) {
           {type === "group" && (
             <>
               <textarea
+                type="text"
                 placeholder="Descripción"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
