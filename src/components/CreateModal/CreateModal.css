@@ -83,3 +83,31 @@
 .form-register button:hover {
   background-color: #d6a850;
 }
+
+.search-results {
+  margin-top: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #888;
+  border-radius: 4px;
+}
+
+.search-item {
+  padding: 6px 8px;
+  cursor: pointer;
+  background: #222;
+  color: #eee;
+}
+
+.search-item:hover {
+  background: #444;
+}
+
+.btn-search {
+  padding: 0 10px;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
