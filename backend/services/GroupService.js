@@ -25,11 +25,12 @@ class GroupService {
       }
 
       const group = await Group.createGroup(name, description, img);
-      if (!group || !group.gid) {
+      if (!group || !group.id) {
         return Result.fail("No se pudo crear el grupo.");
       }
 
-      return Result.success({ gid: group.gid });
+      return Result.success({ gid: group.id });
+
     } catch (error) {
       console.log("Error en la capa de servicio createGroup:", error);
       return Result.fail("Error interno al crear grupo.");

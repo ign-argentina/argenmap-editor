@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CreateModal.css';
 import { registerUser } from '../../api/auth';
-import { createGroup } from '../../api/groups';
+import { createGroup, addUserToGroup } from '../../api/groups';
 import { getUserList } from '../../api/users';
 import { useToast } from '../../context/ToastContext';
 import { searchUser } from '../../api/admin';
@@ -41,27 +41,37 @@ function CreateModal({ type = "user", onClose, onSuccess }) {
     e.preventDefault();
     try {
       let res;
+
       if (type === "user") {
         res = await registerUser(name, lastname, email, password);
         if (res) showToast("Usuario creado correctamente!", "success");
       }
 
       if (type === "group") {
-        if (!selectedUser) return showToast("Seleccioná un usuario admin!", "warning");
+        if (!selectedUser) {
+          return showToast("Seleccioná un usuario admin!", "warning");
+        }
 
-        await createGroup({
-          name,
-          description,
-          admin: selectedUser.id
-        });
+        // Crear el grupo y obtener su ID
+        const groupRes = await createGroup(name, description);
+        console.log("groupRes: ", groupRes)
+        const groupId = groupRes.data.gid;
 
-        showToast("Grupo creado correctamente!", "success");
+        if (!groupId) {
+          throw new Error("No se pudo obtener el ID del grupo creado.");
+        }
+
+        // Asignar el usuario al grupo
+        await addUserToGroup(selectedUser.id, groupId);
+
+        showToast("Grupo creado y usuario asignado correctamente!", "success");
       }
 
       onClose();
       onSuccess?.();
 
     } catch (error) {
+      console.error(error);
       showToast(error.response?.data || error.message, "warning");
     }
   };
@@ -72,7 +82,7 @@ function CreateModal({ type = "user", onClose, onSuccess }) {
         <h2>{type === "user" ? "Nuevo Usuario" : "Nuevo Grupo"}</h2>
 
         <form className="form-register" onSubmit={handleSubmit}>
-          
+
           <input type="text" placeholder="Nombre"
             value={name} onChange={(e) => setName(e.target.value)} required />
 
