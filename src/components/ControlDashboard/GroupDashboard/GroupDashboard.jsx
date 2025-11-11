@@ -76,7 +76,7 @@ function GroupDashboard() {
             Alta Nuevo Grupo
           </button>
         </div>
-        
+
         <input
           type="text"
           placeholder="Buscar grupo..."
@@ -103,17 +103,15 @@ function GroupDashboard() {
                   <td>{group.totalviewers}</td>
                   <td>{group.deleted ? "Eliminado" : "Activo"}</td>
                   <td>
-                    {<button onClick={async () => { await changeGroupStatus(group.id), getAGroupList().then(setGroups), updateMetrics() }}>{group.deleted ? "Recuperar" : "Eliminar"}</button>}
-{/*                     <button
-                      onClick={() => {
-                        if (confirm(`¿Estás seguro de que querés blanquear la clave de ${group.name} ${group.lastname}?`)) {
-                          resetUserPassword(group.id);
-                        }
-                      }}>
-
-                      Blanquear Clave
-                    </button> */}
-                    {/*    <button>Hacer Administrador?</button> */}
+                    {<button
+                      onClick={async () => {
+                        await changeGroupStatus(group.id),
+                        getAGroupList().then(setGroups),
+                        updateMetrics()
+                      }}
+                    >
+                      {group.deleted ? "Recuperar" : "Eliminar"}
+                    </button>}
                   </td>
                 </tr>
               ))
@@ -130,7 +128,7 @@ function GroupDashboard() {
         <CreateModal
           type="group"
           onClose={() => setShowCreateUserModal(false)}
-          // onRegisterSuccess={handleRegisterSuccess}
+        // onRegisterSuccess={handleRegisterSuccess}
         />
       )}
     </div>
