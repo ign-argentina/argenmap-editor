@@ -40,6 +40,15 @@ class AdminController {
     return res.status(200).json({ success: false })
   }
 
+  changeGroupStatus = async (req, res) => {
+    try {
+      const { groupId } = req.body
+      const result = await this.adminService.changeGroupStatus(groupId)
+      return res.status(200).json(result)
+    } catch (error) { }
+    return res.status(200).json({ success: false })
+  }
+
   resetUserPassword = async (req, res) => {
     try {
       const { id } = req.body

@@ -48,6 +48,7 @@ const SEARCH_GROUP = `SELECT g.id, g.name, g.description, g.deleted, COUNT(v.id)
                       ORDER BY g.name ASC
                       LIMIT $2;`;
 
+const CHANGE_GROUP_STATUS = `UPDATE grupos SET deleted = NOT deleted WHERE id = $1;`
 
 /**
 * Modelo para operaciones directas sobre la base de datos relacionadas a grupos.
@@ -206,6 +207,11 @@ class Group extends BaseModel {
     const searchTerm = `%${search}%`;
     const userList = await super.runQuery(SEARCH_GROUP, [searchTerm, limit])
     return userList
+  }
+
+  static changeGroupStatus = async (id) => {
+    const result = await super.runQuery(CHANGE_GROUP_STATUS, [id])
+    return result
   }
 
 }

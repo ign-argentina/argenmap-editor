@@ -13,7 +13,7 @@ adminRoutes.post("/user/resetpassword", PROTECT.REQUIRE_SUPER_ADMIN, adminContro
 
 adminRoutes.get("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.searchGroup)
 adminRoutes.get("/groups", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getAllGroups)
-/* adminRoutes.post("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeGroupStatus) */
+adminRoutes.post("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeGroupStatus)
 
 adminRoutes.get("/metrics/users", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getUsersMetrics)
 adminRoutes.get("/metrics/groups", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getGroupsMetrics)

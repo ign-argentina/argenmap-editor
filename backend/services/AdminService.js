@@ -17,7 +17,7 @@ class AdminService {
       return error;
     }
   }
-  
+
   searchGroup = async (search) => {
     try {
       const LIMIT = 10;
@@ -39,6 +39,11 @@ class AdminService {
 
   changeUserStatus = async (id) => {
     const data = await User.changeUserStatus(id)
+    return data
+  }
+
+  changeGroupStatus = async (id) => {
+    const data = await Group.changeGroupStatus(id)
     return data
   }
 

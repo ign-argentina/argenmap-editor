@@ -9,7 +9,6 @@ groupRoutes.post("/", [PROTECT.REQUIRE_SUPER_ADMIN], groupController.createGroup
 groupRoutes.put("/", PROTECT.REQUIRE_GROUP_ADMIN, groupController.updateGroup);
 groupRoutes.delete("/", PROTECT.REQUIRE_GROUP_ADMIN, groupController.deleteGroup);
 groupRoutes.get("/", PROTECT.REQUIRE_AUTH, groupController.getGroupList) // Devuelve el listado de id's grupos al cual uno pertenece. Si sos superadmin, todos. Si no, tus grupos
-groupRoutes.post("/", [PROTECT.REQUIRE_SUPER_ADMIN], groupController.createGroup);
 
 groupRoutes.get("/rol/:id", PROTECT.REQUIRE_AUTH, groupController.getPermissions)
 

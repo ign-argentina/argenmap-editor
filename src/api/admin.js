@@ -37,6 +37,11 @@ export const changeUserStatus = async (id) => {
   return res.data;
 }
 
+export const changeGroupStatus = async (id) => {
+  const res = await axios.post(`${API_URL}/admin/group`, { groupId: id }, { withCredentials: true });
+  return res.data;
+}
+
 export const getAGroupList = async () => {
   try {
     const res = await axios.get(`${API_URL}/admin/groups`, {

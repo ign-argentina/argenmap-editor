@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getGroupsMetrics, getAGroupList, searchGroup /* changeGroupStatus */ } from '../../../api/admin';
+import { getGroupsMetrics, getAGroupList, searchGroup, changeGroupStatus } from '../../../api/admin';
 import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog'
 import CreateModal from "../../CreateModal/CreateModal"
 import './GroupDashboard.css'
