@@ -61,7 +61,7 @@ function CreateModal({ type = "user", onClose, onSuccess }) {
         //   throw new Error("No se pudo obtener el ID del grupo creado.");
         // }
 
-        // Asignar el usuario al grupo
+        // Asignar el usuario al grupo (NO VA MAS, PROCESO EN EL BACKEND)
         // await addUserToGroup(selectedUser.id, groupId);
 
         showToast("Grupo creado y usuario asignado correctamente!", "success");

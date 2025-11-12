@@ -90,6 +90,7 @@ class AdminController {
     try {
       const { name, description, img, email } = req.body;
       let result = null;
+      console.log("toco")
       if (!name) {
         return res.status(400).json({ error: "El nombre del grupo es obligatorio." });
       }
