@@ -148,6 +148,8 @@ class GroupService {
       if (!userAlreadyExists.exists) {
         if (await Group.isAdminForThisGroup(gid, uid)) {
           console.log("pepe")
+
+          console.log(addUserId + " aa " + gid)
           result = await Group.addUserToGroup(gid, addUserId)
         } else if (await User.isSuperAdmin(uid)) {
           result = await Group.addUserToGroup(gid, addUserId)
