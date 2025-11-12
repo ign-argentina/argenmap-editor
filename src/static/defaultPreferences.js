@@ -41,18 +41,18 @@ const defaultPreferences = {
     textMenu: "white",
     textMenuStyle: "",
   },
-  metaTags: {
-    description:
-      "Visor de mapas desarrollado por el Instituto Geográfico Nacional",
-    image: "/src/styles/images/argenmap.png",
-    title: "IGN - Argenmap",
-  },
-  onInit: {
-    showToolbar: true,
-    showLayerMenu: true,
-  },
+  // metaTags: {
+  //   description:
+  //     "Visor de mapas desarrollado por el Instituto Geográfico Nacional",
+  //   image: "/src/styles/images/argenmap.png",
+  //   title: "IGN - Argenmap",
+  // },
+  // onInit: {
+  //   showToolbar: true,
+  //   showLayerMenu: true,
+  // },
 
-  analytics_ids: ["G-WPKNSX1QMS"],
+  // analytics_ids: ["G-WPKNSX1QMS"],
 
   charts: {
     isActive: true,
@@ -80,13 +80,13 @@ const defaultPreferences = {
     url:
       "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}.png",
   },
-  strings: {
-    basemap_legend_button_text: "Ver leyenda del mapa",
-    basemap_max_zoom: " y máximo de ",
-    basemap_min_zoom: "Zoom mínimo de ",
-    delete_geometry: "Eliminar geometría",
-  },
-  excluded_plugins: ["minimap"],
+  // strings: {
+  //   basemap_legend_button_text: "Ver leyenda del mapa",
+  //   basemap_max_zoom: " y máximo de ",
+  //   basemap_min_zoom: "Zoom mínimo de ",
+  //   delete_geometry: "Eliminar geometría",
+  // },
+  // excluded_plugins: ["minimap"],
   showSearchBar: true,
   searchbar: {
     background_color: "rgba(255, 255, 255, 0.7)",
@@ -98,51 +98,51 @@ const defaultPreferences = {
     },
     top: "5px",
   },
-  geoprocessing: {
-    availableProcesses: [
-      {
-        baseUrl:
-          "https://imagenes.ign.gob.ar/geoserver/geoprocesos/ows?service=WPS&version=1.0.0",
-        geoprocess: "contour",
-        layer: "alos_unificado",
-        name: "Curvas de Nivel",
-        namePrefix: "curvas_de_nivel_",
-        styles: {
-          d_line_color: "#967529",
-          d_line_m: 500,
-          d_weigth: 1,
-          line_color: "#e0b44c",
-          line_weight: 0.8,
-          smoothFactor: 1.7,
-        },
-      },
-      {
-        baseUrl:
-          "https://imagenes.ign.gob.ar/geoserver/ows?service=WPS&version=1.0.0",
-        geoprocess: "waterRise",
-        layer: "geoprocesos:alos_unificado",
-        name: "Cota",
-        namePrefix: "cota_",
-      },
-      {
-        geoprocess: "buffer",
-        name: "Área de influencia",
-        namePrefix: "area_de_influencia_",
-      },
-      {
-        geoprocess: "elevationProfile",
-        name: "Perfil de Elevación",
-        namePrefix: "profile_",
-      },
-    ],
-    buttonIcon: "fa fa-cog",
-    buttonTitle: "Geoprocesos",
-    dialogTitle: "Geoprocesos",
-    isActive: true,
-    strings: {
-      bounds: "Areas a procesar",
-    },
-  },
+  // geoprocessing: {
+  //   availableProcesses: [
+  //     {
+  //       baseUrl:
+  //         "https://imagenes.ign.gob.ar/geoserver/geoprocesos/ows?service=WPS&version=1.0.0",
+  //       geoprocess: "contour",
+  //       layer: "alos_unificado",
+  //       name: "Curvas de Nivel",
+  //       namePrefix: "curvas_de_nivel_",
+  //       styles: {
+  //         d_line_color: "#967529",
+  //         d_line_m: 500,
+  //         d_weigth: 1,
+  //         line_color: "#e0b44c",
+  //         line_weight: 0.8,
+  //         smoothFactor: 1.7,
+  //       },
+  //     },
+  //     {
+  //       baseUrl:
+  //         "https://imagenes.ign.gob.ar/geoserver/ows?service=WPS&version=1.0.0",
+  //       geoprocess: "waterRise",
+  //       layer: "geoprocesos:alos_unificado",
+  //       name: "Cota",
+  //       namePrefix: "cota_",
+  //     },
+  //     {
+  //       geoprocess: "buffer",
+  //       name: "Área de influencia",
+  //       namePrefix: "area_de_influencia_",
+  //     },
+  //     {
+  //       geoprocess: "elevationProfile",
+  //       name: "Perfil de Elevación",
+  //       namePrefix: "profile_",
+  //     },
+  //   ],
+  //   buttonIcon: "fa fa-cog",
+  //   buttonTitle: "Geoprocesos",
+  //   dialogTitle: "Geoprocesos",
+  //   isActive: true,
+  //   strings: {
+  //     bounds: "Areas a procesar",
+  //   },
+  // },
   mainPopup: {
     isActive: false,
     welcomeSign: "Novedades",
