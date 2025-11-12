@@ -110,6 +110,17 @@ class AdminController {
       return res.status(500).json({ error: "Error interno al crear grupo." });
     }
   };
+
+  createUser = async (req, res) => {
+    try{
+      const {name, lastname, email, password} = req.body;      
+      this.adminService.createUser(name, lastname, email, password);
+      return res.status(201).json({message:"Usuario creado correctamente"})
+    }catch(error){
+      return res.status(500).json({error: "Error interno al crear usuarios"})
+    }
+
+  }
 }
 
 

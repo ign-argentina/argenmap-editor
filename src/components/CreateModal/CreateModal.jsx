@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CreateModal.css';
 import { registerUser } from '../../api/auth';
-import { createGroup, searchUser } from '../../api/admin';
+import { createGroup, searchUser, createUser } from '../../api/admin';
 import { addUserToGroup } from '../../api/groups';
 import { getUserList } from '../../api/users';
 import { useToast } from '../../context/ToastContext';
@@ -43,7 +43,7 @@ function CreateModal({ type = "user", onClose, onSuccess }) {
       let res;
 
       if (type === "user") {
-        res = await registerUser(name, lastname, email, password);
+        res = await createUser(name, lastname, email, password);
         if (res) showToast("Usuario creado correctamente!", "success");
       }
 
@@ -54,15 +54,6 @@ function CreateModal({ type = "user", onClose, onSuccess }) {
 
         // Crear el grupo y obtener su ID
         const groupRes = await createGroup(name, description, null, selectedUser.email);
-        console.log("groupRes: ", groupRes)
-        // const groupId = groupRes.data.gid;
-
-        // if (!groupId) {
-        //   throw new Error("No se pudo obtener el ID del grupo creado.");
-        // }
-
-        // Asignar el usuario al grupo (NO VA MAS, PROCESO EN EL BACKEND)
-        // await addUserToGroup(selectedUser.id, groupId);
 
         showToast("Grupo creado y usuario asignado correctamente!", "success");
       }

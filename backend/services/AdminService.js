@@ -97,6 +97,11 @@ class AdminService {
     Group.addUserToGroup(groupId, user.id, 2)
     return true;
   }
+
+  createUser = async (name, lastname, email, password) => {
+    User.newUser(email, name, lastname, password);
+    return true;
+  }
 }
 
 export default AdminService

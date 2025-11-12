@@ -9,6 +9,7 @@ const adminController = new AdminController();
 adminRoutes.get("/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.searchUser)
 adminRoutes.get("/users", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getAllUsers)
 adminRoutes.post("/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeUserStatus)
+adminRoutes.post("/users", PROTECT.REQUIRE_SUPER_ADMIN, adminController.createUser)
 adminRoutes.post("/user/resetpassword", PROTECT.REQUIRE_SUPER_ADMIN, adminController.resetUserPassword)
 
 adminRoutes.post("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.createGroup);

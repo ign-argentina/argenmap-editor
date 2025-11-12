@@ -66,3 +66,13 @@ export const createGroup = async (name, description, img = null, email) => {
   }
 };
 
+export const createUser = async (name, lastname, email, password) => {
+  const res = await axios.post(`${API_URL}/admin/users`, {
+    name,
+    lastname,
+    email,
+    password
+  }, { withCredentials: true });
+
+  return res.data
+}
