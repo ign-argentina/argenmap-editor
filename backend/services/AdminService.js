@@ -66,6 +66,36 @@ class AdminService {
     const data = await Group.getAllGroups();
     return data;
   }
+
+
+  /**
+ * Crea un nuevo grupo. Solo accesible para superadmins.
+ *
+ * @param {number} uid - ID del usuario solicitante.
+ * @param {string} name - Nombre del grupo.
+ * @param {?string} description - Descripción opcional.
+ * @param {?string} img - Imagen opcional.
+ * @returns {Object} Resultado con el ID del grupo creado.
+ */
+  createGroup = async (uid, name, description = null, img = null) => {
+    try {
+      const isSuperAdmin = await User.isSuperAdmin(uid);
+      if (!isSuperAdmin) {
+        return Result.fail("No tenés permisos para crear grupos.");
+      }
+
+      const group = await Group.createGroup(name, description, img);
+      if (!group || !group.id) {
+        return Result.fail("No se pudo crear el grupo.");
+      }
+
+      return Result.success({ gid: group.id });
+
+    } catch (error) {
+      console.log("Error en la capa de servicio createGroup:", error);
+      return Result.fail("Error interno al crear grupo.");
+    }
+  };
 }
 
 export default AdminService

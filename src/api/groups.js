@@ -1,10 +1,10 @@
 import axios from "axios";
 import { API_URL } from "./index.js";
 
-export const createGroup = async (name, description, img = null) => {
+export const createGroup = async (name, description, img = null, email) => {
   try {
     const res = await axios.post(`${API_URL}/groups/`,
-      { name, description, img },
+      { name, description, img, email },
       { withCredentials: true, validateStatus: () => true }
     );
     return res.data; // Devuelve { success: true, data: { gid: ... } }
@@ -52,12 +52,6 @@ export const getGroupUserList = async (id) => {
     });
     return res.data
   } catch (error) { console.log("Error al obtener listado de usuarios " + error) }
-}
-
-export const addUserToGroup = async (id, gid) => {
-  const res = await axios.post(`${API_URL}/groups/management/`,
-    { id, gid }, { withCredentials: true, validateStatus: () => true });
-  return res.data
 }
 
 export const deleteUserFromGroup = async (deleteUserId, gid) => {

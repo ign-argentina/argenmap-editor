@@ -52,3 +52,9 @@ export const getAGroupList = async () => {
     console.error("Error al obtener grupos:", error);
   }
 }
+
+export const addUserToGroup = async (id, gid) => {
+  const res = await axios.post(`${API_URL}/groups/management/`,
+    { id, gid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
