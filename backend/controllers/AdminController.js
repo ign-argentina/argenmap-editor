@@ -86,25 +86,25 @@ class AdminController {
     }
   }
 
-    createGroup = async (req, res) => {
+  createGroup = async (req, res) => {
     try {
       const { name, description, img, email } = req.body;
       let result = null;
-      console.log("toco")
+
       if (!name) {
         return res.status(400).json({ error: "El nombre del grupo es obligatorio." });
       }
 
       const mailCheck = await this.authService.isMailDuplicated(email);
       if (mailCheck.success === true) {
-        result = await this.groupService.createGroup(uid, name, description, img);
+        result = await this.adminService.createGroup(name, description, img);
         if (result.success) {
           const groupId = result.data.gid;
           await this.adminService.addUserToGroup(groupId, email);
         }
       }
-      
-      return res.status(201).json(result.data.gid ? true:false);
+
+      return res.status(201).json(result.data.gid ? true : false);
     } catch (error) {
       console.log("Error en el controlador createGroup:", error);
       return res.status(500).json({ error: "Error interno al crear grupo." });

@@ -93,10 +93,9 @@ class AdminService {
   };
 
   addUserToGroup = async (groupId, email) => {
-    const userId = User.findByEmail(email)
-    console.log(userId)
-    //Group.addUserToGroup(groupId, userId, 2)
-    // return null;
+    const [user] = await User.findByEmail(email)
+    Group.addUserToGroup(groupId, user.id, 2)
+    return true;
   }
 }
 
