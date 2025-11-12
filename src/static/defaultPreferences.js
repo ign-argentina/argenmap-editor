@@ -47,19 +47,19 @@ const defaultPreferences = {
   //   image: "/src/styles/images/argenmap.png",
   //   title: "IGN - Argenmap",
   // },
-  // onInit: {
-  //   showToolbar: true,
-  //   showLayerMenu: true,
-  // },
+
+  onInit: {
+    showToolbar: true,
+    showLayerMenu: true,
+  },
 
   // analytics_ids: ["G-WPKNSX1QMS"],
 
-  charts: {
-    isActive: true,
-  },
+  // charts: {
+  //   isActive: true,
+  // },
 
-
-  favicon: "src/config/styles/images/favicon.ico",
+  // favicon: "src/config/styles/images/favicon.ico",
 
   // geocoder: {
   //   key: "",
@@ -156,13 +156,13 @@ const defaultPreferences = {
   //            </div>
   //          </div>`,
   // },
-  // referencias: {
-  //   height: "",
-  //   icon: "src/config/styles/images/referencias.png",
-  //   image: "src/config/styles/images/legends/referencias.png",
-  //   show: false,
-  //   width: "",
-  // },
+  referencias: {
+    height: "",
+    icon: "src/config/styles/images/referencias.png",
+    image: "src/config/styles/images/legends/referencias.png",
+    show: false,
+    width: "",
+  },
   // table: {
   //   isActive: false,
   //   rowsLimit: 5,
