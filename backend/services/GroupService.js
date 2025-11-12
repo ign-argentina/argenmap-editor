@@ -61,13 +61,13 @@ class GroupService {
     try {
       let rolId = null;
       let data = []
-      const isSuperAdmin = await User.isSuperAdmin(userId)
+/*       const isSuperAdmin = await User.isSuperAdmin(userId)
       if (isSuperAdmin) {
         data = await this.#getAllGroups(userId)
-      } else {
+      } else { */
         rolId = isGroupAdmin ? 2 : rolId // Mejorar. No hardcode (o si?)
         data = await Group.getGroupList(userId, rolId) // Búsqueda normal, te devuelve los grupos donde perteneces.
-      }
+   /*    } */
       return data
     } catch (error) {
       console.log("Error en capa de servicio: " + error)
@@ -222,4 +222,5 @@ class GroupService {
     }
   }
 }
+
 export default GroupService
