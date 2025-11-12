@@ -77,12 +77,8 @@ class AdminService {
  * @param {?string} img - Imagen opcional.
  * @returns {Object} Resultado con el ID del grupo creado.
  */
-  createGroup = async (uid, name, description = null, img = null) => {
+  createGroup = async (name, description = null, img = null) => {
     try {
-      const isSuperAdmin = await User.isSuperAdmin(uid);
-      if (!isSuperAdmin) {
-        return Result.fail("No tenés permisos para crear grupos.");
-      }
 
       const group = await Group.createGroup(name, description, img);
       if (!group || !group.id) {
@@ -90,12 +86,18 @@ class AdminService {
       }
 
       return Result.success({ gid: group.id });
-
     } catch (error) {
       console.log("Error en la capa de servicio createGroup:", error);
       return Result.fail("Error interno al crear grupo.");
     }
   };
+
+  addUserToGroup = async (groupId, email) => {
+    const userId = User.findByEmail(email)
+    console.log(userId)
+    //Group.addUserToGroup(groupId, userId, 2)
+    // return null;
+  }
 }
 
 export default AdminService

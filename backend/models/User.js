@@ -2,7 +2,7 @@ import BaseModel from './BaseModel.js'
 import bcrypt from 'bcryptjs'
 
 const INSERT_USER = 'INSERT INTO usuarios (email, name, lastname, password) VALUES ($1, $2, $3, $4) RETURNING id, email, name, lastname;'
-const SELECT_BY_EMAIL = 'SElECT id, email, name, lastname, password, active FROM usuarios WHERE email LIKE $1;'
+const SELECT_BY_EMAIL = 'SELECT id FROM usuarios WHERE email LIKE $1;'
 const SELECT_1_EMAIL = 'SELECT 1 AS duplicated FROM usuarios WHERE email LIKE $1;'
 const UPDATE_USER = `UPDATE usuarios SET name = COALESCE($1, name), lastname = COALESCE($2, lastname), password = COALESCE($3, password)
                      WHERE id = $4

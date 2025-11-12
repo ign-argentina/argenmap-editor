@@ -53,8 +53,16 @@ export const getAGroupList = async () => {
   }
 }
 
-export const addUserToGroup = async (id, gid) => {
-  const res = await axios.post(`${API_URL}/groups/management/`,
-    { id, gid }, { withCredentials: true, validateStatus: () => true });
-  return res.data
-}
+export const createGroup = async (name, description, img = null, email) => {
+  try {
+    const res = await axios.post(`${API_URL}/admin/`,
+      { name, description, img, email },
+      { withCredentials: true, validateStatus: () => true }
+    );
+    return res.data; // Devuelve { success: true, data: { gid: ... } }
+  } catch (error) {
+    console.error("Error al crear grupo:", error);
+    throw error;
+  }
+};
+

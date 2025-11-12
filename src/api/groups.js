@@ -1,19 +1,6 @@
 import axios from "axios";
 import { API_URL } from "./index.js";
 
-export const createGroup = async (name, description, img = null, email) => {
-  try {
-    const res = await axios.post(`${API_URL}/groups/`,
-      { name, description, img, email },
-      { withCredentials: true, validateStatus: () => true }
-    );
-    return res.data; // Devuelve { success: true, data: { gid: ... } }
-  } catch (error) {
-    console.error("Error al crear grupo:", error);
-    throw error;
-  }
-};
-
 export const getGrupos = async () => {
   try {
     const res = await axios.get(`${API_URL}/groups/`, {
@@ -100,4 +87,10 @@ export const getPermissions = async (id) => {
     });
     return res.data.data
   } catch (error) { console.log("Error al obtener permisos " + error) }
+}
+
+export const addUserToGroup = async (id, gid) => {
+  const res = await axios.post(`${API_URL}/groups/management/`,
+    { id, gid }, { withCredentials: true, validateStatus: () => true });
+  return res.data
 }

@@ -99,17 +99,16 @@ class AdminController {
         result = await this.groupService.createGroup(uid, name, description, img);
         if (result.success) {
           const groupId = result.data.gid;
-          const addAdminUser = await this.adminService.addUserToGroup(uid, groupId);
+          await this.adminService.addUserToGroup(groupId, email);
         }
       }
       
-      return res.status(201).json(result);
+      return res.status(201).json(result.data.gid ? true:false);
     } catch (error) {
       console.log("Error en el controlador createGroup:", error);
       return res.status(500).json({ error: "Error interno al crear grupo." });
     }
   };
-
 }
 
 

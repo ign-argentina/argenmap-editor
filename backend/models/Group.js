@@ -156,8 +156,8 @@ class Group extends BaseModel {
    * @param {number} userId - ID del usuario.
    * @returns {Promise<Array>} Resultado de la operación.
    */
-  static addUserToGroup = async (groupId, userId) => {
-    return await super.runQuery(`INSERT INTO usuarios_por_grupo(grupoid, usuarioid) VALUES ($1, $2) RETURNING *`, [groupId, userId])
+  static addUserToGroup = async (groupId, userId, rolId = null) => {
+    return await super.runQuery(`INSERT INTO usuarios_por_grupo(grupoid, usuarioid, rolid) VALUES ($1, $2, $3) RETURNING *`, [groupId, userId, rolId])
   }
 
   /**

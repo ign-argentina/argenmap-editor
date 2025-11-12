@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './CreateModal.css';
 import { registerUser } from '../../api/auth';
-import { createGroup, addUserToGroup } from '../../api/admin';
+import { createGroup, searchUser } from '../../api/admin';
+import { addUserToGroup } from '../../api/groups';
 import { getUserList } from '../../api/users';
 import { useToast } from '../../context/ToastContext';
-import { searchUser } from '../../api/admin';
 
 function CreateModal({ type = "user", onClose, onSuccess }) {
 
