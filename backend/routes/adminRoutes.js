@@ -5,7 +5,7 @@ import * as PROTECT from "../middlewares/routeGuards.js"
 const adminRoutes = Router();
 const adminController = new AdminController();
 
-/* /admin */
+/* dominio.com/admin */
 adminRoutes.get("/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.searchUser)
 adminRoutes.get("/users", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getAllUsers)
 adminRoutes.post("/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeUserStatus)
