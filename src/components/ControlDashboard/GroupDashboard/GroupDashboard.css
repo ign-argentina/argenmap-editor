@@ -55,7 +55,6 @@
   border-radius: 2px;
 } */
 
-
 /* Body Section */
 .gd-body {
   width: 100%;
@@ -68,8 +67,6 @@
   gap: 1.5rem;
   border: 2px solid var(--secondary--color);
 }
-
-
 
 .gd-actions {
   display: flex;

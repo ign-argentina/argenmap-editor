@@ -50,9 +50,11 @@ function GroupDashboard() {
   return (
     <div className="group-dashboard">
 
-      <h1>Administrar Grupos</h1>
+      {/* <h1>Administrar Grupos</h1> */}
 
-      <section className="gd-metricas">
+
+      <section className="gd-body">
+              <section className="gd-metricas">
         <div>
           Total: {metrics.total}
         </div>
@@ -69,20 +71,21 @@ function GroupDashboard() {
           Usuarios Registrados:
         </div> */}
       </section>
-      <section className="gd-body">
         <div className='gd-actions'>
           <button
             onClick={() => setShowCreateUserModal(true)}>
             Alta Nuevo Grupo
           </button>
-        </div>
 
-        <input
+                  <input
           type="text"
           placeholder="Buscar grupo..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        </div>
+
+
 
         <table className="gd-table">
           <thead>
