@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import defaultPreferences from "../../static/defaultPreferences";
 import language from '../../static/language.json'
 import "./PreferencesForm.css";
 
 const lang = language["es"];
 
-// helper
 const parseRgba = (rgbaString) => {
   const match = rgbaString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d\.]+)?\)/);
   if (!match) return null;
@@ -49,7 +48,14 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
   const [localPreferences, setLocalPreferences] = useState(
     preferences || defaultPreferences
   );
+
   const [openSections, setOpenSections] = useState([]);
+
+  useEffect(() => {
+    const keys = Object.keys(localPreferences || {});
+    const initial = Array.from(new Set(["General", ...keys]));
+    setOpenSections(initial);
+  }, []);
 
   const toggleSection = (path) => {
     setOpenSections((prev) =>
@@ -310,10 +316,33 @@ function PreferencesForm({ preferences, onPreferencesChange }) {
     return null;
   };
 
+  const primitiveEntries = Object.entries(localPreferences).filter(
+    ([, v]) => ["string", "number", "boolean"].includes(typeof v)
+  );
+  const complexEntries = Object.entries(localPreferences).filter(
+    ([, v]) => !["string", "number", "boolean"].includes(typeof v)
+  );
+
   return (
     <div className="preferencesform-container">
       <h2 className="preferencesform-header">Configuraciones Básicas</h2>
-      {Object.entries(localPreferences).map(([k, v]) => renderNode(k, v, true))}
+
+      {/* Sección General (agrupa las claves simples) */}
+      {primitiveEntries.length > 0 && (
+        <div className="accordion-item" key="general">
+          <div className="accordion-header" onClick={() => toggleSection("General")}>
+            <span>General</span>
+          </div>
+          {openSections.includes("General") && (
+            <div className="accordion-content">
+              {primitiveEntries.map(([k, v]) => renderNode(k, v, false))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Resto de las secciones */}
+      {complexEntries.map(([k, v]) => renderNode(k, v, true))}
     </div>
   );
 }
