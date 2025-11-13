@@ -107,7 +107,8 @@
     "text": "Texto",
     "show": "Mostrar",
     "rowsLimit": "Limite de Filas",
-    "table": "Tabla"
+    "table": "Tabla",
+    "referencias": "Referencias"
   },
   "es": {
     "mapConfig": "Mapa Config",
@@ -217,7 +218,8 @@
     "text": "Texto",
     "show": "Mostrar",
     "rowsLimit": "Limite de Filas",
-    "table": "Tabla"
+    "table": "Tabla",
+    "referencias": "Referencias"
   },
   "en": {
     "mapConfig": "Map Config",
@@ -327,6 +329,7 @@
     "text": "Text",
     "show": "Show",
     "rowsLimit": "Rows Limit",
-    "table": "Table"
+    "table": "Table",
+    "referencias": "References"
   }
 }
