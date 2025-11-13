@@ -56,15 +56,6 @@ const defaultPreferences = {
   //   isActive: true,
   // },
   // favicon: "src/config/styles/images/favicon.ico",
-  // geocoder: {
-  //   key: "",
-  //   lang: "es",
-  //   limit: 5,
-  //   query: "q",
-  //   search: "search",
-  //   url: "https://api.ign.gob.ar/buscador/",
-  //   url_by_id: "places",
-  // },
   // hillshade: {
   //   addTo: ["argenmap", "argenmap_gris"],
   //   attribution:
@@ -91,6 +82,15 @@ const defaultPreferences = {
     },
     // left: "40%",
     // top: "5px",
+  },
+  geocoder: {
+    key: "",
+    lang: "es",
+    limit: 5,
+    query: "q",
+    search: "search",
+    url: "https://api.ign.gob.ar/buscador/",
+    url_by_id: "places",
   },
   // geoprocessing: {
   //   availableProcesses: [
