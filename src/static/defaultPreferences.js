@@ -7,16 +7,16 @@ const defaultPreferences = {
     link: "#"
   },
   logo: {
+    src: "https://static.ign.gob.ar/img/logo/Logo-MinDef-IGN-Visores.svg",
     title: "Instituto Geográfico Nacional",
     link: "https://www.ign.gob.ar/",
-    src: "https://static.ign.gob.ar/img/logo/Logo-MinDef-IGN-Visores.svg",
-    style: "",
     height: "49px",
     width: "200px",
+    // style: "",
     srcLogoMini: "https://static.ign.gob.ar/img/logo/LogoIGN_Blanco_SinTexto.svg",
-    ministyle: "",
     miniHeight: "",
     miniWidth: "",
+    ministyle: "",
   },
   mapConfig: {
     center: {
@@ -47,20 +47,15 @@ const defaultPreferences = {
   //   image: "/src/styles/images/argenmap.png",
   //   title: "IGN - Argenmap",
   // },
-
   onInit: {
     showToolbar: true,
     showLayerMenu: true,
   },
-
   // analytics_ids: ["G-WPKNSX1QMS"],
-
   // charts: {
   //   isActive: true,
   // },
-
   // favicon: "src/config/styles/images/favicon.ico",
-
   // geocoder: {
   //   key: "",
   //   lang: "es",
@@ -86,17 +81,16 @@ const defaultPreferences = {
   //   basemap_min_zoom: "Zoom mínimo de ",
   //   delete_geometry: "Eliminar geometría",
   // },
-  excluded_plugins: ["minimap"],
   showSearchBar: true,
   searchbar: {
+    isActive: true,
     background_color: "rgba(255, 255, 255, 0.7)",
     color_focus: "#008dc9",
-    isActive: true,
-    left: "40%",
     strings: {
       placeholder: "Buscar localidad...",
     },
-    top: "5px",
+    // left: "40%",
+    // top: "5px",
   },
   // geoprocessing: {
   //   availableProcesses: [
@@ -156,6 +150,10 @@ const defaultPreferences = {
   //            </div>
   //          </div>`,
   // },
+  // table: {
+  //   isActive: false,
+  //   rowsLimit: 5,
+  // },
   referencias: {
     height: "",
     icon: "src/config/styles/images/referencias.png",
@@ -163,10 +161,7 @@ const defaultPreferences = {
     show: false,
     width: "",
   },
-  // table: {
-  //   isActive: false,
-  //   rowsLimit: 5,
-  // },
+  excluded_plugins: ["minimap"]
 };
 
 export default defaultPreferences;
