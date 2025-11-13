@@ -69,6 +69,8 @@
   border: 2px solid var(--secondary--color);
 }
 
+
+
 .gd-actions {
   display: flex;
   justify-content: flex-start;
@@ -76,12 +78,14 @@
 }
 
 .gd-actions button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
+  /* Reducido de 0.75rem 1.5rem */
   background: var(--secondary--color);
   color: var(--text--color);
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  /* Reducido de 1rem */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -100,11 +104,12 @@
 
 /* Search Input */
 .gd-body input[type="text"] {
-  width: 100%;
-  padding: 1rem 1.5rem;
+  width: 30%;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
   border: 2px solid var(--secondary--color);
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
   outline: none;
   background: var(--text--color);
@@ -123,11 +128,13 @@
 
 /* Table Styles */
 .gd-table {
+  text-align: center;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
   border-radius: 8px;
+  font-size: 0.9rem;
 }
 
 .gd-table thead {
@@ -136,10 +143,10 @@
 }
 
 .gd-table thead th {
-  padding: 1rem;
+  padding: 0.75rem;
   text-align: left;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -168,10 +175,11 @@
 }
 
 .gd-table tbody td {
-  padding: 1rem;
+  padding: 0.75rem;
   text-align: left;
   color: var(--primary--color);
   border-bottom: 1px solid var(--secondary--color);
+  font-size: 0.9rem;
 }
 
 .gd-table tbody td:last-child {
@@ -224,6 +232,10 @@
 
   .gd-body {
     padding: 1rem;
+  }
+
+  .gd-body input[type="text"] {
+    width: 80%;
   }
 
   .gd-table {
