@@ -86,7 +86,7 @@ const defaultPreferences = {
   //   basemap_min_zoom: "Zoom mínimo de ",
   //   delete_geometry: "Eliminar geometría",
   // },
-  // excluded_plugins: ["minimap"],
+  excluded_plugins: ["minimap"],
   showSearchBar: true,
   searchbar: {
     background_color: "rgba(255, 255, 255, 0.7)",
