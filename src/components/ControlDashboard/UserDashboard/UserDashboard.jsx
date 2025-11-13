@@ -49,15 +49,15 @@ function UserDashboard() {
     }
   }, [debouncedSearch]);
 
-/*   const handleRegisterSuccess = () => {
-    checkAuth();
-    setShowCreateUserModal(false);
-  };
- */
+  /*   const handleRegisterSuccess = () => {
+      checkAuth();
+      setShowCreateUserModal(false);
+    };
+   */
   return (
     <div className="user-dashboard">
 
-      <h1>Administrar Usuarios</h1>
+      {/* <h1>Administrar Usuarios</h1> */}
 
       <section className="ud-metricas">
         <div>
@@ -82,14 +82,13 @@ function UserDashboard() {
             onClick={() => setShowCreateUserModal(true)}>
             Alta Nuevo Usuario
           </button>
+          <input
+            type="text"
+            placeholder="Buscar usuario..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-
-        <input
-          type="text"
-          placeholder="Buscar usuario..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
 
         <table className="ud-table">
           <thead>
@@ -137,7 +136,7 @@ function UserDashboard() {
         <CreateModal
           type="user"
           onClose={() => setShowCreateUserModal(false)}
-          onRegisterSuccess={() =>{}}
+          onRegisterSuccess={() => { }}
         />
       )}
     </div>
