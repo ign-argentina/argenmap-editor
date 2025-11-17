@@ -1,4 +1,4 @@
-/* .register-overlay {
+.register-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -68,6 +68,28 @@
   background-color: var(--secondary-default--color);
 }
 
+.form-register textarea {
+  padding: 0.75rem 0.9375rem;
+  border-radius: 0.5rem;
+  border: 0.0625rem solid var(--secondary--color);
+  background-color: var(--secondary--color);
+  color: var(--text--color);
+  font-size: 1rem;
+  min-height: 150px;
+  resize: none;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-register textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.form-register textarea:focus {
+  border-color: var(--active--color);
+  outline: none;
+  background-color: var(--secondary-default--color);
+}
+
 .form-register button {
   padding: 0.75rem;
   background-color: var(--active--color);
@@ -82,4 +104,32 @@
 
 .form-register button:hover {
   background-color: #d6a850;
-} */
+}
+
+.search-results {
+  margin-top: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #888;
+  border-radius: 4px;
+}
+
+.search-item {
+  padding: 6px 8px;
+  cursor: pointer;
+  background: #222;
+  color: #eee;
+}
+
+.search-item:hover {
+  background: #444;
+}
+
+.btn-search {
+  padding: 0 10px;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}

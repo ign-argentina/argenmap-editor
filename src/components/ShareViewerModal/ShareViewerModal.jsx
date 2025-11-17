@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
-import { createShareLink } from '../../api/configApi.js';
-import currentVisor from '../../api/visorApi.js';
+import currentVisor from '../../api/viewerServer.js';
 import { useToast } from '../../context/ToastContext.jsx';
+import { changeIsSharedStatus } from '../../api/viewers.js';
+import { createShareLink } from '../../api/viewers.js';
 import './ShareViewerModal.css';
-import { changeIsSharedStatus } from '../../api/configApi.js';
 
 
 const ShareViewerModal = ({ isOpen, onClose, viewer }) => {

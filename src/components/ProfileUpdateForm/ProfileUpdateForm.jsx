@@ -3,7 +3,7 @@ import { useUser } from "../../context/UserContext";
 import axios from "axios";
 import './ProfileUpdateForm.css';
 import { useToast } from "../../context/ToastContext";
-import { updateUserData, updateUserPassword } from "../../api/configApi";
+import { updateUserData, updateUserPassword } from "../../api/users";
 
 const UpdatePersonalDataForm = () => {
   const { updateUser, user } = useUser();

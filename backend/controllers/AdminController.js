@@ -19,6 +19,13 @@ class AdminController {
     return res.status(200).json(result)
   }
 
+  searchGroup = async (req, res) => {
+    const { search } = req.query;
+    const result = await this.adminService.searchGroup(search)
+    return res.status(200).json(result)
+  }
+
+
   getAllUsers = async (req, res) => {
     const result = await this.adminService.getAllUsers()
     return res.status(200).json(result)
@@ -28,6 +35,15 @@ class AdminController {
     try {
       const { userId } = req.body
       const result = await this.adminService.changeUserStatus(userId)
+      return res.status(200).json(result)
+    } catch (error) { }
+    return res.status(200).json({ success: false })
+  }
+
+  changeGroupStatus = async (req, res) => {
+    try {
+      const { groupId } = req.body
+      const result = await this.adminService.changeGroupStatus(groupId)
       return res.status(200).json(result)
     } catch (error) { }
     return res.status(200).json({ success: false })
@@ -43,13 +59,67 @@ class AdminController {
     }
   }
 
-    getUserMetrics = async (req, res) => {
+  getUsersMetrics = async (req, res) => {
     try {
       const result = await this.adminService.getUserMetrics()
       return res.status(200).json(result)
     } catch (error) {
       return res.status(200).json({ success: false })
     }
+  }
+
+  getGroupsMetrics = async (req, res) => {
+    try {
+      const result = await this.adminService.getGroupsMetrics()
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(200).json({ success: false })
+    }
+  }
+
+  getAllGroups = async (req, res) => {
+    try {
+      const result = await this.adminService.getAllGroups()
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(200).json({ success: false })
+    }
+  }
+
+  createGroup = async (req, res) => {
+    try {
+      const { name, description, img, email } = req.body;
+      let result = null;
+
+      if (!name) {
+        return res.status(400).json({ error: "El nombre del grupo es obligatorio." });
+      }
+
+      const mailCheck = await this.authService.isMailDuplicated(email);
+      if (mailCheck.success === true) {
+        result = await this.adminService.createGroup(name, description, img);
+        if (result.success) {
+          const groupId = result.data.gid;
+          await this.adminService.addUserToGroup(groupId, email);
+        }
+      }
+
+      return res.status(201).json(result.data.gid ? true : false);
+    } catch (error) {
+      console.log("Error en el controlador createGroup:", error);
+      return res.status(500).json({ error: "Error interno al crear grupo." });
+    }
+  };
+
+  createUser = async (req, res) => {
+    try{
+      const {name, lastname, email, password} = req.body;      
+      this.adminService.createUser(name, lastname, email, password);
+      return res.status(201).json({message:"Usuario creado correctamente"})
+    }catch(error){
+      return res.status(500).json({error: "Error interno al crear usuarios"})
+    }
+
   }
 }
 

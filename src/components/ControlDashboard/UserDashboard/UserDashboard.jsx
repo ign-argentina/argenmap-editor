@@ -1,6 +1,10 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
-import { getAUserList, searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../api/configApi';
+import { getUserList } from '../../../api/users';
+import { searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../../api/admin.js';
+import CreateModal from "../../CreateModal/CreateModal"
+import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
+import { useUser } from "/src/context/UserContext";
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -29,6 +33,8 @@ function UserDashboard() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
   const [metrics, setMetrics] = useState([])
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const { checkAuth } = useUser();
 
   const updateMetrics = async () => {
     const metrica = await getUserMetrics()
@@ -39,14 +45,19 @@ function UserDashboard() {
     if (debouncedSearch.trim()) {
       searchUser(debouncedSearch).then(setUsuarios)
     } else {
-      getAUserList().then(setUsuarios); // Si no hay búsqueda, mostramos todos
+      getUserList().then(setUsuarios); // Si no hay búsqueda, mostramos todos
     }
   }, [debouncedSearch]);
 
+  /*   const handleRegisterSuccess = () => {
+      checkAuth();
+      setShowCreateUserModal(false);
+    };
+   */
   return (
     <div className="user-dashboard">
 
-      <h1>Administrar Usuarios</h1>
+      {/* <h1>Administrar Usuarios</h1> */}
 
       <section className="ud-metricas">
         <div>
@@ -66,12 +77,18 @@ function UserDashboard() {
         </div> */}
       </section>
       <section className="ud-body">
-        <input
-          type="text"
-          placeholder="Buscar usuario..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <div className='ud-actions'>
+          <button
+            onClick={() => setShowCreateUserModal(true)}>
+            Alta Nuevo Usuario
+          </button>
+          <input
+            type="text"
+            placeholder="Buscar usuario..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
         <table className="ud-table">
           <thead>
@@ -92,9 +109,17 @@ function UserDashboard() {
                   <td>{usuario.lastname}</td>
                   <td>{usuario.active ? "Activo" : "Inactivo"}</td>
                   <td>
-                    <button onClick={async () => { await changeUserStatus(usuario.id), getAUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
-                    <button onClick={() => resetUserPassword(usuario.id)}>Blanquear Clave</button>
-                    <button>Hacer Administrador?</button>
+                    <button onClick={async () => { await changeUserStatus(usuario.id), getUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`¿Estás seguro de que querés blanquear la clave de ${usuario.name} ${usuario.lastname}?`)) {
+                          resetUserPassword(usuario.id);
+                        }
+                      }}>
+
+                      Blanquear Clave
+                    </button>
+                    {/*    <button>Hacer Administrador?</button> */}
                   </td>
                 </tr>
               ))
@@ -107,6 +132,13 @@ function UserDashboard() {
         </table>
       </section>
 
+      {showCreateUserModal && (
+        <CreateModal
+          type="user"
+          onClose={() => setShowCreateUserModal(false)}
+          onRegisterSuccess={() => { }}
+        />
+      )}
     </div>
   )
 }

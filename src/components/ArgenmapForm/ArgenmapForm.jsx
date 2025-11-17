@@ -3,7 +3,7 @@ import DataForm from "./DataForm";
 import PreferencesForm from "./PreferencesForm";
 import ViewerButtonActions from '../ViewerButtonActions/ViewerButtonActions';
 import defaultPreferences from '../../static/defaultPreferences';
-import currentViewer from '../../api/visorApi.js';
+import currentViewer from '../../api/viewerServer.js';
 import './ArgenmapForm.css';
 
 function ArgenmapForm({ config, editorMode = false, viewer }) {

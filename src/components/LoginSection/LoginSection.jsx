@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import LoginModal from "./LoginModal"
-import RegisterModal from "../RegisterModal"
+import CreateModal from "../CreateModal"
 import ProfileModal from "../ProfileModal/ProfileModal";
 import { useUser } from "../../context/UserContext";
 import './LoginSection.css';
-import { userCheckAuth } from "../../api/configApi";
+import { userCheckAuth } from "../../api/auth";
 
 function LoginSection() {
 
@@ -47,7 +47,7 @@ function LoginSection() {
   return (
     <>
       {showLoginModal ? (<LoginModal onClose={() => setShowLoginModal(false)} onLoginSuccess={handleLoginSuccess} />) : null}
-      {showRegisterModal ? (<RegisterModal onClose={() => setShowRegisterModal(false)} onRegisterSuccess={handleRegisterSuccess} />) : null}
+      {showRegisterModal ? (<CreateModal type="user" onClose={() => setShowRegisterModal(false)} onRegisterSuccess={handleRegisterSuccess} />) : null}
       {(userAuth && showProfileModal) ? (<ProfileModal onClose={() => setShowProfileModal(false)} />) : null}
 
       {!userAuth ? (

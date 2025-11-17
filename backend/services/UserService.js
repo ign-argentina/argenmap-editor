@@ -45,8 +45,7 @@ class UserService {
     }catch(error){
       return error;
     }
-  }
-  
+  }  
 }
 
 export default UserService

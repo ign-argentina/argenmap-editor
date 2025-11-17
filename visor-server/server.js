@@ -19,7 +19,6 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-
 /* app.use(cors({ origin: 'http://localhost:5173' })); // permitir tu frontend */
 app.use(cors());
 

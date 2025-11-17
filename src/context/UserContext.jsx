@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from './ToastContext';
-import { userLogout, userLogin, userCheckAuth } from '../api/configApi';
+import { userLogout, userLogin, userCheckAuth } from '../api/auth';
 
 const UserContext = createContext(null);
 

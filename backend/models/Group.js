@@ -1,7 +1,11 @@
 import BaseModel from "./BaseModel.js";
 
 const GET_GROUP_LIST = `SELECT g.* FROM grupos g JOIN usuarios_por_grupo ug ON ug.grupoId = g.id WHERE ug.usuarioId = $1 AND ($2::int IS NULL OR ug.rolId = $2) AND g.deleted = false ORDER BY g.id ASC; `
-const GET_GROUP_ADMIN_LIST = 'SELECT * FROM grupos WHERE deleted = false ORDER BY id ASC ';
+const GET_GROUP_ADMIN_LIST = `SELECT g.id, g.name, g.description, g.deleted, COUNT(v.id) AS totalviewers
+                                FROM grupos g
+                                LEFT JOIN visores v ON v.gid = g.id
+                                GROUP BY g.id
+                                ORDER BY g.id ASC;`;
 
 // Le enviamos 2 parámetros. userId y groupId. Si el userId no llega, es porque la peticion la hizo un superadmin, por lo tanto devuelve directamente.
 // Si llega, es porq es un usuario y corrobora que sea admin del grupo antes de devolverlo
@@ -32,11 +36,41 @@ const GET_GROUP_USER_LIST = `SELECT
                             ORDER BY r.id ASC;`
 
 
+const GENERATE_METRICS = `SELECT COUNT (*) AS total,
+                          COUNT (CASE WHEN deleted = true THEN 1 END) AS deleted
+                          FROM grupos;`
+
+const SEARCH_GROUP = `SELECT g.id, g.name, g.description, g.deleted, COUNT(v.id) AS totalviewers
+                      FROM grupos g
+                      LEFT JOIN visores v ON v.gid = g.id
+                      WHERE g.name ILIKE $1
+                      GROUP BY g.id
+                      ORDER BY g.name ASC
+                      LIMIT $2;`;
+
+const CHANGE_GROUP_STATUS = `UPDATE grupos SET deleted = NOT deleted WHERE id = $1;`
+
 /**
 * Modelo para operaciones directas sobre la base de datos relacionadas a grupos.
 * Incluye funciones para gestionar grupos, miembros y sus roles.
 */
 class Group extends BaseModel {
+  /**
+   * Crea un nuevo grupo.
+   * @param {string} name - Nombre del grupo.
+   * @param {?string} description - Descripción opcional.
+   * @param {?string} img - Imagen opcional.
+   * @returns {Promise<Object>} Grupo creado (con id incluido).
+   */
+  static createGroup = async (name, description = null, img = null) => {
+    const result = await super.runQuery(
+      `INSERT INTO grupos (name, description, img)
+     VALUES ($1, $2, $3)
+     RETURNING id;`,
+      [name, description, img]
+    );
+    return result[0];
+  };
 
   /**
  * Elimina un grupo por su ID.
@@ -68,10 +102,10 @@ class Group extends BaseModel {
   }
 
   /**
-   * Devuelve todos los grupos sin restricción. (Deprecated)
+   * Devuelve todos los grupos sin restricción.
    * @returns {Promise<Array>} Lista completa de grupos.
    */
-  static getAllGroups = async (userId) => { // DEPRECADO No borrar
+  static getAllGroups = async () => {
     return await super.runQuery(GET_GROUP_ADMIN_LIST)
   }
 
@@ -122,8 +156,8 @@ class Group extends BaseModel {
    * @param {number} userId - ID del usuario.
    * @returns {Promise<Array>} Resultado de la operación.
    */
-  static addUserToGroup = async (groupId, userId) => {
-    return await super.runQuery(`INSERT INTO usuarios_por_grupo(grupoid, usuarioid) VALUES ($1, $2) RETURNING *`, [groupId, userId])
+  static addUserToGroup = async (groupId, userId, rolId = 4) => {
+    return await super.runQuery(`INSERT INTO usuarios_por_grupo(grupoid, usuarioid, rolid) VALUES ($1, $2, $3) RETURNING *`, [groupId, userId, rolId])
   }
 
   /**
@@ -163,6 +197,23 @@ class Group extends BaseModel {
     const data = await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2)', [groupid, uid]);
     return data[0]?.exists ?? false;
   }
+
+  static getGroupsMetrics = async () => {
+    const result = await super.runQuery(GENERATE_METRICS, [])
+    return result[0]
+  }
+
+  static searchGroup = async (search, limit) => {
+    const searchTerm = `%${search}%`;
+    const userList = await super.runQuery(SEARCH_GROUP, [searchTerm, limit])
+    return userList
+  }
+
+  static changeGroupStatus = async (id) => {
+    const result = await super.runQuery(CHANGE_GROUP_STATUS, [id])
+    return result
+  }
+
 }
 
 export default Group
