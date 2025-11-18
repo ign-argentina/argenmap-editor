@@ -42,7 +42,6 @@ class AdminController {
   changeGroupStatus = async (req, res) => {
     try {
       const { groupId } = req.body
-      console.log("ji")
       const result = await this.adminService.changeGroupStatus(groupId)
       return res.status(200).json(result)
     } catch (error) { }
