@@ -55,7 +55,7 @@ export const getAGroupList = async () => {
 
 export const createGroup = async (name, description, img = null, email) => {
   try {
-    const res = await axios.post(`${API_URL}/admin/group`,
+    const res = await axios.post(`${API_URL}/admin/groups`,
       { name, description, img, email },
       { withCredentials: true, validateStatus: () => true }
     );
