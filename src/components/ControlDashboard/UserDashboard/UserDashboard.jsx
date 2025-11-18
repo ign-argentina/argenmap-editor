@@ -59,24 +59,25 @@ function UserDashboard() {
 
       {/* <h1>Administrar Usuarios</h1> */}
 
-      <section className="ud-metricas">
-        <div>
-          Total: {metrics.total}
-        </div>
 
-        <div>
-          Inactivos: {metrics.unabled}
-        </div>
+      <section className="ud-body">
+        <section className="ud-metricas">
+          <div>
+            Total: {metrics.total}
+          </div>
 
-        <div>
-          Administradores: {metrics.admins}
-        </div>
+          <div>
+            Inactivos: {metrics.unabled}
+          </div>
 
-        {/*         <div>
+          <div>
+            Administradores: {metrics.admins}
+          </div>
+
+          {/*         <div>
           Usuarios Registrados:
         </div> */}
-      </section>
-      <section className="ud-body">
+        </section>
         <div className='ud-actions'>
           <button
             onClick={() => setShowCreateUserModal(true)}>
@@ -90,46 +91,48 @@ function UserDashboard() {
           />
         </div>
 
-        <table className="ud-table">
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Activo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.length > 0 ? (
-              usuarios.map((usuario, index) => (
-                <tr key={index}>
-                  <td>{usuario.email}</td>
-                  <td>{usuario.name}</td>
-                  <td>{usuario.lastname}</td>
-                  <td>{usuario.active ? "Activo" : "Inactivo"}</td>
-                  <td>
-                    <button onClick={async () => { await changeUserStatus(usuario.id), getUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
-                    <button
-                      onClick={() => {
-                        if (confirm(`¿Estás seguro de que querés blanquear la clave de ${usuario.name} ${usuario.lastname}?`)) {
-                          resetUserPassword(usuario.id);
-                        }
-                      }}>
-
-                      Blanquear Clave
-                    </button>
-                    {/*    <button>Hacer Administrador?</button> */}
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <div className="ud-table-container">
+          <table className="ud-table">
+            <thead>
               <tr>
-                <td colSpan="4">No se encontraron resultados</td>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Activo</th>
+                <th>Acciones</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {usuarios.length > 0 ? (
+                usuarios.map((usuario, index) => (
+                  <tr key={index}>
+                    <td>{usuario.email}</td>
+                    <td>{usuario.name}</td>
+                    <td>{usuario.lastname}</td>
+                    <td>{usuario.active ? "Activo" : "Inactivo"}</td>
+                    <td>
+                      <button onClick={async () => { await changeUserStatus(usuario.id), getUserList().then(setUsuarios), updateMetrics() }}>{usuario.active ? "Deshabilitar" : "Habilitar"}</button>
+                      <button
+                        onClick={() => {
+                          if (confirm(`¿Estás seguro de que querés blanquear la clave de ${usuario.name} ${usuario.lastname}?`)) {
+                            resetUserPassword(usuario.id);
+                          }
+                        }}>
+
+                        Blanquear Clave
+                      </button>
+                      {/*    <button>Hacer Administrador?</button> */}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4">No se encontraron resultados</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {showCreateUserModal && (
