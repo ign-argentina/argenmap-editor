@@ -2,7 +2,11 @@ import BaseModel from './BaseModel.js'
 import bcrypt from 'bcryptjs'
 
 const INSERT_USER = 'INSERT INTO usuarios (email, name, lastname, password) VALUES ($1, $2, $3, $4) RETURNING id, email, name, lastname;'
-const SELECT_BY_EMAIL = 'SElECT id, email, name, lastname, password, active FROM usuarios WHERE email LIKE $1;'
+
+// SACAR password DEL SELECT
+const SELECT_BY_EMAIL = 'SELECT id, email, name, lastname, password, active FROM usuarios WHERE email LIKE $1;'
+///////////////////////////////
+
 const SELECT_1_EMAIL = 'SELECT 1 AS duplicated FROM usuarios WHERE email LIKE $1;'
 const UPDATE_USER = `UPDATE usuarios SET name = COALESCE($1, name), lastname = COALESCE($2, lastname), password = COALESCE($3, password)
                      WHERE id = $4
@@ -10,14 +14,6 @@ const UPDATE_USER = `UPDATE usuarios SET name = COALESCE($1, name), lastname = C
                      RETURNING email, name, lastname;`;
 
 const IS_SUPER_ADMIN = `SELECT superadmin FROM usuarios WHERE id = $1`;
-
-/* const IS_GROUP_ADMIN = `
-  SELECT EXISTS (
-    SELECT 1
-    FROM usuarios_por_grupo
-    WHERE usuarioId = $1 AND rolId = 2
-  ) as groupadmin
-`; */
 
 const IS_GROUP_ADMIN = `
   SELECT EXISTS (
@@ -30,6 +26,27 @@ const IS_GROUP_ADMIN = `
 
 const SALT_ROUNDS = 10
 
+const SEARCH_USER = `
+  SELECT id, email, name, lastname, active
+  FROM usuarios
+  WHERE (
+    email ILIKE $1 
+    OR CONCAT(name, ' ', lastname) ILIKE $1
+  )
+  ORDER BY email ASC
+  LIMIT $2;
+`;
+
+const CHANGE_USER_STATUS = `UPDATE usuarios SET active = NOT active WHERE id = $1`
+
+const PASSWORD_RESET = "$2b$10$ywXqVy2V64hg2bQ1FWqlgOvqpBoWuBc/kv1j0Ylp/i5YqYxkRyb6O"
+const RESET_PASSWORD = `UPDATE usuarios SET password = $2 WHERE id = $1`
+
+const GENERATE_METRICS = `SELECT COUNT (*) AS total,
+                          COUNT (CASE WHEN active = false THEN 1 END) AS unabled,
+                          COUNT(CASE WHEN superadmin = true THEN 1 END) AS admins
+                          FROM usuarios;`
+
 /**
  * Modelo que maneja la tabla usuarios y toda la lógica relacionada.
  * Permite crear, actualizar, buscar usuarios y verificar roles.
@@ -41,7 +58,7 @@ class User extends BaseModel {
  * @returns {Array} Lista de usuarios con id, nombre, apellido y email.
  */
   static getUserList = async () => {
-    const result = await super.runQuery(`SELECT id, name, lastname, email FROM usuarios WHERE NOT superadmin`)
+    const result = await super.runQuery(`SELECT id, name, lastname, email, active FROM usuarios WHERE NOT superadmin ORDER BY email ASC`)
     return result
   }
 
@@ -162,6 +179,27 @@ class User extends BaseModel {
       console.log("USER MODEL: ", error)
     }
   }
+
+  static searchUser = async (search, limit) => {
+    const searchTerm = `%${search}%`;
+    const userList = await super.runQuery(SEARCH_USER, [searchTerm, limit])
+    return userList
+  }
+
+  static changeUserStatus = async (id) => {
+    const result = await super.runQuery(CHANGE_USER_STATUS, [id])
+    return result
+  }
+
+  static resetUserPassword = async (id) => {
+    const result = await super.runQuery(RESET_PASSWORD, [id, PASSWORD_RESET])
+    return result
+  }
+
+  static getUserMetrics = async () => {
+    const result = await super.runQuery(GENERATE_METRICS, [])
+    return result[0]
+  } 
 }
 
 export default User

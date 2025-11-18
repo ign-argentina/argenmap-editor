@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import currentViewer from '../../api/visorApi';
+import currentViewer from '../../api/viewerServer';
 function Preview({ config }) {
   const iframeName = 'previewIframe';
   const formRef = useRef(null);

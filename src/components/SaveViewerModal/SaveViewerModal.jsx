@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
-import { updateVisor, createVisor, getManageGroups } from "../../api/configApi.js"
-import currentViewer from '../../api/visorApi.js';
+import { updateVisor, createVisor } from "../../api/viewers.js"
+import { getManageGroups } from "../../api/groups.js"
+import currentViewer from '../../api/viewerServer.js';
 import './SaveViewerModal.css';
 
 const SaveViewerModal = ({ isOpen, onClose, viewer, editorMode = false, cloneMode = false, getWorkingConfig }) => {

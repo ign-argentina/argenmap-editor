@@ -4,12 +4,12 @@ import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import ShareViewerModal from '../ShareViewerModal/ShareViewerModal';
 import CreateViewerModal from '../CreateViewerModal/CreateViewerModal';
 import UploadViewerModal from '../UploadViewerModal/UploadViewerModal';
-import { getVisorById, getPublicVisors, getMyVisors, getGrupos, getGroupVisors, deleteVisor, getPermissions, changePublicStatus } from '../../api/configApi';
+import { getVisorById, getPublicVisors, getMyVisors, createShareLink, getGroupVisors, deleteVisor, changePublicStatus } from '../../api/viewers.js';
+import { getGrupos, getPermissions } from '../../api/groups.js';
 import { useUser } from "../../context/UserContext"
 import { useToast } from '../../context/ToastContext';
 import { downloadViewer } from '../../utils/ViewerHandler';
-import { createShareLink } from '../../api/configApi.js';
-import currentVisor from '../../api/visorApi.js';
+import currentVisor from '../../api/viewerServer.js';
 import noImage from '../../assets/no-image.png';
 import logoArgenmap from '../../assets/logoArgenmap.png';
 import logoKharta from '../../assets/logoKharta.png';

@@ -9,4 +9,5 @@ userRoutes.post("/update", PROTECT.REQUIRE_AUTH, userController.updateUser)
 userRoutes.get("/", PROTECT.REQUIRE_GROUP_ADMIN, userController.getUserList)
 
 
+
 export default userRoutes;

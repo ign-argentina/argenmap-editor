@@ -7,7 +7,6 @@ import Result from "../utils/Result.js";
  * Incluye creación, edición, eliminación de grupos y gestión de miembros.
  */
 class GroupService {
-
   /**
  * Elimina un grupo si el usuario tiene permisos (es admin del grupo o super admin).
  *
@@ -62,13 +61,13 @@ class GroupService {
     try {
       let rolId = null;
       let data = []
-      const isSuperAdmin = await User.isSuperAdmin(userId)
+/*       const isSuperAdmin = await User.isSuperAdmin(userId)
       if (isSuperAdmin) {
         data = await this.#getAllGroups(userId)
-      } else {
+      } else { */
         rolId = isGroupAdmin ? 2 : rolId // Mejorar. No hardcode (o si?)
         data = await Group.getGroupList(userId, rolId) // Búsqueda normal, te devuelve los grupos donde perteneces.
-      }
+   /*    } */
       return data
     } catch (error) {
       console.log("Error en capa de servicio: " + error)
@@ -148,7 +147,7 @@ class GroupService {
 
       if (!userAlreadyExists.exists) {
         if (await Group.isAdminForThisGroup(gid, uid)) {
-          console.log("pepe")
+          // console.log("pepe")
           result = await Group.addUserToGroup(gid, addUserId)
         } else if (await User.isSuperAdmin(uid)) {
           result = await Group.addUserToGroup(gid, addUserId)
@@ -223,4 +222,5 @@ class GroupService {
     }
   }
 }
+
 export default GroupService

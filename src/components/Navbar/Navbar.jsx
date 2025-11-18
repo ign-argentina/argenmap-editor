@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "/src/context/UserContext";
 import { useToast } from "../../context/ToastContext";
 import LoginModal from "../LoginModal/LoginModal";
-import RegisterModal from "../RegisterModal/RegisterModal";
+import CreateModal from "../CreateModal/CreateModal";
 import ProfileModal from "../ProfileModal/ProfileModal";
 import "./Navbar.css";
 
@@ -28,7 +28,7 @@ function Navbar() {
     initAuth();
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
@@ -64,7 +64,8 @@ function Navbar() {
         />
       )}
       {showRegisterModal && (
-        <RegisterModal
+        <CreateModal
+          type="user"
           onClose={() => setShowRegisterModal(false)}
           onRegisterSuccess={handleRegisterSuccess}
         />

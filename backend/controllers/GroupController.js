@@ -11,10 +11,6 @@ class GroupController {
     this.authService = new AuthService();
   }
 
-  createGroup = async (req, res) => {
-    /**** TO DO ****/
-  }
-
   /**
  * Actualiza los datos de un grupo específico.
  *
