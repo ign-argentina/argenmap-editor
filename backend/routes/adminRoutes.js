@@ -12,7 +12,7 @@ adminRoutes.post("/user", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeUse
 adminRoutes.post("/users", PROTECT.REQUIRE_SUPER_ADMIN, adminController.createUser)
 adminRoutes.post("/user/resetpassword", PROTECT.REQUIRE_SUPER_ADMIN, adminController.resetUserPassword)
 
-adminRoutes.post("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.createGroup);
+adminRoutes.post("/groups", PROTECT.REQUIRE_SUPER_ADMIN, adminController.createGroup);
 adminRoutes.get("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.searchGroup)
 adminRoutes.get("/groups", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getAllGroups)
 adminRoutes.post("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeGroupStatus)

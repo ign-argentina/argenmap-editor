@@ -106,15 +106,9 @@ function GroupDashboard() {
                   <td>{group.totalviewers}</td>
                   <td>{group.deleted ? "Eliminado" : "Activo"}</td>
                   <td>
-                    {<button
-                      onClick={async () => {
-                        await changeGroupStatus(group.id),
-                        getAGroupList().then(setGroups),
-                        updateMetrics()
-                      }}
-                    >
+                    <button onClick={async () => { await changeGroupStatus(group.id); getAGroupList().then(setGroups); updateMetrics(); }}>
                       {group.deleted ? "Recuperar" : "Eliminar"}
-                    </button>}
+                    </button>
                   </td>
                 </tr>
               ))
@@ -131,7 +125,7 @@ function GroupDashboard() {
         <CreateModal
           type="group"
           onClose={() => setShowCreateUserModal(false)}
-        // onRegisterSuccess={handleRegisterSuccess}
+          onSuccess={() => { getAGroupList().then(setGroups); updateMetrics(); setShowCreateUserModal(false); }}
         />
       )}
     </div>

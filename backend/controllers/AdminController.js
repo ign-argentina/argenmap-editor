@@ -25,7 +25,6 @@ class AdminController {
     return res.status(200).json(result)
   }
 
-
   getAllUsers = async (req, res) => {
     const result = await this.adminService.getAllUsers()
     return res.status(200).json(result)
@@ -43,6 +42,7 @@ class AdminController {
   changeGroupStatus = async (req, res) => {
     try {
       const { groupId } = req.body
+      console.log("ji")
       const result = await this.adminService.changeGroupStatus(groupId)
       return res.status(200).json(result)
     } catch (error) { }
@@ -122,6 +122,5 @@ class AdminController {
 
   }
 }
-
 
 export default AdminController
