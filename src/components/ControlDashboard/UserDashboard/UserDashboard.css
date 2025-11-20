@@ -6,7 +6,6 @@
   padding: 2rem;
   gap: 2rem;
   background: var(--secondary--color);
-  overflow-y: auto;
 }
 
 .user-dashboard h1 {
@@ -56,13 +55,25 @@
   flex-direction: column;
   gap: 1.5rem;
   border: 2px solid var(--secondary--color);
+  overflow: hidden; /* Cambiado de scroll a hidden */
+  height: 100%; /* Añadido para controlar el alto */
 }
 
+
+/* Table Container - Nuevo wrapper para la tabla con scroll */
+.ud-table-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1; /* Ocupa el espacio disponible */
+  border-radius: 8px;
+  position: relative;
+}
+
+/* Table Styles */
 .ud-table {
-  text-align: center;
   width: 100%;
+  border-spacing: 0;
 }
-
 
 .ud-actions {
   display: flex;
@@ -71,25 +82,12 @@
 }
 
 .ud-actions button {
-  /*   padding: 0.75rem 1.5rem;
-  background: var(--secondary--color);
-  color: var(--text--color);
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(69, 101, 141, 0.4); */
-
   padding: 0.5rem 1rem;
-  /* Reducido de 0.75rem 1.5rem */
   background: var(--secondary--color);
   color: var(--text--color);
   border: none;
   border-radius: 8px;
   font-size: 0.9rem;
-  /* Reducido de 1rem */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -108,26 +106,12 @@
 
 /* Search Input */
 .ud-body input[type="text"] {
-  /*   width: 100%;
-  padding: 1rem 1.5rem;
+  width: 30%;  
+  margin: 0 auto;  
+  padding: 0.75rem 1rem; 
   border: 2px solid var(--secondary--color);
   border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  outline: none;
-  background: var(--text--color);
-  color: var(--primary--color); */
-
-  width: 30%;
-  /* Reducido de 100% */
-  margin: 0 auto;
-  /* Centrado */
-  padding: 0.75rem 1rem;
-  /* Reducido de 1rem 1.5rem */
-  border: 2px solid var(--secondary--color);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  /* Reducido de 1rem */
+  font-size: 0.9rem; 
   transition: all 0.3s ease;
   outline: none;
   background: var(--text--color);
@@ -146,19 +130,8 @@
 
 /* Table Styles */
 .ud-table {
-  /*   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  overflow: hidden;
-  border-radius: 8px; */
-
   width: 100%;
-  border-collapse: separate;
   border-spacing: 0;
-  overflow: hidden;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  /* Reducido de 1rem */
 }
 
 .ud-table thead {
@@ -167,26 +140,18 @@
 
   background: linear-gradient(135deg, var(--primary--color) 0%, var(--secondary--color) 100%);
   color: var(--text--color);
-
+  position: sticky; /* Fija el header */
+  top: 0; /* Se queda arriba */
+  z-index: 10; /* Por encima del contenido */
 }
 
 .ud-table thead th {
   padding: 0.75rem;
-  /* Reducido de 1rem */
   text-align: left;
   font-weight: 600;
   font-size: 0.85rem;
-  /* Reducido de 0.95rem */
   text-transform: uppercase;
   letter-spacing: 0.5px;
-
-  /*     padding: 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-   */
 }
 
 .ud-table thead th:first-child {
@@ -214,17 +179,10 @@
 
 .ud-table tbody td {
   padding: 0.75rem;
-  /* Reducido de 1rem */
   text-align: left;
   color: var(--primary--color);
   border-bottom: 1px solid var(--secondary--color);
   font-size: 0.9rem;
-  /* Añadido para consistencia */
-
-  /*     padding: 1rem;
-  text-align: left;
-  color: var(--primary--color);
-  border-bottom: 1px solid var(--secondary--color); */
 }
 
 .ud-table tbody td:last-child {
@@ -240,13 +198,6 @@
 }
 
 .ud-table tbody button {
-  /*   padding: 0.4rem 0.8rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease; */
 
   padding: 0.5rem 1rem;
   border: none;
@@ -282,31 +233,6 @@
   font-size: 1.1rem;
 }
 
-/* Responsive */
-/* @media (max-width: 768px) {
-  .user-dashboard {
-    padding: 1rem;
-    gap: 1rem;
-  }
-
-  .ud-body {
-    padding: 1rem;
-  }
-
-  .ud-table {
-    font-size: 0.85rem;
-  }
-
-  .ud-table thead th,
-  .ud-table tbody td {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .ud-metricas {
-    grid-template-columns: 1fr;
-  }
-} */
-
 @media (max-width: 768px) {
   .user-dashboard {
     padding: 1rem;
@@ -318,7 +244,8 @@
   }
 
   .ud-body input[type="text"] {
-    width: 80%; /* Más ancho en mobile */
+    width: 80%;
+    /* Más ancho en mobile */
   }
 
   .ud-table {

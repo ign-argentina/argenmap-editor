@@ -54,71 +54,72 @@ function GroupDashboard() {
 
 
       <section className="gd-body">
-              <section className="gd-metricas">
-        <div>
-          Total: {metrics.total}
-        </div>
+        <section className="gd-metricas">
+          <div>
+            Total: {metrics.total}
+          </div>
 
-        <div>
-          Inactivos: {metrics.deleted}
-        </div>
-        {/* 
+          <div>
+            Inactivos: {metrics.deleted}
+          </div>
+          {/* 
         <div>
           Administradores: {metrics.admins}
         </div> */}
 
-        {/*         <div>
+          {/*         <div>
           Usuarios Registrados:
         </div> */}
-      </section>
+        </section>
         <div className='gd-actions'>
           <button
             onClick={() => setShowCreateUserModal(true)}>
             Alta Nuevo Grupo
           </button>
 
-                  <input
-          type="text"
-          placeholder="Buscar grupo..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Buscar grupo..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
 
-
-        <table className="gd-table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Cantidad de visores</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {groups?.length > 0 ? (
-              groups.map((group, index) => (
-                <tr key={index}>
-                  <td>{group.name}</td>
-                  <td>{group.description}</td>
-                  <td>{group.totalviewers}</td>
-                  <td>{group.deleted ? "Eliminado" : "Activo"}</td>
-                  <td>
-                    <button onClick={async () => { await changeGroupStatus(group.id); getAGroupList().then(setGroups); updateMetrics(); }}>
-                      {group.deleted ? "Recuperar" : "Eliminar"}
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <div className="gd-table-container">
+          <table className="gd-table">
+            <thead>
               <tr>
-                <td colSpan="4">No se encontraron resultados</td>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Cantidad de visores</th>
+                <th>Estado</th>
+                <th>Acciones</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {groups?.length > 0 ? (
+                groups.map((group, index) => (
+                  <tr key={index}>
+                    <td>{group.name}</td>
+                    <td>{group.description}</td>
+                    <td>{group.totalviewers}</td>
+                    <td>{group.deleted ? "Eliminado" : "Activo"}</td>
+                    <td>
+                      <button onClick={async () => { await changeGroupStatus(group.id); getAGroupList().then(setGroups); updateMetrics(); }}>
+                        {group.deleted ? "Recuperar" : "Eliminar"}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4">No se encontraron resultados</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {showCreateUserModal && (
