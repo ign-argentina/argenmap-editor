@@ -139,7 +139,7 @@ function Navbar() {
                   {(groupAdmin || superAdmin) && (
                     <button
                       onClick={() => {
-                        navigate("/management");
+                        navigate("/mygroups");
                         setShowDropdown(false);
                       }}
                     >
