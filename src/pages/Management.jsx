@@ -13,6 +13,7 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
   const { showToast } = useToast()
+  
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
     if (res.success) {
@@ -80,7 +81,11 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
   );
 }
 
-function Management() {
+function Management({group}) {
+
+  useEffect(() => {
+    alert(group?.name)
+  }, [group])
 
   const navigate = useNavigate();
   const { groupAdmin, superAdmin, loadingUser, user } = useUser();
@@ -175,11 +180,11 @@ function Management() {
 
   return (
     <div className="management-container">
-      <h1 className="dashboard-title">¡Hola {user?.name}!</h1>
+      <h1 className="dashboard-title">{group?.name}</h1>
 
       {(superAdmin || groupAdmin) && (
         <section className="dashboard-section">
-          <div className="dashboard-group-select">
+         {/*  <div className="dashboard-group-select">
             <label htmlFor="group-select">Selecciona el grupo que quieras administrar:</label>
             <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
               <option disabled value="no-group">-- Selecciona un grupo --</option>
@@ -189,20 +194,20 @@ function Management() {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Tabla de informacion */}
-          {selectedGroupData && (
+
+          {group && (
             <>
               <div className="group-data-table">
                 <h2>Información del grupo</h2>
                 <ManagementTableUserList
                   headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
-                  data={[selectedGroupData]}
+                  data={[group]}
                   editableFields={["name", "description", "img"]}
                   onUpdate={handleUpdateGroup} // Actualizar Grupo
                   onDelete={handleDeleteGroup} // Eliminar grupo
-
                 />
               </div>
 
@@ -260,5 +265,6 @@ function Management() {
     </div>
   );
 }
+
 
 export default Management;
