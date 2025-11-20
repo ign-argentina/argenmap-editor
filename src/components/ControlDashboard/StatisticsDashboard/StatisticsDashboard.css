@@ -16,7 +16,7 @@
   letter-spacing: 1px;
 }
 
-.ud-metricas {
+.sd-metricas {
   /*   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
@@ -28,7 +28,7 @@
   width: 100%;
 }
 
-.ud-metricas div {
+.sd-metricas div {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -45,7 +45,7 @@
   border: 2px solid var(--secondary--color);
 }
 
-.ud-body {
+.sd-body {
   width: 100%;
   background: var(--text--color);
   border-radius: 12px;
@@ -61,7 +61,7 @@
 
 
 /* Table Container - Nuevo wrapper para la tabla con scroll */
-.ud-table-container {
+.sd-table-container {
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1; /* Ocupa el espacio disponible */
@@ -70,18 +70,18 @@
 }
 
 /* Table Styles */
-.ud-table {
+.sd-table {
   width: 100%;
   border-spacing: 0;
 }
 
-.ud-actions {
+.sd-actions {
   display: flex;
   justify-content: flex-start;
   gap: 1rem;
 }
 
-.ud-actions button {
+.sd-actions button {
   padding: 0.5rem 1rem;
   background: var(--secondary--color);
   color: var(--text--color);
@@ -94,18 +94,18 @@
   box-shadow: 0 4px 6px rgba(69, 101, 141, 0.4);
 }
 
-.ud-actions button:hover {
+.sd-actions button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(231, 186, 97, 0.6);
   background: var(--active--color);
 }
 
-.ud-actions button:active {
+.sd-actions button:active {
   transform: translateY(0);
 }
 
 /* Search Input */
-.ud-body input[type="text"] {
+.sd-body input[type="text"] {
   width: 30%;  
   margin: 0 auto;  
   padding: 0.75rem 1rem; 
@@ -118,23 +118,23 @@
   color: var(--primary--color);
 }
 
-.ud-body input[type="text"]:focus {
+.sd-body input[type="text"]:focus {
   border-color: var(--active--color);
   box-shadow: 0 0 0 3px rgba(231, 186, 97, 0.2);
 }
 
-.ud-body input[type="text"]::placeholder {
+.sd-body input[type="text"]::placeholder {
   color: var(--secondary--color);
   opacity: 0.7;
 }
 
 /* Table Styles */
-.ud-table {
+.sd-table {
   width: 100%;
   border-spacing: 0;
 }
 
-.ud-table thead {
+.sd-table thead {
   /*   background: linear-gradient(135deg, var(--primary--color) 0%, var(--secondary--color) 100%);
   color: var(--text--color); */
 
@@ -145,7 +145,7 @@
   z-index: 10; /* Por encima del contenido */
 }
 
-.ud-table thead th {
+.sd-table thead th {
   padding: 0.75rem;
   text-align: left;
   font-weight: 600;
@@ -154,30 +154,30 @@
   letter-spacing: 0.5px;
 }
 
-.ud-table thead th:first-child {
+.sd-table thead th:first-child {
   border-top-left-radius: 8px;
 }
 
-.ud-table thead th:last-child {
+.sd-table thead th:last-child {
   border-top-right-radius: 8px;
 }
 
-.ud-table tbody tr {
+.sd-table tbody tr {
   background: var(--text--color);
   transition: all 0.2s ease;
 }
 
-.ud-table tbody tr:nth-child(even) {
+.sd-table tbody tr:nth-child(even) {
   background: rgba(69, 101, 141, 0.05);
 }
 
-.ud-table tbody tr:hover {
+.sd-table tbody tr:hover {
   background: rgba(231, 186, 97, 0.15);
   transform: scale(1.01);
   box-shadow: 0 2px 8px rgba(231, 186, 97, 0.3);
 }
 
-.ud-table tbody td {
+.sd-table tbody td {
   padding: 0.75rem;
   text-align: left;
   color: var(--primary--color);
@@ -185,7 +185,7 @@
   font-size: 0.9rem;
 }
 
-.ud-table tbody td:last-child {
+.sd-table tbody td:last-child {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-start;
@@ -197,7 +197,7 @@
 
 }
 
-.ud-table tbody button {
+.sd-table tbody button {
 
   padding: 0.5rem 1rem;
   border: none;
@@ -209,24 +209,24 @@
 }
 
 
-.ud-table tbody button:first-child {
+.sd-table tbody button:first-child {
   background: var(--secondary--color);
   color: var(--text--color);
 }
 
-.ud-table tbody button:first-child:hover {
+.sd-table tbody button:first-child:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(231, 186, 97, 0.5);
   background: var(--active--color);
 }
 
-.ud-table tbody tr td:nth-child(4) {
+.sd-table tbody tr td:nth-child(4) {
   font-weight: 600;
   color: var(--secondary--color);
 }
 
 /* Empty State */
-.ud-table tbody td[colspan] {
+.sd-table tbody td[colspan] {
   text-align: center;
   padding: 3rem;
   color: var(--secondary--color);
@@ -239,25 +239,25 @@
     gap: 1rem;
   }
 
-  .ud-body {
+  .sd-body {
     padding: 1rem;
   }
 
-  .ud-body input[type="text"] {
+  .sd-body input[type="text"] {
     width: 80%;
     /* Más ancho en mobile */
   }
 
-  .ud-table {
+  .sd-table {
     font-size: 0.85rem;
   }
 
-  .ud-table thead th,
-  .ud-table tbody td {
+  .sd-table thead th,
+  .sd-table tbody td {
     padding: 0.75rem 0.5rem;
   }
 
-  .ud-metricas {
+  .sd-metricas {
     grid-template-columns: 1fr;
   }
 }
