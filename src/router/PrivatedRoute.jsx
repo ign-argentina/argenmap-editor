@@ -2,9 +2,9 @@ import { Navigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 
 const PrivatedRoute = ({ element }) => {
-  const { isAuth, isLoading } = useUser();
+  const { isAuth, isAuthLoading } = useUser();
   
-  if (isLoading) {
+  if (isAuthLoading) {
     return <div>Loading...</div>; 
   }
   

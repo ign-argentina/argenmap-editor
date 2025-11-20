@@ -10,7 +10,6 @@ import { getUserList } from "../api/users.js";
 import './Management.css'
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
-
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
   const { showToast } = useToast()
@@ -29,7 +28,6 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
   }
 
   useEffect(() => {
-
     const loadUsers = async () => {
       const list = await getUserList();
       const filteredList = list.filter( // Filtramos la lista de usuarios conrespecto a la de usuarios en el grupo. Obteniendo finalmente un listado de usuarios que no están en el grupo

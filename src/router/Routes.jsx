@@ -8,6 +8,7 @@ import Management from "../pages/Management";
 import ControlPanel from "../pages/ControlPanel";
 import ArgenmapForm from "../components/ArgenmapForm/ArgenmapForm";
 import PrivatedRoute from "./PrivatedRoute";
+import MyGroups from "../pages/MyGroups";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
       { path: "/info", element: <WelcomePage /> },
       { path: "/visores", element: <ViewerManager /> },
       { path: "/form", element: <Form /> },
-      { path: "/management", element: <Management /> },
+      { path: "/mygroups", element: <MyGroups /> },
       { path: "/admin/dashboard", element: <PrivatedRoute element={<ControlPanel />} />},
       { path: "/aform", element: <ArgenmapForm /> },
       { path: "*", element: <HomeRedirect /> } // Catch all routes

@@ -1,0 +1,32 @@
+.mygroups-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: azure;
+}
+
+.mygroups-header {
+  height: 8%;
+  width: 100%;
+  background-color: rgb(41, 216, 216);
+}
+
+.mygroups-body{
+  display: flex;
+  background-color: bisque;
+  width: 100%;
+  height: 100%;
+}
+
+.mg-lists{
+  width: 20%;
+  height: 100%;
+  background-color:blue;
+}
+
+.mg-info{
+  width: 80%;
+  height: 100%;
+  background-color: blueviolet;
+}
