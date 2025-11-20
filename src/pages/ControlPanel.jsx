@@ -2,6 +2,7 @@ import { useUser } from "../context/UserContext";
 import './ControlPanel.css'
 import GroupDashboard from "../components/ControlDashboard//GroupDashboard/GroupDashboard";
 import UserDashboard from "../components/ControlDashboard/UserDashboard/UserDashboard";
+import StatisticsDashboard from "../components/ControlDashboard/StatisticsDashboard/StatisticsDashboard";
 import { useState } from "react";
 
 function ControlPanel() {
@@ -20,9 +21,8 @@ function ControlPanel() {
       <div className='cpanel-body'>
         {tab === 0 && <UserDashboard />}
         {tab === 1 && <GroupDashboard />}
-          
+        {tab === 3 && <StatisticsDashboard />}
       </div>
-
     </div>
   )
 }
