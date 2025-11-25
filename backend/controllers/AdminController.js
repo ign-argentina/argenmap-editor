@@ -67,6 +67,15 @@ class AdminController {
     }
   }
 
+  getVisorMetrics = async (req, res) => {
+    try {
+      const result = await this.adminService.getVisorMetrics()
+      return res.status(200).json(result)
+    } catch (error) {
+      return res.status(200).json({ success: false })
+    }
+  }
+
   getGroupsMetrics = async (req, res) => {
     try {
       const result = await this.adminService.getGroupsMetrics()
@@ -111,12 +120,12 @@ class AdminController {
   };
 
   createUser = async (req, res) => {
-    try{
-      const {name, lastname, email, password} = req.body;      
+    try {
+      const { name, lastname, email, password } = req.body;
       this.adminService.createUser(name, lastname, email, password);
-      return res.status(201).json({message:"Usuario creado correctamente"})
-    }catch(error){
-      return res.status(500).json({error: "Error interno al crear usuarios"})
+      return res.status(201).json({ message: "Usuario creado correctamente" })
+    } catch (error) {
+      return res.status(500).json({ error: "Error interno al crear usuarios" })
     }
 
   }

@@ -90,7 +90,6 @@
   }
 }
 
-/* Añadilo al final de tu StatisticsDashboard.css */
 .sd-chart {
   width: 100%;
   height: 220px;
@@ -100,13 +99,11 @@
   align-items: center;
 }
 
-/* Ajustes para la leyenda de Recharts */
 .recharts-legend-wrapper {
   font-size: 0.9rem;
   color: var(--text--color);
 }
 
-/* Tooltip styling (si querés personalizar) */
 .recharts-default-tooltip {
   border-radius: 8px;
   font-size: 0.9rem;

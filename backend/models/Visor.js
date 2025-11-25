@@ -76,6 +76,12 @@ FROM visores v
 JOIN config c ON v.cid = c.id
 WHERE v.uid = $1 AND v.deleted = true;`
 
+const GENERATE_METRICS = `SELECT
+  COUNT(*) FILTER (WHERE deleted = false) AS total,
+  COUNT(*) FILTER (WHERE publico = true AND deleted = false) AS public,
+  COUNT(*) FILTER (WHERE isshared = true AND deleted = false) AS shared
+FROM visores;`
+
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
     try {
@@ -214,7 +220,6 @@ class Visor extends BaseModel {
     }
   }
 
-
   static getMyDeletedViewers = async (userid) => {
     try {
       const result = await super.runQuery(GET_DELETED_USER_VIEWERS, [userid])
@@ -223,6 +228,11 @@ class Visor extends BaseModel {
       console.log("Error en la capa de persistencia", error)
       throw error
     }
+  }
+
+  static getVisorMetrics = async () => {
+    const result = await super.runQuery(GENERATE_METRICS, [])
+    return result[0]
   }
 }
 

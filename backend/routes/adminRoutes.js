@@ -19,5 +19,6 @@ adminRoutes.post("/group", PROTECT.REQUIRE_SUPER_ADMIN, adminController.changeGr
 
 adminRoutes.get("/metrics/users", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getUsersMetrics)
 adminRoutes.get("/metrics/groups", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getGroupsMetrics)
+adminRoutes.get("/metrics/visor", PROTECT.REQUIRE_SUPER_ADMIN, adminController.getVisorMetrics)
 
 export default adminRoutes;

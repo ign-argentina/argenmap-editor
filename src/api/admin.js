@@ -13,6 +13,12 @@ export const getUserMetrics = async () => {
   return res.data
 }
 
+export const getVisorMetrics = async () => {
+  const res = await axios.get(`${API_URL}/admin/metrics/visor`,
+    { withCredentials: true, validateStatus: () => true });
+  return res.data
+}
+
 export const resetUserPassword = async (id) => {
   const res = await axios.post(`${API_URL}/admin/user/resetpassword`, { id: id },
     { withCredentials: true, validateStatus: () => true });
