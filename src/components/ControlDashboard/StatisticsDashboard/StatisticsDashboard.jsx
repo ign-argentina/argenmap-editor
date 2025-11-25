@@ -118,6 +118,13 @@ function StatisticsDashboard() {
           </div>
 
           <div className="sd-row">
+            <span>Activos (no-admins)</span>
+            <strong>
+              {(userMetrics.total ?? 0) - (userMetrics.unabled ?? 0) - (userMetrics.admins ?? 0)}
+            </strong>
+          </div>
+          
+          <div className="sd-row">
             <span>Inactivos</span>
             <strong>{userMetrics.unabled ?? 0}</strong>
           </div>
@@ -158,6 +165,13 @@ function StatisticsDashboard() {
           <div className="sd-row">
             <span>Total</span>
             <strong>{groupMetrics.total ?? 0}</strong>
+          </div>
+
+          <div className="sd-row">
+            <span>Activos</span>
+            <strong>
+              {(groupMetrics.total ?? 0) - (groupMetrics.deleted ?? 0)}
+            </strong>
           </div>
 
           <div className="sd-row">
