@@ -27,4 +27,5 @@
   width: 86%;
   height: 100%;
   background-color: aliceblue;
+  overflow: scroll;
 }
