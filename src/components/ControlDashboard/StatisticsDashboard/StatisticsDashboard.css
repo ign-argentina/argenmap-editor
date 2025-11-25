@@ -1,98 +1,36 @@
 .statistics-dashboard {
   width: 100%;
-  height: 100%;
   padding: 2rem;
   background: var(--secondary--color);
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 }
 
-/* CONTENEDOR PRINCIPAL */
 .sd-body {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
   gap: 2rem;
-  width: 100%;
 }
 
-/* TARJETAS */
-.sd-card {
+/* Columna completa con MetricCards + gráfico */
+.sd-column {
   background: var(--primary--color);
   padding: 2rem;
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
   border: 2px solid var(--secondary--color);
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.4rem;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.sd-card:hover {
+.sd-column:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
 }
 
-/* TITULO DE CADA SECCIÓN */
-.sd-title {
-  font-size: 1.5rem;
-  color: var(--text--color);
-  margin: 0;
-  text-align: left;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-/* FILAS (cada métrica) */
-.sd-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--text--color);
-  padding: 0.9rem 1.2rem;
-  border-radius: 10px;
-  border: 1px solid var(--secondary--color);
-  font-size: 1rem;
-  color: var(--primary--color);
-  transition: background 0.25s ease;
-}
-
-.sd-row:hover {
-  background: rgba(231, 186, 97, 0.15);
-}
-
-/* VALOR */
-.sd-row strong {
-  font-size: 1.2rem;
-  color: var(--active--color);
-  font-weight: 700;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .statistics-dashboard {
-    padding: 1rem;
-  }
-
-  .sd-card {
-    padding: 1.5rem;
-  }
-
-  .sd-title {
-    text-align: center;
-  }
-
-  .sd-row {
-    flex-direction: column;
-    gap: 0.4rem;
-    text-align: center;
-  }
-}
-
 .sd-chart {
   width: 100%;
-  height: 220px;
+  height: 230px;
   margin-top: 1rem;
   display: flex;
   justify-content: center;
@@ -101,10 +39,19 @@
 
 .recharts-legend-wrapper {
   font-size: 0.9rem;
-  color: var(--text--color);
 }
 
 .recharts-default-tooltip {
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: 0.4rem 0.7rem;
   font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .statistics-dashboard {
+    padding: 1rem;
+  }
+  .sd-column {
+    padding: 1.4rem;
+  }
 }
