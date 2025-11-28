@@ -17,7 +17,7 @@ const router = createBrowserRouter([
       { path: "/info", element: <WelcomePage /> },
       { path: "/visores", element: <ViewerManager /> },
       { path: "/form", element: <Form /> },
-      { path: "/mygroups", element: <MyGroups /> },
+      { path: "/mygroups", element: <PrivatedRoute element={<MyGroups />} /> },
       { path: "/admin/dashboard", element: <PrivatedRoute element={<ControlPanel />} />},
       { path: "/aform", element: <ArgenmapForm /> },
       { path: "*", element: <HomeRedirect /> } // Catch all routes

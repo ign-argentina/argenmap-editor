@@ -123,9 +123,10 @@ class GroupService {
       if (isSuperAdmin) {
         const isAdmin = await User.isSuperAdmin(uid)
         result = isAdmin ? await Group.getGroupUserList(id) : result
-      } else if (await Group.isAdminForThisGroup(id, uid)) {
+      } else if (await Group.isMemberOfThisGroup(uid, id)) {      
         result = await Group.getGroupUserList(id)
       }
+
       return result.length > 0 ? Result.success(result) : Result.fail("El grupo no tiene usuarios o no existe: " + id)
     } catch (error) {
       console.log("Error en la capa de servicio: " + error)

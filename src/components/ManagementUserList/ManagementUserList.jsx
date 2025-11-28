@@ -10,6 +10,7 @@ function ManagementTableUserList({
   editableFields = [],
   rolOptions = [],
   isUserTable = false,
+  hasAccess = false,
 }) {
   const [editRowId, setEditRowId] = useState(null);
   const [editedData, setEditedData] = useState({});
@@ -81,11 +82,14 @@ function ManagementTableUserList({
     <table className="management-table">
       <thead className="management-table__head">
         <tr>
-          {extendedKeys.map((key) => (
-            <th key={key} className="management-table__header-cell">
-              {key === "acciones" ? "Acciones" : headers[key]}
-            </th>
-          ))}
+          {extendedKeys.map((key) => {
+            if (key === "acciones" && !hasAccess) return null;
+            return (
+              <th key={key} className="management-table__header-cell">
+                {key === "acciones" ? "Acciones" : headers[key]}
+              </th>
+            );
+          })}
         </tr>
       </thead>
       <tbody className="management-table__body">
@@ -158,42 +162,44 @@ function ManagementTableUserList({
                 )}
               </td>
             ))}
-            <td className="management-table__cell management-table__actions-cell">
-              {editRowId === row.id ? (
-                <button
-                  title="Guardar"
-                  className="management-table__btn-confirm management-table__btn btn-management"
-                  onClick={handleUpdate}
-                >
-                  <i className="fas fa-check"></i>
-                </button>
-              ) : (
+            {hasAccess && (
+              <td className="management-table__cell management-table__actions-cell">
+                {editRowId === row.id ? (
+                  <button
+                    title="Guardar"
+                    className="management-table__btn-confirm management-table__btn btn-management"
+                    onClick={handleUpdate}
+                  >
+                    <i className="fas fa-check"></i>
+                  </button>
+                ) : (
+                  <button
+                    style={{
+                      visibility:
+                        isUserTable && row.id === user?.id
+                          ? "hidden"
+                          : "visible",
+                    }}
+                    title="Editar"
+                    className="management-table__btn-edit management-table__btn btn-management"
+                    onClick={() => handleEditClick(row)}
+                  >
+                    <i className="fas fa-pencil-alt"></i>
+                  </button>
+                )}
                 <button
                   style={{
                     visibility:
-                      isUserTable && row.id === user?.id
-                        ? "hidden"
-                        : "visible",
+                      isUserTable && row.id === user?.id ? "hidden" : "visible",
                   }}
-                  title="Editar"
-                  className="management-table__btn-edit management-table__btn btn-management"
-                  onClick={() => handleEditClick(row)}
+                  title="Eliminar"
+                  className="management-table__btn-delete management-table__btn btn-management"
+                  onClick={() => handleDelete(row.id)}
                 >
-                  <i className="fas fa-pencil-alt"></i>
+                  <i className="fas fa-circle-minus"></i>
                 </button>
-              )}
-              <button
-                style={{
-                  visibility:
-                    isUserTable && row.id === user?.id ? "hidden" : "visible",
-                }}
-                title="Eliminar"
-                className="management-table__btn-delete management-table__btn btn-management"
-                onClick={() => handleDelete(row.id)}
-              >
-                <i className="fas fa-circle-minus"></i>
-              </button>
-            </td>
+              </td>
+            )}
           </tr>
         ))}
       </tbody>

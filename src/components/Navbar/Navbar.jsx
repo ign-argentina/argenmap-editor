@@ -136,7 +136,7 @@ function Navbar() {
                     <i className="fa-solid fa-id-badge"></i> Perfil
                   </button>
 
-                  {(groupAdmin || superAdmin) && (
+
                     <button
                       onClick={() => {
                         navigate("/mygroups");
@@ -145,7 +145,7 @@ function Navbar() {
                     >
                       <i className="fa-solid fa-people-group"></i> Mis Grupos
                     </button>
-                  )}
+
 
                   {superAdmin && (
                     <button
