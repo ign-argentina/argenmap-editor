@@ -136,16 +136,16 @@ function Navbar() {
                     <i className="fa-solid fa-id-badge"></i> Perfil
                   </button>
 
-                  {(groupAdmin || superAdmin) && (
+
                     <button
                       onClick={() => {
-                        navigate("/management");
+                        navigate("/mygroups");
                         setShowDropdown(false);
                       }}
                     >
                       <i className="fa-solid fa-people-group"></i> Mis Grupos
                     </button>
-                  )}
+
 
                   {superAdmin && (
                     <button

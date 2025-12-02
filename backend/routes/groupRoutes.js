@@ -14,8 +14,8 @@ groupRoutes.get("/rol/:id", PROTECT.REQUIRE_AUTH, groupController.getPermissions
 groupRoutes.post("/management", PROTECT.REQUIRE_GROUP_ADMIN, groupController.addUserToGroup)
 groupRoutes.delete("/management", PROTECT.REQUIRE_GROUP_ADMIN, groupController.deleteUserFromGroup)
 groupRoutes.put("/management", PROTECT.REQUIRE_GROUP_ADMIN, groupController.updateUserRolFromGroup)
-groupRoutes.get("/management", PROTECT.REQUIRE_GROUP_ADMIN, groupController.getManageGroupList) // Si sos superadmin, devuelve todos los grupos. Si no, los grupos que administras
+groupRoutes.get("/management", /* PROTECT.REQUIRE_GROUP_ADMIN, */ groupController.getManageGroupList) // Si sos superadmin, devuelve todos los grupos. Si no, los grupos que administras
 groupRoutes.get("/management/:id", PROTECT.REQUIRE_GROUP_ADMIN, groupController.getGroup) // Devuelve informacion del grupo si sos admin del grupo o superadmin
-groupRoutes.get("/management/userlist/:id", PROTECT.REQUIRE_GROUP_ADMIN, groupController.getGroupUserList)
+groupRoutes.get("/management/userlist/:id", /* PROTECT.REQUIRE_GROUP_ADMIN, */ groupController.getGroupUserList)
 
 export default groupRoutes;

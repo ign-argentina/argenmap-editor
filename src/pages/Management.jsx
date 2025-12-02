@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { useToast } from "../context/ToastContext.jsx";
-import { useNavigate } from "react-router-dom";
 import ManagementTableUserList from "../components/ManagementUserList/ManagementUserList.jsx";
 import ManagementDeletedViewerList from "../components/ManagementDeletedViewerList/ManagementDeletedViewerList.jsx";
 import { restoreViewer, getDeletedViewers } from "../api/viewers.js";
-import { getManageGroups, getGroup, getGroupUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/groups.js";
+import { getGroupUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup, getPermissions } from "../api/groups.js";
 import { getUserList } from "../api/users.js";
 import './Management.css'
 
 function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
-
   const [userList, setUserList] = useState([])
   const [userSelected, setUserSelected] = useState(null)
   const { showToast } = useToast()
+
   const handleAdd = async () => {
     const res = await addUserToGroup(userSelected, groupId)
     if (res.success) {
       showToast("Usuario agregado al grupo!", "success");
-      onSuccess()
+      onSuccess();
     } else {
       showToast("No se ha podido agregar el usuario al grupo", "error");
     }
@@ -29,7 +28,6 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
   }
 
   useEffect(() => {
-
     const loadUsers = async () => {
       const list = await getUserList();
       const filteredList = list.filter( // Filtramos la lista de usuarios conrespecto a la de usuarios en el grupo. Obteniendo finalmente un listado de usuarios que no están en el grupo
@@ -82,182 +80,170 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
   );
 }
 
-function Management() {
-
-  const navigate = useNavigate();
-  const { groupAdmin, superAdmin, loadingUser, user } = useUser();
-  const [adminGroup, setAdminGroup] = useState([]);
-  const [selectedGroupData, setSelectedGroupData] = useState(null);
-  const [selectedGroupUserList, setSelectedGroupUserList] = useState([])
-  const [deletedViewerList, setDeletedViewerList] = useState([])
-
+function Management({ group }) {
+  const [selectedGroupUserList, setSelectedGroupUserList] = useState([]);
+  const [deletedViewerList, setDeletedViewerList] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [activeTab, setActiveTab] = useState("usuarios");
   const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const [roles, setRoles] = useState([])
-  const { showToast } = useToast()
+  const { user } = useUser();
+  const { showToast } = useToast();
 
-  const handleSelectChange = async (e) => {
-    const selectedId = e.target.value;
-    if (!selectedId) return setSelectedGroupData([]);
+  // Cargar datos iniciales solo cuando group esté disponible
+  useEffect(() => {
+    const loadInitialData = async () => {
+      if (!group?.id) return; //Validar que group existe
 
-    try {
-      const groupData = await getGroup(selectedId)
-      setSelectedGroupData(groupData);
-      await updateGroupUserList(selectedId)
-      await getDeletedViewerList(selectedId)
-    } catch (error) {
-      console.error("Error al obtener info del grupo:", error);
-      setSelectedGroupData(null);
+      setIsLoading(true);
+      try {
+        const [userList, deletedList, rolList, access] = await Promise.all([
+          getGroupUserList(group.id),
+          getDeletedViewers(group.id),
+          getRoles(),
+          getPermissions(group.id)
+        ]);
+
+        setSelectedGroupUserList(userList || []);
+        setDeletedViewerList(deletedList || []);
+        setRoles(rolList || []);
+        setIsAdmin(access.ga || false)
+
+      } catch (error) {
+        console.error("Error al cargar datos:", error);
+        showToast("Error al cargar los datos del grupo", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadInitialData();
+  }, [group?.id, user]);
+
+  // Funciones helper 
+  const updateGroupUserList = async () => {
+    if (!group?.id) return;
+    const userList = await getGroupUserList(group.id);
+    setSelectedGroupUserList(userList || []);
+  };
+
+  const updateDeletedViewerList = async () => {
+    if (!group?.id) return;
+    const deletedList = await getDeletedViewers(group.id);
+    setDeletedViewerList(deletedList || []);
+  };
+
+  const handleDeleteUser = async (uid) => {
+    await deleteUserFromGroup(uid, group.id);
+    await updateGroupUserList();
+    showToast("El usuario ha sido removido del grupo", "warning");
+  };
+
+  const handleUpdateRolUser = async (user) => {
+    await updateUserRolFromGroup(user.id, user.rol, group.id);
+    await updateGroupUserList();
+    showToast("El rol del usuario ha sido modificado", "success");
+  };
+
+  const handleUpdateGroup = async (groupData) => {
+    const { name, description, img } = groupData;
+    await updateGroup(name, description, img, group.id);
+    showToast("Guardado con Éxito", "success");
+  };
+
+  const handleDeleteGroup = async () => {
+    if (confirm('¿Estás seguro que querés eliminar este grupo?')) {
+      await deleteGroup(group.id);
+      window.location.reload();
     }
   };
 
-  const updateGroupUserList = async (id) => {
-    const userList = await getGroupUserList(id)
-    setSelectedGroupUserList(userList ? userList : [])
-  }
-
-  const getDeletedViewerList = async(id) => {
-
-    const deletedList = await getDeletedViewers(id)
-    console.log(deletedList)
-    setDeletedViewerList(deletedList ? deletedList : [])
-  }
-
-  const loadGroups = async () => {
-    const groupList = await getManageGroups()
-    const rolList = await getRoles()
-    setRoles(rolList)
-    setAdminGroup(groupList);
-  }
-
-  // Si no tenes accesos te saca (MEJORAR CON PRIVATEDROUTES)
-  useEffect(() => {
-    if (loadingUser) return; // Esperamos a que termine de cargar el usuario 
-    if (!superAdmin && !groupAdmin) {
-      navigate('/')
-    } else {
-      loadGroups()
-    }
-  }, [loadingUser, superAdmin, groupAdmin, navigate]);
-
-  const handleDeleteUser = async (uid) => {
-    await deleteUserFromGroup(uid, selectedGroupData.id)
-    await updateGroupUserList(selectedGroupData.id)
-    showToast("El usuario ha sido removido del grupo", "warning")
-  }
-
-  const handleUpdateRolUser = async (user) => {
-    await updateUserRolFromGroup(user.id, user.rol, selectedGroupData.id)
-    await updateGroupUserList(selectedGroupData.id)
-    showToast("El rol del usuario ha sido modificado", "success")
-  }
-
-  const handleUpdateGroup = async (groupData) => {
-    const { name, description, img } = groupData
-    await updateGroup(name, description, img, selectedGroupData.id)
-    const groupInfo = await getGroup(selectedGroupData.id)
-    setSelectedGroupData(groupInfo);
-    showToast("Guardado con Exito", "success")
-  }
-
-  const handleDeleteGroup = async () => {
-    if (confirm('Estas seguro que queres eliminar este grupo?')) {
-      await deleteGroup(selectedGroupData.id)
-      window.location.reload()
-    }
-  }
-
   const handleRestoreViewer = async (viewerid) => {
-    if (confirm('Estas seguro que queres restaurar este visor?')) {
-      await restoreViewer(viewerid, selectedGroupData.id)
-      await getDeletedViewerList(selectedGroupData.id)
+    if (confirm('¿Estás seguro que querés restaurar este visor?')) {
+      await restoreViewer(viewerid, group.id);
+      await updateDeletedViewerList();
     }
+  };
+
+  // Mostrar loading hasta que todo esté listo
+  if (!group || isLoading) {
+    return (
+      <div className="management-container">
+        <div className="loading-spinner">Cargando...</div>
+      </div>
+    );
   }
 
   return (
     <div className="management-container">
-      <h1 className="dashboard-title">¡Hola {user?.name}!</h1>
+      <h1 className="dashboard-title">{group.name}</h1>
 
-      {(superAdmin || groupAdmin) && (
-        <section className="dashboard-section">
-          <div className="dashboard-group-select">
-            <label htmlFor="group-select">Selecciona el grupo que quieras administrar:</label>
-            <select defaultValue="no-group" id="group-select" onChange={handleSelectChange}>
-              <option disabled value="no-group">-- Selecciona un grupo --</option>
-              {adminGroup?.map((grupo) => (
-                <option key={grupo.id} value={grupo.id}>
-                  {grupo.name}
-                </option>
-              ))}
-            </select>
+      <section className="dashboard-section">
+        <div className="group-data-table">
+          <h2>Información del grupo</h2>
+          <ManagementTableUserList
+            headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
+            data={[group]}
+            editableFields={["name", "description", "img"]}
+            onUpdate={handleUpdateGroup}
+            onDelete={handleDeleteGroup}
+            hasAccess={isAdmin}
+          />
+        </div>
+
+        <div className="group-data-table">
+          <div className="group-tab-menu">
+            <button
+              className={activeTab === "usuarios" ? "active" : ""}
+              onClick={() => setActiveTab("usuarios")}
+            >
+              Integrantes del grupo
+            </button>
+            {isAdmin && (<button
+              className={activeTab === "visores" ? "active" : ""}
+              onClick={() => setActiveTab("visores")}
+            >
+              Visores eliminados
+            </button>)}
           </div>
 
-          {/* Tabla de informacion */}
-          {selectedGroupData && (
+          {activeTab === "usuarios" && (
             <>
-              <div className="group-data-table">
-                <h2>Información del grupo</h2>
-                <ManagementTableUserList
-                  headers={{ name: "Nombre", description: "Descripción", img: "Imagen" }}
-                  data={[selectedGroupData]}
-                  editableFields={["name", "description", "img"]}
-                  onUpdate={handleUpdateGroup} // Actualizar Grupo
-                  onDelete={handleDeleteGroup} // Eliminar grupo
-
-                />
-              </div>
-
-              <div className="group-data-table">
-                <div className="group-tab-menu">
-                  <button
-                    className={activeTab === "usuarios" ? "active" : ""}
-                    onClick={() => setActiveTab("usuarios")}
-                  > {/* <i className="fa-solid fa-people-group"></i> */}
-                    Integrantes del grupo
-                  </button>
-                  <button
-                    className={activeTab === "visores" ? "active" : ""}
-                    onClick={() => setActiveTab("visores")}
-                  >
-                    Vistores eliminados
-                  </button>
-                </div>
-
-                {activeTab === "usuarios" && (
-                  <>
-                    <button className="dash-button" onClick={() => setShowAddUserModal(true)} > Agregar Usuario </button>
-                    <ManagementTableUserList
-                      headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
-                      data={selectedGroupUserList}
-                      onDelete={handleDeleteUser}
-                      onUpdate={handleUpdateRolUser}
-                      editableFields={["rol"]}
-                      rolOptions={roles}
-                      isUserTable={true}
-                    />
-                  </>
-                )}
-
-                {activeTab === "visores" && (
-                  <>
-                  {/*   <button className="dash-button"> Nuevo Visor </button> */}
-                    <ManagementDeletedViewerList
-                      headers={{ name: "Nombre", isargenmap: "Version"}}
-                      data={deletedViewerList}
-                      onRestore={handleRestoreViewer}
-                    />
-                  </>
-                )}
-              </div>
+              {isAdmin && (<button className="dash-button" onClick={() => setShowAddUserModal(true)}>
+                Agregar Usuario
+              </button>)}
+              <ManagementTableUserList
+                headers={{ name: "Nombre", lastname: "Apellido", email: "Email", rol: "Rol" }}
+                data={selectedGroupUserList}
+                onDelete={handleDeleteUser}
+                onUpdate={handleUpdateRolUser}
+                editableFields={["rol"]}
+                rolOptions={roles}
+                isUserTable={true}
+                hasAccess={(isAdmin)}
+              />
             </>
           )}
 
-          {showAddUserModal ? (<AddUserModal onClose={() => setShowAddUserModal(false)}
-            groupId={selectedGroupData.id}
-            onSuccess={async () => await updateGroupUserList(selectedGroupData.id)}
-            groupUserList={selectedGroupUserList} />) : null}
-        </section>
+          {activeTab === "visores" && (
+            <ManagementDeletedViewerList
+              headers={{ name: "Nombre", isargenmap: "Version" }}
+              data={deletedViewerList}
+              onRestore={handleRestoreViewer}
+            />
+          )}
+        </div>
+      </section>
+
+      {showAddUserModal && (
+        <AddUserModal
+          onClose={() => setShowAddUserModal(false)}
+          groupId={group.id}
+          onSuccess={updateGroupUserList}
+          groupUserList={selectedGroupUserList}
+        />
       )}
     </div>
   );
