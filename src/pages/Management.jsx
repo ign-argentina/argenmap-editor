@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { useToast } from "../context/ToastContext.jsx";
-import { useNavigate } from "react-router-dom";
 import ManagementTableUserList from "../components/ManagementUserList/ManagementUserList.jsx";
 import ManagementDeletedViewerList from "../components/ManagementDeletedViewerList/ManagementDeletedViewerList.jsx";
 import { restoreViewer, getDeletedViewers } from "../api/viewers.js";
-import { getManageGroups, getGroup, getGroupUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup, getPermissions } from "../api/groups.js";
+import { getGroupUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup, getPermissions } from "../api/groups.js";
 import { getUserList } from "../api/users.js";
 import './Management.css'
 
@@ -18,7 +17,7 @@ function AddUserModal({ onClose, groupId, onSuccess, groupUserList }) {
     const res = await addUserToGroup(userSelected, groupId)
     if (res.success) {
       showToast("Usuario agregado al grupo!", "success");
-      onSuccess()
+      onSuccess();
     } else {
       showToast("No se ha podido agregar el usuario al grupo", "error");
     }
@@ -87,7 +86,7 @@ function Management({ group }) {
   const [roles, setRoles] = useState([]);
   const [activeTab, setActiveTab] = useState("usuarios");
   const [showAddUserModal, setShowAddUserModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // ✅ Loading state
+  const [isLoading, setIsLoading] = useState(true); // Loading state
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { user } = useUser();
@@ -177,15 +176,6 @@ function Management({ group }) {
     );
   }
 
-  // Verificar permisos
-  /*   if (!superAdmin && !groupAdmin) {
-      return (
-        <div className="management-container">
-          <h2>No tenés permisos para acceder a esta sección</h2>
-        </div>
-      );
-    } */
-
   return (
     <div className="management-container">
       <h1 className="dashboard-title">{group.name}</h1>
@@ -258,7 +248,5 @@ function Management({ group }) {
     </div>
   );
 }
-
-
 
 export default Management;
