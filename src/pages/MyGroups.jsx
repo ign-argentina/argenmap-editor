@@ -9,7 +9,6 @@ function MyGroups() {
   const [selectedGroup, setSelectedGroup] = useState(null)
   const [groupList, setGroupList] = useState([])
 
-  const grupos = [{ id: "x", nombre: "Mockeado 1" }, { id: "x", nombre: "Mockeado 2" }, { id: "x", nombre: "Mockeado 3" }]
   const invitaciones = [{ id: "x", nombre: "Invitacion" }]
 
 
@@ -21,19 +20,23 @@ function MyGroups() {
     <section className='mygroups-page' >
 
       <div className='mygroups-header'>
-        <h1>Mis grupos</h1>
+        <h1>{/* ALGO */}</h1>
       </div>
 
       <div className='mygroups-body'>
         <div className='mg-lists'>
           <div className="mg-list-header">
             <button onClick={() => setShowGroupList(true)}> Mis grupos</button>
-           {/*  <button onClick={() => setShowGroupList(false)}>Invitaciones</button> */}
+            {/* <button onClick={() => setShowGroupList(false)}>Invitaciones</button> */}
           </div>
           <div className="mg-list-body">
 
             {showGroupList ? groupList.map((grupo, idx) => (
-              <button key={idx} onClick={() => setSelectedGroup(grupo)} className="mg-group-btn">
+              <button 
+                key={idx} 
+                onClick={() => setSelectedGroup(grupo)} 
+                className={selectedGroup?.id === grupo.id ? "mg-group-btn active" : "mg-group-btn"}
+              >
                 {grupo.name}
               </button>
             )) :
