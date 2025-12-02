@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ManagementTableUserList from "../components/ManagementUserList/ManagementUserList.jsx";
 import ManagementDeletedViewerList from "../components/ManagementDeletedViewerList/ManagementDeletedViewerList.jsx";
 import { restoreViewer, getDeletedViewers } from "../api/viewers.js";
-import { getManageGroups, getGroup, getGroupUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup } from "../api/groups.js";
+import { getManageGroups, getGroup, getGroupUserList, addUserToGroup, deleteUserFromGroup, updateUserRolFromGroup, getRoles, updateGroup, deleteGroup, getPermissions } from "../api/groups.js";
 import { getUserList } from "../api/users.js";
 import './Management.css'
 
@@ -88,8 +88,9 @@ function Management({ group }) {
   const [activeTab, setActiveTab] = useState("usuarios");
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // ✅ Loading state
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const { groupAdmin, superAdmin, user } = useUser();
+  const { user } = useUser();
   const { showToast } = useToast();
 
   // Cargar datos iniciales solo cuando group esté disponible
@@ -99,15 +100,18 @@ function Management({ group }) {
 
       setIsLoading(true);
       try {
-        const [userList, deletedList, rolList] = await Promise.all([
+        const [userList, deletedList, rolList, access] = await Promise.all([
           getGroupUserList(group.id),
           getDeletedViewers(group.id),
-          getRoles()
+          getRoles(),
+          getPermissions(group.id)
         ]);
 
         setSelectedGroupUserList(userList || []);
         setDeletedViewerList(deletedList || []);
         setRoles(rolList || []);
+        setIsAdmin(access.ga || false)
+
       } catch (error) {
         console.error("Error al cargar datos:", error);
         showToast("Error al cargar los datos del grupo", "error");
@@ -195,7 +199,7 @@ function Management({ group }) {
             editableFields={["name", "description", "img"]}
             onUpdate={handleUpdateGroup}
             onDelete={handleDeleteGroup}
-            hasAccess={(groupAdmin || superAdmin)}
+            hasAccess={isAdmin}
           />
         </div>
 
@@ -207,7 +211,7 @@ function Management({ group }) {
             >
               Integrantes del grupo
             </button>
-            {(superAdmin || groupAdmin) && (<button
+            {isAdmin && (<button
               className={activeTab === "visores" ? "active" : ""}
               onClick={() => setActiveTab("visores")}
             >
@@ -217,7 +221,7 @@ function Management({ group }) {
 
           {activeTab === "usuarios" && (
             <>
-              {(groupAdmin || superAdmin) && (<button className="dash-button" onClick={() => setShowAddUserModal(true)}>
+              {isAdmin && (<button className="dash-button" onClick={() => setShowAddUserModal(true)}>
                 Agregar Usuario
               </button>)}
               <ManagementTableUserList
@@ -228,7 +232,7 @@ function Management({ group }) {
                 editableFields={["rol"]}
                 rolOptions={roles}
                 isUserTable={true}
-                hasAccess={(groupAdmin || superAdmin)}
+                hasAccess={(isAdmin)}
               />
             </>
           )}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './MyGroups.css'
 import Management from "./Management";
-import { getManageGroups } from "../api/groups";
+import { getManageGroups, getGrupos } from "../api/groups";
 
 function MyGroups() {
 
@@ -14,7 +14,8 @@ function MyGroups() {
 
 
   useEffect(() => {
-    getManageGroups().then(setGroupList)
+ /*    getManageGroups().then(setGroupList) */
+    getGrupos().then(setGroupList)
   }, [])
   return (
     <section className='mygroups-page' >
@@ -27,7 +28,7 @@ function MyGroups() {
         <div className='mg-lists'>
           <div className="mg-list-header">
             <button onClick={() => setShowGroupList(true)}> Mis grupos</button>
-            <button onClick={() => setShowGroupList(false)}>Invitaciones</button>
+           {/*  <button onClick={() => setShowGroupList(false)}>Invitaciones</button> */}
           </div>
           <div className="mg-list-body">
 
