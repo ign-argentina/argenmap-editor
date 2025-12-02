@@ -162,122 +162,125 @@ function StatisticsDashboard() {
           </BarChart>
         </div>
 
-        {/* ---------------- USERS ---------------- */}
-        <div className="sd-column">
-          <MetricCard
-            icon="👥"
-            title="Usuarios Totales"
-            value={userMetrics.total ?? 0}
-          />
-          <MetricCard icon="🟢" title="Activos" value={activeUsers} />
-          <MetricCard icon="🛑" title="Inactivos" value={userMetrics.unabled ?? 0} />
-          <MetricCard icon="⭐" title="Administradores" value={userMetrics.admins ?? 0} />
+        <div className="sd-statics2">
+          {/* ---------------- USERS ---------------- */}
+          <div className="sd-column">
+            <MetricCard
+              icon="👥"
+              title="Usuarios Totales"
+              value={userMetrics.total ?? 0}
+            />
+            <MetricCard icon="🟢" title="Activos" value={activeUsers} />
+            <MetricCard icon="🛑" title="Inactivos" value={userMetrics.unabled ?? 0} />
+            <MetricCard icon="⭐" title="Administradores" value={userMetrics.admins ?? 0} />
 
-          <div className="sd-chart">
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie
-                  data={userPieData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={80}
-                  label={pieLabel}
-                  labelLine={false}
-                >
-                  {userPieData.map((entry, idx) => (
-                    <Cell
-                      key={`cell-${idx}`}
-                      fill={USER_COLORS[idx % USER_COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend verticalAlign="bottom" height={36} />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="sd-chart">
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie
+                    data={userPieData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={80}
+                    label={pieLabel}
+                    labelLine={false}
+                  >
+                    {userPieData.map((entry, idx) => (
+                      <Cell
+                        key={`cell-${idx}`}
+                        fill={USER_COLORS[idx % USER_COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend verticalAlign="bottom" height={36} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
 
-        {/* ---------------- GROUPS ---------------- */}
-        <div className="sd-column">
-          <MetricCard
-            icon="📦"
-            title="Grupos Totales"
-            value={groupMetrics.total ?? 0}
-          />
-          <MetricCard icon="🟢" title="Activos" value={activeGroups} />
-          <MetricCard
-            icon="🛑"
-            title="Inactivos"
-            value={groupMetrics.deleted ?? 0}
-          />
+          {/* ---------------- GROUPS ---------------- */}
+          <div className="sd-column">
+            <MetricCard
+              icon="📦"
+              title="Grupos Totales"
+              value={groupMetrics.total ?? 0}
+            />
+            <MetricCard icon="🟢" title="Activos" value={activeGroups} />
+            <MetricCard
+              icon="🛑"
+              title="Inactivos"
+              value={groupMetrics.deleted ?? 0}
+            />
 
-          <div className="sd-chart">
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie
-                  data={groupPieData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={80}
-                  label={pieLabel}
-                  labelLine={false}
-                >
-                  {groupPieData.map((entry, idx) => (
-                    <Cell
-                      key={`cell-g-${idx}`}
-                      fill={GROUP_COLORS[idx % GROUP_COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend verticalAlign="bottom" height={36} />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="sd-chart">
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie
+                    data={groupPieData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={80}
+                    label={pieLabel}
+                    labelLine={false}
+                  >
+                    {groupPieData.map((entry, idx) => (
+                      <Cell
+                        key={`cell-g-${idx}`}
+                        fill={GROUP_COLORS[idx % GROUP_COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend verticalAlign="bottom" height={36} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
 
-        {/* ---------------- VISORES ---------------- */}
-        <div className="sd-column">
-          <MetricCard
-            icon="🗂️"
-            title="Visores Totales"
-            value={visorMetrics.total ?? 0}
-          />
-          <MetricCard
-            icon="🌍"
-            title="Públicos"
-            value={visorMetrics.public ?? 0}
-          />
-          <MetricCard
-            icon="🤝"
-            title="Compartidos"
-            value={visorMetrics.shared ?? 0}
-          />
+          {/* ---------------- VISORES ---------------- */}
+          <div className="sd-column">
+            <MetricCard
+              icon="🗂️"
+              title="Visores Totales"
+              value={visorMetrics.total ?? 0}
+            />
+            <MetricCard
+              icon="🌍"
+              title="Públicos"
+              value={visorMetrics.public ?? 0}
+            />
+            <MetricCard
+              icon="🤝"
+              title="Compartidos"
+              value={visorMetrics.shared ?? 0}
+            />
 
-          <div className="sd-chart">
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie
-                  data={visorPieData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={80}
-                  label={pieLabel}
-                  labelLine={false}
-                >
-                  {visorPieData.map((entry, idx) => (
-                    <Cell
-                      key={`cell-v-${idx}`}
-                      fill={VISOR_COLORS[idx % VISOR_COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend verticalAlign="bottom" height={36} />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="sd-chart">
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie
+                    data={visorPieData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={80}
+                    label={pieLabel}
+                    labelLine={false}
+                  >
+                    {visorPieData.map((entry, idx) => (
+                      <Cell
+                        key={`cell-v-${idx}`}
+                        fill={VISOR_COLORS[idx % VISOR_COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend verticalAlign="bottom" height={36} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
+
         </div>
       </section>
     </div>
