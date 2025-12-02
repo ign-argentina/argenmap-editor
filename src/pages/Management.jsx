@@ -170,9 +170,7 @@ function Management({ group }) {
   // Mostrar loading hasta que todo esté listo
   if (!group || isLoading) {
     return (
-      <div className="management-container">
-        <div className="loading-spinner">Cargando...</div>
-      </div>
+        <div className="loading-spinner">Seleccione un grupo para cargar informacion.</div>
     );
   }
 
