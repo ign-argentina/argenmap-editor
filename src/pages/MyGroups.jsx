@@ -16,6 +16,7 @@ function MyGroups() {
  /*    getManageGroups().then(setGroupList) */
     getGrupos().then(setGroupList)
   }, [])
+
   return (
     <section className='mygroups-page' >
 
@@ -31,22 +32,32 @@ function MyGroups() {
           </div>
           <div className="mg-list-body">
 
-            {showGroupList ? groupList.map((grupo, idx) => (
-              <button 
-                key={idx} 
-                onClick={() => setSelectedGroup(grupo)} 
-                className={selectedGroup?.id === grupo.id ? "mg-group-btn active" : "mg-group-btn"}
-              >
-                {grupo.name}
-              </button>
-            )) :
-              invitaciones.map((invitacion, idx) => (
-                <button key={idx} className="mg-group-btn">
-                  {invitacion.nombre}
-                </button>
-              ))}
+            {showGroupList ? (
+              groupList.length > 0 ? (
+                groupList.map((grupo, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setSelectedGroup(grupo)} 
+                    className={selectedGroup?.id === grupo.id ? "mg-group-btn active" : "mg-group-btn"}
+                  >
+                    {grupo.name}
+                  </button>
+                ))
+              ) : (
+                <div>No perteneces a ningún grupo</div>
+              )
+            ) : (
+              invitaciones.length > 0 ? (
+                invitaciones.map((invitacion, idx) => (
+                  <button key={idx} className="mg-group-btn">
+                    {invitacion.nombre}
+                  </button>
+                ))
+              ) : (
+                <div>No hay invitaciones pendientes</div>
+              )
+            )}
           </div>
-
         </div>
 
         <div className="mg-info">
@@ -56,5 +67,6 @@ function MyGroups() {
     </section>
   )
 }
+
 
 export default MyGroups;

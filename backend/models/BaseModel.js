@@ -11,6 +11,7 @@ class BaseModel {
  * @param {Array} [params=[]] - Lista de parámetros para la consulta.
  * @returns {Promise<Array>} Resultados obtenidos (filas).
  */
+
   static async runQuery(sql, params = []) {
     const result = await db.query(sql, params);
     return result.rows;
