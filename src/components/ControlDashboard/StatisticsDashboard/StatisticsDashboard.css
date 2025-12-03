@@ -1,0 +1,83 @@
+.statistics-dashboard {
+  width: 100%;
+  padding: 2rem;
+  background: var(--secondary--color);
+}
+
+.sd-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 2rem;
+}
+
+/* Columna completa con MetricCards + gráfico */
+.sd-column {
+  background: var(--primary--color);
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--secondary--color);
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.sd-column:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+.sd-chart {
+  width: 100%;
+  height: 230px;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.recharts-legend-wrapper {
+  font-size: 0.9rem;
+}
+
+.recharts-default-tooltip {
+  border-radius: 10px;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .statistics-dashboard {
+    padding: 1rem;
+  }
+
+  .sd-column {
+    padding: 1.4rem;
+  }
+}
+
+.sd-fullrow {
+  grid-column: 1 / -1;
+  background: var(--primary--color);
+  padding: 2rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--secondary--color);
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.sd-statics2 {
+  grid-column: 1 / -1;
+  background: var(--primary--color);
+  padding: 2rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--secondary--color);
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}

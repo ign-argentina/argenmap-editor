@@ -1,10 +1,16 @@
+import BaseModel from "../models/BaseModel.js";
 import Group from "../models/Group.js";
 import User from "../models/User.js"
+import Visor from "../models/Visor.js"
 import Result from "../utils/Result.js"
 
 /**
  * Servicio que maneja la lógica relacionada con la administracion.
  */
+
+
+const TOTAL_METRICS = `SELECT * FROM ADMIN_METRICS`;
+
 
 class AdminService {
 
@@ -47,13 +53,8 @@ class AdminService {
     return data
   }
 
-  getUserMetrics = async () => {
-    const data = await User.getUserMetrics();
-    return data
-  }
-
-  getGroupsMetrics = async () => {
-    const data = await Group.getGroupsMetrics();
+  getMetrics = async () => {
+    const data = await BaseModel.runQuery(TOTAL_METRICS, []);
     return data
   }
 

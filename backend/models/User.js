@@ -42,11 +42,6 @@ const CHANGE_USER_STATUS = `UPDATE usuarios SET active = NOT active WHERE id = $
 const PASSWORD_RESET = "$2b$10$ywXqVy2V64hg2bQ1FWqlgOvqpBoWuBc/kv1j0Ylp/i5YqYxkRyb6O"
 const RESET_PASSWORD = `UPDATE usuarios SET password = $2 WHERE id = $1`
 
-const GENERATE_METRICS = `SELECT COUNT (*) AS total,
-                          COUNT (CASE WHEN active = false THEN 1 END) AS unabled,
-                          COUNT(CASE WHEN superadmin = true THEN 1 END) AS admins
-                          FROM usuarios;`
-
 /**
  * Modelo que maneja la tabla usuarios y toda la lógica relacionada.
  * Permite crear, actualizar, buscar usuarios y verificar roles.
@@ -195,11 +190,6 @@ class User extends BaseModel {
     const result = await super.runQuery(RESET_PASSWORD, [id, PASSWORD_RESET])
     return result
   }
-
-  static getUserMetrics = async () => {
-    const result = await super.runQuery(GENERATE_METRICS, [])
-    return result[0]
-  } 
 }
 
 export default User

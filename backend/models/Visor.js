@@ -76,6 +76,7 @@ FROM visores v
 JOIN config c ON v.cid = c.id
 WHERE v.uid = $1 AND v.deleted = true;`
 
+
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
     try {
@@ -214,7 +215,6 @@ class Visor extends BaseModel {
     }
   }
 
-
   static getMyDeletedViewers = async (userid) => {
     try {
       const result = await super.runQuery(GET_DELETED_USER_VIEWERS, [userid])
@@ -224,6 +224,7 @@ class Visor extends BaseModel {
       throw error
     }
   }
+
 }
 
 export default Visor

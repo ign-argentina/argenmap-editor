@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getGroupsMetrics, getAGroupList, searchGroup, changeGroupStatus } from '../../../api/admin';
+import { getMetrics, getAGroupList, searchGroup, changeGroupStatus } from '../../../api/admin';
 import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog'
 import CreateModal from "../../CreateModal/CreateModal"
 import './GroupDashboard.css'
@@ -22,22 +22,22 @@ const useDebounce = (value, delay) => {
 };
 
 function GroupDashboard() {
-
-  useEffect(() => {
-    getGroupsMetrics().then(setMetrics)
-  }, []);
-
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
   const [metrics, setMetrics] = useState([])
   const [showCreateUserModal, setShowCreateUserModal] = useState(false);
-
+  
   const updateMetrics = async () => {
-    const metrica = await getGroupsMetrics()
-    setMetrics(metrica)
+    const metrica = await getMetrics();
+    setMetrics(metrica[0]);
+    return metrica[0];
   }
 
+  useEffect(() => {
+    updateMetrics();
+  }, []);
+  
   useEffect(() => {
     if (debouncedSearch.trim()) {
       searchGroup(debouncedSearch).then(setGroups)
@@ -56,11 +56,11 @@ function GroupDashboard() {
       <section className="gd-body">
         <section className="gd-metricas">
           <div>
-            Total: {metrics.total}
+            Total: {metrics.group_total}
           </div>
 
           <div>
-            Inactivos: {metrics.deleted}
+            Inactivos: {metrics.group_deleted}
           </div>
           {/* 
         <div>

@@ -36,9 +36,6 @@ const GET_GROUP_USER_LIST = `SELECT
                             ORDER BY r.id ASC;`
 
 
-const GENERATE_METRICS = `SELECT COUNT (*) AS total,
-                          COUNT (CASE WHEN deleted = true THEN 1 END) AS deleted
-                          FROM grupos;`
 
 const SEARCH_GROUP = `SELECT g.id, g.name, g.description, g.deleted, COUNT(v.id) AS totalviewers
                       FROM grupos g
@@ -196,11 +193,6 @@ class Group extends BaseModel {
   static isMemberOfThisGroup = async (uid, groupid) => {
     const data = await super.runQuery('SELECT EXISTS (SELECT 1 FROM usuarios_por_grupo WHERE grupoid = $1 AND usuarioid = $2)', [groupid, uid]);
     return data[0]?.exists ?? false;
-  }
-
-  static getGroupsMetrics = async () => {
-    const result = await super.runQuery(GENERATE_METRICS, [])
-    return result[0]
   }
 
   static searchGroup = async (search, limit) => {

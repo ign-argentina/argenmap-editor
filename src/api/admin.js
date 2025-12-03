@@ -1,14 +1,9 @@
 import axios from "axios";
 import { API_URL } from "../api/index.js";
 
-export const getGroupsMetrics = async () => {
-  const res = await axios.get(`${API_URL}/admin/metrics/groups`,
-    { withCredentials: true, validateStatus: () => true });
-  return res.data
-}
 
-export const getUserMetrics = async () => {
-  const res = await axios.get(`${API_URL}/admin/metrics/users`,
+export const getMetrics = async () => {
+  const res = await axios.get(`${API_URL}/admin/metrics`,
     { withCredentials: true, validateStatus: () => true });
   return res.data
 }

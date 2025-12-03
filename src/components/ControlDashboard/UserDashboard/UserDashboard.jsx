@@ -1,7 +1,7 @@
 import './UserDashboard.css'
 import { useState, useEffect } from 'react';
 import { getUserList } from '../../../api/users';
-import { searchUser, changeUserStatus, getUserMetrics, resetUserPassword } from '../../../api/admin.js';
+import { searchUser, changeUserStatus, getMetrics, resetUserPassword } from '../../../api/admin.js';
 import CreateModal from "../../CreateModal/CreateModal"
 import ConfirmDialog from '../../ConfirmDialog/ConfirmDialog';
 import { useUser } from "/src/context/UserContext";
@@ -24,11 +24,6 @@ const useDebounce = (value, delay) => {
 };
 
 function UserDashboard() {
-
-  useEffect(() => {
-    getUserMetrics().then(setMetrics)
-  }, []);
-
   const [usuarios, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
@@ -37,10 +32,15 @@ function UserDashboard() {
   const { checkAuth } = useUser();
 
   const updateMetrics = async () => {
-    const metrica = await getUserMetrics()
-    setMetrics(metrica)
+    const metrica = await getMetrics();
+    setMetrics(metrica[0]);
+    return metrica[0];
   }
-
+  
+  useEffect(() => {
+    updateMetrics();
+  }, []);
+  
   useEffect(() => {
     if (debouncedSearch.trim()) {
       searchUser(debouncedSearch).then(setUsuarios)
@@ -60,18 +60,23 @@ function UserDashboard() {
       {/* <h1>Administrar Usuarios</h1> */}
 
 
+          <button
+            onClick={async () => console.log(metrics)}>
+            TEST
+          </button>
+
       <section className="ud-body">
         <section className="ud-metricas">
           <div>
-            Total: {metrics.total}
+            Total: {metrics.user_total}
           </div>
 
           <div>
-            Inactivos: {metrics.unabled}
+            Inactivos: {metrics.user_disabled}
           </div>
 
           <div>
-            Administradores: {metrics.admins}
+            Administradores: {metrics.user_admin}
           </div>
 
           {/*         <div>
