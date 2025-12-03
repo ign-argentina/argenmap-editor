@@ -16,25 +16,22 @@ import {
   Rectangle,
 } from "recharts";
 
-import {
-  getUserMetrics,
-  getGroupsMetrics,
-  getVisorMetrics,
-} from "../../../api/admin.js";
-
+import { getMetrics } from "../../../api/admin.js";
 import MetricCard from "./MetricCard.jsx";
 import "./StatisticsDashboard.css";
 
 function StatisticsDashboard() {
-  const [userMetrics, setUserMetrics] = useState({});
-  const [groupMetrics, setGroupMetrics] = useState({});
-  const [visorMetrics, setVisorMetrics] = useState({});
+  const [metrics, setMetrics] = useState({});
 
   useEffect(() => {
-    getUserMetrics().then(setUserMetrics);
-    getGroupsMetrics().then(setGroupMetrics);
-    getVisorMetrics().then(setVisorMetrics);
+    updateMetrics();
   }, []);
+
+  const updateMetrics = async () => {
+    const metrica = await getMetrics();
+    setMetrics(metrica[0]);
+    return metrica[0];
+  }
 
   const safeNum = (v) => {
     const n = Number(v ?? 0);
@@ -51,10 +48,11 @@ function StatisticsDashboard() {
     activeUsers,
     activeGroups,
   } = useMemo(() => {
+
     /* ---------- USERS ---------- */
-    const totalUsers = safeNum(userMetrics.total);
-    const inactivos = safeNum(userMetrics.unabled);
-    const admins = safeNum(userMetrics.admins);
+    const totalUsers = safeNum(metrics.user_total);
+    const inactivos = safeNum(metrics.user_disabled);
+    const admins = safeNum(metrics.user_admin);
     let activosNoAdmins = totalUsers - inactivos - admins;
     if (activosNoAdmins < 0) activosNoAdmins = 0;
 
@@ -67,8 +65,8 @@ function StatisticsDashboard() {
     const USER_COLORS = ["#FFC107", "#F44336", "#4CAF50"];
 
     /* ---------- GROUPS ---------- */
-    const totalGroups = safeNum(groupMetrics.total);
-    const deletedGroups = safeNum(groupMetrics.deleted);
+    const totalGroups = safeNum(metrics.group_total);
+    const deletedGroups = safeNum(metrics.group_deleted);
     let activeGroups = totalGroups - deletedGroups;
     if (activeGroups < 0) activeGroups = 0;
 
@@ -80,9 +78,9 @@ function StatisticsDashboard() {
     const GROUP_COLORS = ["#4CAF50", "#F44336"];
 
     /* ---------- VISORES ---------- */
-    const totalVisors = safeNum(visorMetrics.total);
-    let publicVisors = safeNum(visorMetrics.public);
-    let sharedVisors = safeNum(visorMetrics.shared);
+    const totalVisors = safeNum(metrics.viewer_total);
+    let publicVisors = safeNum(metrics.viewer_public);
+    let sharedVisors = safeNum(metrics.viewer_shared);
 
     if (publicVisors < 0) publicVisors = 0;
     if (sharedVisors < 0) sharedVisors = 0;
@@ -111,7 +109,7 @@ function StatisticsDashboard() {
       activeUsers: activosNoAdmins,
       activeGroups: activeGroups,
     };
-  }, [userMetrics, groupMetrics, visorMetrics]);
+  }, [metrics]);
 
   const pieLabel = ({ name, percent }) =>
     `${name} ${Math.round(percent * 100)}%`;
@@ -168,11 +166,11 @@ function StatisticsDashboard() {
             <MetricCard
               icon="👥"
               title="Usuarios Totales"
-              value={userMetrics.total ?? 0}
+              value={metrics.user_total ?? 0}
             />
             <MetricCard icon="🟢" title="Activos" value={activeUsers} />
-            <MetricCard icon="🛑" title="Inactivos" value={userMetrics.unabled ?? 0} />
-            <MetricCard icon="⭐" title="Administradores" value={userMetrics.admins ?? 0} />
+            <MetricCard icon="🛑" title="Inactivos" value={metrics.user_disabled ?? 0} />
+            <MetricCard icon="⭐" title="Administradores" value={metrics.user_admin ?? 0} />
 
             <div className="sd-chart">
               <ResponsiveContainer width="100%" height={220}>
@@ -204,13 +202,13 @@ function StatisticsDashboard() {
             <MetricCard
               icon="📦"
               title="Grupos Totales"
-              value={groupMetrics.total ?? 0}
+              value={metrics.group_total ?? 0}
             />
             <MetricCard icon="🟢" title="Activos" value={activeGroups} />
             <MetricCard
               icon="🛑"
               title="Inactivos"
-              value={groupMetrics.deleted ?? 0}
+              value={metrics.group_deleted ?? 0}
             />
 
             <div className="sd-chart">
@@ -243,17 +241,17 @@ function StatisticsDashboard() {
             <MetricCard
               icon="🗂️"
               title="Visores Totales"
-              value={visorMetrics.total ?? 0}
+              value={metrics.viewer_total ?? 0}
             />
             <MetricCard
               icon="🌍"
               title="Públicos"
-              value={visorMetrics.public ?? 0}
+              value={metrics.viewer_public ?? 0}
             />
             <MetricCard
               icon="🤝"
               title="Compartidos"
-              value={visorMetrics.shared ?? 0}
+              value={metrics.viewer_shared ?? 0}
             />
 
             <div className="sd-chart">

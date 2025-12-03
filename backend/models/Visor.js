@@ -76,11 +76,6 @@ FROM visores v
 JOIN config c ON v.cid = c.id
 WHERE v.uid = $1 AND v.deleted = true;`
 
-const GENERATE_METRICS = `SELECT
-  COUNT(*) FILTER (WHERE deleted = false) AS total,
-  COUNT(*) FILTER (WHERE publico = true AND deleted = false) AS public,
-  COUNT(*) FILTER (WHERE isshared = true AND deleted = false) AS shared
-FROM visores;`
 
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
@@ -230,10 +225,6 @@ class Visor extends BaseModel {
     }
   }
 
-  static getVisorMetrics = async () => {
-    const result = await super.runQuery(GENERATE_METRICS, [])
-    return result[0]
-  }
 }
 
 export default Visor

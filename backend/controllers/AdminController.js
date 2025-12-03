@@ -58,27 +58,9 @@ class AdminController {
     }
   }
 
-  getUsersMetrics = async (req, res) => {
+  getMetrics = async (req, res) => {
     try {
-      const result = await this.adminService.getUserMetrics()
-      return res.status(200).json(result)
-    } catch (error) {
-      return res.status(200).json({ success: false })
-    }
-  }
-
-  getVisorMetrics = async (req, res) => {
-    try {
-      const result = await this.adminService.getVisorMetrics()
-      return res.status(200).json(result)
-    } catch (error) {
-      return res.status(200).json({ success: false })
-    }
-  }
-
-  getGroupsMetrics = async (req, res) => {
-    try {
-      const result = await this.adminService.getGroupsMetrics()
+      const result = await this.adminService.getMetrics()
       return res.status(200).json(result)
     } catch (error) {
       return res.status(200).json({ success: false })
