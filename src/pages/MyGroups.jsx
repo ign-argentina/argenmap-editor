@@ -16,6 +16,7 @@ function MyGroups() {
  /*    getManageGroups().then(setGroupList) */
     getGrupos().then(setGroupList)
   }, [])
+
   return (
     <section className='mygroups-page' >
 
@@ -57,7 +58,6 @@ function MyGroups() {
               )
             )}
           </div>
-
         </div>
 
         <div className="mg-info">
@@ -67,5 +67,6 @@ function MyGroups() {
     </section>
   )
 }
+
 
 export default MyGroups;
