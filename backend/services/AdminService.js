@@ -10,7 +10,19 @@ import Result from "../utils/Result.js"
 
 
 const TOTAL_METRICS = `SELECT * FROM ADMIN_METRICS`;
+const MOST_VIEWERS_VISITED = `SELECT v.name, vbm.visits
+                              FROM visores v
+                              JOIN metrics_by_viewer vbm ON v.id = vbm.visor_id
+                              WHERE vbm.visits IS NOT NULL
+                              ORDER BY vbm.visits DESC
+                              LIMIT $1`
 
+const MOST_VIEWERS_DOWNLOADED = `SELECT v.name, vbm.visits
+                                FROM visores v
+                                JOIN metrics_by_viewer vbm ON v.id = vbm.visor_id
+                                WHERE vbm.visits IS NOT NULL
+                               ORDER BY vbm.visits DESC
+                                LIMIT $1`
 
 class AdminService {
 
@@ -54,7 +66,17 @@ class AdminService {
   }
 
   getMetrics = async () => {
-    const data = await BaseModel.runQuery(TOTAL_METRICS, []);
+    const MAX_VALUES = 10;
+    const metrics = await BaseModel.runQuery(TOTAL_METRICS, [MAX_VALUES]);
+    const visited = await BaseModel.runQuery(MOST_VIEWERS_VISITED, [MAX_VALUES]);
+    const downloaded = await BaseModel.runQuery(MOST_VIEWERS_DOWNLOADED, [MAX_VALUES]);;
+
+    const data = {
+      generalMetrics: metrics,
+      mostVisited: visited,
+      mostDownloaded: downloaded
+    }
+
     return data
   }
 
