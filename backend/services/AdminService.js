@@ -73,12 +73,11 @@ class AdminService {
     const downloaded = await BaseModel.runQuery(MOST_VIEWERS_DOWNLOADED, [MAX_VALUES]);;
 
     const data = {
-      generalMetrics: metrics,
+      generalMetrics: metrics[0],
       mostVisited: visited,
       mostDownloaded: downloaded
     }
-  console.log("4")
-    console.log(data)
+
     return data
   }
 
