@@ -17,11 +17,11 @@ const MOST_VIEWERS_VISITED = `SELECT v.name, vbm.visits
                               ORDER BY vbm.visits DESC
                               LIMIT $1`
 
-const MOST_VIEWERS_DOWNLOADED = `SELECT v.name, vbm.visits
+const MOST_VIEWERS_DOWNLOADED = `SELECT v.name, vbm.downloads
                                 FROM visores v
                                 JOIN metrics_by_viewer vbm ON v.id = vbm.visor_id
-                                WHERE vbm.visits IS NOT NULL
-                               ORDER BY vbm.visits DESC
+                                WHERE vbm.downloads IS NOT NULL
+                               ORDER BY vbm.downloads DESC
                                 LIMIT $1`
 
 class AdminService {
@@ -66,8 +66,9 @@ class AdminService {
   }
 
   getMetrics = async () => {
+  
     const MAX_VALUES = 10;
-    const metrics = await BaseModel.runQuery(TOTAL_METRICS, [MAX_VALUES]);
+    const metrics = await BaseModel.runQuery(TOTAL_METRICS);
     const visited = await BaseModel.runQuery(MOST_VIEWERS_VISITED, [MAX_VALUES]);
     const downloaded = await BaseModel.runQuery(MOST_VIEWERS_DOWNLOADED, [MAX_VALUES]);;
 
@@ -76,7 +77,8 @@ class AdminService {
       mostVisited: visited,
       mostDownloaded: downloaded
     }
-
+  console.log("4")
+    console.log(data)
     return data
   }
 

@@ -33,6 +33,7 @@ function UserDashboard() {
 
   const updateMetrics = async () => {
     const metrica = await getMetrics();
+    console.log(metrica)
     setMetrics(metrica[0]);
     return metrica[0];
   }
