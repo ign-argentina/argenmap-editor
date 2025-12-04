@@ -27,17 +27,17 @@ function GroupDashboard() {
   const debouncedSearch = useDebounce(search, 500); // Se aplica el debounce con 500ms
   const [metrics, setMetrics] = useState([])
   const [showCreateUserModal, setShowCreateUserModal] = useState(false);
-  
+
   const updateMetrics = async () => {
     const metrica = await getMetrics();
-    setMetrics(metrica[0]);
-    return metrica[0];
+    setMetrics(metrica);
+    return metrica;
   }
 
   useEffect(() => {
     updateMetrics();
   }, []);
-  
+
   useEffect(() => {
     if (debouncedSearch.trim()) {
       searchGroup(debouncedSearch).then(setGroups)
@@ -49,27 +49,12 @@ function GroupDashboard() {
 
   return (
     <div className="group-dashboard">
-
-      {/* <h1>Administrar Grupos</h1> */}
-
-
       <section className="gd-body">
         <section className="gd-metricas">
-          <div>
-            Total: {metrics.group_total}
-          </div>
 
-          <div>
-            Inactivos: {metrics.group_deleted}
-          </div>
-          {/* 
-        <div>
-          Administradores: {metrics.admins}
-        </div> */}
+          <div>Total: {metrics?.generalMetrics?.group_total}</div>
+          <div>Inactivos: {metrics?.generalMetrics?.group_deleted}</div>
 
-          {/*         <div>
-          Usuarios Registrados:
-        </div> */}
         </section>
         <div className='gd-actions'>
           <button

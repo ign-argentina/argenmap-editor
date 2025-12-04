@@ -33,15 +33,14 @@ function UserDashboard() {
 
   const updateMetrics = async () => {
     const metrica = await getMetrics();
-    console.log(metrica)
-    setMetrics(metrica[0]);
-    return metrica[0];
+    setMetrics(metrica);
+    return metrica;
   }
-  
+
   useEffect(() => {
     updateMetrics();
   }, []);
-  
+
   useEffect(() => {
     if (debouncedSearch.trim()) {
       searchUser(debouncedSearch).then(setUsuarios)
@@ -50,39 +49,19 @@ function UserDashboard() {
     }
   }, [debouncedSearch]);
 
-  /*   const handleRegisterSuccess = () => {
-      checkAuth();
-      setShowCreateUserModal(false);
-    };
-   */
   return (
     <div className="user-dashboard">
-
-      {/* <h1>Administrar Usuarios</h1> */}
-
-
-          <button
-            onClick={async () => console.log(metrics)}>
-            TEST
-          </button>
+      <button
+        onClick={async () => console.log(metrics)}>
+        TEST
+      </button>
 
       <section className="ud-body">
         <section className="ud-metricas">
-          <div>
-            Total: {metrics.user_total}
-          </div>
+          <div>Total: {metrics?.generalMetrics?.user_total}</div>
+          <div>Inactivos: {metrics?.generalMetrics?.user_disabled}</div>
+          <div>Administradores: {metrics?.generalMetrics?.user_admin}</div>
 
-          <div>
-            Inactivos: {metrics.user_disabled}
-          </div>
-
-          <div>
-            Administradores: {metrics.user_admin}
-          </div>
-
-          {/*         <div>
-          Usuarios Registrados:
-        </div> */}
         </section>
         <div className='ud-actions'>
           <button

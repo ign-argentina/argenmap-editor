@@ -29,8 +29,8 @@ function StatisticsDashboard() {
 
   const updateMetrics = async () => {
     const metrica = await getMetrics();
-    setMetrics(metrica[0]);
-    return metrica[0];
+    setMetrics(metrica);
+    return metrica;
   }
 
   const safeNum = (v) => {
@@ -50,9 +50,9 @@ function StatisticsDashboard() {
   } = useMemo(() => {
 
     /* ---------- USERS ---------- */
-    const totalUsers = safeNum(metrics.user_total);
-    const inactivos = safeNum(metrics.user_disabled);
-    const admins = safeNum(metrics.user_admin);
+    const totalUsers = safeNum(metrics?.generalMetrics?.user_total);
+    const inactivos = safeNum(metrics?.generalMetrics?.user_disabled);
+    const admins = safeNum(metrics?.generalMetrics?.user_admin);
     let activosNoAdmins = totalUsers - inactivos - admins;
     if (activosNoAdmins < 0) activosNoAdmins = 0;
 
@@ -65,8 +65,8 @@ function StatisticsDashboard() {
     const USER_COLORS = ["#FFC107", "#F44336", "#4CAF50"];
 
     /* ---------- GROUPS ---------- */
-    const totalGroups = safeNum(metrics.group_total);
-    const deletedGroups = safeNum(metrics.group_deleted);
+    const totalGroups = safeNum(metrics?.generalMetrics?.group_total);
+    const deletedGroups = safeNum(metrics?.generalMetrics?.group_deleted);
     let activeGroups = totalGroups - deletedGroups;
     if (activeGroups < 0) activeGroups = 0;
 
@@ -78,9 +78,9 @@ function StatisticsDashboard() {
     const GROUP_COLORS = ["#4CAF50", "#F44336"];
 
     /* ---------- VISORES ---------- */
-    const totalVisors = safeNum(metrics.viewer_total);
-    let publicVisors = safeNum(metrics.viewer_public);
-    let sharedVisors = safeNum(metrics.viewer_shared);
+    const totalVisors = safeNum(metrics?.generalMetrics?.viewer_total);
+    let publicVisors = safeNum(metrics?.generalMetrics?.viewer_public);
+    let sharedVisors = safeNum(metrics?.generalMetrics?.viewer_shared);
 
     if (publicVisors < 0) publicVisors = 0;
     if (sharedVisors < 0) sharedVisors = 0;
@@ -166,11 +166,11 @@ function StatisticsDashboard() {
             <MetricCard
               icon="👥"
               title="Usuarios Totales"
-              value={metrics.user_total ?? 0}
+              value={metrics?.generalMetrics?.user_total ?? 0}
             />
             <MetricCard icon="🟢" title="Activos" value={activeUsers} />
-            <MetricCard icon="🛑" title="Inactivos" value={metrics.user_disabled ?? 0} />
-            <MetricCard icon="⭐" title="Administradores" value={metrics.user_admin ?? 0} />
+            <MetricCard icon="🛑" title="Inactivos" value={metrics?.generalMetrics?.user_disabled ?? 0} />
+            <MetricCard icon="⭐" title="Administradores" value={metrics?.generalMetrics?.user_admin ?? 0} />
 
             <div className="sd-chart">
               <ResponsiveContainer width="100%" height={220}>
@@ -202,13 +202,13 @@ function StatisticsDashboard() {
             <MetricCard
               icon="📦"
               title="Grupos Totales"
-              value={metrics.group_total ?? 0}
+              value={metrics?.generalMetrics?.group_total ?? 0}
             />
             <MetricCard icon="🟢" title="Activos" value={activeGroups} />
             <MetricCard
               icon="🛑"
               title="Inactivos"
-              value={metrics.group_deleted ?? 0}
+              value={metrics?.generalMetrics?.group_deleted ?? 0}
             />
 
             <div className="sd-chart">
@@ -241,17 +241,17 @@ function StatisticsDashboard() {
             <MetricCard
               icon="🗂️"
               title="Visores Totales"
-              value={metrics.viewer_total ?? 0}
+              value={metrics?.generalMetrics?.viewer_total ?? 0}
             />
             <MetricCard
               icon="🌍"
               title="Públicos"
-              value={metrics.viewer_public ?? 0}
+              value={metrics?.generalMetrics?.viewer_public ?? 0}
             />
             <MetricCard
               icon="🤝"
               title="Compartidos"
-              value={metrics.viewer_shared ?? 0}
+              value={metrics?.generalMetrics?.viewer_shared ?? 0}
             />
 
             <div className="sd-chart">
