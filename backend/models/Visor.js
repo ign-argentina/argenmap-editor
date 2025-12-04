@@ -76,6 +76,9 @@ FROM visores v
 JOIN config c ON v.cid = c.id
 WHERE v.uid = $1 AND v.deleted = true;`
 
+const INCREMENT_VISIT = `UPDATE metrics_by_viewer
+                        SET visits = visits + 1
+                        WHERE visor_id = ( SELECT id FROM visores WHERE sharetoken = $1);`
 
 class Visor extends BaseModel {
   static createVisor = async (uid, groupid, cid, name, description, img, isPublic = false) => {
@@ -180,7 +183,7 @@ class Visor extends BaseModel {
   static getConfigIdByShareToken = async (shareToken, isTemporal = false, apikey = null) => {
     try {
       const validApikey = process.env.VITE_FRONT_APIKEY;
-
+      let response = null;
       const result = await super.runQuery(GET_BY_SHARE_TOKEN, [
         shareToken,
         isTemporal,
@@ -188,7 +191,13 @@ class Visor extends BaseModel {
         validApikey
       ]);
 
-      return result.length > 0 ? result?.[0].cid : null;
+      if (result.length > 0){
+        response = result?.[0].cid;
+        // Incrementar Visita
+
+        super.runQuery(INCREMENT_VISIT, [shareToken])
+      }
+      return response
     } catch (err) {
       console.error("Error en Visor.getConfigIdByShareToken:", err);
       throw err; // O devolver null
