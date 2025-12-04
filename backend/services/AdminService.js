@@ -8,7 +8,6 @@ import Result from "../utils/Result.js"
  * Servicio que maneja la lógica relacionada con la administracion.
  */
 
-
 const TOTAL_METRICS = `SELECT * FROM ADMIN_METRICS`;
 const MOST_VIEWERS_VISITED = `SELECT v.name, vbm.visits
                               FROM visores v
@@ -65,8 +64,7 @@ class AdminService {
     return data
   }
 
-  getMetrics = async () => {
-  
+  getMetrics = async () => {  
     const MAX_VALUES = 10;
     const metrics = await BaseModel.runQuery(TOTAL_METRICS);
     const visited = await BaseModel.runQuery(MOST_VIEWERS_VISITED, [MAX_VALUES]);
@@ -90,7 +88,6 @@ class AdminService {
     const data = await Group.getAllGroups();
     return data;
   }
-
 
   /**
  * Crea un nuevo grupo. Solo accesible para superadmins.
