@@ -35,10 +35,10 @@ const defaultPreferences = {
     headerBackground: "#157DB9",
     iconBar: "#4f4f4f",
     menuBackground: "#157DB9",
-    btnColor: "white",
-    textLegendMenu: "white",
+    btnColor: "#ffffff",
+    textLegendMenu: "#ffffff",
     textLegendMenuStyle: "",
-    textMenu: "white",
+    textMenu: "#ffffff",
     textMenuStyle: "",
   },
   // metaTags: {
