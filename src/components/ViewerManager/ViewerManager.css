@@ -1,80 +1,111 @@
 .viewer-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 15.625rem);
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
   justify-content: start;
-  gap: 0.75rem;
+  gap: 1.25rem;
 }
 
 .viewer-item {
   display: flex;
-  width: 15.625rem;
+  width: 100%;
   flex-direction: column;
-  border: 0.0625rem solid var(--secondary--color);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background-color: #ccc;
+  transition: all 0.25s ease;
+  background-color: white;
   user-select: none;
-  box-shadow: 0 0.125rem 0.25rem 0 rgba(0, 0, 0, .3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .viewer-item:hover {
-  background-color: var(--active--color);
-  color: black;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--active--color);
 }
 
 .viewer-item.selected {
-  border: 0.1875rem solid var(--active--color);
-  color: black;
-  background-color: var(--active--color);
+  border: 2px solid var(--active--color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
 .viewer-image {
   object-fit: cover;
-  height: 18vh;
+  height: 9rem;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.viewer-item:hover .viewer-image {
+  transform: scale(1.05);
 }
 
 .viewer-info {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 0.625rem;
-  color: black;
+  padding: 0.75rem;
+  color: #333;
+  gap: 0.375rem;
 }
 
 .viewer-info h3 {
   margin: 0;
-  font-size: 1.1em;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.3;
 }
 
 .viewer-info p {
   margin: 0;
   text-align: initial;
-  font-size: 0.9em;
+  font-size: 0.8125rem;
+  color: #666;
   display: -webkit-box;
-  /* -webkit-line-clamp: 3; */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.5;
 }
 
 .viewer-info p.viewer-date,
 .viewer-info p.viewer-privacy {
-  font-size: 0.9em;
-  color: var(--text--color);
-  margin: 0.125rem 0;
+  font-size: 0.8125rem;
+  color: #888;
+  margin: 0;
   margin-top: auto;
-  color: #575757;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .viewer-description {
-  background-color: var(--primary--color);
-  border-radius: 0.1875rem;
-  max-height: 19vh;
+  background-color: white;
+  border-radius: 0.75rem;
+  max-height: 16vh;
   overflow-y: auto;
-  padding: 1.25rem;
+  padding: 1rem;
   position: relative;
-  color: var(--text--color);
-  border: 0.125rem solid var(--secondary--color);
+  color: #333;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 0.75rem;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .loading-message {
@@ -82,27 +113,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 49vw;
-  height: 44vh;
-  color: #000000;
-  font-size: 1.2rem;
-  gap: 1rem;
+  height: 100%;
+  color: #666;
+  font-size: 1.1rem;
+  gap: 1.5rem;
 }
 
 .spinner {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 0.3125rem solid #ccc;
-  border-top: 0.3125rem solid #333;
+  width: 3rem;
+  height: 3rem;
+  border: 0.25rem solid rgba(0, 0, 0, 0.1);
+  border-top: 0.25rem solid var(--active--color);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
@@ -110,12 +139,13 @@
 
 .no-viewers-message {
   text-align: center;
-  font-size: 2rem;
-  margin-top: 1.25rem;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  color: #666;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .container-display-0 {
@@ -138,43 +168,67 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 1.25rem;
+  flex-direction: row-reverse;
 }
 
 .viewer-info-text {
   flex: 1;
-  padding-right: 1.25rem;
+}
+
+.viewer-info-text h3 {
+  margin: 0 0 0.375rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.viewer-info-text p {
+  margin: 0.375rem 0;
+  color: #666;
+  line-height: 1.5;
+  font-size: 0.875rem;
 }
 
 .group-image-right {
-  width: 6.25rem;
-  height: auto;
-  border-radius: 0.5rem;
+  width: 7rem;
+  height: 7rem;
+  border-radius: 0.75rem;
   object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  order: -1;
+}
+
+.manager-group-tabs button {
+  background-color: transparent;
+  color: var(--text--color);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.manager-group-tabs button.active {
+  background-color: var(--active--color);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.manager-group-tabs button:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 .manager-group-tabs {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
-  height: 100%;
-}
-
-.manager-group-tabs button {
-  background-color: var(--primary--color);
-  color: var(--text--color);
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  min-width: 3%;
-}
-
-.manager-group-tabs button.active {
-  background-color: var(--active--color, #1e90ff);
-  font-weight: bold;
-}
-
-.manager-group-tabs button:hover {
-  background-color: var(--active--color);
+  padding: 0.5rem 0;
 }
 
 @media (max-width: 768px) {
@@ -193,81 +247,118 @@
 }
 
 .manager-group-role {
-  font-style: italic;
-  color: white;
-  padding: 0.5rem;
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
 }
 
 .viewer-filter-divider {
   width: 100%;
-  color: var(--secondary--color);
+  border: none;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0.5rem 0;
 }
 
 .viewer-desc-divider {
   width: 100%;
-  height: 0.0625rem;
-  background-color: var(--secondary--color);
-  margin-bottom: 0.3rem;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 0.5rem 0;
 }
 
 .viewer-public-icon {
-  color: #4caf50;
-  margin-left: 0.5rem;
-  font-size: 1rem;
-  vertical-align: right;
+  color: #10b981;
+  font-size: 0.875rem;
 }
 
 .viewer-private-icon {
-  color: #ff6767;
-  margin-left: 0.5rem;
-  font-size: 1rem;
-  vertical-align: right;
+  color: #ef4444;
+  font-size: 0.875rem;
 }
 
 .viewer-context-button {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0.75rem;
+  right: 0.75rem;
   z-index: 5;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 0.1875rem;
-  padding: 0.6875rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   color: #333;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.viewer-item:hover .viewer-context-button {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .viewer-context-button:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.viewer-item {
-  position: relative;
-  overflow: hidden;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
 }
 
 .viewer-context-menu {
   position: fixed;
   background: white;
-  border: 0.0625rem solid #ccc;
-  border-radius: 0.375rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0.75rem;
   z-index: 999;
-  box-shadow: 0px 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
-  padding: 0.25rem 0;
-  width: 10rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  min-width: 12rem;
+  animation: dropdownFadeIn 0.2s ease;
 }
 
 .viewer-context-menu button {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
   border: none;
+  border-radius: 0.5rem;
   text-align: left;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  background: none;
+  color: #333;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+}
+
+.viewer-context-menu button:hover {
+  background-color: #f8f9fa;
+}
+
+.viewer-context-menu button.btn-delete {
+  color: #dc3545;
+}
+
+.viewer-context-menu button.btn-delete:hover {
+  background-color: #fff5f5;
 }
 
 .viewer-context-menu i {
-  margin-right: 0.5rem;
+  width: 1.25rem;
+  font-size: 1rem;
+  color: #666;
+  transition: color 0.15s ease;
+}
+
+.viewer-context-menu button:hover i {
+  color: inherit;
 }
 
 .viewer-card-logo {
@@ -284,24 +375,30 @@
   display: flex;
   flex-direction: column;
   align-content: center;
-  padding: 1rem;
-  border: 0.125rem solid var(--secondary--color);
+  padding: 1.5rem;
+  border: none;
 }
 
 .manager-header {
   display: flex;
   flex-direction: column;
   background-color: var(--primary--color);
-  height: 15%;
+  padding-bottom: 1rem;
   color: white;
+}
+
+.manager-header h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.75rem;
+  font-weight: 600;
 }
 
 .manager-main {
   background-color: var(--primary--color);
-  height: 85%;
+  flex: 1;
   display: flex;
   flex-direction: row;
-  border-radius: 0.1875rem;
+  gap: 1.5rem;
   color: var(--text--color);
 }
 
@@ -314,25 +411,32 @@
 
 .viewer-list-container {
   flex: 1 1 auto;
-  transition: flex-basis 0.2s;
+  transition: all 0.3s ease;
   position: relative;
-  padding: 1rem;
-  border: 0.125rem solid #ccc;
-  border-radius: 0.1875rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
   background-image: var(--cartografia-bg, url('/assets/cartografia.jpg'));
   background-position: center;
   background-size: cover;
-  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: auto;
-  background-color: rgba(200, 200, 200, 0.5);
+  background-color: rgba(240, 240, 240, 0.85);
   background-blend-mode: overlay;
 }
 
 .viewer-actions {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 1rem;
   flex-shrink: 0;
-  background-color: var(--primary--color);
-  margin-left: 1rem;
+  background-color: transparent;
+}
+
+.viewer-actions .btn-common {
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 10rem;
 }
