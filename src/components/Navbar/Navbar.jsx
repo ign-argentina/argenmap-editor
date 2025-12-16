@@ -86,15 +86,19 @@ function Navbar() {
           <NavLink
             to="/info"
             className={({ isActive }) => (isActive ? "active" : undefined)}
+            title="Información"
           >
             <i className="fa-solid fa-circle-info"></i>
+            <span>Info</span>
           </NavLink>
 
           <NavLink
             to="/visores"
             className={({ isActive }) => (isActive ? "active" : undefined)}
+            title="Gestor de Visores"
           >
-            <i className="fa-solid fa-house"></i> Gestor
+            <i className="fa-solid fa-house"></i>
+            <span>Gestor</span>
           </NavLink>
 
           {!isAuth ? (
@@ -104,7 +108,8 @@ function Navbar() {
                 onClick={() => setShowLoginModal(true)}
                 title="Iniciar Sesión"
               >
-                <i className="fa-solid fa-right-from-bracket"></i> Iniciar Sesión
+                <i className="fa-solid fa-right-from-bracket"></i>
+                <span>Iniciar Sesión</span>
               </button>
               <button
                 className="nav-button"
@@ -112,6 +117,7 @@ function Navbar() {
                 title="Registrarse"
               >
                 <i className="fa-solid fa-user-plus"></i>
+                <span>Registrarse</span>
               </button>
             </>
           ) : (
@@ -121,7 +127,8 @@ function Navbar() {
                 onClick={() => setShowDropdown((prev) => !prev)}
                 title="Opciones de usuario"
               >
-                <i className="fa-solid fa-user"></i> {user?.name}{" "}
+                <i className="fa-solid fa-user"></i>
+                <span>{user?.name}</span>
                 <i className="fa-solid fa-caret-down"></i>
               </button>
 
@@ -154,7 +161,7 @@ function Navbar() {
                         setShowDropdown(false);
                       }}
                     >
-                      <i className="fa-solid fa-screwdriver-wrench"></i> Admin Dashboard
+                      <i className="fa-solid fa-screwdriver-wrench"></i> Panel de Control
                     </button>
                   )}
 
