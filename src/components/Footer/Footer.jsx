@@ -8,7 +8,9 @@ function Footer() {
     <footer>
       <nav className="footer">
         <div className="footer-left">
-          <img src={argenmapBanner} alt="Argenmap Banner" className="footer-banner" />
+          <a href="https://github.com/ign-argentina/argenmap" target="_blank" rel="noopener noreferrer">
+            <img src={argenmapBanner} alt="Argenmap Banner" className="footer-banner" />
+          </a>
         </div>
         <div className="foot-items">
           <LatestRelease />
