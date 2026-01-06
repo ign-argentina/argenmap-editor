@@ -399,7 +399,6 @@ const ViewerManager = () => {
                 Subir
               </button>
             </div>
-
           </div>
 
           <ConfirmDialog
