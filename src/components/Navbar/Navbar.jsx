@@ -76,10 +76,12 @@ function Navbar() {
 
       <nav className="navbar">
         <div className="logo">
-          <img
-            src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg"
-            alt="Logo IGN"
-          />
+          <a href="https://www.ign.gob.ar" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg"
+              alt="Logo IGN"
+            />
+          </a>
         </div>
 
         <div className="nav-links">
