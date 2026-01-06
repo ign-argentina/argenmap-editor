@@ -1,13 +1,16 @@
 /* import { NavLink } from "react-router-dom"; */
 import LatestRelease from '../LatestRelease/LatestRelease';
+import argenmapBanner from '../../assets/argenmap-banner.png';
 import './Footer.css'
 
 function Footer() {
   return (
     <footer>
       <nav className="footer">
-        <div className="To-Do">
-          {/*                     <img src="https://static.ign.gob.ar/img/logo/ign/logo_IGN_blanco_sinTexto.svg" alt="Logo IGN" /> */}
+        <div className="footer-left">
+          <a href="https://github.com/ign-argentina/argenmap" target="_blank" rel="noopener noreferrer">
+            <img src={argenmapBanner} alt="Argenmap Banner" className="footer-banner" />
+          </a>
         </div>
         <div className="foot-items">
           <LatestRelease />

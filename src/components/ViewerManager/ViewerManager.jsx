@@ -352,22 +352,22 @@ const ViewerManager = () => {
               {selectedViewer && (<div className={`viewer-description ${showDescriptionModal ? 'open' : 'closed'}`}>
                 <div className="viewer-info-row">
                   <div className="viewer-info-text">
-                    <h3>{selectedViewer.name}</h3>
+                    <h3>{selectedViewer.name} - {selectedViewer.gname || 'Sin grupo'}</h3>
                     <div className='viewer-desc-divider'></div>
                     <p>{selectedViewer.description}</p>
                     <p className="viewer-date">
-                      {selectedViewer.lastupdate
+                      Última actualización {selectedViewer.lastupdate
                         ? new Date(selectedViewer.lastupdate).toLocaleDateString('es-AR', {
                           day: 'numeric',
                           month: 'short',
                           year: 'numeric'
                         })
                         : "Fecha no disponible"}
+                        
                     </p>
                     <p className="viewer-privacy">
-                      {selectedViewer.publico ? 'Público' : 'Privado'}
+                      Visibilidad: {selectedViewer.publico ? 'Público' : 'Privado'}
                     </p>
-                    <h3>Grupo: {selectedViewer.gname || 'Sin grupo'}</h3>
                   </div>
                   <img
                     src={selectedViewer.gimg || noImage}
@@ -399,7 +399,6 @@ const ViewerManager = () => {
                 Subir
               </button>
             </div>
-
           </div>
 
           <ConfirmDialog

@@ -4,6 +4,19 @@
   align-items: center;
   background-color: var(--primary--color);
   height: 6vh;
+  padding: 0 1rem;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+.footer-banner {
+  height: 4vh;
+  width: auto;
+  object-fit: contain;
 }
 
 .foot-items {
